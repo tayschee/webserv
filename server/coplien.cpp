@@ -26,7 +26,7 @@ server::server(const std::string& _domain, const std::string& _ip, int _port) : 
 	for (size_t i = 0; i < _ip.size(); i++)
 	{
 		if (::isdigit(_ip[i]))
-			bytes[index].append(1, _ip[i]);
+			bytes[index].append(1, _ip[i]); // Filling the current byte of the ip address
 		else
 			index++;
 	}
@@ -34,7 +34,7 @@ server::server(const std::string& _domain, const std::string& _ip, int _port) : 
 	ip = 0;
 	for (int i = 0; i < 4; i++)
 		ip |= std::stoi(bytes[i]) << (8 * i);
-	
+
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 	address.sin_addr.s_addr = ip;

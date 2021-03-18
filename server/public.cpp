@@ -1,4 +1,4 @@
-/*  this file regroup all public functions from server.hpp 
+/*  this file regroup all public functions from server.hpp
     which are not inside coplien.cpp and operator.cpp
 */
 
@@ -35,12 +35,13 @@ void server::start()
 		if (activity < 0 && errno != EINTR)
 			std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
 
-		if (FD_ISSET(socket_host, &readfds))
+		if (FD_ISSET(socket_host, &readfds)) // If there is a modification on socket_host, then it's an incomming connection
 		{
-			res = accept(socket_host, (struct sockaddr *)&address_in, (socklen_t *)&size); 
+			res = accept(socket_host, (struct sockaddr *)&address_in, (socklen_t *)&size);
 			if (res < 0)
 				std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
 
+			// finding the first 0 of socket_client and setting it
 			it = std::find(socket_client.begin(), socket_client.end(), 0);
 			if (it != socket_client.end())
 				*it = res;
@@ -48,16 +49,16 @@ void server::start()
 
 		for (size_t i = 0; i < socket_client.size(); i++)
 		{
-			if (FD_ISSET(socket_client[i], &readfds))
+			if (FD_ISSET(socket_client[i], &readfds)) // is there a modification on the current socket_client ?
 			{
-				res = read(socket_client[i], buffer, 1024);
+				res = read(socket_client[i], buffer, 1024); // TODO : make this read the whole message
 
 				if (res > 0)
 				{
 					buffer[res] = 0;
 					std::cout << buffer;
 				}
-				else if (!res)
+				else if (!res) // request empty... then close the connection
 				{
 					close(socket_client[i]);
 					socket_client[i] = 0;
