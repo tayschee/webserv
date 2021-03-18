@@ -2,8 +2,6 @@
 
 #include "server.hpp"
 
-/*reverse bytes order that convert any type of integer(whole number) from little endian to big endian 
-and from big endian to little endian */
 template <typename Int_type>
 Int_type server::reverse_bytes_order(Int_type x) const
 {
@@ -26,7 +24,6 @@ Int_type server::reverse_bytes_order(Int_type x) const
 	return rev_x;
 }
 
-/*convert int or short for endian of network same behavior than real functions*/
 unsigned short server::ft_htons(unsigned short x) const
 {
 	if (BYTE_ORDER == LITTLE_ENDIAN)
