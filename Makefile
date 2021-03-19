@@ -8,7 +8,10 @@ EXEC = webserv
 
 SERVER_DIR = server/
 
-SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp
+REQUEST_DIR = request/
+
+SRCS = main.cpp $(REQUEST_DIR)coplien.cpp #$(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
+				$(REQUEST_DIR)coplien.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

@@ -1,5 +1,4 @@
 #include "request.hpp"
-// defining all functions used for canonique mode.
 
 
 /*	0.Accept-Charsets					9.Host								
@@ -13,20 +12,15 @@
 	8.Date								17.WWW-Authenticate
 */
 
-request::request()
+request::head_key::head_key()
 {
-	std::map<std::string, std::string>::iterator it;
-	size_t	i = 0;
 
-	std::string
-	while (i < 18) //18 must be change by "size of header_key"
-	{
-		header_data.insert(std::pair(header_key[i], "???"));
-		++i;
-	}
-	it = header_data.begin();
-	while (it != header_data.end())
-		std::cout << it->first << " : " << it->second << "\n";
+    const std::string[18] = {"Accept-Charsets", "Accept-Language", "Allow", "Authorization", "Content-Language", "Content-Length",
+                        "Content-Location", "Content-Type", "Date", "Host", "Last-Modified", "Location", "Referer", "Retry-After",
+                        "Server", "Transfer-Encoding", "User-Agent", "WWW-Authenticate"}
+    key = new std::string(18);
+    key = 
+
+
+    
 }
-
-request::~request(){}
