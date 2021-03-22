@@ -10,18 +10,21 @@
 class request 
 {
 	private :
-		struct			head_key
+		/*struct			head_key
 		{
 			std::string	*key;
 
 			head_key();
-		}				head_key;
+		}				head_key;*/
 
 	private : //private variable
-		std::string	header_key; //all type of information which must be inside the header
-		std::map<std::string, std::string> header_data;
+		//std::string	header_key; //all type of information which must be inside the header
+		//std::map<std::string, std::string> header_data;
+	public : //private function which may be public for test
+		std::string		today(time_t time_sec = time(NULL)) const; /*this function return date of today*/
 	public :
 		request();
+		request(const char *txt);
 		//request(std::map header_data);
 		~request();
 
