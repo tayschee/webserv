@@ -3,7 +3,7 @@
 /*	this function return a date into the form of string which is similar to : "Mon, 12 Mar 2088 12:27:32 GMT"
 	this function have a default argument to return date of today
 	time_sec is the time you want to have in string*/
-std::string		request::today(time_t time_sec) const //WARNING : time not allowed
+std::string		request::time_string(time_t time_sec) const //WARNING : time not allowed
 {
 	const int	max_size_of_tm = 5; /* seems be the maximum character of a time zone(tm)*/
 	const int	str_size = 26 + max_size_of_tm + 1; /*	size of string will contain date, 26 for all character with day

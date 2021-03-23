@@ -31,7 +31,30 @@ request::request()
 
 request::request(const char *txt)
 {
+	std::string	split_str(txt); //use to cut a string in two part
+	std::string	header_str; //use to store header
+	char		**sub_header; //use to store header with all lines separated
+	size_t i = 1;
 
+	/*split header and message of request*/ 
+	i = split_str.find("\n\n");
+	message = split_str.substr(i);
+	header_str = split_str.erase(i);
+
+	sub_header = ft_split(header_str.c_str(), '\n');
+
+	/*put commande inside*/
+	cmd = *(sub_header);
+
+	/*for each element in sub_header put them inside map<std::string, std::string> to access each element individually WARNING i start by 1*/
+	while (sub_header[i])
+	{
+		split_str = sub_header[i];
+		i = split_str.find(":");
+		header_data[split_str.substr(0, i)] = split_str.substr(i + 1); //WARNING must verify if we can +1 , +1 is to pass space
+	}
+	//to free allocation of 2 dimension for example char **
+	free_malloc_2d(sub_header);
 }
 
 request::~request(){}
