@@ -17,7 +17,8 @@ server &server::operator=(const server& other)
 
 // defining "normal" constructor used to create the server.
 // _ip is given as a string under ipv4 format.
-server::server(const std::string& _domain, const std::string& _ip, int _port) : domain_name(_domain), port(_port),
+server::server(const std::string& _domain, const std::string& _ip, int _port) :
+	port(_port), domain_name(_domain), 
 	socket_client(512, 0)
 {
 	std::string bytes[4];
@@ -33,7 +34,7 @@ server::server(const std::string& _domain, const std::string& _ip, int _port) : 
 
 	ip = 0;
 	for (int i = 0; i < 4; i++)
-		ip |= std::stoi(bytes[i]) << (8 * i);
+		ip |= atoi(bytes[i].c_str()) << (8 * i);
 
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
