@@ -10,10 +10,17 @@ SERVER_DIR = server/
 
 REQUEST_DIR = request/
 
+UTILS_DIR = utils/
+
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
-				#$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp
+				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp \
+				$(UTILS_DIR)utils.cpp
+
+#file with fonction use to debug
+DEBUG_SRCS = $(REQUEST_DIR)debug.cpp
 
 OBJS = $(SRCS:.cpp=.o)
+DEBUG_OBJS = $(DEBUG_SRCS:.cpp=.o)
 
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
@@ -24,10 +31,15 @@ all : $(EXEC)
 
 $(EXEC) : $(OBJS)
 	make -C libft
-	$(CXX) -o $@ $(INCLUDE) -L libft/ $(FLAGS) $^
+	$(CXX) -o $(EXEC) $(INCLUDE) $^ libft/libft.a
+
+#compile with debug mode
+debug : $(OBJS) $(DEBUG_OBJS)
+	make -C libft
+	$(CXX) -o $(EXEC) -D DEBUG=1 $(INCLUDE) $^ libft/libft.a
 
 clean : 
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(DEBUG_OBJS)
 
 fclean : clean
 	rm -f $(EXEC)
