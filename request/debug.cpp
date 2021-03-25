@@ -5,18 +5,18 @@ void request::print_cmd() const
 	std::cout << "cmd : |" << cmd << "|" << std::endl;
 }
 
-void request::print_header_data() const 
+void request::print_header() const
 {
-	std::map<std::string, std::string>::const_iterator it(header_data.begin());
-	std::map<std::string, std::string>::const_iterator end(header_data.end());
+	std::map<std::string, std::string>::const_iterator it(header.begin());
+	std::map<std::string, std::string>::const_iterator end(header.end());
 
-	std::cout << "header_data : "<< std::endl;
+	std::cout << "header : "<< std::endl;
 	while (it != end)
 	{
 		std::cout << "key : |" << it->first << "|, value : |" << it->second << "|" << std::endl;
 		++it;
 	}
-	std::cout << "end of header_data" << std::endl;
+	std::cout << "end of header" << std::endl;
 }
 
 void request::print_message() const
@@ -28,7 +28,7 @@ void request::print_variable() const
 {
 	print_cmd();
 	std::cout << std::endl;
-	print_header_data();
+	print_header();
 	std::cout << std::endl;
 	print_message();
 }
