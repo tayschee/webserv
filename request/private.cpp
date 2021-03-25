@@ -26,3 +26,4 @@ std::string		request::time_string(time_t time_sec) const //WARNING : time not al
 	
 	return (std::string(char_date));
 }
+

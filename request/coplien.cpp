@@ -31,30 +31,45 @@ request::request()
 
 request::request(const char *txt)
 {
-	std::string	split_str(txt); //use to cut a string in two part
-	std::string	header_str; //use to store header
-	char		**sub_header; //use to store header with all lines separated
-	size_t i = 1;
+	std::string	split_str(txt);	//use to store a string will be cut in two part like txt will be cut into a header and a message
+	std::string	str_key;		//string behind ":"
+	char		**sub_header;	//use to store header with all lines separated
+	size_t		pos;			//position of ":"
+	size_t 		i = 1;			//incrementation, start after commande
 
 	/*split header and message of request*/ 
-	i = split_str.find("\n\n");
-	message = split_str.substr(i);
-	header_str = split_str.erase(i);
+	pos = split_str.find("\n\n");
+	if (pos == split_str.npos) //verify if there is a body part
+		return ;
+	message = split_str.substr(pos + 2);
 
-	sub_header = ft_split(header_str.c_str(), '\n');
+	sub_header = ft_split(split_str.substr(0, pos).c_str(), '\n');
 
-	/*put commande inside*/
-	cmd = *(sub_header);
-
-	/*for each element in sub_header put them inside map<std::string, std::string> to access each element individually WARNING i start by 1*/
-	while (sub_header[i])
+	/*for each element in sub_header put them inside map<std::string, std::string> to access each element individually*/
+	if (sub_header && *sub_header)
 	{
-		split_str = sub_header[i];
-		i = split_str.find(":");
-		header_data[split_str.substr(0, i)] = split_str.substr(i + 1); //WARNING must verify if we can +1 , +1 is to pass space
+		cmd = *sub_header; //put first commande in special variable cmd because she is not store like other
+
+		i = 1;
+		while (sub_header[i])
+		{
+			split_str = sub_header[i];
+			pos = split_str.find(":"); //find return string::npos() if there is no ":"
+			if (pos == split_str.npos) //verify if there is ":"
+				header_data[split_str.substr(nb_horizontal_space(split_str), split_str.size())] = "";
+			else
+			{
+				str_key = split_str.substr(0, pos);
+				split_str = split_str.substr(pos + 1);
+				header_data[clean_string(str_key)] = clean_string(split_str);
+			}
+			++i;
+		}
 	}
-	//to free allocation of 2 dimension for example char **
+	//to free allocation of char **
 	free_malloc_2d(sub_header);
+
+	//why not throw exception if there is a probleme
 }
 
 request::~request(){}
