@@ -24,17 +24,17 @@ request::request(const char *txt)
 
 	/*split header and body of request*/ 
 	pos = split_str.find("\n\n");
-	if (pos == split_str.npos) //verify if there is a body part
-		body = "";
-	else
-		body = split_str.substr(pos + 2);
+
+	body = pos == split_str.npos ? "" : split_str.substr(pos + 2); /*	if body exists boydy = all after "\n\n"
+																		else body = ""						*/
 
 	sub_header = ft_split(split_str.substr(0, pos).c_str(), '\n');
 
 	/*for each element in sub_header put them inside map<std::string, std::string> to access each element individually*/
 	if (sub_header && *sub_header)
 	{
-		cmd = *sub_header; //put first commande in special variable cmd because she is not store like other
+		//put first line of header in special variables because it has not same syntax
+		method_parsing(*sub_header); //WARNING all white space not check (tab)
 
 		i = 1;
 		while (sub_header[i])

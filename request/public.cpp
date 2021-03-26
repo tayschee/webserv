@@ -1,9 +1,13 @@
 #include <request.hpp>
 
-/*return cmd*/
-std::string		request::get_cmd() const
+
+/*execute method store in method[CMD]*/
+std::string	request::execute()
 {
-	return (cmd);
+	const std::string possible_cmd[] = {"GET", "HEAD", "POST", "PUT", "DELETE",
+										"CONNECT", "OPTIONS", "TRACE", "PACTH"};
+
+	return "";
 }
 
 /*iterator pointing on first information about header except cmd*/

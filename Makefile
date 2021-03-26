@@ -13,7 +13,7 @@ REQUEST_DIR = request/
 UTILS_DIR = utils/
 
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
-				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp \
+				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp\
 				$(UTILS_DIR)utils.cpp
 
 #file with fonction use to debug
@@ -25,7 +25,7 @@ DEBUG_OBJS = $(DEBUG_SRCS:.cpp=.o)
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
 INCLUDE = -I ./include -I ./libft
-CPPFLAGS = $(INCLUDE) -std=c++98 -D DEBUG=1 #-Wall -Wextra -Werror
+CPPFLAGS = $(INCLUDE) -std=c++98 -D DEBUG=1 -Wall -Wextra -Werror
 
 all : $(EXEC)
 

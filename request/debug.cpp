@@ -1,8 +1,10 @@
 #include "request.hpp"
 
-void request::print_cmd() const
+void request::print_method() const
 {
-	std::cout << "cmd : |" << cmd << "|" << std::endl;
+	std::cout << "CMD : " << method[CMD] << "\n";
+	std::cout << "ARG : " << method[ARG] << "\n";
+	std::cout << "VERSION : " << method[VERSION] << "\n";
 }
 
 void request::print_header() const
@@ -26,7 +28,7 @@ void request::print_body() const
 
 void request::print_variable() const
 {
-	print_cmd();
+	print_method();
 	std::cout << std::endl;
 	print_header();
 	std::cout << std::endl;
