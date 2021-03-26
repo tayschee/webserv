@@ -1,4 +1,7 @@
 #include "utils.hpp"
+# if defined(DEBUG)		//include for debug
+#  include <iostream> 
+# endif
 
 bool	is_horizontal_space(const int c) //verify if c is space or tab
 {
@@ -17,7 +20,7 @@ size_t	nb_horizontal_space(const std::string &str) //return the number of succes
 }
 
 /*	delete useless white space at the begin and at the end of the string.
-	Possible improuvement with delete useless white space inside string */
+	Not optimised*/
 std::string clean_string(std::string &str)
 {
 	size_t	str_begin = 0; //how many element to pass space in begin of string
@@ -36,7 +39,14 @@ std::string clean_string(std::string &str)
 			++i;
 		str_end = i;
 		i += nb_horizontal_space(&str.c_str()[i]);
+		if (i - str_end > 1 && i != size)
+		{
+			str.erase(str_end + 1, i - str_end - 1);
+			size = str.size();
+			str_end = size;
+			i = 0;
+		}
 	}
-	str.erase(str_end, i);
+	str.erase(str_end);
 	return str;
 }

@@ -1,6 +1,10 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
+# if defined(DEBUG)		//include for debug
+#  include <iostream> 
+# endif
+
 # include <map>			//std::map
 # include <utility>		//std::pair
 # include <string>		//std::string
@@ -9,10 +13,6 @@ extern "C"				//use to add C library
 {
 	# include "libft.h" //ft_split
 }
-
-# if defined(DEBUG)		//include for debug
-#  include <iostream> 
-# endif
 
 /*request to send*/
 class request 
@@ -23,7 +23,7 @@ class request
 	private : //private variable
 		std::string							cmd; //first line of header with the commande the path and the version of http
 		std::map<std::string, std::string>	header; //all information inside header after cmd
-		std::string							message; //this is the body part of request
+		std::string							body; //this is the body part of request
 	public : //PRIVATE function which may be public for test
 		std::string		time_string(time_t time_sec = time(NULL)) const; /*this function return date of today*/
 
@@ -40,7 +40,7 @@ class request
 	public : //function to test request
 		void print_cmd() const; //print cmd(first line of header)
 		void print_header() const; //print all header_data (header without cmd)
-		void print_message() const; // print message(body of request)
+		void print_body() const; // print body(body of request)
 		void print_variable() const; //combination of three previous functions
 
 	# endif

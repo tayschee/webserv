@@ -19,9 +19,9 @@ void request::print_header() const
 	std::cout << "end of header" << std::endl;
 }
 
-void request::print_message() const
+void request::print_body() const
 {
-	std::cout << "message : " << std::endl <<  "|" << message << "| end of message" << std::endl;
+	std::cout << "body : " << std::endl <<  "|" << body << "| end of body" << std::endl;
 }
 
 void request::print_variable() const
@@ -30,5 +30,5 @@ void request::print_variable() const
 	std::cout << std::endl;
 	print_header();
 	std::cout << std::endl;
-	print_message();
+	print_body();
 }

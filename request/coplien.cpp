@@ -16,17 +16,18 @@
 
 request::request(const char *txt)
 {
-	std::string	split_str(txt);	//use to store a string will be cut in two part like txt will be cut into a header and a message
+	std::string	split_str(txt);	//use to store a string will be cut in two part like txt will be cut into a header and a body
 	std::string	str_key;		//string behind ":"
 	char		**sub_header;	//use to store header with all lines separated
 	size_t		pos;			//position of ":"
 	size_t 		i = 1;			//incrementation, start after commande
 
-	/*split header and message of request*/ 
+	/*split header and body of request*/ 
 	pos = split_str.find("\n\n");
 	if (pos == split_str.npos) //verify if there is a body part
-		return ;
-	message = split_str.substr(pos + 2);
+		body = "";
+	else
+		body = split_str.substr(pos + 2);
 
 	sub_header = ft_split(split_str.substr(0, pos).c_str(), '\n');
 
@@ -41,7 +42,10 @@ request::request(const char *txt)
 			split_str = sub_header[i];
 			pos = split_str.find(":"); //find return string::npos() if there is no ":"
 			if (pos == split_str.npos) //verify if there is ":"
-				header[split_str.substr(nb_horizontal_space(split_str), split_str.size())] = "";
+			{
+				split_str = split_str.substr(0, split_str.size());
+				header[clean_string(split_str)] = "";
+			}
 			else
 			{
 				str_key = split_str.substr(0, pos);
