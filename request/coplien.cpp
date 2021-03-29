@@ -8,10 +8,10 @@
 	2.Allow								11.Location							
 	3.Authorization						12.Referer								All informations which can contain header
 	4.Content-Language					13.Retry-After
-	5.Content-Length = nb char			14.Server = nginx/1.19.18
+	5.Content-Length = nb char			14.Server = webserv
 	6.Content-Location					15.Transfer-Encoding = extent of data?
 	7.Content-Type = text/html			16.User-Agent
-	8.Date								17.WWW-Authenticate
+	8.Date =							17.WWW-Authenticate
 */
 
 request::request(const char *txt)

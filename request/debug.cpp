@@ -2,7 +2,7 @@
 
 void request::print_method() const
 {
-	std::cout << "CMD : " << method[CMD] << "\n";
+	std::cout << "CMD : " << method[METHOD] << "\n";
 	std::cout << "ARG : " << method[ARG] << "\n";
 	std::cout << "VERSION : " << method[VERSION] << "\n";
 }
