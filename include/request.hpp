@@ -28,27 +28,44 @@ class request
 		class response
 		{
 			public : //response typedef
-				typedef int (response::*response_function)(void); //pointeur to response function
+				//pointer to response function
+				typedef int (response::*response_function)(const std::string &, const std::map<std::string, std::string> &);
 
 			private :
 				std::string		version; //version share by methode[VERSION]
 				int				status; /*status code to know what's wrong or if all pass fine,
-										it will be associated with map to find name of status code*/
+										it will be associated with a std::map to find name of status code*/
 				header_type		header; /*header of response*/
 				std::string		body;	/*body of response maybe put a fd instead*/
 
+			private : //UTILS
+				std::string		time_string(time_t time_sec = time(NULL)) const; /*this function return date of today or date specified*/
+				std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
+				std::string		*get_allow_method() const; //return a pointer to string which contain all allow method
 			public : //later in private
-				const response_function	get_method_function(const std::string &method, const std::string *allow_method) const;
-				int						method_is_head();
-				void					main_header(const std::string allow_method);
-				void					add_allow(const std::string allow_method_array);
-				void					add_date();	
+				response_function		get_method_function(const std::string &method, const std::string *allow_method) const;
+				void					main_header(const std::string *allow_method);
+
+			private : //method_is_function
+				int						method_is_head(const std::string &path, const std::map<std::string, std::string> &req_head);// function to do what a method head supposed to do
+
+			private : //add_function to add header_field in header
+				void					add_allow(const std::string *allow_method_array); //add allow header field in header
+				void					add_date(); //add date header field in header
+
 
 			public :
 				response(/*std::string (&method)[3], header_type &header, std::string &body*/);
 				~response();
 
-				//message_to_send();
+				const std::string message() const;
+			
+			/*if you dont compile with -D DEBUG=<value> those functions doesn't exist*/
+			# if defined(DEBUG)
+			public : //function to test request
+				void print_message();
+
+			# endif
 		};
 
 	private : //private variable
@@ -57,7 +74,6 @@ class request
 		std::string							body;		//this is the body part of request
 	public : //PRIVATE function which may be public for test
 		void			method_parsing(const std::string &commande_line); /*use inside request(const char *txt) to parse method*/
-		std::string		time_string(time_t time_sec = time(NULL)) const; /*this function return date of today or date specified*/
 
 	public :
 		request();

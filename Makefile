@@ -16,11 +16,11 @@ UTILS_DIR = utils/
 
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp\
-				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)private.cpp \
+				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)private.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp $(RESPONSE_DIR)method.cpp\
 				$(UTILS_DIR)utils.cpp
 
 #file with fonction use to debug
-DEBUG_SRCS = $(REQUEST_DIR)debug.cpp
+DEBUG_SRCS = $(REQUEST_DIR)debug.cpp $(RESPONSE_DIR)debug.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 DEBUG_OBJS = $(DEBUG_SRCS:.cpp=.o)

@@ -11,16 +11,20 @@ void			request::response::add_allow(const std::string *allow_method_array)
 	for (i = 0; allow_method_array[i] != ""; i++) //can be optimised
 	{
 		allow_method_string += allow_method_array[i];
-		if (allow_method_array[i + 1] != "")
+		if (allow_method_array[i + 1] == "")
 			break ;
 		allow_method_string += ", ";
 	}
 
-	header.insert(std::pair("Allow", allow_method_string));
+
+
+	header.insert(std::pair<std::string, std::string>("Allow", allow_method_string));
 }
 
 void			request::response::add_date()
 {
-	request::time_string()
+	const std::string date = time_string();
+	const std::string date_key = "Date";
 
+	header.insert(std::pair<std::string, std::string>(date_key, date));
 }

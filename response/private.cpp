@@ -1,8 +1,8 @@
 #include "request.hpp"
 
-const request::response::response_function request::response::get_method_function(const std::string &method, const std::string *allow_method) const
+request::response::response_function request::response::get_method_function(const std::string &method, const std::string *allow_method)
 {
-	const response_function	method_function[] = {&response::method_is_head, &response::method_is_head, &response::method_is_head,
+	response_function	method_function[] = {&response::method_is_head(/*const std::string &, const std::map<std::string, std::string> &*/), &response::method_is_head, &response::method_is_head,
 											&response::method_is_head, &response::method_is_head, &response::method_is_head,
 											&response::method_is_head, &response::method_is_head, &response::method_is_head,
 											&response::method_is_head};
@@ -17,14 +17,9 @@ const request::response::response_function request::response::get_method_functio
 }
 
 
-void			main_header(const std::string *allow_method)
+void			request::response::main_header(const std::string *allow_method)
 {
 	add_allow(allow_method); // add header field allow in header
 	add_date();
-}
-
-int				 request::response::method_is_head(void)
-{
-	std::cout << "OK\n"; //to test
-	return 1;
+	//add host
 }
