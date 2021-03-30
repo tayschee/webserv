@@ -7,22 +7,23 @@
 EXEC = webserv
 
 SERVER_DIR = server/
+PARSER_DIR = parser/
 
-SRCS = $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp
+SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp $(PARSER_DIR)public.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)private.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
-INCLUDE = include/
-FLAGS = -Wall -Wextra -Werror
+INCLUDE = -I ./include
+CPPFLAGS = $(INCLUDE) -std=c++98 -Wall -Wextra -Werror
 
 all : $(EXEC)
 
 $(EXEC) : $(OBJS)
 	$(CXX) -o $@ $(INCLUDE) $(FLAGS) $^
 
-clean : 
+clean :
 	rm -f $(OBJS)
 
 fclean : clean
