@@ -25,14 +25,13 @@ class	parser
 
 
 	private:
-		std::string				filename;
-		std::vector<block *>	blocks;
+		std::string		filename;
+		block			main;
 
 	private:
 		parser();
 
 		parser(const std::string& _filename);
-
 
 		void parse_file();
 

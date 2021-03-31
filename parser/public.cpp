@@ -1,6 +1,6 @@
 #include "parser.hpp"
 
-std::vector <std::string> parser::split(const std::string &str, const std::string &delimiters)
+std::vector<std::string> parser::split(const std::string &str, const std::string &delimiters)
 {
 	std::vector<std::string> result;
 
@@ -8,7 +8,7 @@ std::vector <std::string> parser::split(const std::string &str, const std::strin
 	while ((beg = str.find_first_not_of(delimiters, pos)) != std::string::npos)
 	{
 		pos = str.find_first_of(delimiters, beg + 1);
-		std::cout << str.substr(beg, pos - beg) << std::endl;
+		result.push_back(str.substr(beg, pos - beg));
 	}
 	return result;
 }

@@ -1,2 +1,2 @@
-bonjour
-au revoir
+server_name		localhost
+listen			80

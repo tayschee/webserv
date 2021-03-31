@@ -1,2 +1,3 @@
-au revoir ?
-mais on vient juste de commencer...
+root			/var/www
+listen			443
+truc			bonjour au revoir			yo mec

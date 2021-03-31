@@ -17,11 +17,13 @@ OBJS = $(SRCS:.cpp=.o)
 CXX = clang++
 INCLUDE = -I ./include
 CPPFLAGS = $(INCLUDE) -std=c++98 -Wall -Wextra -Werror
+CXXFLAGS = -fsanitize=address -g
+LDFLAGS = -fsanitize=address -g
 
 all : $(EXEC)
 
 $(EXEC) : $(OBJS)
-	$(CXX) -o $@ $(INCLUDE) $(FLAGS) $^
+	$(CXX) -o $@ $(INCLUDE) $(LDFLAGS) $(FLAGS) $^
 
 clean :
 	rm -f $(OBJS)
