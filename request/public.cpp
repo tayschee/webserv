@@ -1,12 +1,9 @@
 #include <request.hpp>
 
 /*execute method store in method[CMD]*/
-//std::string	request::response()
-//{
-	/*if any of them is good generate an allow field*/
-	/*const std::string possible_cmd[] = {"GET", "HEAD", "POST", "PUT", "DELETE",
-										"CONNECT", "OPTIONS", "TRACE", "PATCH"};*/
-	
+std::string	request::send_response() const
+{
+	response	resp(method, header, body);
 
-//	return "";
-//}
+	return (resp.message());
+}

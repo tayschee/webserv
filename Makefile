@@ -1,9 +1,3 @@
-#
-#
-#There is maybe mistake inside makefile I can t verif we didn t have make for now it is just a structure to do it
-#
-#
-
 EXEC = webserv
 
 SERVER_DIR = server/
@@ -16,7 +10,7 @@ UTILS_DIR = utils/
 
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp\
-				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)private.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp $(RESPONSE_DIR)method.cpp\
+				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp $(RESPONSE_DIR)method.cpp $(RESPONSE_DIR)get.cpp\
 				$(UTILS_DIR)utils.cpp
 
 #file with fonction use to debug
