@@ -35,7 +35,8 @@ debug : $(OBJS) $(DEBUG_OBJS)
 	make -C libft
 	$(CXX) -o $(EXEC) $(INCLUDE) $^ libft/libft.a
 
-clean : 
+clean :
+	make fclean -C libft
 	rm -f $(OBJS) $(DEBUG_OBJS)
 
 fclean : clean
