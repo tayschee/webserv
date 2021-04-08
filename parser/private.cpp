@@ -5,23 +5,71 @@ void parser::parse_file()
 	std::ifstream ifs(filename.c_str());
 	std::string line, name;
 	std::vector<std::string> splitted;
+	int number = 1;
+	bool block;
 
 	while (std::getline(ifs, line))
 	{
+		block = false;
 		if (line.empty())
+		{
+			number++;
 			continue;
+		}
+		else if (isspace(line[0]))
+		{
+			std::cerr << "Error: Unexpected whitespace at " << filename << ":" << number << std::endl;
+			return;
+		}
+		else if (line[line.length() - 1] == '{')
+		{
+			line.erase(line.length() - 1);
+			block = true;
+		}
 		splitted = split(line);
 		name = splitted[0];
 		splitted.erase(splitted.begin());
-		main.conf[name] = splitted;
+		number++;
+		if (!block)
+			main.conf[name] = splitted;
+		else
+		{
+			struct block *b = new struct block(name, splitted, &main);
+			parse_block(ifs, b, number);
+			main.add_block(b);
+		}
 	}
+}
 
-	for (std::map<std::string, std::vector<std::string> >::iterator it = main.conf.begin();
-		it != main.conf.end(); it++)
+void parser::parse_block(std::ifstream &ifs, parser::block *b, int &number)
+{
+	std::string line, name;
+	std::vector<std::string> splitted;
+	bool block;
+
+	while (std::getline(ifs, line))
 	{
-		std::cout << it->first << " : " << it->second[0];
-		for (size_t i = 1; i < it->second.size(); i++)
-			std::cout << ", " << it->second[i];
-		std::cout << std::endl;
+		block = false;
+		if (line == "}")
+			break;
+		else if (line[line.length() - 1] == '{')
+		{
+			line.erase(line.end());
+			block = true;
+		}
+		splitted = split(line);
+		name = splitted[0];
+		splitted.erase(splitted.begin());
+		number++;
+		if (!block)
+			b->conf[name] = splitted;
+		else
+		{
+			struct block *subblock = new struct block(name, splitted, b);
+			parse_block(ifs, subblock, number);
+			b->add_block(subblock);
+		}
 	}
+	if (line == "}")
+		number++;
 }

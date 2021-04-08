@@ -13,9 +13,9 @@ std::vector<std::string> parser::split(const std::string &str, const std::string
 	return result;
 }
 
-std::vector<parser> parser::parse_folder(std::string path)
+std::vector<parser *> parser::parse_folder(std::string path)
 {
-	std::vector<parser> res;
+	std::vector<parser *> res;
 	DIR *dir = opendir(path.c_str());
 
 	if (path[path.length() - 1] == '/')
@@ -23,7 +23,12 @@ std::vector<parser> parser::parse_folder(std::string path)
 
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
 		if (entry->d_type == DT_REG)
-			res.push_back(parser(path + "/" + entry->d_name));
+			res.push_back(new parser(path + "/" + entry->d_name));
 	closedir(dir);
 	return res;
+}
+
+void parser::block::add_block(parser::block *b)
+{
+	blocks.push_back(b);
 }
