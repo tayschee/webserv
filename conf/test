@@ -1,0 +1,8 @@
+server_name		localhost
+listen			80
+root			/var/www
+
+location ~ .php {
+	root		/var/www/php
+	fastcgi_params	TEST $test
+}
