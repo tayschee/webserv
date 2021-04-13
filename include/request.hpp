@@ -27,15 +27,18 @@ class request
 	public : //request typedef
 		typedef std::map<std::string, std::string>::const_iterator iterator;
 		typedef std::map<std::string, std::string>	header_type;
+		typedef std::pair<std::string, std::string>	value_type;
 
 	public : //Class response for now in public but later in private to help me to create a function to send response that will be more intuituve
 		class response
 		{
 			public : //response typedef
 				//pointer to response function
-				typedef int (response::*response_function)(const std::string &, const std::map<std::string, std::string> &);
+				typedef int (response::*response_function)(const std::string &, const std::map<std::string, std::string> &, const std::string &);
 				typedef request::iterator 		iterator;
 				typedef request::header_type	header_type;
+				typedef request::value_type		value_type;
+				
 
 			private :
 				std::string		version; //version share by methode[VERSION]
@@ -52,21 +55,27 @@ class request
 
 			private : //get_* functions, they return a value with a key without map
 				/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
-				response_function		get_method_function(const std::string &method, const std::string *allow_method) const; //KEY : method, VALUE : function
-				std::string				get_status_string() const; //KEY : status, VALUE: message
+				response_function	get_method_function(const std::string &method, const std::string *allow_method) const; //KEY : method, VALUE : function
+				std::string			get_status_string() const; //KEY : status, VALUE: message
+				value_type			get_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 
 			private : //method_is_* function, apply one of method
-				int						method_is_head(const std::string &file, const header_type &req_head); //HEAD
-				int						method_is_get(const std::string &file, const header_type &req_head); //GET
+				int					method_is_head(const std::string &file, const header_type &req_head, const std::string &body); //HEAD
+				int					method_is_get(const std::string &file, const header_type &req_head, const std::string &body); //GET
+				int					method_is_delete(const std::string &file, const header_type &req_head, const std::string &body); //DELETE
+				int					method_is_options(const std::string &file, const header_type &req_head, const std::string &body); //OPTION
+				int					method_is_put(const std::string &file, const header_type &req_head, const std::string &body); //PUT
 
 			private : //add_* functions, add something inside class like header_field or body
-				void					add_allow(const std::string *allow_method_array); //Allow
-				void					add_date(); //Date
-				void					add_content_length(const header_type &req_head, const off_t &bytes_size); //Content-Length
-				void					add_last_modified(time_t time); //Last-Modified
-				void					add_server(); //Server
+				void				add_allow(const std::string *allow_method_array); //Allow
+				void				add_date(); //Date
+				void				add_content_length(const header_type &req_head, const off_t &bytes_size); //Content-Length
+				void				add_last_modified(time_t time); //Last-Modified
+				void				add_server(); //Server
+				void				add_content_type(const std::string &file); //Content-type
+				void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
 
-				void					add_body(int fd, struct stat file_stat); //body
+				void				add_body(int fd, struct stat file_stat); //body
 
 			public :
 				response(const std::string (&method)[3], const header_type &req_head, const std::string &body);

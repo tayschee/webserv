@@ -33,8 +33,8 @@ request::response::get_method_function(const std::string &method, const std::str
 	/*function associated with array allow_method pass in parameter, it must be at least equal size, to compare array see
 	public.cpp*/
 	response_function	method_function[] = {&response::method_is_get, &response::method_is_head, &response::method_is_head,
-											&response::method_is_head, &response::method_is_head, &response::method_is_head,
-											&response::method_is_head, &response::method_is_head, &response::method_is_head,
+											&response::method_is_put, &response::method_is_delete, &response::method_is_head,
+											&response::method_is_head, &response::method_is_options, &response::method_is_head,
 											&response::method_is_head};
 	size_t i;
 
@@ -44,4 +44,50 @@ request::response::get_method_function(const std::string &method, const std::str
 			break;
 	}
 	return(method_function[i]);
+}
+
+request::response::value_type		request::response::get_media_type(const std::string subtype) const
+{
+	header_type	media_map;
+	iterator	val;
+
+	//APPLICATION
+	media_map.insert(value_type(BMP, APP));
+	media_map.insert(value_type(GIF, APP));
+	media_map.insert(value_type(JPEG, APP));
+	media_map.insert(value_type(PNG, APP));
+	media_map.insert(value_type(WEBP, APP));
+
+	//AUDIO
+	media_map.insert(value_type(BMP, AUDIO));
+	media_map.insert(value_type(GIF, AUDIO));
+	media_map.insert(value_type(JPEG, AUDIO));
+	media_map.insert(value_type(PNG, AUDIO));
+	media_map.insert(value_type(WEBP, AUDIO));
+
+	//IMAGE
+	media_map.insert(value_type(BMP, IMAGE));
+	media_map.insert(value_type(GIF, IMAGE));
+	media_map.insert(value_type(JPEG, IMAGE));
+	media_map.insert(value_type(PNG, IMAGE));
+	media_map.insert(value_type(WEBP, IMAGE));
+
+	//TXT
+	media_map.insert(value_type(CSS, TXT));
+	media_map.insert(value_type(HTML, TXT));
+	media_map.insert(value_type(JS, TXT));
+
+	//VIDEO
+	media_map.insert(value_type(BMP, VIDEO));
+	media_map.insert(value_type(GIF, VIDEO));
+	media_map.insert(value_type(JPEG, VIDEO));
+	media_map.insert(value_type(PNG, VIDEO));
+	media_map.insert(value_type(WEBP, VIDEO));
+
+	/*if subtype doesn't exist return default value*/
+	val = media_map.find(subtype);
+	if (val == media_map.end())
+		return (value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+
+	return (*val);
 }

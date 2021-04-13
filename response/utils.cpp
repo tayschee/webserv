@@ -40,7 +40,7 @@ std::string		request::response::header_to_string() const
 		str += it->first;
 		str += ": ";
 		str += it->second;
-		str += "\n";
+		str += CRLF;
 		++it;
 	}
 	return str;
@@ -58,7 +58,7 @@ std::string		request::response::header_first_line() const
 {
 	std::string		first_line;
 
-	first_line = version + " " + ft_itoa(status) + " " + get_status_string() + "\n";
+	first_line = version + " " + ft_itoa(status) + " " + get_status_string() + CRLF;
 
 	return first_line;
 }

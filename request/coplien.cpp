@@ -18,26 +18,26 @@ request::request(const char *txt)
 {
 	std::string	split_str(txt);	//use to store a string will be cut in two part like txt will be cut into a header and a body
 	std::string	str_key;		//string behind ":"
-	char		**sub_header;	//use to store header with all lines separated
+	std::vector<std::string> sub_header;	//use to store header with all lines separated
 	size_t		pos;			//position of ":"
 	size_t 		i = 1;			//incrementation, start after commande
 
 	/*split header and body of request*/ 
-	pos = split_str.find("\n\n");
+	pos = split_str.find(CRLF CRLF);
 
-	body = pos == split_str.npos ? "" : split_str.substr(pos + 2); /*	if body exists boydy = all after "\n\n"
+	body = pos == split_str.npos ? "" : split_str.substr(pos + 2); /*	if body exists boydy = all after "\r\n\r\n"
 																		else body = ""						*/
 
-	sub_header = ft_split(split_str.substr(0, pos).c_str(), '\n');
+	sub_header = split(split_str.substr(0, pos).c_str(), CRLF);
 
 	/*for each element in sub_header put them inside map<std::string, std::string> to access each element individually*/
-	if (sub_header && *sub_header)
+	if (sub_header.size())
 	{
 		//put first line of header in special variables because it has not same syntax
-		method_parsing(*sub_header); //WARNING all white space not check (tab)
+		method_parsing(sub_header[0]); //WARNING all white space not check (tab)
 
 		i = 1;
-		while (sub_header[i])
+		while (i < sub_header.size())
 		{
 			split_str = sub_header[i];
 			pos = split_str.find(":"); //find return string::npos() if there is no ":"
@@ -55,9 +55,6 @@ request::request(const char *txt)
 			++i;
 		}
 	}
-	//to free allocation of char **
-	free_malloc_2d(sub_header);
-
 	//why not throw exception if there is a probleme
 }
 

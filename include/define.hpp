@@ -4,6 +4,16 @@
 /*Server*/
 # define WEBSERV "webserv"
 
+/*line return*/
+# define CRLF "\r\n"
+
+/*delete file message*/
+# define DELETE_FILE	"<html>"\
+						"	<body>"\
+    					"		<h1>File deleted.</h1>"\
+						"	</body>"\
+						"</html>"
+
 /*define header field*/
 # define ALLOW "Allow"
 # define ACCEPT_CHARSET "Accept-Charset"
@@ -49,4 +59,37 @@
 # define STATUS_503 "Service Unavailable"
 # define UNKNOW_STATUS "Unknow"
 
+/*define type*/
+
+# define APP		"application/"
+# define AUDIO		"audio/"
+# define EXEMPLE	"exemple/"
+# define FONT 		"font/"
+# define IMAGE		"image/"
+# define MODEL		"model/"
+# define TXT		"text/"
+# define VIDEO		"video/"
+
+# define DEFAULT_TYPE "text/"
+
+/*define subtype*/
+
+# define BMP	"bmp"
+# define CSS 	"css"
+# define HTML	"html"
+# define GIF	"gif"
+# define JPEG	"jpeg"
+# define JS		"javascript"
+# define OGG	"ogg"
+# define PNG	"png"
+# define WAV	"wav"
+# define WEBP	"webp"
+# define WEBM	"webm"
+
+# define DEFAULT_SUBTYPE "plain"
+
+/*define encoding extension*/
+# define GZIP		"gz"
+# define COMPRESS	"Z"
+# define DEFLATE	""
 #endif

@@ -51,6 +51,35 @@ void			request::response::add_server()
 	header.insert(std::pair<std::string, std::string>(SERVER, WEBSERV));
 }
 
+void			request::response::add_content_type(const std::string &file)
+{
+	std::string extension;
+	size_t		pos = file.find_first_of(".");
+	value_type	val(DEFAULT_TYPE, DEFAULT_SUBTYPE);
+
+	if (pos != file.npos)
+	{
+ 		extension = file.substr(pos + 1);
+		val = get_media_type(extension);
+	}
+	header.insert(value_type(CONTENT_TYPE, val.first + val.second));
+}
+
+/*void				request::response::add_transfert_encoding(const std::string &file)
+{
+	std::string extension;
+	size_t		pos = file.find_last_of(".");
+	value_type	val;
+
+	if (pos == file.npos)
+		return ;	//no encoding
+ 
+ 	extension = file.substr(pos + 1);
+	val = get_encoding_type(extension);
+
+	header.insert(value_type(CONTENT_TYPE, val.first + val.second));
+}*/
+
 /* this time, this is not a field it's the body of response which be add */
 void			request::response::add_body(int fd, struct stat file_stat)
 {

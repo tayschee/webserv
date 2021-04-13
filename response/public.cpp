@@ -18,7 +18,7 @@ request::response::response(const std::string (&method)[3], const header_type &r
 
 	/*call pointer to member function this is exactly like that we must call it,
 	 ALL bracket are neccessary there is no other way*/
-	status = (this->*header_field_function)(method[ARG], req_head);
+	status = (this->*header_field_function)(method[ARG], req_head, body);
 
 	(void)body; //for now do nothing
 	version = method[VERSION];
@@ -33,7 +33,7 @@ const std::string	request::response::message() const
 	
 	msg = header_first_line();
 	msg += header_to_string();
-	msg += "\n";
+	msg += CRLF;
 	msg += body;
 
 	return msg;

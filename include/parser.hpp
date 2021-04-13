@@ -11,42 +11,42 @@
 
 class parser
 {
-public:
-	struct block
-	{
-		std::string name;
-		std::vector<std::string> args;
-		std::map<std::string, std::vector<std::string> > conf;
-		block *parent;
-		std::vector<block *> blocks;
+	public:
+		struct block
+		{
+			std::string name;
+			std::vector<std::string> args;
+			std::map<std::string, std::vector<std::string> > conf;
+			block *parent;
+			std::vector<block *> blocks;
 
-		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>(), block *parent = NULL);
+			block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>(), block *parent = NULL);
 
-		void add_block(block *b);
-	};
+			void add_block(block *b);
+		};
 
-private:
-	std::string filename;
-	block main;
+	private:
+		std::string filename;
+		block main;
 
-private:
-	parser();
+	private:
+		parser();
 
-	parser(const std::string &_filename);
+		parser(const std::string &_filename);
 
-	void parse_file();
-	void parse_block(std::ifstream &ifs, block *b, int &number);
+		void parse_file();
+		void parse_block(std::ifstream &ifs, block *b, int &number);
 
-public:
-	parser(const parser &other);
-	~parser();
+	public:
+		parser(const parser &other);
+		~parser();
 
-	parser &operator=(const parser &other);
+		parser &operator=(const parser &other);
 
-	static std::vector<parser *> parse_folder(std::string path);
-	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
+		static std::vector<parser *> parse_folder(std::string path);
+		static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
 
-	friend std::ostream& operator<<(std::ostream& os, const parser& parsed);
+		friend std::ostream& operator<<(std::ostream& os, const parser& parsed);
 };
 
 std::ostream& operator<<(std::ostream& os, const parser::block& b);

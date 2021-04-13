@@ -50,3 +50,16 @@ std::string clean_string(std::string &str)
 	str.erase(str_end);
 	return str;
 }
+
+std::vector<std::string> split(const std::string &str, const std::string &delimiters)
+{
+	std::vector<std::string> result;
+
+	size_t beg, pos = 0;
+	while ((beg = str.find_first_not_of(delimiters, pos)) != std::string::npos)
+	{
+		pos = str.find_first_of(delimiters, beg + 1);
+		result.push_back(str.substr(beg, pos - beg));
+	}
+	return result;
+}
