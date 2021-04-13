@@ -55,14 +55,14 @@ void			request::response::add_content_type(const std::string &file)
 {
 	std::string extension;
 	size_t		pos = file.find_first_of(".");
-	value_type	val(DEFAULT_TYPE, DEFAULT_SUBTYPE);
+	value_type	val(DEFAULT_SUBTYPE, DEFAULT_TYPE);
 
 	if (pos != file.npos)
 	{
  		extension = file.substr(pos + 1);
 		val = get_media_type(extension);
 	}
-	header.insert(value_type(CONTENT_TYPE, val.first + val.second));
+	header.insert(value_type(CONTENT_TYPE, val.second + val.first));
 }
 
 /*void				request::response::add_transfert_encoding(const std::string &file)
