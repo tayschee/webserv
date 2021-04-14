@@ -77,3 +77,24 @@ void parser::parse_block(std::ifstream &ifs, parser::block *b, int &number)
 	if (line == "}")
 		number++;
 }
+
+void parser::block::get_property(const std::string& name, std::vector<entry>& entries) const
+{
+	typedef std::map<std::string, std::vector<std::string> >::const_iterator iterator;
+
+	iterator it = conf.find(name);
+
+	if (it != conf.end())
+	{
+		entry e;
+		e.args = it->second;
+		e.name = name;
+		e.blockName = this->name;
+		e.blockArgs = args;
+
+		entries.push_back(e);
+	}
+
+	for (size_t i = 0; i < blocks.size(); i++)
+		blocks[i]->get_property(name, entries);
+}

@@ -42,3 +42,11 @@ std::ostream& operator<<(std::ostream& os, const parser::block& b)
 		os << *b.blocks[i];
 	return os;
 }
+
+std::vector<parser::entry> parser::operator[](const std::string& name) const
+{
+	std::vector<entry> results;
+
+	main.get_property(name, results);
+	return results;
+}

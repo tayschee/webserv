@@ -12,6 +12,14 @@
 class parser
 {
 public:
+	struct entry
+	{
+		std::string blockName;
+		std::vector<std::string> blockArgs;
+		std::string name;
+		std::vector<std::string> args;
+	};
+
 	struct block
 	{
 		std::string name;
@@ -21,8 +29,10 @@ public:
 		std::vector<block *> blocks;
 
 		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>(), block *parent = NULL);
+		~block();
 
 		void add_block(block *b);
+		void get_property(const std::string& name, std::vector<entry>& entries) const;
 	};
 
 private:
@@ -37,6 +47,7 @@ private:
 	void parse_file();
 	void parse_block(std::ifstream &ifs, block *b, int &number);
 
+
 public:
 	parser(const parser &other);
 	~parser();
@@ -45,6 +56,8 @@ public:
 
 	static std::vector<parser *> parse_folder(std::string path);
 	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
+
+	std::vector<entry> operator[](const std::string& name) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const parser& parsed);
 };
