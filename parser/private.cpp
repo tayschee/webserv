@@ -50,11 +50,15 @@ void parser::parse_block(std::ifstream &ifs, parser::block *b, int &number)
 	while (std::getline(ifs, line))
 	{
 		block = false;
-		if (line == "}")
+		if (line.find("}") != line.npos)
 			break;
+		if (line.empty())
+		{
+			continue;
+		}
 		else if (line[line.length() - 1] == '{')
 		{
-			line.erase(line.end());
+			line.erase(line.length() - 1);
 			block = true;
 		}
 		splitted = split(line);

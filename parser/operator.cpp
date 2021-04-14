@@ -27,7 +27,10 @@ std::ostream& operator<<(std::ostream& os, const parser::block& b)
 	typedef std::map<std::string, std::vector<std::string> >::const_iterator const_iterator;
 	for (const_iterator it = b.conf.begin(); it != b.conf.end(); it++)
 	{
-		os << " - " << it->first << " : " << it->second[0];
+		if (it->second.empty())
+			os << " - " << it->first;
+		else
+			os << " - " << it->first << " : " << it->second[0];
 		for (size_t i = 1; i < it->second.size(); i++)
 			os << ", " << it->second[i];
 		if (b.blocks.size() || (++it)-- != b.conf.end())
