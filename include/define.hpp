@@ -14,6 +14,16 @@
 						"	</body>"\
 						"</html>"
 
+# define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
+
+# define ERROR_FILE		"<html>\n"\
+						"<head><title>xxx</title></head>\n"\
+						"<body>\n"\
+						"<center><h1>xxx</h1></center>\n"\
+						"<hr><center>webserv</center>\n"\
+						"</body>\n"\
+						"</html>"
+
 /*define header field*/
 # define ALLOW "Allow"
 # define ACCEPT_CHARSET "Accept-Charset"

@@ -1,7 +1,7 @@
 #include <request.hpp>
 
 
-request::response::response(const std::string (&method)[3], const header_type &req_head, const std::string &body)
+request::response::response(const std::string (&method)[3], const header_type &req_head, const std::string &req_body)
 {
 	/*array of allow_method, if you add one here you MUST add function in method_function inside get_method_function,
 	"" is for end of array, method are define inside define.hpp*/
@@ -18,9 +18,10 @@ request::response::response(const std::string (&method)[3], const header_type &r
 
 	/*call pointer to member function this is exactly like that we must call it,
 	 ALL bracket are neccessary there is no other way*/
-	status = (this->*header_field_function)("cat.html", req_head, body);
+	status = (this->*header_field_function)("cat.html", req_head, req_body);
+	if (status < 200 || status > 299)
+		error_response(req_head);
 
-	(void)body; //for now do nothing
 	version = method[VERSION];
 }
 

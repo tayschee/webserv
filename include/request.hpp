@@ -47,11 +47,12 @@ class request
 				header_type		header; /*header of response*/
 				std::string		body;	/*body of response maybe put a fd instead*/
 
-			private : //UTILS
+			private : //utils
 				std::string		time_string(time_t time_sec = time(NULL)) const; /*this function return date of today or date specified*/
 				std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 				void			main_header(const std::string *allow_method);
 				std::string		header_first_line() const;
+				void			error_response(const header_type &req_head);
 
 			private : //get_* functions, they return a value with a key without map
 				/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
@@ -60,11 +61,12 @@ class request
 				value_type			get_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 
 			private : //method_is_* function, apply one of method
-				int					method_is_head(const std::string &file, const header_type &req_head, const std::string &body); //HEAD
-				int					method_is_get(const std::string &file, const header_type &req_head, const std::string &body); //GET
-				int					method_is_delete(const std::string &file, const header_type &req_head, const std::string &body); //DELETE
-				int					method_is_options(const std::string &file, const header_type &req_head, const std::string &body); //OPTION
-				int					method_is_put(const std::string &file, const header_type &req_head, const std::string &body); //PUT
+				int					method_is_head(const std::string &file, const header_type &req_head, const std::string &req_body); //HEAD
+				int					method_is_get(const std::string &file, const header_type &req_head, const std::string &req_body); //GET
+				int					method_is_delete(const std::string &file, const header_type &req_head, const std::string &req_body); //DELETE
+				int					method_is_options(const std::string &file, const header_type &req_head, const std::string &req_body); //OPTION
+				int					method_is_put(const std::string &file, const header_type &req_head, const std::string &req_body); //PUT
+				int					method_is_unknow(const std::string &file, const header_type &req_head, const std::string &req_body); //UNKNOW
 
 			private : //add_* functions, add something inside class like header_field or body
 				void				add_allow(const std::string *allow_method_array); //Allow
@@ -78,7 +80,7 @@ class request
 				void				add_body(int fd, struct stat file_stat); //body
 
 			public :
-				response(const std::string (&method)[3], const header_type &req_head, const std::string &body);
+				response(const std::string (&method)[3], const header_type &req_head, const std::string &req_body);
 				~response();
 
 				const std::string message() const;
@@ -102,6 +104,8 @@ class request
 		request();
 		request(const char *txt);		//take in parameter the char * of receive or read to parse him
 		~request();
+
+		//void			wait();
 		std::string		send_response() const;
 
 	/*if you dont compile with -D DEBUG=<value> those functions doesn't exist*/

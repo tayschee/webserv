@@ -35,7 +35,7 @@ request::response::get_method_function(const std::string &method, const std::str
 	response_function	method_function[] = {&response::method_is_get, &response::method_is_head, &response::method_is_head,
 											&response::method_is_put, &response::method_is_delete, &response::method_is_head,
 											&response::method_is_head, &response::method_is_options, &response::method_is_head,
-											&response::method_is_head};
+											&response::method_is_unknow};
 	size_t i;
 
 	for(i = 0; allow_method[i] != ""; i++)

@@ -62,3 +62,18 @@ std::string		request::response::header_first_line() const
 
 	return first_line;
 }
+
+void			request::response::error_response(const header_type &req_head)
+{
+	const std::string	status_string(get_status_string());
+	const std::string	msg(ft_itoa(status) + status_string); //MUST CHANGE itoa
+	size_t				i;
+
+
+	body = ERROR_FILE;
+	i = body.find("xxx", 0);
+	body.replace(i, 3, msg, msg.size());
+
+	add_content_length(req_head, msg.size());
+	add_content_type(ERROR_FILE_NAME);
+}
