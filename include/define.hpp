@@ -7,13 +7,6 @@
 /*line return*/
 # define CRLF "\r\n"
 
-/*delete file message*/
-# define DELETE_FILE	"<html>"\
-						"	<body>"\
-    					"		<h1>File deleted.</h1>"\
-						"	</body>"\
-						"</html>"
-
 # define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
 
 # define ERROR_FILE		"<html>\n"\
@@ -65,6 +58,7 @@
 # define STATUS_401 "Unauthorized"
 # define STATUS_405 "Method Not Allowed"
 # define STATUS_406 "Not Acceptable"
+# define STATUS_409 "Conflict"
 # define STATUS_501 "Not Implemented"
 # define STATUS_503 "Service Unavailable"
 # define UNKNOW_STATUS "Unknow"

@@ -17,10 +17,10 @@ request::response::response(const std::string (&method)[3], const header_type &r
 	main_header(allow_method); /*add header_field which are present in all method*/
 
 	/*call pointer to member function this is exactly like that we must call it,
-	 ALL bracket are neccessary there is no other way*/
+	ALL bracket are neccessary there is no other way*/
 	status = (this->*header_field_function)("cat.html", req_head, req_body);
 	if (status < 200 || status > 299)
-		error_response(req_head);
+		error_response(req_head);	
 
 	version = method[VERSION];
 }

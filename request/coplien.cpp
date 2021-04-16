@@ -14,6 +14,12 @@
 	8.Date =							17.WWW-Authenticate
 */
 
+//do nothing wait read
+request::request() : method(), header(), body()
+{
+
+}
+
 request::request(const char *txt)
 {
 	std::string	split_str(txt);	//use to store a string will be cut in two part like txt will be cut into a header and a body

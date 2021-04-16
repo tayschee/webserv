@@ -2,7 +2,8 @@
     which are not inside coplien.cpp and operator.cpp
 */
 
-#include "server.hpp"
+# include "server.hpp"
+# include "request.hpp"
 
 void server::start()
 {
@@ -10,8 +11,6 @@ void server::start()
 	int activity, res, size, max;
 	sockaddr_in address_in;
 	std::vector<int>::iterator it;
-
-	char buffer[1025];
 
 	if (listen(socket_host, 12))
 	{
@@ -51,20 +50,23 @@ void server::start()
 		{
 			if (FD_ISSET(socket_client[i], &readfds)) // is there a modification on the current socket_client ?
 			{
-				res = read(socket_client[i], buffer, 1024); // TODO : make this read the whole message
+					request		req;
+					
+					req.read_socket(socket_client[i]);
+					std::string str(req.send_response());
 
-				if (res > 0)
-				{
-					buffer[res] = 0;
-					std::cout << buffer;
-				}
-				else if (!res) // request empty... then close the connection
-				{
-					close(socket_client[i]);
-					socket_client[i] = 0;
-				}
-				else
-					std::cerr << "read got a problem. Error: " << strerror(errno) << std::endl;
+					write(socket_client[i], str.c_str(), str.size());
+					std::cout << "-----------------------\n";
+					std::cout << str << "\n";
+			}
+			else if (!res) // request empty... then close the connection
+			{
+				close(socket_client[i]);
+				socket_client[i] = 0;
+			}
+			else
+			{
+				//std::cerr << "read got a problem. Error: " << strerror(errno) << std::endl;
 			}
 		}
 	}

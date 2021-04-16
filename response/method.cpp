@@ -55,7 +55,19 @@ int		request::response::method_is_delete(const std::string &file, const header_t
 
 int		request::response::method_is_options(const std::string &file, const header_type &req_head, const std::string &req_body)
 {
-	return (method_is_head(file, req_head, req_body));
+	struct stat file_stat; //information about file
+
+	(void)req_body;
+
+	if (lstat(file.c_str(), &file_stat) < 0)
+		return (100); //ERROR
+
+	/* two next line can maybe be add to main_header */
+	add_content_length(req_head, 0); /* st_size = total size in byte */
+	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+	add_content_type(file);
+
+	return 200; //value of OK response
 }
 
 int		request::response::method_is_put(const std::string &file, const header_type &req_head, const std::string &req_body)

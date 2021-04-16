@@ -99,13 +99,15 @@ class request
 		std::string							body;		//this is the body part of request
 	public : //PRIVATE function which may be public for test
 		void			method_parsing(const std::string &commande_line); /*use inside request(const char *txt) to parse method*/
+		void			parse_header(const std::string &header_str);
+		void			read_end_of_body(const int socket);
 
 	public :
 		request();
 		request(const char *txt);		//take in parameter the char * of receive or read to parse him
 		~request();
 
-		//void			wait();
+		void			read_socket(const int socket);
 		std::string		send_response() const;
 
 	/*if you dont compile with -D DEBUG=<value> those functions doesn't exist*/
