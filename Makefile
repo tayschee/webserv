@@ -7,8 +7,13 @@
 EXEC = webserv
 
 SERVER_DIR = server/
+PARSER_DIR = parser/
 
+<<<<<<< HEAD
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp
+=======
+SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp $(PARSER_DIR)public.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)operator.cpp
+>>>>>>> gboucett
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -16,13 +21,18 @@ OBJS = $(SRCS:.cpp=.o)
 CXX = clang++
 INCLUDE = -I ./include
 CPPFLAGS = $(INCLUDE) -std=c++98 -Wall -Wextra -Werror
+<<<<<<< HEAD
+=======
+CXXFLAGS = -fsanitize=address -g
+LDFLAGS = -fsanitize=address -g
+>>>>>>> gboucett
 
 all : $(EXEC)
 
 $(EXEC) : $(OBJS)
-	$(CXX) -o $@ $(INCLUDE) $(FLAGS) $^
+	$(CXX) -o $@ $(INCLUDE) $(LDFLAGS) $(FLAGS) $^
 
-clean : 
+clean :
 	rm -f $(OBJS)
 
 fclean : clean
