@@ -1,34 +1,52 @@
-#include <request.hpp>
+#include <message/request.hpp>
 
-/* read request of socket until the end */
-void		request::read_socket(const int socket)
+/*part of function read socket*/
+/*int		request::read_header(const int socket)
 {
-	const int buf_size = 4;
+	const size_t buf_size = 4;
 	char buffer[buf_size + 1];
-	std::string	header_str;
-	std::string	str_to_find(CRLF CRLF);
-	size_t pos = 0;
+	size_t pos;
 
-	do
+	pos = body.size();
+	if (read(socket, buffer, buf_size) < 0)
+		return 1; //throw exception
+	buffer[buf_size] = 0;
+	body += buffer; //header is stock in body for now but that have no importance it's only during parsing
+	if (pos != 0)
+		pos = body.find(SEPARATOR, pos - 1); 
+	else
+		pos = body.find(SEPARATOR, pos); //header end with CRLF CRLF (SEPARATOR)
+}*/
+/* read request of socket until the end */
+/*int		request::read_socket(const int socket)
+{
+	size_t pos;
+
+	if (read_step == READING_HEADER)
 	{
-		read(socket, buffer, buf_size);
-		buffer[buf_size] = 0;
-		header_str += buffer;
-		pos = header_str.find(str_to_find); //WARNING read all each time must start to buf_size - 1
+		pos = read_header(socket);
+		if (pos != body.npos)
+		{
+			parse_header(body.substr(0, pos)); //fill header
+			body = body.substr(pos + ft_strlen(SEPARATOR)); //body start after SEPARATOR
+			read_step == READING_BODY;
+		}
 	}
-	while (pos == header_str.npos); //read until double CRLF
+	else if (read_step == READING_BODY)
+	{
+		if (body.size() < ft_itoa(header.find(CONTENT_LENGTH)->second))
+		{
 
-	body = header_str.substr(pos + str_to_find.size());
-	header_str = header_str.substr(0, pos);
-
-	parse_header(header_str); //convert header_string to header
+		}
+	}
 	read_end_of_body(socket); //read file until the end and put it into body
-}
+	return 0;
+}*/
 
 /*execute method store in method[CMD]*/
-std::string	request::send_response() const
+/*std::string	request::send_response() const
 {
 	response	resp(method, header, body);
 
 	return (resp.message());
-}
+}*/

@@ -6,6 +6,7 @@
 
 /*line return*/
 # define CRLF "\r\n"
+# define SEPARATOR CRLF CRLF
 
 # define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
 
@@ -56,6 +57,8 @@
 # define STATUS_304 "Found" //Nor modified ?
 # define STATUS_400 "Bad Request"
 # define STATUS_401 "Unauthorized"
+# define STATUS_403 "Forbidden"
+# define STATUS_404 "Not Found"
 # define STATUS_405 "Method Not Allowed"
 # define STATUS_406 "Not Acceptable"
 # define STATUS_409 "Conflict"
@@ -64,7 +67,6 @@
 # define UNKNOW_STATUS "Unknow"
 
 /*define type*/
-
 # define APP		"application/"
 # define AUDIO		"audio/"
 # define EXEMPLE	"exemple/"

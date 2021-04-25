@@ -18,6 +18,12 @@
 class   server
 {
     public : /*typedef if neccessary*/
+		struct socket_data
+		{
+			int		socket;
+			request socket_request;
+		};
+		
 
     private : /*private variables we can put a comment next to them to understand their utility*/
 
@@ -32,12 +38,6 @@ class   server
 		server(); // cannot declare a server without port/ip...
 		server(const server& other); // cannot copy server
 		server& operator=(const server& other); // cannot copy server
-
-		template <typename Int_type>
-		Int_type reverse_bytes_order(Int_type x) const; //convert whole number from little endian to big endian and vice versa
-
-		unsigned short ft_htons(unsigned short x) const; //convert short for endian of network same behavior than real functions
-		unsigned int ft_htonl(unsigned int x) const; //convert int for endian of network same behavior than real functions
 
     public : /*public function*/
 		server(const std::string& domain, const std::string& ip, int port);	
