@@ -1,100 +1,62 @@
 #include "parser.hpp"
+#include "utils.hpp"
 
 void parser::parse_file()
 {
 	std::ifstream ifs(filename.c_str());
-	std::string line, name;
-	std::vector<std::string> splitted;
-	int number = 1;
-	bool block;
+	std::string line;
+	int line_no = 1;
+	std::string block_id = "server";
+
+	blocks[block_id] = block(block_id);
 
 	while (std::getline(ifs, line))
 	{
-		block = false;
+		line_no++;
 		if (line.empty())
-		{
-			number++;
 			continue;
-		}
-		else if (isspace(line[0]))
-		{
-			std::cerr << "Error: Unexpected whitespace at " << filename << ":" << number << std::endl;
-			return;
-		}
-		else if (line[line.length() - 1] == '{')
-		{
-			line.erase(line.length() - 1);
-			block = true;
-		}
-		splitted = split(line);
-		name = splitted[0];
-		splitted.erase(splitted.begin());
-		number++;
-		if (!block)
-			main.conf[name] = splitted;
-		else
-		{
-			struct block *b = new struct block(name, splitted, &main);
-			parse_block(ifs, b, number);
-			main.add_block(b);
-		}
+
+		line = clean_string(line);
+		if (line.empty())
+			continue;
+
+		parse_line(line, line_no, block_id);
 	}
 }
 
-void parser::parse_block(std::ifstream &ifs, parser::block *b, int &number)
+void parser::parse_line(std::string line, int line_no, std::string &block_id)
 {
-	std::string line, name;
 	std::vector<std::string> splitted;
-	bool block;
+	bool block = false;
+	std::string name;
 
-	while (std::getline(ifs, line))
+	(void)line_no;
+
+	if (line[line.length() - 1] == '{')
 	{
-		block = false;
-		if (line.find("}") != line.npos)
-			break;
-		if (line.empty())
-		{
-			continue;
-		}
-		else if (line[line.length() - 1] == '{')
-		{
-			line.erase(line.length() - 1);
-			block = true;
-		}
-		splitted = split(line);
-		name = splitted[0];
-		splitted.erase(splitted.begin());
-		number++;
-		if (!block)
-			b->conf[name] = splitted;
-		else
-		{
-			struct block *subblock = new struct block(name, splitted, b);
-			parse_block(ifs, subblock, number);
-			b->add_block(subblock);
-		}
+		block = true;
+		line.erase(line.length() - 1);
+		line = clean_string(line);
 	}
-	if (line == "}")
-		number++;
-}
-
-void parser::block::get_property(const std::string& name, std::vector<entry>& entries) const
-{
-	typedef std::map<std::string, std::vector<std::string> >::const_iterator iterator;
-
-	iterator it = conf.find(name);
-
-	if (it != conf.end())
+	else if (line == "}")
 	{
-		entry e;
-		e.args = it->second;
-		e.name = name;
-		e.blockName = this->name;
-		e.blockArgs = args;
-
-		entries.push_back(e);
+		block_id = "server";
+		return ;
 	}
 
-	for (size_t i = 0; i < blocks.size(); i++)
-		blocks[i]->get_property(name, entries);
+	splitted = split(line);
+	name = splitted[0];
+	splitted.erase(splitted.begin());
+	if (block)
+	{
+		if (name == "location")
+		{
+			name = splitted[0];
+			splitted.erase(splitted.begin());
+		}
+		block_id = name;
+		blocks[block_id] = parser::block(block_id, splitted);
+	}
+	else
+		blocks[block_id].conf[name] = splitted;
 }

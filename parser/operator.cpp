@@ -1,52 +1,44 @@
 #include "parser.hpp"
 
-std::ostream& operator<<(std::ostream& os, const parser& parsed)
+std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v)
+{
+	if (v.empty())
+		return os << "empty";
+
+	os << v[0];
+	for (size_t i = 1; i < v.size(); i++)
+		os << ", " << v[i];
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const parser::block &b)
+{
+	os << "Name : " << b.name << std::endl;
+	os << "Args : " << b.args << std::endl;
+	os << "Conf : " << std::endl;
+
+	for (parser::entries::const_iterator it = b.conf.begin(); it != b.conf.end(); it++)
+		os << " - " << it->first << " -> " << it->second << std::endl;
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const parser &parsed)
 {
 	os << "Filename : " << parsed.filename << std::endl;
 
-	os << parsed.main;
-	return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const parser::block& b)
-{
-	os << "Block name : " << b.name << "(" << &b << ")" << std::endl;
-	os << "Parent block address : " << b.parent << std::endl;
-
-	os << "args :";
-	if (b.args.empty())
-		os << " none" << std::endl;
-	else
+	for (std::map<std::string, parser::block>::const_iterator it = parsed.blocks.begin();
+		 it != parsed.blocks.end(); it++)
 	{
-		os << " " << b.args[0];
-		for (size_t i = 1; i < b.args.size(); i++)
-			os << ", " << b.args[i];
-		os << std::endl;
-	}
+		os << it->second;
 
-	typedef std::map<std::string, std::vector<std::string> >::const_iterator const_iterator;
-	for (const_iterator it = b.conf.begin(); it != b.conf.end(); it++)
-	{
-		if (it->second.empty())
-			os << " - " << it->first;
-		else
-			os << " - " << it->first << " : " << it->second[0];
-		for (size_t i = 1; i < it->second.size(); i++)
-			os << ", " << it->second[i];
-		if (b.blocks.size() || (++it)-- != b.conf.end())
+		if ((++it)-- != parsed.blocks.end())
 			os << std::endl;
 	}
-	if (b.blocks.size())
-		os << std::endl;
-	for (size_t i = 0; i < b.blocks.size(); i++)
-		os << *b.blocks[i];
+
 	return os;
 }
 
-std::vector<parser::entry> parser::operator[](const std::string& name) const
+const parser::entries &parser::operator[](const std::string &block_name) const
 {
-	std::vector<entry> results;
-
-	main.get_property(name, results);
-	return results;
+	return get_block(block_name).conf;
 }

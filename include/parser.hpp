@@ -12,32 +12,21 @@
 class parser
 {
 public:
-	struct entry
-	{
-		std::string blockName;
-		std::vector<std::string> blockArgs;
-		std::string name;
-		std::vector<std::string> args;
-	};
+	typedef std::map<std::string, std::vector<std::string> > entries;
 
 	struct block
 	{
 		std::string name;
 		std::vector<std::string> args;
-		std::map<std::string, std::vector<std::string> > conf;
-		block *parent;
-		std::vector<block *> blocks;
+		entries conf;
 
-		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>(), block *parent = NULL);
-		~block();
-
-		void add_block(block *b);
-		void get_property(const std::string& name, std::vector<entry>& entries) const;
+		block();
+		block(const std::string& name, const std::vector<std::string> &args = std::vector<std::string>());
 	};
 
 private:
 	std::string filename;
-	block main;
+	std::map<std::string, block> blocks;
 
 private:
 	parser();
@@ -45,8 +34,7 @@ private:
 	parser(const std::string &_filename);
 
 	void parse_file();
-	void parse_block(std::ifstream &ifs, block *b, int &number);
-
+	void parse_line(std::string line, int line_no, std::string& block_id);
 
 public:
 	parser(const parser &other);
@@ -54,14 +42,16 @@ public:
 
 	parser &operator=(const parser &other);
 
-	static std::vector<parser *> parse_folder(std::string path);
+	static std::vector<parser> parse_folder(std::string path);
 	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
 
-	std::vector<entry> operator[](const std::string& name) const;
+	const entries &operator[](const std::string& block_name) const;
+	const block &get_block(const std::string& block_name) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const parser& parsed);
 };
 
+std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);
 std::ostream& operator<<(std::ostream& os, const parser::block& b);
 
 #endif //WEBSERV_PARSER_HPP

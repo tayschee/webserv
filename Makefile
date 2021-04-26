@@ -3,7 +3,6 @@ EXEC = webserv
 SERVER_DIR = server/
 PARSER_DIR = parser/
 
-SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp $(PARSER_DIR)public.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)operator.cpp
 REQUEST_DIR = request/
 
 RESPONSE_DIR = response/
@@ -13,7 +12,7 @@ UTILS_DIR = utils/
 SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp\
 				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp $(RESPONSE_DIR)method.cpp $(RESPONSE_DIR)get.cpp\
-				$(UTILS_DIR)utils.cpp
+				$(UTILS_DIR)utils.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)operator.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)public.cpp
 
 #file with fonction use to debug
 DEBUG_SRCS = $(REQUEST_DIR)debug.cpp $(RESPONSE_DIR)debug.cpp

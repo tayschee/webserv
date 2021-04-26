@@ -1,12 +1,22 @@
 server_name		localhost
 listen			80
-root			/var/www
 
-location ~ .php {
-	root		/var/www/php
-	fastcgi_params	TEST $test
+location / {
+	accept POST GET TRACE
+	root /tmp
+	index io
+}
 
-	bloc para praap {
-		isodi spoidk psod
-	}
+error_page 400 401 402
+location_error 40x.html {
+	root /tmp/error
+}
+
+location test {
+	root /tmp/te
+}
+
+cgi .php {
+	root /var/www/php
+	fastcfi_params //////
 }
