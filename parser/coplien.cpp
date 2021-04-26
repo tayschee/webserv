@@ -16,8 +16,6 @@ parser::parser(const std::string &_filename) : filename(_filename), main("server
 
 parser::~parser()
 {
-	for (size_t i = 0; i < main.blocks.size(); i++)
-		delete main.blocks[i];
 }
 
 parser &parser::operator=(const parser &other)
@@ -33,4 +31,10 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 	this->name = name;
 	this->args = args;
 	this->parent = parent;
+}
+
+parser::block::~block()
+{
+	for (size_t i = 0; i < blocks.size(); i++)
+		delete blocks[i];
 }

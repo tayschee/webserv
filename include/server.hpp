@@ -9,7 +9,7 @@
 #include <netinet/ip.h> // sockaddr_in
 #include <sys/socket.h> // socket, bind, setsockopt, accept
 #include <vector> // std::vector
-#include <sys/select.h> // select, fd_set, 
+#include <sys/select.h> // select, fd_set,
 #include <sys/time.h> // FD_ZERO, FD_SET, FD_ISSET
 #include <algorithm> // std::max, std::find
 #include <unistd.h> // close
@@ -18,12 +18,6 @@
 class   server
 {
     public : /*typedef if neccessary*/
-		struct socket_data
-		{
-			int		socket;
-			request socket_request;
-		};
-		
 
     private : /*private variables we can put a comment next to them to understand their utility*/
 
@@ -40,9 +34,9 @@ class   server
 		server& operator=(const server& other); // cannot copy server
 
     public : /*public function*/
-		server(const std::string& domain, const std::string& ip, int port);	
+		server(const std::string& domain, const std::string& ip, int port);
 		~server();
-		
+
 		void start(); // Calls listen and starts the server
 };
 

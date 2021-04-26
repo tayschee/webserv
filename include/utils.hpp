@@ -10,6 +10,8 @@ size_t		nb_horizontal_space(const std::string &str); //return number of succesiv
 std::string	clean_string(std::string &str); //delete useless horizontal space in a string
 std::vector<std::string> split(const std::string &str, const std::string &delimiters); //split string with delimiters
 
+std::string itoa(const int nb);
+
 /*why not do same function for vertical space*/
 
 

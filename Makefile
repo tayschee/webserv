@@ -2,6 +2,7 @@ EXEC = webserv
 
 SERVER_DIR = server/
 MESSAGE_DIR = message/
+PARSER_DIR = parser/
 REQUEST_DIR = request/
 RESPONSE_DIR = response/
 
@@ -16,10 +17,10 @@ SRCS = main.cpp $(MESSAGE_DIR)coplien.cpp $(MESSAGE_DIR)parse.cpp $(MESSAGE_DIR)
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)getter.cpp $(REQUEST_DIR)parse.cpp $(REQUEST_DIR)private.cpp \
 				$(RESPONSE_DIR)coplien.cpp $(RESPONSE_DIR)static_variable.cpp $(RESPONSE_DIR)getter.cpp $(RESPONSE_DIR)method.cpp \
 				$(RESPONSE_DIR)find.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)error.cpp $(RESPONSE_DIR)add.cpp\
+				$(PARSER_DIR)public.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)operator.cpp \
 				$(UTILS_DIR)utils.cpp
 
 OBJS = $(SRCS:.cpp=.o)
-DEBUG_OBJS = $(DEBUG_SRCS:.cpp=.o)
 
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
