@@ -1,6 +1,6 @@
 #include "utils.hpp"
 # if defined(DEBUG)		//include for debug
-#  include <iostream> 
+#  include <iostream>
 # endif
 
 bool	is_horizontal_space(const int c) //verify if c is space or tab
@@ -27,7 +27,7 @@ std::string clean_string(std::string &str)
 	size_t	str_end; //how many element to pass space in end of string
 	size_t	size; //string size
 	size_t	i = 0; //inc
-	
+
 	str_begin = nb_horizontal_space(str);
 	str.erase(0, str_begin);
 	size = str.size();
@@ -49,4 +49,19 @@ std::string clean_string(std::string &str)
 	}
 	str.erase(str_end);
 	return str;
+}
+
+std::string itoa(int nb)
+{
+	std::string str;
+	long n = nb;
+	bool sign = n < 0;
+
+	n = sign ? n * -1 : n;
+	while (n)
+	{
+		str.insert(str.begin(), n % 10 + '0');
+		n /= 10;
+	}
+	return (sign ? "-" : "") + str;
 }
