@@ -3,14 +3,18 @@
 */
 
 # include "server.hpp"
-# include "request.hpp"
+# include "message/request.hpp"
+# include "message/message.hpp"
+# include "utils.hpp" 
 
 void server::start()
 {
+	request		req;
 	fd_set readfds;
 	int activity, res, size, max;
 	sockaddr_in address_in;
 	std::vector<int>::iterator it;
+	request::receive_management recv_obj;
 
 	if (listen(socket_host, 12))
 	{
@@ -50,14 +54,13 @@ void server::start()
 		{
 			if (FD_ISSET(socket_client[i], &readfds)) // is there a modification on the current socket_client ?
 			{
-					request		req;
-					
-					req.read_socket(socket_client[i]);
-					std::string str(req.send_response());
+				req.receive(socket_client[i], &recv_obj, 10);
+				if (recv_obj.step == recv_obj.BODY_DONE)
+				{
+					std::cout << req.get();
+					while (1);
+				}
 
-					write(socket_client[i], str.c_str(), str.size());
-					std::cout << "-----------------------\n";
-					std::cout << str << "\n";
 			}
 			else if (!res) // request empty... then close the connection
 			{

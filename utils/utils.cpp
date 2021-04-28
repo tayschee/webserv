@@ -1,7 +1,4 @@
 #include "utils.hpp"
-# if defined(DEBUG)		//include for debug
-#  include <iostream>
-# endif
 
 bool	is_horizontal_space(const int c) //verify if c is space or tab
 {
@@ -63,7 +60,7 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 	}
 	return result;
 }
-std::string itoa(int nb)
+std::string ft_itoa(int nb)
 {
 	std::string str;
 	long n = nb;
@@ -76,4 +73,16 @@ std::string itoa(int nb)
 		n /= 10;
 	}
 	return (sign ? "-" : "") + str;
+}
+
+size_t		ft_strlen(const char *str)
+{
+	size_t i(0);
+	if (str == NULL)
+		return i;
+	while (str[i] != 0)
+	{
+		++i;
+	}
+	return i;
 }

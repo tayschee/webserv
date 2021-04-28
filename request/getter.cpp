@@ -27,14 +27,12 @@ std::string		request::get_version() const
 /*to have request information in the form of std::string*/
 std::string		request::get() const
 {
-	iterator	it;
-	iterator	end;
+	const_iterator	it(header.begin());
+	const_iterator	end(header.end());
 	std::string req_str;
 
 	req_str = first_line.method + " " + first_line.uri + " " + first_line.version + "\n";
 
-	it = header.begin();
-	end = header.end();
 	while (it != end)
 	{
 		req_str += it->first + ": " + it->second + "\n";

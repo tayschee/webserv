@@ -4,8 +4,8 @@
 that doesn't exist for now, but it can be implement*/
 std::string		response::header_to_string() const
 {
-	iterator it = header.begin();
-	iterator end = header.end();
+	const_iterator it(header.begin());
+	const_iterator end(header.end());
 	std::string str;
 
 	while (it != end)

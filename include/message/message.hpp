@@ -12,20 +12,48 @@
 # include <sys/stat.h>	//stat
 # include <fcntl.h>		//open 
 # include <errno.h>		//errno
+# include <unistd.h>	//write, read
 
 # include "utils.hpp" 	//everything
 # include "define.hpp" 	//everything
-extern "C"				//use to add C library
-{
-	# include "libft.h" //ft_itoa but that must be change
-}
 
 class message
 {
 	public :
-		typedef std::map<std::string, std::string>::const_iterator iterator;
-		typedef std::map<std::string, std::string>	header_type;
-		typedef std::pair<std::string, std::string>	value_type;
+		/*structure will be use to store information during receive and send process*/
+		struct exchange_management
+		{
+			size_t	size;
+
+			exchange_management();
+			~exchange_management();
+		};
+		struct receive_management : public exchange_management
+		{
+			enum		{ NOTHING_DONE, HEADER_DONE, BODY_DONE };
+			enum		{ NO, YES };
+
+			int			step;
+			bool		is_there_cl;
+			bool		is_there_tf;
+			std::string	msg;
+
+			receive_management();
+			~receive_management();
+		};
+		struct send_management : public exchange_management
+		{
+			bool step;
+
+			send_management();
+			~send_management();
+		};
+
+	public :
+		typedef std::map<std::string, std::string>::iterator 		iterator;
+		typedef std::map<std::string, std::string>::const_iterator	const_iterator;
+		typedef std::map<std::string, std::string>					header_type;
+		typedef std::pair<std::string, std::string>					value_type;
 	
 	protected :
 		header_type		header;
@@ -52,4 +80,5 @@ class message
 		//message operator=(message &x);
 		~message();
 };
+
 #endif

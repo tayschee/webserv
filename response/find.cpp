@@ -21,10 +21,9 @@ response::find_method_function(const std::string &method, const std::string *all
 response::media_type_array::value_type
 response::find_media_type(const std::string subtype) const
 {
-	iterator	val;
+	const_iterator	val(existing_media_type.find(subtype));
 
 	/*if subtype doesn't exist return default value*/
-	val = existing_media_type.find(subtype);
 	if (val == existing_media_type.end())
 		return (value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
 

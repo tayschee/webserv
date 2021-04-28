@@ -15,6 +15,10 @@
 #include <unistd.h> // close
 #include <iostream> //std::cerr
 
+#include "message/message.hpp"
+#include "message/request.hpp"
+#include "message/response.hpp"
+
 class   server
 {
     public : /*typedef if neccessary*/
