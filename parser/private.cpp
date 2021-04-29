@@ -1,11 +1,10 @@
 #include "parser.hpp"
-#include "utils.hpp"
 
 void parser::parse_file()
 {
 	std::ifstream ifs(filename.c_str());
 	std::string line;
-	int line_no = 1;
+	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
 
 	_blocks[block_id] = block(block_id.first, block_id.second);
@@ -19,6 +18,18 @@ void parser::parse_file()
 		line = clean_string(line);
 		if (line.empty())
 			continue;
+		if (line[0] == '{')
+		{
+			_blocks.clear();
+			std::cerr << "Error: " << filename << ": There is a single '{' at line " << line_no << std::endl;
+			return ;
+		}
+		else if (line.find('}') != line.npos && line != "}")
+		{
+			_blocks.clear();
+			std::cerr << "Error: " << filename << ": The '}' at line " << line_no << " is not alone." << std::endl;
+			return ;
+		}
 
 		parse_line(line, line_no, block_id);
 	}
@@ -81,4 +92,14 @@ std::string parser::find_best_match(std::string arg) const
 		arg.erase(arg.rfind('/'));
 	}
 	return "/";
+}
+
+bool parser::is_valid() const
+{
+	if (_blocks.find(std::make_pair("location", std::vector<std::string>(1, "/"))) == _blocks.end())
+	{
+		std::cerr << "Error: " << filename << ": No 'location /' block" << std::endl;
+		return false;
+	}
+	return true;
 }

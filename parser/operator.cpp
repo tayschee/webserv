@@ -26,6 +26,11 @@ std::ostream &operator<<(std::ostream &os, const parser &parsed)
 {
 	os << "Filename : " << parsed.filename << std::endl;
 
+	bool validity = parsed.is_valid();
+	os << "Validity : " << (validity ? "\033[32;1mTrue" : "\033[31;1mFalse") << "\033[0m" << std::endl;
+
+	if (!validity)
+		return os;
 	for (parser::blocks::const_iterator it = parsed._blocks.begin();
 		 it != parsed._blocks.end(); it++)
 	{

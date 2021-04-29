@@ -10,6 +10,8 @@ std::string	clean_string(std::string &str); //delete useless horizontal space in
 
 std::string itoa(const int nb);
 
+std::string get_extension(const std::string& str); // Get a file exension (with prefix)
+
 /*why not do same function for vertical space*/
 
 

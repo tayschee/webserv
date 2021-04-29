@@ -22,8 +22,14 @@ std::vector<parser> parser::parse_folder(std::string path)
 		path.erase(path.end());
 
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
-		if (entry->d_type == DT_REG)
+	{
+		if (entry->d_type == DT_REG && get_extension(entry->d_name) == ".conf")
+		{
 			res.push_back(parser(path + "/" + entry->d_name));
+			if (!res.rbegin()->is_valid())
+				res.pop_back();
+		}
+	}
 	closedir(dir);
 	return res;
 }
@@ -35,6 +41,8 @@ const parser::block &parser::get_block(const std::string& block_name, const std:
 
 	if (block_name == "location" && it == _blocks.end())
 		return get_block(block_name, find_best_match(block_args.empty() ? "" : block_args[0]));
+	else if (it == _blocks.end())
+		throw BlockNotFound(block_name, block_args);
 	return it->second;
 }
 
@@ -44,4 +52,9 @@ const parser::block &parser::get_block(const std::string& block_name, const std:
 
 	args.push_back(block_arg);
 	return get_block(block_name, args);
+}
+
+const char *parser::BlockNotFound::what() const throw()
+{
+	return err.c_str();
 }

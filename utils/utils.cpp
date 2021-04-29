@@ -65,3 +65,10 @@ std::string itoa(int nb)
 	}
 	return (sign ? "-" : "") + str;
 }
+
+std::string get_extension(const std::string& str)
+{
+	std::string::size_type pos = str.find('.');
+
+	return pos == str.npos ? "" : str.substr(pos);
+}

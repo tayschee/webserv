@@ -8,6 +8,8 @@
 #include <iostream>	 // std::cerr
 #include <fstream>	 // std::ifstream
 #include <dirent.h>	 // opendir, closedir
+#include <exception> // std::exception
+#include "utils.hpp" // get_extension, clean_string
 
 class parser
 {
@@ -16,6 +18,20 @@ public:
 
 	typedef std::map<std::string, std::vector<std::string> > entries;
 	typedef std::map<std::pair<std::string, std::vector<std::string> >, block> blocks;
+
+	class BlockNotFound : public std::exception
+	{
+		public:
+			BlockNotFound(const std::string& name, const std::vector<std::string>& args) throw();
+			~BlockNotFound() throw();
+
+			const char *what() const throw();
+
+		private:
+			std::string err;
+			const std::string& name;
+			const std::vector<std::string>& args;
+	};
 
 	struct block
 	{
@@ -38,6 +54,8 @@ private:
 
 	void parse_file();
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
+
+	bool is_valid() const;
 
 	std::string find_best_match(std::string arg) const;
 
