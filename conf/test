@@ -12,8 +12,16 @@ location_error 40x.html {
 	root /tmp/error
 }
 
-location test {
+location /test/t1/ {
+	root /tmp/te/test/t1
+}
+
+location test/ {
 	root /tmp/te
+}
+
+location_error test {
+
 }
 
 cgi .php {

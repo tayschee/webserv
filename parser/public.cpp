@@ -28,7 +28,20 @@ std::vector<parser> parser::parse_folder(std::string path)
 	return res;
 }
 
-const parser::block &parser::get_block(const std::string& block_name) const
+const parser::block &parser::get_block(const std::string& block_name, const std::vector<std::string>& block_args) const
 {
-	return blocks.at(block_name);
+	blocks::key_type key = std::make_pair(block_name, block_args);
+	blocks::const_iterator it = _blocks.find(key);
+
+	if (block_name == "location" && it == _blocks.end())
+		return get_block(block_name, find_best_match(block_args.empty() ? "" : block_args[0]));
+	return it->second;
+}
+
+const parser::block &parser::get_block(const std::string& block_name, const std::string& block_arg) const
+{
+	std::vector<std::string> args;
+
+	args.push_back(block_arg);
+	return get_block(block_name, args);
 }

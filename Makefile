@@ -23,13 +23,14 @@ DEBUG_OBJS = $(DEBUG_SRCS:.cpp=.o)
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
 INCLUDE = -I ./include -I ./libft
-CPPFLAGS = $(INCLUDE) -std=c++98 -D DEBUG=1 -Wall -Wextra -Werror
+DEBUG_ARG = -fsanitize=address -g
+CPPFLAGS = $(INCLUDE) -std=c++98 -DDEBUG=1 -Wall -Wextra -Werror $(DEBUG_ARG)
 
 all : $(EXEC)
 
 $(EXEC) : $(OBJS)
 	make -C libft
-	$(CXX) -o $(EXEC) $(INCLUDE) $^ libft/libft.a
+	$(CXX) -o $(EXEC) $(DEBUG_ARG) $(INCLUDE) $^ libft/libft.a
 
 #compile with debug mode
 debug : $(OBJS) $(DEBUG_OBJS)

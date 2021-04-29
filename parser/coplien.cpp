@@ -21,7 +21,7 @@ parser::~parser()
 parser &parser::operator=(const parser &other)
 {
 	filename = other.filename;
-	blocks = other.blocks;
+	_blocks = other._blocks;
 
 	return *this;
 }

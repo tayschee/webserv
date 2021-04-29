@@ -3,7 +3,7 @@
 
 #include <string>	 // std::string
 #include <vector>	 // std::vector
-#include <map>		 // std::map
+#include <map>		 // std::map, std::multimap
 #include <algorithm> // std::find_first_not
 #include <iostream>	 // std::cerr
 #include <fstream>	 // std::ifstream
@@ -12,7 +12,10 @@
 class parser
 {
 public:
+	struct block;
+
 	typedef std::map<std::string, std::vector<std::string> > entries;
+	typedef std::map<std::pair<std::string, std::vector<std::string> >, block> blocks;
 
 	struct block
 	{
@@ -21,12 +24,12 @@ public:
 		entries conf;
 
 		block();
-		block(const std::string& name, const std::vector<std::string> &args = std::vector<std::string>());
+		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>());
 	};
 
 private:
 	std::string filename;
-	std::map<std::string, block> blocks;
+	blocks _blocks;
 
 private:
 	parser();
@@ -34,7 +37,9 @@ private:
 	parser(const std::string &_filename);
 
 	void parse_file();
-	void parse_line(std::string line, int line_no, std::string& block_id);
+	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
+
+	std::string find_best_match(std::string arg) const;
 
 public:
 	parser(const parser &other);
@@ -45,13 +50,13 @@ public:
 	static std::vector<parser> parse_folder(std::string path);
 	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
 
-	const entries &operator[](const std::string& block_name) const;
-	const block &get_block(const std::string& block_name) const;
+	const block &get_block(const std::string &block_name, const std::vector<std::string> &block_args = std::vector<std::string>()) const;
+	const block &get_block(const std::string &block_name, const std::string &block_arg) const;
 
-	friend std::ostream& operator<<(std::ostream& os, const parser& parsed);
+	friend std::ostream &operator<<(std::ostream &os, const parser &parsed);
 };
 
-std::ostream& operator<<(std::ostream& os, const std::vector<std::string>& v);
-std::ostream& operator<<(std::ostream& os, const parser::block& b);
+std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v);
+std::ostream &operator<<(std::ostream &os, const parser::block &b);
 
 #endif //WEBSERV_PARSER_HPP
