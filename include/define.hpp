@@ -6,7 +6,7 @@
 
 /*line return*/
 # define CRLF "\r\n"
-# define SEPARATOR CRLF CRLF
+# define SEPARATOR "\r\n\r\n"
 
 # define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
 
@@ -34,7 +34,7 @@
 # define CONTENT_TYPE "Content-Type"
 # define DATE "Date"
 # define LOCATION "Location"
-# define TRANSFERT_ENCODING "Tranfert-Encoding"
+# define TRANSFERT_ENCODING "Transfert-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
 # define WWW_AUTHENTIFICATE "WWW-Authentificate"
 

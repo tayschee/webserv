@@ -5,6 +5,7 @@
 # include "server.hpp"
 # include "message/request.hpp"
 # include "message/message.hpp"
+# include "message/exchange_management.hpp"
 # include "utils.hpp" 
 
 void server::start()
@@ -14,7 +15,7 @@ void server::start()
 	int activity, res, size, max;
 	sockaddr_in address_in;
 	std::vector<int>::iterator it;
-	request::receive_management recv_obj;
+	request::receive_management recv_obj(1);
 
 	if (listen(socket_host, 12))
 	{
@@ -54,13 +55,13 @@ void server::start()
 		{
 			if (FD_ISSET(socket_client[i], &readfds)) // is there a modification on the current socket_client ?
 			{
-				req.receive(socket_client[i], &recv_obj, 10);
-				if (recv_obj.step == recv_obj.BODY_DONE)
+				if (req.receive(socket_client[i], recv_obj) == 1)
 				{
+					std::cout << "----------------\n";
 					std::cout << req.get();
-					while (1);
+					std::cout << "----------------\n";
+					exit(1);
 				}
-
 			}
 			else if (!res) // request empty... then close the connection
 			{
