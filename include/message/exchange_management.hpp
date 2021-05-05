@@ -1,7 +1,7 @@
 #ifndef EXCHANGE_MANAGEMENT_HPP
 # define EXCHANGE_MANAGEMENT_HPP
 
-# include "message.hpp"
+# include "message/message.hpp"
 
 /*parent class of receive_management and send_management, it does nothing just here to allow polymorphism*/
 class	message::exchange_management

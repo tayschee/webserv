@@ -29,10 +29,10 @@ int		response::method_is_get(const request &req)
 	{
 		return (error_file(errno));
 	}
-	if (lstat(file.c_str(), &file_stat) < 0)
+	if (stat(file.c_str(), &file_stat) < 0)
 		return (error_file(errno));
 
-	if (add_body(fd, file_stat)) /*body is filled by content of fd*/
+	if (add_body(fd, file_stat)) /*fill body with content of fd*/
 	{
 		close(fd);
 		return error_file(errno);

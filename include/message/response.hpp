@@ -90,6 +90,7 @@ class response : public message
 
 	public :
 		response(const request &req);
+		response(int status);
 		~response();
 
 		const std::string message() const;

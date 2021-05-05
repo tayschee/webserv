@@ -3,6 +3,7 @@
 
 /*Server*/
 # define WEBSERV "webserv"
+# define HTTP_VERSION "HTTP/1.1"
 
 /*line return*/
 # define CRLF "\r\n"

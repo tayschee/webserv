@@ -15,12 +15,13 @@ void server::start()
 	int activity, res, size, max;
 	sockaddr_in address_in;
 	std::vector<int>::iterator it;
-	request::receive_management recv_obj(1);
+	request::receive_management recv_obj(1000);
 
 	if (listen(socket_host, 12))
 	{
 		std::cerr << "Failed to listen. Error: " << strerror(errno) << std::endl;
-		return ;
+		close(socket_host);
+		exit(0);
 	}
 
 	while (true)

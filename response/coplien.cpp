@@ -1,6 +1,5 @@
 #include <message/response.hpp>
 
-
 response::response(const request &req)
 {
 	std::string allow_method[] = {GET, HEAD, PUT, POST, CONNECT, OPTIONS, DELETE, PATCH, ""}; //will be replaced
@@ -16,6 +15,17 @@ response::response(const request &req)
 	//	error_response(req);	
 	first_line.status_string = find_status_string();
 	first_line.version = req.get_version();
+}
+
+response::response(int status) : message()
+{
+	first_line.status = status;
+	first_line.status_string = find_status_string();
+	first_line.version = HTTP_VERSION;
+
+	main_header(allow_method); /*add header_field which are present in all method*/
+	body = ERROR_FILE;
+	add_content_length();
 }
 
 response::~response(){};
