@@ -7,7 +7,7 @@
 
 /*line return*/
 # define CRLF "\r\n"
-# define SEPARATOR "\r\n\r\n"
+# define SEPARATOR CRLF CRLF
 
 # define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
 

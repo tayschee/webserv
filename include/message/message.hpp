@@ -23,7 +23,7 @@ class message
 		/*structure will be use to store information during receive and send process*/
 		class exchange_management;	
 		class receive_management;
-		class send_management;
+		//class send_management;
 
 	public :
 		typedef std::map<std::string, std::string>::iterator 		iterator;

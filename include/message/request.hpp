@@ -1,6 +1,7 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
+# include "parser.hpp"
 # include "message/message.hpp"
 # include "message/response.hpp"
 # include "message/exchange_management.hpp"
@@ -41,8 +42,8 @@ class request : public message
 		//std::string	get_body() const;
 		//header_type	get_header() const;
 
+		response		get_response(const parser &pars) const; //to have response object
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const; //to have complete request of the form of std::string
-		response		get_response() const; //to have response object
 
 	public :
 		void			clear();
@@ -54,13 +55,6 @@ class request : public message
 		request operator=(const request &x);
 		~request();
 
-		void			check_end_of_cl_body(receive_management *recv_data);
-		void			check_end_of_tf_body(receive_management *recv_data, const size_t old_size, const int size_read);
-		void			receive_tf_body(const int socket, receive_management *recv_data);
-		void			receive_cl_body(const int socket, receive_management *recv_data);
-		void			receive_body(const int socket, receive_management *recv_data, const size_t buf_size);
-		void			prepare_receive_body(receive_management *recv_data, size_t pos);
-		void			receive_header(const int socket, receive_management *recv_data, const size_t buf_size);
 		bool			receive(const int socket, receive_management &recv_data);
 
 		//int			read_socket(const int socket);

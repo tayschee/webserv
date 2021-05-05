@@ -1,8 +1,10 @@
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
-#include "message/message.hpp"
-#include  "message/request.hpp"
+# include "parser.hpp"
+# include "message/message.hpp"
+# include  "message/request.hpp"
+# include "message/exchange_management.hpp"
 
 class request;
 
@@ -18,7 +20,7 @@ class response : public message
 
 	public : //typedef
 		//pointer to method_function
-		typedef int (response::*method_function)(const request &req);
+		typedef int (response::*method_function)(const request &req, const parser &pars);
 
 		//map type to find information
 		typedef std::map<std::string, method_function>	method_array;
@@ -52,12 +54,12 @@ class response : public message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 
 	private : //method_is_* function, apply one of method
-		int					method_is_head(const request &req); //HEAD
-		int					method_is_get(const request &req); //GET
-		int					method_is_delete(const request &req); //DELETE
-		int					method_is_options(const request &req); //OPTION
-		int					method_is_put(const request &req); //PUT
-		int					method_is_unknow(const request &req); //UNKNOW
+		int					method_is_head(const request &req, const parser &pars); //HEAD
+		int					method_is_get(const request &req, const parser &pars); //GET
+		int					method_is_delete(const request &req, const parser &pars); //DELETE
+		int					method_is_options(const request &req, const parser &pars); //OPTION
+		int					method_is_put(const request &req, const parser &pars); //PUT
+		int					method_is_unknow(const request &req, const parser &pars); //UNKNOW
 
 	private : //add_* functions, add something inside class like header_field or body
 		void				add_allow(const std::string *allow_method_array); //Allow
@@ -83,13 +85,14 @@ class response : public message
 	
 		//std::string	get_body() const;
 		//header_type	get_header() const;
+		void			get_error(int error, const parser &pars);
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 
 	private : //error_* functions, they are relations with error returns
-		int				error_file(int errnum) const; //can maybe be change by find_* function
+		int					error_file(int errnum) const; //can maybe be change by find_* function
 
 	public :
-		response(const request &req);
+		response(const request &req, const parser &pars);
 		response(int status);
 		~response();
 
