@@ -24,8 +24,6 @@ void	response::get_error(int error, const parser &pars)
 
 response::response(const request &req, const parser &pars)
 {
-	
-	
 	std::string allow_method[] = {GET, HEAD, PUT, POST, CONNECT, OPTIONS, DELETE, PATCH, ""}; //will be replaced
 	/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
 	method_function header_field_function = find_method_function(req.get_method(), allow_method); //give function associate with request

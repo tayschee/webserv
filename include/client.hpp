@@ -28,7 +28,7 @@ public: /*public function*/
     parser  &get_pars();
     bool    is_listen();
     bool    is_read;
-    request::receive_management rcm;
+    message::receive_management rcm;
     request rq;
 };
 

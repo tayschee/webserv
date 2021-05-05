@@ -1,7 +1,5 @@
 #include <message/response.hpp>
 
-#include <iostream>
-
 /*this file regroup get function, get dont refer to the method but function to get a value through an other*/
 
 /*return string associated to a status*/

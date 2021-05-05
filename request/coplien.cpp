@@ -9,7 +9,6 @@
 	3.Authorization						12.Referer								All informations which can contain header
 	4.Content-Language					13.Retry-After
 	5.Content-Length = nb char			14.Server = webserv
-			FD_SET(socket_host, &writefds);
 	6.Content-Location					15.Transfer-Encoding = extent of data?
 	7.Content-Type = text/html			16.User-Agent
 	8.Date =							17.WWW-Authenticate

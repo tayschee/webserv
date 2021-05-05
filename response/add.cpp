@@ -93,7 +93,6 @@ bool			response::add_body(int fd, struct stat &file_stat)
 		return 1; //check errno
 	}
 	buffer[file_stat.st_size] = 0;
-	std::cout << "je suis dans add_body" << std::endl;
 	body = buffer;
 	return 0;
 }

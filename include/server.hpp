@@ -16,9 +16,9 @@
 #include <iostream> //std::cerr
 
 #include <list>
-#include "../include/client.hpp"
+#include "client.hpp"
 #include <csignal>
-#include "../include/parser.hpp"
+#include "parser.hpp"
 
 class   server
 {

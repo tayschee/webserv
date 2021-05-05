@@ -2,7 +2,7 @@
     which are not inside coplien.cpp and operator.cpp
 */
 
-#include "../include/server.hpp"
+#include "server.hpp"
 #include <list>
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
 #include <stdio.h>

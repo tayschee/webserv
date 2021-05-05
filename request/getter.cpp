@@ -25,20 +25,20 @@ std::string		request::get_version() const
 }
 
 /*to have request information in the form of std::string*/
-std::string		request::get() const
+std::string		request::get(const std::string &hf_sep, const std::string &eol) const
 {
 	const_iterator	it(header.begin());
 	const_iterator	end(header.end());
 	std::string req_str;
 
-	req_str = first_line.method + " " + first_line.uri + " " + first_line.version + "\n";
+	req_str = first_line.method + " " + first_line.uri + " " + first_line.version + eol;
 
 	while (it != end)
 	{
-		req_str += it->first + ": " + it->second + "\n";
+		req_str += it->first + hf_sep + it->second + eol;
 		++it;
 	}
-	req_str += "\n" + body;
+	req_str += eol + body;
 
 	return req_str;
 }

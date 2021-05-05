@@ -1,4 +1,4 @@
-#include "../include/server.hpp"
+#include "server.hpp"
 
 // defining all functions used for canonique mode.
 

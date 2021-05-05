@@ -1,5 +1,5 @@
 #include "parser.hpp"
-#include "../include/utils.hpp"
+#include "utils.hpp"
 
 std::vector<std::string> parser::split(const std::string &str, const std::string &delimiters)
 {

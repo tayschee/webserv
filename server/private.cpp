@@ -2,7 +2,7 @@
 
 #include "server.hpp"
 
-template <typename Int_type>
+/*template <typename Int_type>
 Int_type server::reverse_bytes_order(Int_type x) const
 {
 	int i = 0;
@@ -35,4 +35,4 @@ unsigned int server::ft_htonl(unsigned int x) const
 	if (BYTE_ORDER == LITTLE_ENDIAN)
 		x = reverse_bytes_order(x);
 	return (x);
-}
+}*/

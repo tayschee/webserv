@@ -163,7 +163,6 @@ int		response::method_is_get(const request &req, const parser &pars)
 	std::cout << "file = " << file << std::endl;
 	if (lstat(file.c_str(), &file_stat) < 0)
 		return (error_file(errno));
-	
 	std::string CGI(req.get_uri());
 	std::string::iterator it = CGI.end();
 	while (--it != CGI.begin())
@@ -235,9 +234,37 @@ int		response::method_is_get(const request &req, const parser &pars)
 	}
 	if (fd > 0)
 		close(fd);
-
 	return 200;
 }
+/*
+int		response::method_is_get(const request &req)
+{
+	int		fd;
+	struct stat file_stat; //information about file
+	std::string	file = req.get_uri();
+
+	//403 interdiction
+	if ((fd = open(file.c_str(), O_RDONLY)) < 0)
+	{
+		return (error_file(errno));
+	}
+	if (lstat(file.c_str(), &file_stat) < 0)
+		return (error_file(errno));
+
+	if (add_body(fd, file_stat)) //body is filled by content of fd//
+	{
+		close(fd);
+		return error_file(errno);
+	}
+	close(fd);
+
+	// almost same than method_is_head but we dont call it because we need struct stat to fill body //
+	add_content_length(req.get_header(), file_stat.st_size); // st_size = total size in byte //
+	add_last_modified(file_stat.st_mtime); // st_mtime = hour of last modification //
+	add_content_type(file);
+
+	return 200;
+}*/
 
 int		response::method_is_delete(const request &req, const parser &pars)
 {

@@ -1,9 +1,10 @@
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
-#include "message/message.hpp"
-#include  "message/request.hpp"
-#include "../parser.hpp"
+# include "parser.hpp"
+# include "message/message.hpp"
+# include  "message/request.hpp"
+# include "message/exchange_management.hpp"
 
 class request;
 
@@ -71,6 +72,10 @@ class response : public message
 
 		bool				add_body(int fd, struct stat &file_stat); //body
 
+	public :
+		void 	parse_start_line(const std::string &start_line){ (void)start_line; }
+		void 	parse_header(const std::string &start_line){ (void)start_line; }
+
 	public : //get_* functions, inside getter.cpp, this function are used to have access private variable
 		response_line	get_first_line() const;
 
@@ -80,8 +85,8 @@ class response : public message
 	
 		//std::string	get_body() const;
 		//header_type	get_header() const;
-		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 		void			get_error(int error, const parser &pars);
+		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 
 	private : //error_* functions, they are relations with error returns
 		int					error_file(int errnum) const; //can maybe be change by find_* function
@@ -91,11 +96,6 @@ class response : public message
 		~response();
 
 		const std::string message() const;
-		void	set_size()
-		{
-		//	header["Content-Length"] =  ft_itoa(body.size());
-			header["Content-Type"] =  "text/html";
-		}
 };
 
 #endif

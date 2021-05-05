@@ -75,7 +75,6 @@ int 	cluster::start()
 			client cl = *it;
 			if (FD_ISSET(fd, &readfds)) // is there a modification on the current list_client ?
 			{
-
 				if (cl.is_listen())
 				{
 					size = sizeof(address_in);
@@ -88,14 +87,12 @@ int 	cluster::start()
 				}
 				else
 				{
-					cl.rq.receive(fd, &cl.rcm, 1024);
+					cl.is_read = cl.rq.receive(fd, cl.rcm);
+
 					cl.set_time();
 					if (cl.rq.get_method().empty()) // request empty... then close the connection
 						close_client(it);
-					else
-						cl.is_read = true;
 				}
-
 			}
 			if (cl.is_read && (activity = select(max + 1, NULL, &writefds, NULL, NULL)))
 			{
@@ -107,6 +104,7 @@ int 	cluster::start()
 					std::cerr << "send()" << strerror(errno) << std::endl;
 					exit(errno);
 				}
+			
 				cl.rq = request();
 				cl.rcm = message::receive_management();
 			}

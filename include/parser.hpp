@@ -3,7 +3,7 @@
 
 #include <string>	 // std::string
 #include <vector>	 // std::vector
-#include <map>		 // std::map, std::multimap
+#include <map>		 // std::map
 #include <algorithm> // std::find_first_not
 #include <iostream>	 // std::cerr
 #include <fstream>	 // std::ifstream

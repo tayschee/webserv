@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 int		nb_chiffre(long int n)
 {
@@ -26,9 +25,8 @@ int		nb_chiffre(long int n)
 	return (i);
 }
 
-/*char	*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
-	return (NULL);
 	int			i;
 	char		*nb;
 	long int	nbr;
@@ -53,6 +51,5 @@ int		nb_chiffre(long int n)
 		nb[--i] = (nbr % 10) + '0';
 		nbr = nbr / 10;
 	}
-
 	return (nb);
-}*/
+}
