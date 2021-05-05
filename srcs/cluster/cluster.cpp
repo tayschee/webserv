@@ -64,7 +64,6 @@ int 	cluster::start()
 				return 0;
 			time_select.tv_sec = 20;
 			time_select.tv_usec = 0;
-			std::cout << "WAIT FOR NEW REQUETS..." << std::endl;
 			if ((activity = select(max + 1, &readfds, NULL, NULL, &time_select)) < 0 && errno != EINTR)
 				std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
 		}

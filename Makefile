@@ -1,18 +1,18 @@
 EXEC = webserv
 
-SERVER_DIR = server/
-MESSAGE_DIR = message/
-EXCHANGE_DIR = exchange_management/
-PARSER_DIR = parser/
-REQUEST_DIR = request/
-RESPONSE_DIR = response/
-CLUSTER_DIR = cluster/
-CLIENT_DIR = client/
-UTILS_DIR = utils/
-#SRCS = main.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp $(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
-				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)private.cpp\
-				$(RESPONSE_DIR)public.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp $(RESPONSE_DIR)method.cpp $(RESPONSE_DIR)get.cpp\
-				$(UTILS_DIR)utils.cpp
+SRCS_DIR = srcs/
+
+CLUSTER_DIR = $(SRCS_DIR)cluster/
+MESSAGE_DIR = $(SRCS_DIR)message/
+UTILS_DIR = $(SRCS_DIR)utils/
+PARSER_DIR = $(SRCS_DIR)parser/
+
+SERVER_DIR = $(CLUSTER_DIR)server/
+CLIENT_DIR = $(CLUSTER_DIR)client/
+
+EXCHANGE_DIR = $(MESSAGE_DIR)exchange_management/
+REQUEST_DIR = $(MESSAGE_DIR)request/
+RESPONSE_DIR = $(MESSAGE_DIR)response/
 
 SRCS = main.cpp $(CLIENT_DIR)coplien.cpp $(CLIENT_DIR)public.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)coplien.cpp\
 				$(PARSER_DIR)coplien.cpp $(PARSER_DIR)operator.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)public.cpp\
@@ -25,8 +25,6 @@ SRCS = main.cpp $(CLIENT_DIR)coplien.cpp $(CLIENT_DIR)public.cpp $(SERVER_DIR)pu
 				$(RESPONSE_DIR)find.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)error.cpp $(RESPONSE_DIR)add.cpp \
 				$(CLUSTER_DIR)cluster.cpp $(UTILS_DIR)utils.cpp
 	
-#$(PARSER_DIR)public.cpp $(PARSER_DIR)coplien.cpp $(PARSER_DIR)private.cpp $(PARSER_DIR)operator.cpp
-
 OBJS = $(SRCS:.cpp=.o)
 
 #To activate implicit rules to compile in cpp use CXX
@@ -40,7 +38,6 @@ $(EXEC) : $(OBJS)
 	$(CXX) -o $(EXEC) $(INCLUDE) $^
 
 clean :
-	make fclean -C libft
 	rm -f $(OBJS) $(DEBUG_OBJS)
 
 fclean : clean
