@@ -9,7 +9,7 @@ response::method_array	response::initialise_existing_method()
 	const method_function	method_func[size] = {&response::method_is_get, &response::method_is_head, &response::method_is_unknow,
 											 &response::method_is_put, &response::method_is_delete, &response::method_is_unknow,
 											 &response::method_is_unknow, &response::method_is_options, &response::method_is_unknow};
-	
+
 	method_array	map;
 	size_t			i;
 
@@ -17,7 +17,7 @@ response::method_array	response::initialise_existing_method()
 	{
 		map.insert(method_array::value_type(method_name[i], method_func[i]));
 	}
-	map.end()->second = &response::method_is_unknow; //if method doesn't exist use method_unknow
+	map.rbegin()->second = &response::method_is_unknow; //if method doesn't exist use method_unknow
 
 	return map;
 }

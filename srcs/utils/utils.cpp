@@ -75,9 +75,6 @@ std::string ft_itoa(int nb)
 	return (sign ? "-" : "") + str;
 }
 
-<<<<<<< HEAD:utils/utils.cpp
-std::string get_extension(const std::string& str)
-=======
 size_t		ft_strlen(const char *str)
 {
 	size_t i(0);
@@ -91,13 +88,8 @@ size_t		ft_strlen(const char *str)
 }
 
 /*std::string get_extension(const std::string& str)
->>>>>>> origin/master:srcs/utils/utils.cpp
 {
 	std::string::size_type pos = str.find('.');
 
 	return pos == str.npos ? "" : str.substr(pos);
-<<<<<<< HEAD:utils/utils.cpp
-}
-=======
 }*/
->>>>>>> origin/master:srcs/utils/utils.cpp
