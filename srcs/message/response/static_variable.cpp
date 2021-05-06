@@ -82,7 +82,7 @@ response::status_array			response::initialise_existing_status()
 	{
 		map.insert(status_array::value_type(status_int[i], msg_status[i]));
 	}
-	map.end()->second = UNKNOW_STATUS; //if method doesn't exist use method_unknow
+	//map.end()->second = UNKNOW_STATUS; //if method doesn't exist use method_unknow
 
 	return map;
 }

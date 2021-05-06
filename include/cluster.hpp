@@ -1,34 +1,37 @@
 #ifndef CLUSTER_HPP
 # define CLUSTER_HPP
 
-#include "server.hpp"
-#include "message/message.hpp"
-#include "message/request.hpp"
-#include "message/response.hpp"
-#include "parser.hpp"
+# include "parser.hpp"
+# include "server.hpp"
+# include "client.hpp"
+# include "message/response.hpp"
+# include <csignal>
+# include <list>
 
 class cluster
 {
-    private: /*private function*/
-    std::list<client> 			list_client;
-	std::vector<server> 		tab;
-	std::vector<parser> 		pars;
+public:
+    typedef std::list<client>::iterator iterator;
 
-    public: /*public function*/
-       // cluster(const cluster& other); // cannot copy cluster
-	    typedef std::list<client>::iterator iterator;
+private: /*private function*/
+    std::list<client>       list_client; // list all clients
 
-        cluster();
-        cluster(const std::string _path);
-        ~cluster();
+    cluster();
+    cluster(const cluster& other); // cannot copy cluster
+    cluster& operator=(const cluster& other); // cannot copy cluster
 
-    int		init_listen();
-    int     start();
-    void	close_client(iterator &it);
+    void	                close_client(iterator &it); // close a client
+    void	                set_list_fd(fd_set &readfds, fd_set &writefds, int &max); // initialize all sockets
+    int                     wait_activity(fd_set &readfds, fd_set &writefds); // wait a activity as read or write
+    int 	                receive(client &cl, const int &fd, iterator &it); // call receive
+    int		                send_response(client &cl); // send to response
 
-     //   cluster& operator=(const cluster& other); // cannot copy cluster
+public: /*public function*/
+    cluster(const std::string _path); // constructor used
+    ~cluster(); // destructor
 
-       
+    int		                init_listen(); // initializing listens
+    int                     start(); // start mananging sockets
 };
 
 #endif
