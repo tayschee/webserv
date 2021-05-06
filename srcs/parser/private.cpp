@@ -1,15 +1,57 @@
 #include "parser.hpp"
 
+#include <cstdio>
+
+bool parser::getline(int fd, std::string &line)
+{
+	line.clear();
+	ssize_t i = 0;
+	std::string::size_type limit;
+
+	if ((limit = buffer.find('\n')) != buffer.npos)
+	{
+		line += buffer.substr(0, limit);
+		buffer.erase(0, limit + 1);
+		buffer.resize(BUFFER_SIZE, '\0');
+		return true;
+	}
+	else if (buffer[0] != '\0')
+	{
+		line += buffer.substr(0, buffer.find('\0'));
+		buffer.assign(BUFFER_SIZE, '0');
+	}
+	while ((i = read(fd, &buffer[0], BUFFER_SIZE)) > 0 &&
+			(limit = buffer.find('\n')) == buffer.npos)
+	{
+		line += buffer;
+		buffer.assign(BUFFER_SIZE, '\0');
+	}
+	if (i < 0)
+		return false;
+	line += buffer.substr(0, limit);
+	buffer.erase(0, limit + 1);
+	buffer.resize(BUFFER_SIZE, '\0');
+	if ((limit = line.find('\0')) != line.npos)
+		line.erase(limit);
+	return i > 0;
+}
 void parser::parse_file()
 {
-	std::ifstream ifs(filename.c_str());
+	int file = open(filename.c_str(), O_RDONLY);
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
 
-	_blocks[block_id] = block(block_id.first, block_id.second);
+	if (file == -1)
+	{
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		return;
+	}
 
-	while (std::getline(ifs, line))
+	_blocks[block_id] = block(block_id.first, block_id.second);
+	buffer.assign(BUFFER_SIZE, '\0');
+
+	while (getline(file, line))
 	{
 		line_no++;
 		if (line.empty())
@@ -28,6 +70,8 @@ void parser::parse_file()
 		}
 		parse_line(line, line_no, block_id);
 	}
+
+	close(file);
 }
 
 void parser::parse_line(std::string line, int line_no, blocks::key_type &block_id)
@@ -156,49 +200,49 @@ bool parser::check_prop(const std::string &name, const std::vector<std::string> 
 	}
 }
 
-bool parser::check_prop_root(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_root(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_index(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_index(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_serv_name(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_serv_name(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_return(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_return(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_accept(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_accept(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_listen(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_listen(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;
 	return true;
 }
 
-bool parser::check_prop_err_page(const std::vector<std::string>& args, int line_no) const
+bool parser::check_prop_err_page(const std::vector<std::string> &args, int line_no) const
 {
 	(void)args;
 	(void)line_no;

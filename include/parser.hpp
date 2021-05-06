@@ -6,10 +6,15 @@
 #include <map>		 // std::map, std::multimap
 #include <algorithm> // std::find_first_not
 #include <iostream>	 // std::cerr
-#include <fstream>	 // std::ifstream
+#include <fcntl.h>	 // open, close
+#include <errno.h>	 // errno
+#include <cstring>	 // strerror
+#include <unistd.h>	 // read, write
 #include <dirent.h>	 // opendir, closedir
 #include <exception> // std::exception
 #include "utils.hpp" // get_extension, clean_string
+
+#define BUFFER_SIZE 32
 
 class parser
 {
@@ -48,11 +53,12 @@ private:
 
 	std::string filename;
 	blocks _blocks;
+	std::string buffer;
 
 private:
-
 	parser(const std::string &_filename);
 
+	bool getline(int fd, std::string& line);
 	void parse_file();
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
 
