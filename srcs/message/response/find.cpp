@@ -11,11 +11,18 @@ response::find_status_string() const
 
 /*this function return function associated to a method*/
 response::method_array::value_type::second_type /*same than method_function*/
-response::find_method_function(const std::string &method, const std::string *allow_method) const
+response::find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const
 {
-	(void)allow_method; //with path verify
+	std::vector<std::string>::const_iterator it(allow_method.begin());
+	std::vector<std::string>::const_iterator end(allow_method.end());
 
-	return existing_method.find(method)->second;
+	while (it < end)
+	{
+		if (method == *it)
+			return existing_method.find(method)->second;
+	}
+
+	return existing_method.end()->second;
 }
 
 response::media_type_array::value_type

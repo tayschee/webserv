@@ -44,12 +44,12 @@ class response : public message
 
 	private : //utils
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
-		void			main_header(const std::string *allow_method);
+		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
-		method_array::value_type::second_type	find_method_function(const std::string &method, const std::string *allow_method) const; //KEY : method, VALUE : function
+		method_array::value_type::second_type	find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 
@@ -62,7 +62,7 @@ class response : public message
 		int					method_is_unknow(const request &req, const parser &pars); //UNKNOW
 
 	private : //add_* functions, add something inside class like header_field or body
-		void				add_allow(const std::string *allow_method_array); //Allow
+		void				add_allow(const std::vector<std::string> &allow_method_array); //Allow
 		void				add_date(); //Date
 		void				add_content_length(const header_type &req_head, const off_t &bytes_size); //Content-Length
 		void				add_last_modified(time_t time); //Last-Modified

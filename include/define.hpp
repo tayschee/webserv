@@ -19,6 +19,15 @@
 						"</body>\n"\
 						"</html>"
 
+/*parser block*/
+# define BLOCK_SERVER "server"
+# define BLOCK_LOCATION "location"
+# define BLOCK_ERROR "location_error"
+# define BLOCK_CGI "cgi"
+
+/*parser variable*/
+# define ACCEPT "accept"
+
 /*define header field*/
 # define ALLOW "Allow"
 # define ACCEPT_CHARSET "Accept-Charset"
@@ -95,8 +104,4 @@
 
 # define DEFAULT_SUBTYPE "plain"
 
-/*define encoding extension*/
-# define GZIP		"gz"
-# define COMPRESS	"Z"
-# define DEFLATE	""
 #endif

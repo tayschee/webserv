@@ -3,16 +3,17 @@
 /*This file regroup all functions add_*, they are all private and are use to complete header header field by header field */
 
 /*add field Allow inside header*/
-void			response::add_allow(const std::string *allow_method_array)
+void			response::add_allow(const std::vector<std::string> &allow_method_array)
 {
+	std::vector<std::string>::const_iterator it(allow_method_array.begin());
+	std::vector<std::string>::const_iterator end(allow_method_array.end());
 	std::string allow_method_string;
-	int i;
 
-	/*concatenate allow methods and add " ," beetween them*/
-	for (i = 0; allow_method_array[i] != ""; i++) //can be optimised
+	/* concatenate allow methods and add " ," beetween them */
+	while(it < end) //can be optimised
 	{
-		allow_method_string += allow_method_array[i];
-		if (allow_method_array[i + 1] == "")
+		allow_method_string += *it;
+		if (it + 1 == end)
 			break ;
 		allow_method_string += ", ";
 	}

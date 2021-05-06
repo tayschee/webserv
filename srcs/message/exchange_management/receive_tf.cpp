@@ -73,7 +73,10 @@ int receive_management::receive_tf::check(message *req)
 		}
 		else
 		{
-			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
+			if (pos == 0)
+				msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
+			else
+				msg.erase(pos - 2, (i + CRLF_size) - (pos - 2)); //delete length of current chunk
 		}
 		buf_size += CRLF_size;
 		msg_size = msg.size();
