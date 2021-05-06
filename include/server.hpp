@@ -15,6 +15,11 @@
 #include <unistd.h> // close
 #include <iostream> //std::cerr
 
+#include <list>
+#include "client.hpp"
+#include <csignal>
+#include "parser.hpp"
+
 class   server
 {
     public : /*typedef if neccessary*/
@@ -25,12 +30,12 @@ class   server
         uint32_t			ip;
         std::string			domain_name; //to replace ip adress
 		int					socket_host; //to identify host
-		std::vector<int>	socket_client; //to identify clients
+		std::list<client>	socket_client; //to identify clients
 		sockaddr_in			address;
+		parser				pars;
 
     private : /*private function*/
 		server(); // cannot declare a server without port/ip...
-		server(const server& other); // cannot copy server
 		server& operator=(const server& other); // cannot copy server
 
 		template <typename Int_type>
@@ -39,11 +44,31 @@ class   server
 		unsigned short ft_htons(unsigned short x) const; //convert short for endian of network same behavior than real functions
 		unsigned int ft_htonl(unsigned int x) const; //convert int for endian of network same behavior than real functions
 
+
     public : /*public function*/
-		server(const std::string& domain, const std::string& ip, int port);
+		//int sighandler(const int signal, void *ptr);
+
+		server(const server& other); // cannot copy server
+		//std::list<client>::iterator		close_client(client cl);
+		server(const parser & _parse);
 		~server();
 
-		void start(); // Calls listen and starts the server
+		int		get_socket_host()
+		{
+			return socket_host;
+		}
+
+		parser	get_parser()
+		{
+			return pars;
+		}
+
+		std::list<client>	get_list_client()
+		{
+			return socket_client;
+		}
+
+		//void start(); // Calls listen and starts the server
 };
 
 #endif

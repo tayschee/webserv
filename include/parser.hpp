@@ -48,7 +48,6 @@ private:
 	blocks _blocks;
 
 private:
-	parser();
 
 	parser(const std::string &_filename);
 
@@ -60,6 +59,7 @@ private:
 	std::string find_best_match(std::string arg) const;
 
 public:
+	parser();
 	parser(const parser &other);
 	~parser();
 
