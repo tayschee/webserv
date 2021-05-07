@@ -30,14 +30,10 @@ void			response::add_date()
 }
 
 /*add field Content_Length to response::header*/
-void			response::add_content_length(const header_type &req_head, const off_t &bytes_size)
+void			response::add_content_length(const off_t &bytes_size) //off_t == long long on mac
 {
-	/*doc precise Content-Length MUST NOT be sent if there is a Transfert-Encoding field inside request, so we verify it*/
-	if (req_head.find(TRANSFERT_ENCODING) == req_head.end())
-	{
-		/*Warning dont know of type off_t is larger than int*/
-		header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
-	}
+	/*Warning dont know of type off_t is larger than int*/
+	header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
 }
 
 /*add field Last_Modified to response::header*/

@@ -64,7 +64,7 @@ class response : public message
 	private : //add_* functions, add something inside class like header_field or body
 		void				add_allow(const std::vector<std::string> &allow_method_array); //Allow
 		void				add_date(); //Date
-		void				add_content_length(const header_type &req_head, const off_t &bytes_size); //Content-Length
+		void				add_content_length(const off_t &bytes_size); //Content-Length
 		void				add_last_modified(time_t time); //Last-Modified
 		void				add_server(); //Server
 		void				add_content_type(const std::string &file); //Content-type
@@ -90,13 +90,12 @@ class response : public message
 
 	private : //error_* functions, they are relations with error returns
 		int					error_file(int errnum) const; //can maybe be change by find_* function
+		void				default_error(int error_status);
 
 	public :
 		response(const request &req, const parser &pars);
 		response(int status);
 		~response();
-
-		const std::string message() const;
 };
 
 #endif

@@ -20,7 +20,7 @@ int		response::method_is_head(const request &req, const parser &pars)
 	}
 
 	/* two next line can maybe be add to main_header */
-	add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
+	add_content_length(file_stat.st_size); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_type(file);
 
@@ -291,7 +291,7 @@ int		response::method_is_options(const request &req, const parser &pars)
 		return error_file(errno); //check errno
 
 	/* two next line can maybe be add to main_header */
-	add_content_length(req.get_header(), 0); /* st_size = total size in byte */
+	add_content_length(0); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_type(file);
 
@@ -315,7 +315,7 @@ int		response::method_is_put(const request &req, const parser &pars)
 			return (error_file(errno));
 		}
 		/* this header field are specific if file didn't exists */
-		add_content_length(req.get_header(), 0); //Content-length is for size of body and there is no body
+		add_content_length(0); //Content-length is for size of body and there is no body
 		//must add location
 	}
 	if (write(fd, body.c_str(), body.size()) < 0)
