@@ -132,6 +132,7 @@ class message::receive_management : public exchange_management
 	public :
 		int			receive(const int socket, message *req);
 		void		clear();
+		void		reset(size_t read_size);
 
 	public :
 		receive_management();
