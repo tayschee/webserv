@@ -35,6 +35,8 @@ template<class T> 	T	ft_atoi(const std::string &str)
 	return nb;
 }
 
+std::string get_extension(const std::string& str); // Get a file exension (with prefix)
+
 /*why not do same function for vertical space*/
 
 

@@ -29,6 +29,9 @@ std::vector<parser> parser::parse_folder(std::string path)
 	if (path[path.length() - 1] == '/')
 		path.erase(path.end());
 
+	if (dir == NULL)
+		throw std::invalid_argument("Cannot open " + path + ": no such file or directory.");
+
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
 	{
 		if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
@@ -39,6 +42,8 @@ std::vector<parser> parser::parse_folder(std::string path)
 		}
 	}
 	closedir(dir);
+	if (res.empty())
+		throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
 }
 
