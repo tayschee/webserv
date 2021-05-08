@@ -16,6 +16,17 @@
 
 #define BUFFER_SIZE 3200
 
+#define ACCEPT "accept"
+#define LOCATION "location"
+#define LISTEN "listen"
+#define SERVER_NAME "server_name"
+#define ERROR_PAGE "error_page"
+#define CGI "cgi"
+#define INDEX "index"
+#define RETURN "return"
+#define AUTOINDEX "autoindex"
+#define ROOT "root"
+
 class parser
 {
 public:
