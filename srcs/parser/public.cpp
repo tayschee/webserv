@@ -37,13 +37,14 @@ std::vector<parser> parser::parse_folder(std::string path)
 		if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
 			res.push_back(parser(path + "/" + entry->d_name));
-			if (!res.rbegin()->is_valid())
-				res.pop_back();
+			//if (!res.rbegin()->is_valid())
+				//res.pop_back();
 		}
 	}
 	closedir(dir);
-	if (res.empty())
-		throw std::runtime_error("All the files in " + path + " are invalid.");
+	//if (res.empty())
+		//throw std::runtime_error("All the files in " + path + " are invalid.");
+	exit(0);
 	return res;
 }
 

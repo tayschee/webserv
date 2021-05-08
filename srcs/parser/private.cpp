@@ -2,6 +2,19 @@
 
 #include <cstdio>
 
+static void append_buffer(std::string& buffer, std::string& line, size_t limit, bool resize)
+{
+	line += buffer.substr(0, limit);
+
+	if (resize)
+	{
+		buffer.erase(0, limit + 1);
+		buffer.resize(BUFFER_SIZE, '\0');
+	}
+	else
+		buffer.assign(BUFFER_SIZE, '\0');
+}
+
 bool parser::getline(int fd, std::string &line)
 {
 	line.clear();
@@ -10,31 +23,20 @@ bool parser::getline(int fd, std::string &line)
 
 	if ((limit = buffer.find('\n')) != buffer.npos)
 	{
-		line += buffer.substr(0, limit);
-		buffer.erase(0, limit + 1);
-		buffer.resize(BUFFER_SIZE, '\0');
+		append_buffer(buffer, line, limit, true);
 		return true;
 	}
 	else if (buffer[0] != '\0')
-	{
-		line += buffer.substr(0, buffer.find('\0'));
-		buffer.assign(BUFFER_SIZE, '0');
-	}
+		append_buffer(buffer, line, buffer.find('\0'), false);
 	while ((i = read(fd, &buffer[0], BUFFER_SIZE)) > 0 &&
 			(limit = buffer.find('\n')) == buffer.npos)
-	{
-		line += buffer;
-		buffer.assign(BUFFER_SIZE, '\0');
-	}
+		append_buffer(buffer, line, limit, false);
 	if (i < 0)
 		return false;
-	line += buffer.substr(0, limit);
-	buffer.erase(0, limit + 1);
-	buffer.resize(BUFFER_SIZE, '\0');
-	if ((limit = line.find('\0')) != line.npos)
-		line.erase(limit);
+	append_buffer(buffer, line, limit, true);
 	return i > 0;
 }
+
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
@@ -54,6 +56,8 @@ void parser::parse_file()
 	while (getline(file, line))
 	{
 		line_no++;
+
+
 		if (line.empty())
 			continue;
 
@@ -68,10 +72,13 @@ void parser::parse_file()
 			_blocks.clear();
 			return;
 		}
+		std::cout << "Line : |" << line << "|" << std::endl;
+		continue;
 		parse_line(line, line_no, block_id);
 	}
 
 	close(file);
+	buffer.clear();
 }
 
 void parser::parse_line(std::string line, int line_no, blocks::key_type &block_id)

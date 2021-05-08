@@ -20,11 +20,7 @@ Main blocks and properties:
 
 	- location blocks allows us to configure a specific path of URI. They are written with an only argument that is the same path as in the URI.
 	- cgi blocks allows the configuration of CGI in the server. They are written with the needed extension, you can put it with or without the point prefix. Example : if you put "cgi .php" or "cgi php" it will be the same result.
-	- error_page and location_error should be used together:
-		- error_page is an property that indicates which errors are treated with a specific file. It should be only in the server block (ie in no apparent block).
-		- location_error is a block that specifies where are the errors specified in error_page. It is written with an argument which specifies the concerned group of errors, the variable numbers are replaced with an 'x'. These codes should be terminated with the extension wanted. Example: location_error 40x.html.
-		If there is no location_error, the location of all the specified errors (with error_page) will fallback to "location /".
-		If there is no error_page, it must not be any location_error block. This will result to an error.
+	- error_page binds an error code to an actual html page. It is the only property that can be repeated in a single block. Each error_page takes exactly two parameters that is, in this order, the error code and the associated page. This property will be always related to its parent. Example: error_page 404 404.html.
 	- root properties should be used only in location and location_error blocks. It says to webserv where to search for files with the URI specified by its parent. It takes one and only one argument.
 	- index properties should only be located in location blocks. It is meant to be used in conjunction with root, to tell what is the default file to look for, when the URI specifies a folder instead of a file. It can take one or more arguments, and each one of them will be tested until we find an index file in the root folder specified.
 	- listen specifies a port to listen on IP and a port. The IP must be an IPv4. Port and IP address are separated by a ':' and no space (Example: listen 127.0.0.1:80).

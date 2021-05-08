@@ -14,7 +14,7 @@
 #include <exception> // std::exception
 #include "utils.hpp" // get_extension, clean_string
 
-#define BUFFER_SIZE 32
+#define BUFFER_SIZE 3200
 
 class parser
 {
