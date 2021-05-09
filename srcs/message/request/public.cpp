@@ -16,3 +16,16 @@ int		request::receive(const int socket, receive_management &recv_data)
 
 	return i;
 }
+
+int		request::validity() const
+{
+	header_type::const_iterator end(header.end());
+	std::pair<header_type::const_iterator, header_type::const_iterator> range_host(header.equal_range(HOST));
+
+	if (range_host.first == end)
+		return 400;
+	else if (++range_host.first != range_host.second)
+		return 400;
+	//must check too invalid field value but i don't know really what that mean
+	return 0;
+}

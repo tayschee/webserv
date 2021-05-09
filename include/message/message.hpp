@@ -5,7 +5,7 @@
 #  include <iostream>
 # endif
 
-# include <map> 		//std::map
+# include <map> 		//std::multimap std::map
 # include <vector>		//std::vector
 # include <utility>		//std::pair maybe inside map
 # include <string>		//std::string
@@ -26,10 +26,10 @@ class message
 		//class send_management;
 
 	public :
-		typedef std::map<std::string, std::string>::iterator 		iterator;
-		typedef std::map<std::string, std::string>::const_iterator	const_iterator;
-		typedef std::map<std::string, std::string>					header_type;
-		typedef std::pair<std::string, std::string>					value_type;
+		typedef std::multimap<std::string, std::string>		header_type;
+		typedef header_type::iterator 						iterator;
+		typedef header_type::const_iterator					const_iterator;
+		typedef header_type::value_type						value_type;
 	
 	protected :
 		header_type		header;

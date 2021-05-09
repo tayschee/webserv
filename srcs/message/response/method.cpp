@@ -174,7 +174,7 @@ int		response::method_is_get(const request &req, const parser &pars)
 	if (cmp == ".php")
 	{
 		body = cgi(req, pars);
-		header["cgi"] =  "true";
+		header.insert(value_type("cgi", "true"));
 		std::string cmp("cgi");
 		std::string resp_str;
 		const_iterator	it(header.begin());
@@ -188,8 +188,8 @@ int		response::method_is_get(const request &req, const parser &pars)
 				i++;
 		}
 		tmp[i] = '\0';
-		header["Content-Length"] =  ft_itoa(body.size() - i);
-		header["Content-Type"] =  "text/html";
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size() - i)));
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
 
 		std::vector<std::string> tab;
 		std::vector<std::string> tab2;
@@ -198,7 +198,7 @@ int		response::method_is_get(const request &req, const parser &pars)
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end() && it != --tab.end(); ++it)
 		{
 			tab2 = split(*it, ":");
-			header[tab2[0]] = tab2[1];
+			header.insert(value_type(tab2[0], tab2[1]));
 		}
 
 		body = body.c_str() + i;
@@ -206,8 +206,8 @@ int		response::method_is_get(const request &req, const parser &pars)
 	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
 	{
 		body = index(file);
-		header["Content-Length"] =  ft_itoa(body.size());
-		header["Content-Type"] =  "text/html";
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
 	}
 	else 
 	{
@@ -224,12 +224,12 @@ int		response::method_is_get(const request &req, const parser &pars)
 		}
 		/* almost same than method_is_head but we dont call it because we need struct stat to fill body */
 		//add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
-		header["Content-Length"] =  ft_itoa(body.size());
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 
 		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 		add_content_type(file);
 		if (cmp == ".jpg")
-			header["Content-Type"] =  "image/jpeg";
+			header.insert(value_type(CONTENT_TYPE, "image/jpeg"));
 
 	}
 	if (fd > 0)

@@ -52,16 +52,20 @@ void			response::add_content_type(const std::string &file)
 {
 	std::string extension;
 	size_t		pos = file.find_first_of(".");
-	value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
-	std::string value;
 
 	if (pos != file.npos)
 	{
  		extension = file.substr(pos + 1);
-		media_type = find_media_type(extension);
-		value = media_type.second + media_type.first + "; charset=UTF-8 ";   
+		media_type_array::value_type	media_type(find_media_type(extension));
+
+		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
 	}
-	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	else
+	{
+		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+
+		header.insert(value_type(CONTENT_TYPE, media_type.first + media_type.second));
+	}
 }
 
 /*void				response::add_transfert_encoding(const std::string &file)

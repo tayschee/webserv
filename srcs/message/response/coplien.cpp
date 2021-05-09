@@ -18,8 +18,8 @@ void	response::get_error(int error, const parser &pars)
 	read(fd, buf, file_stat.st_size);
 	buf[file_stat.st_size] = '\0';
 	body = buf;
-	header["Content-Length"] =  ft_itoa(body.size());
-	header["Content-Type"] =  "text/html";
+	header.insert(value_type(CONTENT_LENGTH,  ft_itoa(body.size())));
+	header.insert(value_type(CONTENT_TYPE,  "text/html"));
 }
 
 response::response(const request &req, const parser &pars) : message()
@@ -42,12 +42,15 @@ response::response(const request &req, const parser &pars) : message()
 	first_line.version = req.get_version();
 }
 
-response::response(int status) : message()
+response::response(int status, const parser &pars) : message()
 {
 	first_line.status = status;
 	first_line.status_string = find_status_string();
 	first_line.version = HTTP_VERSION;
 
+	//parser::entries path_info(pars.get_block(BLOCK_SERVER).conf);
+	//std::vector<std::string> (path_info.find(ACCEPT)->second);
+	(void)pars;
 	default_error(status);
 }
 

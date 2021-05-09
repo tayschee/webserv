@@ -94,7 +94,7 @@ class response : public message
 
 	public :
 		response(const request &req, const parser &pars);
-		response(int status);
+		response(int status, const parser &pars);
 		~response();
 };
 
