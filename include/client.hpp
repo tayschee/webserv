@@ -3,6 +3,7 @@
 
 #include <time.h>
 #include <sys/time.h>
+#include "server.hpp"
 #include "../include/message/request.hpp"
 #include "../include/message/message.hpp"
 #include "../include/message/response.hpp"
@@ -19,23 +20,26 @@ private: /*private function*/
     message::receive_management     rcm;
     request                         req;
 
+    void                            reset_time(); // Set the time at the current time
+
     client();
 
 public: /*public function*/
     client(const int pfd, const bool _listen, const parser &_pars);
+    client(int _fd, bool _listen, const client &other);
+
     client(const client& other);
 	client& operator=(const client& other);
     ~client();
 
-    int                             get_fd(); // get_fd
-    parser                          &get_pars(); // get_pars
-    message::receive_management     &get_rcm(); // get_receive_management
-    request                         &get_req(); // get_request
+    int                             get_fd() const;
+    void                            receive(); // manage receive
+    ssize_t                         sent(); // send response
+    bool                            is_empty() const;
     bool                            is_listen() const; // Check if listening socket
     bool                            is_time() const; // Check if the time is finished
-    bool                            is_read() const; // Check if is already read
-    void                            set_time(); // Set the time at the current time
-    void                            set_read(bool _read); // Set if read or not read
+    bool                            is_read() const; // Check if read
+
 };
 
 #endif

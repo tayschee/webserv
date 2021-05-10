@@ -13,6 +13,17 @@ cluster::cluster(const std::string _path) : list_client() // constructor used
 	}
 }
 
+cluster::cluster(const cluster& other) // constructor by copy
+{
+	(void)other;
+}
+
+cluster &cluster::operator=(const cluster& other) // assignation
+{
+	(void)other;
+	return *this;
+}
+
 cluster::~cluster() // destructor
 {
 	for(iterator it = list_client.begin(); it != list_client.end(); ++it)

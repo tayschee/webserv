@@ -1,23 +1,8 @@
 #include "client.hpp"
 
-int         client::get_fd() // get_fd
+bool        client::is_empty() const // check if requete is empty
 {
-    return fd;
-}
-
-parser     &client::get_pars() // get_pars
-{
-    return pars;
-}
-
-message::receive_management     &client::get_rcm() // get_receive_management
-{
-    return rcm;
-}
-
-request     &client::get_req() // get_request
-{
-    return req;
+	return req.get_method().empty(); // if method is void / close client
 }
 
 bool        client::is_listen() const // Check if listening socket
@@ -41,12 +26,7 @@ bool        client::is_time() const // Check if the time is finished
     return 0;
 }
 
-void        client::set_time() // Check if is already read
+int         client::get_fd() const
 {
-    gettimeofday(&time, NULL);
-}
-
-void        client::set_read(bool _read) // Set if read or not read
-{
-    read = _read;
+    return fd;
 }

@@ -58,10 +58,10 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 	return 1;
 }
 
-int		cluster::receive(client &cl, const int &fd, iterator &it) // there is something to read
+int		cluster::receive(client &cli, const int &fd, iterator &it) // there is something to read
 {
 	int res, size;
-	if (cl.is_listen()) // check if new client
+	if (cli.is_listen()) // check if new client
 	{
 		sockaddr_in address_in;
 		size = sizeof(address_in);
@@ -70,28 +70,23 @@ int		cluster::receive(client &cl, const int &fd, iterator &it) // there is somet
 		res = accept(fd, (struct sockaddr *)&address_in, (socklen_t *)&size);
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
-		list_client.push_back(client(res, false, cl.get_pars()));
+		list_client.push_back(client(res, false, cli));
 	}
 	else
 	{
-		cl.set_read(cl.get_req().receive(fd, cl.get_rcm())); // no of new client / juste call receive
-
-		cl.set_time();
-		if (cl.get_req().get_method().empty()) // if method is void / close client
+		cli.receive(); // no of new client / juste call receive
+		if (cli.is_empty()) // if method is void / close client
 			close_client(it);
 	}
 	return 1;
 }
 
-int		cluster::send_response(client &cl) // send of response
+int		cluster::send_response(client &cli) // send of response
 {
-		cl.set_read(false);
-		response rp(cl.get_req(), cl.get_pars());
-		//std::cout << rp.get() << std::endl;
-		if(send(cl.get_fd(), rp.get().c_str() ,rp.get().size(), 0) < 0)
+		if(cli.sent() < 0)
 		{
 			std::cerr << "send()" << strerror(errno) << std::endl;
-			exit(errno);
+			return -1;
 		}
 		return 1;
 }

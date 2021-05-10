@@ -1,12 +1,15 @@
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
+class request;
+
 # include "parser.hpp"
 # include "message/message.hpp"
-# include  "message/request.hpp"
+# include "message/request.hpp"
 # include "message/exchange_management.hpp"
-
-class request;
+# include <dirent.h>
+# include <sys/stat.h> 
+# include "cgi.hpp"
 
 class response : public message
 {

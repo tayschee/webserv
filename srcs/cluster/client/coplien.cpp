@@ -11,6 +11,11 @@ client::client(int _fd, bool _listen, const parser &_pars) : fd(_fd), listen(_li
     gettimeofday(&time, NULL);
 }
 
+client::client(int _fd, bool _listen, const client &other) : fd(_fd), listen(_listen), read(false), pars(other.pars), rcm(2000), req()
+{
+    gettimeofday(&time, NULL);
+}
+
 client::client(const client& other) // constructor by copy
 {
 	fd = other.fd;
