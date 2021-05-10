@@ -25,6 +25,7 @@ response::find_method_function(const std::string &method, const std::vector<std:
 	{
 		if (method == *it)
 			return existing_method.find(method)->second;
+		++it;
 	}
 	return &response::method_is_unknow;
 }
