@@ -49,7 +49,7 @@ void			response::add_last_modified(time_t time)
 /*add field Last_Modified to response::header, those function may change to replace "webserv" by server_name*/
 void			response::add_server()
 {
-	header.insert(std::pair<std::string, std::string>(SERVER, WEBSERV));
+	header.insert(std::pair<std::string, std::string>(PARSER_SERVER, WEBSERV));
 }
 
 void			response::add_content_type(const std::string &file)
@@ -63,7 +63,7 @@ void			response::add_content_type(const std::string &file)
 	{
  		extension = file.substr(pos + 1);
 		media_type = find_media_type(extension);
-		value = media_type.second + media_type.first + "; charset=UTF-8 ";   
+		value = media_type.second + media_type.first + "; charset=UTF-8 ";
 	}
 	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
 }
@@ -76,7 +76,7 @@ void			response::add_content_type(const std::string &file)
 
 	if (pos == file.npos)
 		return ;	//no encoding
- 
+
  	extension = file.substr(pos + 1);
 	val = get_encoding_type(extension);
 
@@ -89,7 +89,7 @@ bool			response::add_body(int fd, struct stat &file_stat)
 	char	buffer[file_stat.st_size + 1]; //st_size contains size of file + 1 for '\0'
 
 	/*read fd and put it's content in buffer*/
-	if (read(fd, buffer, file_stat.st_size) < 0) 
+	if (read(fd, buffer, file_stat.st_size) < 0)
 	{
 		return 1; //check errno
 	}
