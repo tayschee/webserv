@@ -26,6 +26,6 @@ int		request::validity() const
 		return 400;
 	else if (++range_host.first != range_host.second)
 		return 400;
-	//must check too invalid field value but i don't know really what that mean
+	//maybe check tf
 	return 0;
 }
