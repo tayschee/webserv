@@ -45,7 +45,7 @@ void			cgi::clear(char **env)
 	delete[](env);
 }
 
-std::string   	cgi::son(const int save_in, const int save_out, int fd[2], const char *script_name, char **env)
+void		cgi::son(const int save_in, const int save_out, int fd[2], const char *script_name, char **env)
 {
 	char **nll = NULL;
 	close(fd[0]);
@@ -56,8 +56,9 @@ std::string   	cgi::son(const int save_in, const int save_out, int fd[2], const 
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
 	close(fd[1]);
+	clear(env);
 	std::cerr << "Execve crashed." << std::endl;
-	return "error";
+	throw std::string("quit");
 }
 
 void			cgi::father(const int fd[2], std::string &new_body)
@@ -97,7 +98,7 @@ std::string     cgi::exec(char **env, const parser &pars)
 	}
 	else if (pid == 0)
 	{
-		new_body = son(save_in, save_out, fd,
+		son(save_in, save_out, fd,
 		pars.get_block("cgi", ".php").conf.find("script_name")->second[0].c_str(), env);
 	}
 	else

@@ -15,7 +15,7 @@ private: /*private function*/
     void			        clear(char **env);
     std::string             exec(char **env, const parser &pars);
     char                    **init_env(const request &req, const parser &pars);
-    std::string             son(const int save_in, const int save_out, int fd[2], const char *script_name, char **env);
+    void                    son(const int save_in, const int save_out, int fd[2], const char *script_name, char **env);
     void                    father(const int fd[2], std::string &new_body);
 
 public: /*public function*/

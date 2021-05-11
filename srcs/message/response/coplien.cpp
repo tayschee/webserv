@@ -31,9 +31,7 @@ response::response(const request &req, const parser &pars)
 	/*call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way*/
 	
 	first_line.status = (this->*header_field_function)(req, pars);
-	if (first_line.status == -1)
-		return;
-	else if (first_line.status < 200 || first_line.status > 299)
+	if (first_line.status < 200 || first_line.status > 299)
 		get_error(first_line.status, pars);
 	else
 		first_line.status_string = find_status_string();

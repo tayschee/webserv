@@ -70,8 +70,6 @@ int		response::method_is_get(const request &req, const parser &pars)
 	if (cmp == ".php")
 	{
 		cgi(req, pars, body);
-		if (body == "error")
-			return -1;
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
 

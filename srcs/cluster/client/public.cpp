@@ -11,8 +11,5 @@ ssize_t                         client::sent() // send response
     read = false;
     response rp(req, pars);
     //std::cout << rp.get() << std::endl;
-    if (rp.get_body() == "error")
-        return -1;
-    else
-        return send(fd, rp.get().c_str(), rp.get().size(), 0);
+    return send(fd, rp.get().c_str(), rp.get().size(), 0);
 }

@@ -33,9 +33,11 @@ int 	cluster::start() // cluster manage the list of socket
 					return 0;
 			}
 			if (cli.is_read())
+			{
 				if (send_response(cli) == -1)
-					return -1;
-			if (cli.is_time())
+					close_client(it);
+			}
+			else if (cli.is_time())
 				close_client(it);
 		}
 	}
