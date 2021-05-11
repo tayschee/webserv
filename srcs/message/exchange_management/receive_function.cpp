@@ -10,7 +10,7 @@ int		receive_management::receive(const int socket, message *req)
 
 	if ((i = data->receive(socket, req)) == 1)
 	{
-		if (dynamic_cast<receive_header *>(data) != NULL)
+		if (dynamic_cast<receive_header *>(data) != NULL) //check type of data
 		{
 			i = specialization(req);
 			i = data->check(req);
@@ -18,7 +18,7 @@ int		receive_management::receive(const int socket, message *req)
 		else
 			clear();
 	}
-	else if (i == -1)
+	else if (i == -1) //which case read can fail ?
 		clear();
 	return i;
 }
@@ -31,15 +31,15 @@ int		receive_management::specialization(message *req)
 
 	if (it != end)
 	{
-		new_data = new(std::nothrow) receive_tf(this->data->msg); //if allocation fail return NULL
+		new_data = new receive_tf(this->data->msg);
 	}
 	else if ((it = it = req->header.find(CONTENT_LENGTH)) != end)
 	{
-		new_data = new(std::nothrow) receive_cl(*this->data, ft_atoi<size_t>(it->second)); //if allocation fail return NULL
+		new_data = new receive_cl(*this->data, ft_atoi<size_t>(it->second));
 	}
 	else
 	{
-		new_data = new(std::nothrow) receive_cl(*this->data, 0); //if allocation fail return NULL
+		new_data = new receive_cl(*this->data, 0);
 	}
 	delete data;
 	data = new_data;
@@ -51,6 +51,15 @@ receive_management::internal_receive *receive_management::clone() const
 	if (data == NULL)
 		return data;
 	return data->clone();
+}
+
+void		receive_management::reset(size_t read_size)
+{
+	if (data != NULL)
+	{
+		clear();
+	}
+	data = new receive_header(read_size);
 }
 
 void	receive_management::clear()

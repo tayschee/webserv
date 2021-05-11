@@ -29,10 +29,10 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	ssize_t i;
 
 	/*for now read the future size to read or read define size to optimise this it will be read define_size
-	+ suppose the numer of char of an int*/
+	+ suppose the numer of char in an int*/
 	if (this->buf_size == 0)
 	{
-		buffer = new(std::nothrow) char[default_buf_size + 1];
+		buffer = new char[default_buf_size + 1];
 		if ((i = read(socket, buffer, default_buf_size)) < 0)
 			return -1;
 		buffer[i] = 0;
@@ -42,7 +42,7 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	}
 	else
 	{
-		buffer = new(std::nothrow) char[this->buf_size + 1];
+		buffer = new char[this->buf_size + 1];
 		if ((i = read(socket, buffer, this->buf_size)) < 0)
 			return -1;
 		buffer[i] = 0;
@@ -53,35 +53,38 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	}
 }
 
-//check if object have reached end of read body and return 1 if it's true
+//check if object have reached end of read body ("0" + CRLF) and return 1 if it's true
 int receive_management::receive_tf::check(message *req)
 {
 	size_t	i;
 	size_t	CRLF_size(ft_strlen(CRLF));
 	size_t	msg_size(msg.size());
 
-	std::cout << "---------------\n" << msg << "\n------------------\n";
-	while ((i = msg.find(CRLF, pos)) != msg.npos /*&& msg_size > i + CRLF_size*/)
+	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi<size_t>(msg.substr(pos));
-		std::cout << "buf_size : " << buf_size << "\n";
-		if (buf_size == 0)
+		buf_size = ft_atoi<size_t>(msg.substr(pos)); //store size of next_buffer
+		if (buf_size == 0) //verify if it's end
 		{
-			msg.erase(pos); //delete all after unnecssary
+			if (pos == 0)
+				msg.erase(pos); //erase 0\r\n + all after if there is
+			else
+				msg.erase(pos - CRLF_size); //erase 0\r\n + all after if there is + \r\n before
 			req->body = msg; //complete req, it can be use
 			return 1;
 		}
+		buf_size += CRLF_size;
+		if (pos == 0)
+			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
 		else
 		{
-			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
+			pos = pos - CRLF_size;
+			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk + \r\n before, to have request without size
 		}
-		buf_size += CRLF_size;
 		msg_size = msg.size();
 		pos += buf_size;
-		if (msg_size < pos) //stop if size < pos
+		if (msg_size < pos) //if size of buffer not again read
 		{
 			buf_size = buf_size - (pos - msg_size);
-			std::cout << "new_buf_size : " << buf_size << "\n";
 			return 0;
 		}
 		buf_size = 0;

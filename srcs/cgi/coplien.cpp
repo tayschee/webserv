@@ -4,7 +4,7 @@ cgi::cgi(const request &req, const parser &pars, std::string &body)
 {
 	body = exec(init_env(req, pars), pars);
 
-		if (body == "error" || body[0] == '5')
+		if (body[0] == '5')
 			return;
 
 		//std::string cmp("cgi");

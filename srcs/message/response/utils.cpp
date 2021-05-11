@@ -20,7 +20,7 @@ std::string		response::header_to_string() const
 }
 
 /*add inside response:header all field which are in all method and in all condition*/
-void			response::main_header(const std::string *allow_method)
+void			response::main_header(const std::vector<std::string> &allow_method)
 {
 	add_allow(allow_method); // allow_field add in header
 	add_date(); //date field add in header

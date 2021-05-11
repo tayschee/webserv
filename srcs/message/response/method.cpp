@@ -12,7 +12,7 @@ int		response::method_is_head(const request &req, const parser &pars)
 	}
 
 	/* two next line can maybe be add to main_header */
-	add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
+	add_content_length(file_stat.st_size); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_type(file);
 
@@ -72,15 +72,10 @@ int		response::method_is_get(const request &req, const parser &pars)
 		cgi(req, pars, body);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
-
-		header["Content-Length"] =  ft_itoa(body.size());
-		header["Content-Type"] =  "text/html";
 	}
 	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
 	{
 		body = index(file);
-		header["Content-Length"] =  ft_itoa(body.size());
-		header["Content-Type"] =  "text/html";
 	}
 	else 
 	{
@@ -97,14 +92,16 @@ int		response::method_is_get(const request &req, const parser &pars)
 		}
 		/* almost same than method_is_head but we dont call it because we need struct stat to fill body */
 		//add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
-		header["Content-Length"] =  ft_itoa(body.size());
-
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		add_content_type(file);
-		if (cmp == ".jpg")
-			header["Content-Type"] =  "image/jpeg";
-
+		//header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	}
+	std::cout << "===============================" << std::endl;
+	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+	//add_content_type(file);
+	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+	header.insert(value_type(CONTENT_TYPE, "text/html"));
+	std::cout << "CONTENT_TYPE = " << header.find(CONTENT_TYPE)->second << std::endl;
+	if (cmp == ".jpg")
+		header.insert(value_type(CONTENT_TYPE, "image/jpeg"));
 	if (fd > 0)
 		close(fd);
 	return 200;
@@ -164,7 +161,7 @@ int		response::method_is_options(const request &req, const parser &pars)
 		return error_file(errno); //check errno
 
 	/* two next line can maybe be add to main_header */
-	add_content_length(req.get_header(), 0); /* st_size = total size in byte */
+	add_content_length(0); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_type(file);
 
@@ -188,7 +185,7 @@ int		response::method_is_put(const request &req, const parser &pars)
 			return (error_file(errno));
 		}
 		/* this header field are specific if file didn't exists */
-		add_content_length(req.get_header(), 0); //Content-length is for size of body and there is no body
+		add_content_length(0); //Content-length is for size of body and there is no body
 		//must add location
 	}
 	if (write(fd, body.c_str(), body.size()) < 0)

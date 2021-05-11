@@ -13,3 +13,20 @@ int		response::error_file(int errnum) const
 	else
 		return 500; //server error ?
 }
+
+void	response::default_error(int error_status)
+{
+	size_t pos(0);
+	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
+	std::string new_str(ft_itoa(error_status) + " " + find_status_string());
+	size_t size_new_str(new_str.size());
+	body = DEFAULT_ERROR_FILE;
+
+	while ((pos = body.find(STR_TO_REPLACE, pos)) != body.npos)
+	{
+		body.replace(pos, size_str_to_replace, new_str);
+		pos += size_new_str;
+	}
+	add_content_length(body.size());
+	add_content_type(DEFAULT_ERROR_FILE_EXT);
+}

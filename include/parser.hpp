@@ -3,7 +3,7 @@
 
 #include <string>	 // std::string
 #include <vector>	 // std::vector
-#include <map>		 // std::map
+#include <map>		 // std::map, std::multimap
 #include <algorithm> // std::find_first_not
 #include <iostream>	 // std::cerr
 #include <fstream>	 // std::ifstream
@@ -44,6 +44,8 @@ public:
 	};
 
 private:
+	typedef bool (parser::*check_func)(const std::vector<std::string>&, int) const;
+
 	std::string filename;
 	blocks _blocks;
 
@@ -55,8 +57,22 @@ private:
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
 
 	bool is_valid() const;
+	bool check_line(const std::string& line, int line_no) const;
+	bool check_prop(const std::string& name, const std::vector<std::string>& args, int line_no) const;
+	bool check_block(const std::string &name, const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_root(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_index(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_serv_name(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_return(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_accept(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_listen(const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_err_page(const std::vector<std::string>& args, int line_no) const;
+	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
+	bool check_block_location_error(const std::vector<std::string>& args, int line_no) const;
+	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
 
 	std::string find_best_match(std::string arg) const;
+	std::string remove_comments(const std::string &line) const;
 
 public:
 	parser();

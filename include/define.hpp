@@ -3,20 +3,31 @@
 
 /*Server*/
 # define WEBSERV "webserv"
+# define HTTP_VERSION "HTTP/1.1"
 
 /*line return*/
 # define CRLF "\r\n"
 # define SEPARATOR CRLF CRLF
 
-# define ERROR_FILE_NAME ".html" /*to use a funtion simply*/
+# define STR_TO_REPLACE "XXX"
+# define DEFAULT_ERROR_FILE_EXT ".html" /*to use a funtion simply*/
 
-# define ERROR_FILE		"<html>\n"\
-						"<head><title>xxx</title></head>\n"\
-						"<body>\n"\
-						"<center><h1>xxx</h1></center>\n"\
-						"<hr><center>webserv</center>\n"\
-						"</body>\n"\
-						"</html>"
+# define DEFAULT_ERROR_FILE	"<html>\n"\
+							"<head><title>"STR_TO_REPLACE"</title></head>\n"\
+							"<body>\n"\
+							"<center><h1>"STR_TO_REPLACE"</h1></center>\n"\
+							"<hr><center>webserv</center>\n"\
+							"</body>\n"\
+							"</html>"
+
+/*parser block*/
+# define BLOCK_SERVER "server"
+# define BLOCK_LOCATION "location"
+# define BLOCK_ERROR "location_error"
+# define BLOCK_CGI "cgi"
+
+/*parser variable*/
+# define ACCEPT "accept"
 
 /*define header field*/
 # define ALLOW "Allow"
@@ -50,20 +61,50 @@
 # define PATCH "PATCH"
 
 /*define status (please sort them)*/
+# define STATUS_100 "Continue"
+# define STATUS_101 "Switching Protocols"
+
 # define STATUS_200 "OK"
 # define STATUS_201 "Created"
+# define STATUS_202 "Accepted"
+# define STATUS_203 "Non-Authoritative Information"
 # define STATUS_204 "No Content"
+# define STATUS_205 "Reset Content"
+# define STATUS_206 "Partial Content"
+
+# define STATUS_300 "Multiple Choices"
 # define STATUS_301 "Moved Permanently"
-# define STATUS_304 "Found" //Nor modified ?
+# define STATUS_302 "Found"
+# define STATUS_303 "See Other"
+# define STATUS_304 "Not Modified"
+# define STATUS_305 "Use Proxy"
+# define STATUS_307 "Temporary Redirect"
+
 # define STATUS_400 "Bad Request"
 # define STATUS_401 "Unauthorized"
+# define STATUS_402 "Payment Required"
 # define STATUS_403 "Forbidden"
 # define STATUS_404 "Not Found"
 # define STATUS_405 "Method Not Allowed"
 # define STATUS_406 "Not Acceptable"
+# define STATUS_407 "Proxy Authentification Required"
+# define STATUS_408 "Request Timeout"
 # define STATUS_409 "Conflict"
+# define STATUS_410 "Gone"
+# define STATUS_411 "Length Required"
+# define STATUS_412 "Precondition Failde"
+# define STATUS_413 "Payload Too Large"
+# define STATUS_414 "URI Too Long"
+# define STATUS_415 "Unsupported Media Type"
+# define STATUS_417 "Expectation Failed"
+# define STATUS_426 "Upgrade Required"
+
+# define STATUS_500 "Internal Server Error"
 # define STATUS_501 "Not Implemented"
+# define STATUS_502 "Bad Gateway"
 # define STATUS_503 "Service Unavailable"
+# define STATUS_504 "Gateway Timeout"
+# define STATUS_505 "HTTP Version Not Supported"
 # define UNKNOW_STATUS "Unknow"
 
 /*define type*/
@@ -94,8 +135,4 @@
 
 # define DEFAULT_SUBTYPE "plain"
 
-/*define encoding extension*/
-# define GZIP		"gz"
-# define COMPRESS	"Z"
-# define DEFLATE	""
 #endif

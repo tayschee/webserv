@@ -29,7 +29,7 @@ int		receive_management::receive_header::receive(const int socket, message *req)
 	ssize_t		i; //this just a long return type of read
 
 	if ((i = read(socket, buffer, buf_size)) < 0)
-		return -1; //throw exception
+		return 500; //throw exception
 	
 	buffer[i] = 0;
 	msg += buffer;
@@ -46,7 +46,6 @@ int			receive_management::receive_header::check(message *req)
 	pos = msg.find(SEPARATOR);
 	if (pos != msg.npos) //if there is double /r/n prepare receive_body
 	{
-		std::cout << "+++++++++++++++++++++\n" << msg << "+++++++++++++++++++++\n";
 		req->parse_header(msg.substr(0, pos)); //fill header + request_line
 		msg.erase(0, pos + ft_strlen(SEPARATOR));
 		return 1; //header end

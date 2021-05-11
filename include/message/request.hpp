@@ -55,8 +55,8 @@ class request : public message
 		request operator=(const request &x);
 		~request();
 
-		bool			receive(const int socket, receive_management &recv_data);
-
+		int				receive(const int socket, receive_management &recv_data);
+		int				validity() const;
 		//int			read_socket(const int socket);
 		//std::string		send_response() const;
 

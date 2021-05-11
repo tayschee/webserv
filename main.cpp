@@ -1,4 +1,5 @@
 #include "cluster.hpp"
+#include "message.hpp"
 
 int		main()
 {
@@ -7,11 +8,10 @@ int		main()
 	try
 	{
 		cl.start();
+		std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
 	}
 	catch (std::string const e)
 	{
-		std::cout << "GGGGGGGGGGGGGggggggggggg" << std::endl;
 	}
-	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
 	return 0;
 }

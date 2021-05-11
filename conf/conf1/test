@@ -1,12 +1,14 @@
-server_name		localhost
-listen			80
-root			/var/www
+{
+	server_name		localhost
+	listen			80
+	root			/var/www
 
-location ~ .php {
-	root		/var/www/php
-	fastcgi_params	TEST $test
+	location ~ .php {
+		root		/var/www/php
+		fastcgi_params	TEST $test
 
-	bloc para praap {
-		isodi spoidk psod
+		bloc para praap {
+			isodi spoidk psod
+		}
 	}
 }
