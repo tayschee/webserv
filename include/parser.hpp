@@ -26,7 +26,6 @@
 #define PARSER_SERVER_NAME "server_name"
 #define PARSER_ERROR_PAGE "error_page"
 #define PARSER_INDEX "index"
-#define PARSER_RETURN "return"
 #define PARSER_AUTOINDEX "autoindex"
 #define PARSER_ROOT "root"
 
@@ -81,6 +80,7 @@ private:
 
 	bool basic_chk_block(const std::string& name, const std::string& actual, const std::vector<std::string>& expected, int line_no) const;
 	bool basic_chk_args(const std::string& name, int actual, int expected, bool exact, int line_no) const;
+	bool advanced_chk_err_code(const std::string& err, int line_no) const;
 
 	bool is_valid() const;
 	bool check_line(const std::string& line, int line_no) const;
@@ -89,7 +89,6 @@ private:
 	bool check_prop_root(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_index(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_serv_name(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
-	bool check_prop_return(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_accept(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_listen(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_err_page(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;

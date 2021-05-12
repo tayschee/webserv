@@ -37,7 +37,25 @@ bool parser::basic_chk_args(const std::string &name, int actual, int expected, b
 
 	if ((exact && expected != actual) || (!exact && expected > actual))
 	{
-		std::cerr << "Error: " << filename << ": " << name << " should have " << message << expected << " arguments. (line: " << line_no << ")\n";
+		std::cerr << "Error: " << filename << ": " << name << " should have " << message << " " << expected << " arguments. (line: " << line_no << ")\n";
+		return false;
+	}
+	return true;
+}
+
+bool parser::advanced_chk_err_code(const std::string& err, int line_no) const
+{
+	char *end;
+	long nb = strtol(err.c_str(), &end, 10);
+
+	if (end != (err.c_str() + err.length()))
+	{
+		std::cerr << "Error: " << filename << ": an error code takes only numbers. (line: " << line_no << ")\n";
+		return false;
+	}
+	if (nb < 100 || nb >= 600)
+	{
+		std::cerr << "Error: " << filename << ": An error code must be an integer between 100 and 599. (line: " << line_no << ")\n";
 		return false;
 	}
 	return true;
@@ -178,7 +196,7 @@ std::string parser::remove_comments(const std::string &line) const
 {
 	std::string::size_type pos = line.find('#');
 
-	return pos == line.npos ? line : line.substr(pos);
+	return pos == line.npos ? line : line.substr(0, pos);
 }
 
 bool parser::is_valid() const
@@ -228,7 +246,6 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	prop_checker[PARSER_ROOT] = &parser::check_prop_root;
 	prop_checker[PARSER_INDEX] = &parser::check_prop_index;
 	prop_checker[PARSER_SERVER_NAME] = &parser::check_prop_serv_name;
-	prop_checker[PARSER_RETURN] = &parser::check_prop_return;
 	prop_checker[PARSER_ACCEPT] = &parser::check_prop_accept;
 	prop_checker[PARSER_LISTEN] = &parser::check_prop_listen;
 	prop_checker[PARSER_ERROR_PAGE] = &parser::check_prop_err_page;
@@ -249,41 +266,38 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 
 bool parser::check_prop_root(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	if (block_id != PARSER_LOCATION || block_id != PARSER_SERVER)
-	{
-		std::cerr << "Error: " << filename << ": root should be only in " PARSER_LOCATION " and " PARSER_SERVER " blocks. (line: " << line_no << ")\n";
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
+	expected.push_back(PARSER_SERVER);
+
+	if (!basic_chk_block(PARSER_ROOT, block_id, expected, line_no))
 		return false;
-	}
-	if (args.size() != 1)
-	{
-		std::cerr << "Error: " << filename << ": root should have exactly one argument. (line: " << line_no << ")\n";
+	if (!basic_chk_args(PARSER_ROOT, args.size(), 1, true, line_no))
 		return false;
-	}
 	return true;
 }
 
 bool parser::check_prop_index(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	if (block_id != PARSER_LOCATION)
-	{
-		std::cerr << "Error: " << filename << ": index should only be in " PARSER_LOCATION ". (line: " << line_no << ")\n";
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
+
+	if (!basic_chk_block(PARSER_INDEX, block_id, expected, line_no))
 		return false;
-	}
-	if (args.empty())
-	{
-		std::cerr << "Error: " << filename << ": index must have at least one argument. (line: " << line_no << ")\n";
+	if (!basic_chk_args(PARSER_INDEX, args.size(), 1, false, line_no))
 		return false;
-	}
 	return true;
 }
 
 bool parser::check_prop_serv_name(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	if (block_id != PARSER_SERVER)
-	{
-		std::cerr << "Error: " << filename << ": server_name should only be in " PARSER_SERVER ". (line: " << line_no << ")\n";
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_SERVER);
+
+	if (!basic_chk_block(PARSER_SERVER_NAME, block_id, expected, line_no))
 		return false;
-	}
+	if (!basic_chk_args(PARSER_SERVER_NAME, args.size(), 1, true, line_no))
+		return false;
 
 	std::vector<std::string> splitted = split(args[0], ".");
 	if (splitted.size() != 4)
@@ -293,22 +307,20 @@ bool parser::check_prop_serv_name(const std::string &block_id, const std::vector
 	}
 	for (size_t i = 0; i < splitted.size(); i++)
 	{
-		int val = strtol(splitted[0].c_str(), NULL, 10);
+		char *end;
+		int val = strtol(splitted[i].c_str(), &end, 10);
 
+		if (end != (splitted[i].c_str() + splitted[i].length()))
+		{
+			std::cerr << "Error: " << filename << ": An IP adress should contain no letter. (line = " << line_no << ")\n";
+			return false;
+		}
 		if (errno == ERANGE || !(0 <= val && val <= 255))
 		{
-			std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ").\n";
+			std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
 			return false;
 		}
 	}
-	return true;
-}
-
-bool parser::check_prop_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
-{
-	(void)args;
-	(void)line_no;
-	(void)block_id;
 	return true;
 }
 
@@ -330,8 +342,15 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 
 bool parser::check_prop_err_page(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	(void)args;
-	(void)line_no;
-	(void)block_id;
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_SERVER);
+	expected.push_back(PARSER_LOCATION);
+
+	if (!basic_chk_block(PARSER_ERROR_PAGE, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_ERROR_PAGE, args.size(), 2, true, line_no))
+		return false;
+	if (!advanced_chk_err_code(args[0], line_no))
+		return false;
 	return true;
 }
