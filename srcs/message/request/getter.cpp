@@ -1,25 +1,25 @@
 #include "message/request.hpp"
 
 /*use to have all information about first line in the structure of request to store first_line*/
-request::request_line	request::get_first_line() const
+const request::request_line	&request::get_first_line() const
 {
 	return first_line;
 }
 
 /*more specific than get_first_line simply use for method*/
-std::string		request::get_method() const
+const std::string		&request::get_method() const
 {
 	return first_line.method;
 }
 
 /*more specific than get_first_line simply use for uri*/
-std::string		request::get_uri() const
+const std::string	&request::get_uri() const
 {
 	return first_line.uri;
 }
 
 /*more specific than get_first_line simply use for version*/
-std::string		request::get_version() const
+const std::string		&request::get_version() const
 {
 	return first_line.version;
 }

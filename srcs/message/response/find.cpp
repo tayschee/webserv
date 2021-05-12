@@ -1,4 +1,4 @@
-#include <message/response.hpp>
+#include "message/response.hpp"
 
 /*this file regroup get function, get dont refer to the method but function to get a value through an other*/
 
@@ -40,4 +40,50 @@ response::find_media_type(const std::string subtype) const
 		return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
 
 	return (*val);
+}
+
+std::string	response::find_path(const parser::block &block) const
+{
+	parser::entries entries(block.conf);
+	std::string path(entries.find("root")->second[0] + block.args[0]);
+	struct stat file_stat;
+
+	if (stat(path.c_str(), &file_stat) < 0)
+	{
+		//do something
+	}
+	//determine if this is complete path or if this not for that verify if this is a directory
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
+	{
+		std::list<std::string> files(files_in_dir(path));
+		return (find_index(entries, files));
+	}
+	else
+	{
+		return path;
+	}
+
+}
+
+std::string response::find_index(const parser::entries &entries, const std::list<std::string> &files) const
+{
+	std::list<std::string>::const_iterator it_f;
+	std::list<std::string>::const_iterator end_f;
+
+	std::vector<std::string> index(entries.find("index")->second);
+	std::vector<std::string>::iterator it_i(index.begin());
+	std::vector<std::string>::iterator end_i(index.end());
+
+	while (it_i != end_i)
+	{
+		it_f = files.begin();
+		while (it_f != end_f)
+		{
+			if (*it_i == *it_f)
+				return *it_i;
+			++it_f;
+		}
+		++it_i;
+	}
+	return "";
 }

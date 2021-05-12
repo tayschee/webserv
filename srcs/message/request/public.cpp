@@ -19,6 +19,8 @@ int		request::receive(const int socket, receive_management &recv_data)
 
 int		request::validity() const
 {
+	if (first_line.version != HTTP_VERSION)
+		return 505;
 	header_type::const_iterator end(header.end());
 	std::pair<header_type::const_iterator, header_type::const_iterator> range_host(header.equal_range(HOST));
 

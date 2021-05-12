@@ -1,6 +1,6 @@
 # include <message/response.hpp>
 
-response::response_line	response::get_first_line() const
+const response::response_line	&response::get_first_line() const
 {
 	return first_line;
 }
@@ -10,11 +10,11 @@ int						response::get_status() const
 	return first_line.status;
 }
 
-std::string				response::get_status_string() const
+const std::string				&response::get_status_string() const
 {
 	return first_line.status_string;
 }
-std::string				response::get_version() const
+const std::string				&response::get_version() const
 {
 	return first_line.version;
 }

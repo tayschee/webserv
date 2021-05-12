@@ -40,9 +40,7 @@ response::response(const request &req, const parser &pars) : message()
 		
 		first_line.status = (this->*header_field_function)(req, pars);
 		if (first_line.status == 401)
-		{
 			header.insert(value_type("WWW-Authenticate", "Basic realm=\"Accès au site de staging\", charset=\"UTF-8\""));
-		}
 		if (first_line.status < 200 || first_line.status > 299)
 			get_error(first_line.status, pars);
 
@@ -52,7 +50,7 @@ response::response(const request &req, const parser &pars) : message()
 	}
 }
 
-response::response(int status, const parser &pars) : message()
+/*response::response(int status, const parser &pars) : message()
 {
 	first_line.status = status;
 	first_line.status_string = find_status_string();
@@ -67,7 +65,7 @@ response::response(int status, const parser &pars) : message()
 		//mettre un fonction
 	//sinon
 		default_error(status);
-}
+}*/
 
 response::~response(){};
 

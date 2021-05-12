@@ -1,15 +1,18 @@
-#ifndef WEBSERV_PARSER_HPP
-#define WEBSERV_PARSER_HPP
+#ifndef	PARSER_HPP
+# define PARSER_HPP
 
-#include <string>	 // std::string
-#include <vector>	 // std::vector
-#include <map>		 // std::map, std::multimap
-#include <algorithm> // std::find_first_not
-#include <iostream>	 // std::cerr
-#include <fstream>	 // std::ifstream
-#include <dirent.h>	 // opendir, closedir
-#include <exception> // std::exception
-#include "utils.hpp" // get_extension, clean_string
+# include <string>	 	// std::string
+# include <vector>	 	// std::vector
+# include <map>		 	// std::map, std::multimap
+# include <algorithm> 	// std::find_first_not
+# include <iostream>	// std::cerr
+# include <fstream>		// std::ifstream
+# include <dirent.h>	// opendir, closedir
+# include <exception> // std::exception
+# include "utils.hpp" // get_extension, clean_string
+//# include "message/request.hpp"
+
+class request;
 
 class parser
 {

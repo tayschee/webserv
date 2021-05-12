@@ -45,8 +45,8 @@ class message
 		virtual void	parse_header(const std::string &header_str) = 0;
 
 	public : //getter.cpp this function are used to have acess to private or protected variable
-		header_type 	get_header() const;
-		std::string 	get_body() const;
+		const header_type 	&get_header() const;
+		const std::string 	&get_body() const;
 		virtual std::string	get(const std::string &hf_sep = std::string(": "), const std::string &eol= std::string(CRLF)) const = 0;
 	public : //coplien.cpp
 		message();
