@@ -22,7 +22,7 @@ int		response::method_is_head(const request &req, const parser &pars)
 	/* two next line can maybe be add to main_header */
 	add_content_length(file_stat.st_size); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_type(file);
+	add_content_type(file, req);
 
 	return 200; //value of OK response
 }
@@ -227,7 +227,7 @@ int		response::method_is_get(const request &req, const parser &pars)
 		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 
 		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		add_content_type(file);
+		add_content_type(file, req);
 		if (cmp == ".jpg")
 			header.insert(value_type(CONTENT_TYPE, "image/jpeg"));
 
@@ -287,13 +287,13 @@ int		response::method_is_options(const request &req, const parser &pars)
 	struct stat file_stat; //information about file
 	std::string	file = req.get_uri();
 
-	if (lstat(file.c_str(), &file_stat) < 0)
+	if (stat(file.c_str(), &file_stat) < 0)
 		return error_file(errno); //check errno
 
 	/* two next line can maybe be add to main_header */
 	add_content_length(0); /* st_size = total size in byte */
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_type(file);
+	add_content_type(file, req);
 
 	return 200; //value of OK response
 }
@@ -322,7 +322,7 @@ int		response::method_is_put(const request &req, const parser &pars)
 		return 500;
 	close(fd);
 
-	add_content_type(file);
+	add_content_type(file, req);
 
 	return response_value;
 }

@@ -3,6 +3,7 @@
 
 # include "message/message.hpp"
 
+class message;
 /*parent class of receive_management and send_management, it does nothing just here to allow polymorphism*/
 class	message::exchange_management
 {

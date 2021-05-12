@@ -19,6 +19,7 @@ SRCS = main.cpp $(CLIENT_DIR)coplien.cpp $(CLIENT_DIR)public.cpp $(SERVER_DIR)pu
 				$(SERVER_DIR)operator.cpp $(SERVER_DIR)public.cpp $(SERVER_DIR)private.cpp \
 				$(MESSAGE_DIR)coplien.cpp $(MESSAGE_DIR)parse.cpp $(MESSAGE_DIR)getter.cpp $(MESSAGE_DIR)utils.cpp\
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)getter.cpp $(REQUEST_DIR)parse.cpp $(REQUEST_DIR)private.cpp \
+				$(REQUEST_DIR)static_variable.cpp \
 				$(EXCHANGE_DIR)receive_function.cpp $(EXCHANGE_DIR)exchange_management.cpp $(EXCHANGE_DIR)receive_management.cpp \
 				$(EXCHANGE_DIR)receive_function.cpp $(EXCHANGE_DIR)receive_cl.cpp $(EXCHANGE_DIR)receive_tf.cpp $(EXCHANGE_DIR)receive_header.cpp\
 				$(RESPONSE_DIR)coplien.cpp $(RESPONSE_DIR)static_variable.cpp $(RESPONSE_DIR)getter.cpp $(RESPONSE_DIR)method.cpp \

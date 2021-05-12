@@ -3,9 +3,12 @@
 
 # include "parser.hpp"
 # include "message/message.hpp"
-# include  "message/request.hpp"
+# include "message/request.hpp"
 # include "message/exchange_management.hpp"
 
+#include <list>
+
+class parser;
 class request;
 
 class response : public message
@@ -46,12 +49,15 @@ class response : public message
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
+		std::list<std::string> files_in_dir(const std::string &path) const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
 		method_array::value_type::second_type	find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
+		std::string								find_path(const parser::block &block) const;
+		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
 
 	private : //method_is_* function, apply one of method
 		int					method_is_head(const request &req, const parser &pars); //HEAD
@@ -67,7 +73,8 @@ class response : public message
 		void				add_content_length(const off_t &bytes_size); //Content-Length
 		void				add_last_modified(time_t time); //Last-Modified
 		void				add_server(); //Server
-		void				add_content_type(const std::string &file); //Content-type
+		void				add_content_type(const std::string &file, const request &req); //Content-type
+		void				add_content_type(const std::string &file); //Content-type without precise charset
 		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
 
 		bool				add_body(int fd, struct stat &file_stat); //body
@@ -77,14 +84,14 @@ class response : public message
 		void 	parse_header(const std::string &start_line){ (void)start_line; }
 
 	public : //get_* functions, inside getter.cpp, this function are used to have access private variable
-		response_line	get_first_line() const;
+		const response_line	&get_first_line() const;
 
 		int				get_status() const;
-		std::string		get_status_string() const;
-		std::string		get_version() const;
+		const std::string		&get_status_string() const;
+		const std::string		&get_version() const;
 	
-		//std::string	get_body() const;
-		//header_type	get_header() const;
+		//const std::string	&get_body() const;
+		//const header_type	&get_header() const;
 		void			get_error(int error, const parser &pars);
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 

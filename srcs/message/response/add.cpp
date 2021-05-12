@@ -16,6 +16,7 @@ void			response::add_allow(const std::vector<std::string> &allow_method_array)
 		if (it + 1 == end)
 			break ;
 		allow_method_string += ", ";
+		++it;
 	}
 
 	header.insert(std::pair<std::string, std::string>(ALLOW, allow_method_string));
@@ -48,7 +49,37 @@ void			response::add_server()
 	header.insert(std::pair<std::string, std::string>(SERVER, WEBSERV));
 }
 
-void			response::add_content_type(const std::string &file)
+/*add field Content-Type to response::header, if accept-charset is in request precise charset*/
+void			response::add_content_type(const std::string &file, const request &req) //pas tester
+{
+	std::string extension;
+	size_t		pos = file.find_first_of(".");
+	request::header_type head = req.get_header();
+	request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+
+	if (pos != file.npos)
+	{
+ 		extension = file.substr(pos + 1);
+		media_type_array::value_type	media_type(find_media_type(extension));
+
+		if (it != head.end())
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+		else
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	}
+	else
+	{
+		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+
+		if (it != head.end())
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+		else
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	}
+}
+
+/*add field Content-Type to response::header, without precise charser*/
+void			response::add_content_type(const std::string &file) //pas tester
 {
 	std::string extension;
 	size_t		pos = file.find_first_of(".");
@@ -64,7 +95,7 @@ void			response::add_content_type(const std::string &file)
 	{
 		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
 
-		header.insert(value_type(CONTENT_TYPE, media_type.first + media_type.second));
+		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
 	}
 }
 
