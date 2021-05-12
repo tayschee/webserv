@@ -10,6 +10,7 @@ class request;
 # include <dirent.h>
 # include <sys/stat.h> 
 # include "cgi.hpp"
+# include "utils.hpp" //files_in_dir
 
 #include <list>
 
@@ -54,7 +55,6 @@ class response : public message
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
-		std::list<std::string> files_in_dir(const std::string &path) const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/

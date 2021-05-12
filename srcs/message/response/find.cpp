@@ -52,14 +52,23 @@ std::string	response::find_path(const parser::block &block) const
 	{
 		//do something
 	}
+	std::cout << "path" << path << '\n';
 	//determine if this is complete path or if this not for that verify if this is a directory
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
+		std::string index;
+
+		std::cout << "directory\n";
 		std::list<std::string> files(files_in_dir(path));
-		return (find_index(entries, files));
+		index = find_index(entries, files);
+		if (index == "")
+			return index;
+		else
+			return (path + index);
 	}
 	else
 	{
+		std::cout << "file\n";
 		return path;
 	}
 
@@ -68,7 +77,7 @@ std::string	response::find_path(const parser::block &block) const
 std::string response::find_index(const parser::entries &entries, const std::list<std::string> &files) const
 {
 	std::list<std::string>::const_iterator it_f;
-	std::list<std::string>::const_iterator end_f;
+	std::list<std::string>::const_iterator end_f(files.end());
 
 	std::vector<std::string> index(entries.find("index")->second);
 	std::vector<std::string>::iterator it_i(index.begin());
