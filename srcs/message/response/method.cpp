@@ -22,7 +22,6 @@ int		response::method_is_head(const request &req, const parser &pars)
 std::string		index(std::string path)
 {
     errno = 0;
-	std::cout << "path = " << path << std::endl;
 	DIR *dir = opendir(path.c_str());\
 	struct dirent *dp;
 	std::string index =\
@@ -47,6 +46,30 @@ std::string		index(std::string path)
 	return index;
 }
 
+bool	is_authorize(const request &req, const parser &pars)
+{
+	parser::entries path = pars.get_block("location", "/").conf;
+	if (path.find("auth_basic") != path.end())
+	{
+		message::header_type gh = req.get_header();
+		if (gh.find("Authorization") == gh.end())
+			return false;
+		std::vector<std::string> tab;
+		std::string Authorization(req.get_header().find("Authorization")->second);
+		char buf[500];
+		int fd = open(path.find("auth_basic_user_file")->second[0].c_str(), O_RDONLY);
+		int ret = read(fd, buf, 499);
+		buf[ret] = '\0';
+		tab = split(buf, "\t\r\n");
+		close(fd);
+		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+			if (Authorization == *it)
+				return true;
+		return false;
+	}
+	return true;
+}
+
 int		response::method_is_get(const request &req, const parser &pars)
 {
 	int		fd = -1;
@@ -56,7 +79,6 @@ int		response::method_is_get(const request &req, const parser &pars)
 
 	//403 interdiction
 	
-	std::cout << "file = " << file << std::endl;
 	if (lstat(file.c_str(), &file_stat) < 0)
 		return (error_file(errno));
 	std::string CGI(req.get_uri());
@@ -67,8 +89,25 @@ int		response::method_is_get(const request &req, const parser &pars)
 			break;
 	}
 	std::string cmp(it, CGI.end());
+	if (cmp == ".jpg")
+	{
+		if (!is_authorize(req, pars))
+			return 401;
+		fd = open(file.c_str(), O_RDONLY);
+		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
+		{
+			close(fd);
+			return error_file(errno);
+		}
+		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+		header.insert(value_type(CONTENT_TYPE, "text/jpeg"));
+		return 200;
+	}
 	if (cmp == ".php")
 	{
+		if (!is_authorize(req, pars))
+			return 401;
 		cgi(req, pars, body);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
@@ -79,6 +118,8 @@ int		response::method_is_get(const request &req, const parser &pars)
 	}
 	else 
 	{
+		if (!is_authorize(req, pars))
+			return 401;
 		if ((fd = open(file.c_str(), O_RDONLY)) < 0)
 		{
 			return (error_file(errno));
@@ -94,14 +135,10 @@ int		response::method_is_get(const request &req, const parser &pars)
 		//add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
 		//header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	}
-	std::cout << "===============================" << std::endl;
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	//add_content_type(file);
 	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	header.insert(value_type(CONTENT_TYPE, "text/html"));
-	std::cout << "CONTENT_TYPE = " << header.find(CONTENT_TYPE)->second << std::endl;
-	if (cmp == ".jpg")
-		header.insert(value_type(CONTENT_TYPE, "image/jpeg"));
 	if (fd > 0)
 		close(fd);
 	return 200;

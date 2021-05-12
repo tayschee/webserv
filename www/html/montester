@@ -1,0 +1,32 @@
+Bienvenue dans ce petit testeur de serveur Web.
+Passer le test ici est le minimum avant de passer à une évaluation.
+
+appuyez sur Entrée pour continuer
+
+CE TEST NE DOIT PAS ÊTRE LE SEUL TEST DE L'ÉVALUATION !!!
+
+appuyez sur Entrée pour continuer
+
+Avant de commencer, veuillez suivre les quelques étapes suivantes (le contenu des fichiers peut être n'importe quoi et vous sera montré par le test):
+- Téléchargez l'exécutable cgi_test sur l'hôte
+- Créez un répertoire YoupiBanane avec:
+-a nom de fichier youpi.bad_extension
+-un nom de fichier youpi.bla
+-un sous-répertoire appelé nop
+-a nom de fichier youpi.bad_extension dans nop
+-a nom de fichier autre.pouic dans nop
+-un sous-répertoire appelé Yeah
+-un nom de fichier not_happy.bad_extension en Ouais
+appuyez sur Entrée pour continuer
+
+Configurez le fichier de configuration comme suit:
+- / doit répondre UNIQUEMENT à la demande GET
+- / put_test / * doit répondre à la requête PUT et enregistrer les fichiers dans un répertoire de votre choix
+- tout fichier avec l'extension .bla doit répondre à la requête POST en appelant l'exécutable cgi_test
+- / post_body doit répondre à n'importe quoi à la requête POST avec un maxBody de 100
+- / directory / doit répondre à la requête GET et la racine de celui-ci serait le référentiel YoupiBanane et si aucun fichier n'est demandé, il doit rechercher les fichiers youpi.bad_extension
+
+appuyez sur Entrée pour continuer
+
+Avant de commencer, veuillez vérifier que le serveur est lancé
+appuyez sur Entrée pour continuer

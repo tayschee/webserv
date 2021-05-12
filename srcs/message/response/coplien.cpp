@@ -29,7 +29,6 @@ response::response(const request &req, const parser &pars) : message()
 	}
 	else
 	{
-
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
 		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
 
@@ -40,6 +39,10 @@ response::response(const request &req, const parser &pars) : message()
 		/*call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way*/
 		
 		first_line.status = (this->*header_field_function)(req, pars);
+		if (first_line.status == 401)
+		{
+			header.insert(value_type("WWW-Authenticate", "Basic realm=\"Accès au site de staging\", charset=\"UTF-8\""));
+		}
 		if (first_line.status < 200 || first_line.status > 299)
 			get_error(first_line.status, pars);
 
