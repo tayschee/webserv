@@ -17,7 +17,6 @@ response::method_array	response::initialise_existing_method()
 	{
 		map.insert(method_array::value_type(method_name[i], method_func[i]));
 	}
-	map.rbegin()->second = &response::method_is_unknow; //if method doesn't exist use method_unknow
 
 	return map;
 }
@@ -82,7 +81,6 @@ response::status_array			response::initialise_existing_status()
 	{
 		map.insert(status_array::value_type(status_int[i], msg_status[i]));
 	}
-	map.end()->second = UNKNOW_STATUS; //if method doesn't exist use method_unknow
 
 	return map;
 }

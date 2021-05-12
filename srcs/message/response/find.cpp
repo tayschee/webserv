@@ -6,7 +6,12 @@
 response::status_array::value_type::second_type
 response::find_status_string() const
 {
-	return existing_status.find(first_line.status)->second;
+	status_array::const_iterator it(existing_status.find(first_line.status));
+	
+	if (it == existing_status.end())
+		return UNKNOW_STATUS;
+	else
+		return existing_status.find(first_line.status)->second;
 }
 
 /*this function return function associated to a method*/
@@ -21,18 +26,17 @@ response::find_method_function(const std::string &method, const std::vector<std:
 		if (method == *it)
 			return existing_method.find(method)->second;
 	}
-
-	return existing_method.end()->second;
+	return &response::method_is_unknow;
 }
 
 response::media_type_array::value_type
 response::find_media_type(const std::string subtype) const
 {
-	const_iterator	val(existing_media_type.find(subtype));
+	media_type_array::const_iterator	val(existing_media_type.find(subtype));
 
 	/*if subtype doesn't exist return default value*/
 	if (val == existing_media_type.end())
-		return (value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+		return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
 
 	return (*val);
 }

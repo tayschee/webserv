@@ -46,7 +46,6 @@ int			receive_management::receive_header::check(message *req)
 	pos = msg.find(SEPARATOR);
 	if (pos != msg.npos) //if there is double /r/n prepare receive_body
 	{
-		std::cout << "+++++++++++++++++++++\n" << msg << "+++++++++++++++++++++\n";
 		req->parse_header(msg.substr(0, pos)); //fill header + request_line
 		msg.erase(0, pos + ft_strlen(SEPARATOR));
 		return 1; //header end
