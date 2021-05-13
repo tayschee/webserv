@@ -2,20 +2,14 @@
 
 // defining all functions used for canonique mode.
 
-server::server(){}
+server::server(){} // constructor by default
 
-server::server(const server& other)
+server::server(const server& other) // constructor by copy
 {
-	port = other.port;
-    ip = other.ip;
-    domain_name = other.domain_name; //to replace ip adress
-	socket_host = other.socket_host; //to identify host
-	socket_client = other.socket_client; //to identify clients
-	address = other.address;
-	pars = other.pars;
+	(void)other;
 }
 
-server &server::operator=(const server& other)
+server &server::operator=(const server& other) // assign
 {
 	(void)other;
 	return *this;
@@ -24,10 +18,9 @@ server &server::operator=(const server& other)
 // defining "normal" constructor used to create the server.
 // _ip is given as a string under ipv4 format.
 server::server(const parser & _pars) :
-	port(ft_atoi<int>(_pars.get_block("server").conf.find("listen")->second[0])),
-	domain_name("server"), socket_client(), pars(_pars)
+port(ft_atoi<int>(_pars.get_block("server").conf.find("listen")->second[0])), domain_name("server")
 {
-	std::string _ip(pars.get_block("server").conf.find("server_name")->second[0]);
+	std::string _ip(_pars.get_block("server").conf.find("server_name")->second[0]);
 	std::string bytes[4];
 	int index = 0;
 
@@ -56,9 +49,4 @@ server::server(const parser & _pars) :
 		std::cerr << "failed to bind on port " << port << ". Error: " << strerror(errno) << std::endl;
 }
 
-server::~server()
-{
-	//for (std::list<client>::iterator it = socket_client.begin(); it != socket_client.end(); it++)
-	//	it = close_client(it);
-	//close(socket_host);
-}
+server::~server(){} // destructor

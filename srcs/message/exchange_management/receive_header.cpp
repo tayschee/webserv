@@ -29,7 +29,7 @@ int		receive_management::receive_header::receive(const int socket, message *req)
 	ssize_t		i; //this just a long return type of read
 
 	if ((i = read(socket, buffer, buf_size)) < 0)
-		return -1; //throw exception
+		return 500; //throw exception
 	
 	buffer[i] = 0;
 	msg += buffer;

@@ -1,36 +1,15 @@
-#include "../include/client.hpp"
-#include <sys/time.h>
-#include <fstream>      // std::ofstream
-#include <unistd.h>
+#include "client.hpp"
 
-bool    client::is_time()
+void                            client::receive() // call recieve
 {
-    if (is_listen())
-        return 0;
-    struct timeval now;
-    gettimeofday(&now, NULL);
-	if ((now.tv_sec - time.tv_sec) > 60)
-        return 1;
-    return 0;
+    reset_time();
+    read = req.receive(fd, rcm);
 }
 
-void    client::set_time()
+ssize_t                         client::sent() // send response
 {
-    gettimeofday(&time, NULL);
+    read = false;
+    response rp(req, pars);
+//    std::cout << rp.get() << std::endl;
+    return send(fd, rp.get().c_str(), rp.get().size(), 0);
 }
-
-bool    client::is_listen()
-{
-    return listen;
-}
-
-int     &client::get_fd()
-{
-    return fd;
-}
-
-parser     &client::get_pars()
-{
-    return pars;
-}
-

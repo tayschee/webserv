@@ -3,9 +3,10 @@
 
 # include "parser.hpp"
 # include "message/message.hpp"
-# include "message/response.hpp"
 # include "message/exchange_management.hpp"
+# include "message/response.hpp"
 
+class parser;
 class response;
 
 class request : public message
@@ -15,10 +16,19 @@ class request : public message
 		{
 			std::string	method;
 			std::string uri;
+			//add query_string after ?
 			std::string version;
 
 			void	clear();
 		};
+
+	public :
+		typedef std::vector<std::string> method_array;
+
+	public : //public variable
+		static const method_array		existing_method;
+	private :
+		static method_array initialise_existing_method(); //to initialise method_array
 
 	private : //private variable
 		request_line						first_line;	//method arg and version
@@ -30,17 +40,14 @@ class request : public message
 		void			parse_header(const std::string &header_str);
 		//void			parse_body()
 
-	private :
-		//void			read_end_of_body(const int socket);
-
 	public : //getter.cpp, this function are used to have access information of the class
-		request_line	get_first_line() const;
+		const request_line	&get_first_line() const;
 
-		std::string		get_method() const;
-		std::string		get_uri() const;
-		std::string		get_version() const;
-		//std::string	get_body() const;
-		//header_type	get_header() const;
+		const std::string	&get_method() const;
+		const std::string	&get_uri() const;
+		const std::string	&get_version() const;
+		//const std::string	&get_body() const;
+		//const header_type	&get_header() const;
 
 		response		get_response(const parser &pars) const; //to have response object
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const; //to have complete request of the form of std::string
@@ -56,10 +63,7 @@ class request : public message
 		~request();
 
 		int				receive(const int socket, receive_management &recv_data);
-
-		//int			read_socket(const int socket);
-		//std::string		send_response() const;
-
+		int				validity() const;
 };
 
 #endif

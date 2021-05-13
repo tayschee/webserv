@@ -1,4 +1,5 @@
 #include "parser.hpp"
+#include "message/request.hpp"
 
 #include <cstdio>
 #include <climits>
@@ -324,19 +325,61 @@ bool parser::check_prop_serv_name(const std::string &block_id, const std::vector
 	return true;
 }
 
-bool parser::check_prop_accept(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+bool parser::check_prop_accept(const std::vector<std::string>& args, int line_no) const //pas tester
 {
-	(void)args;
-	(void)line_no;
-	(void)block_id;
+	std::vector<std::string>::const_iterator args_it(args.begin());
+	std::vector<std::string>::const_iterator args_end(args.end());
+
+	const request::method_array &existing_method(request::existing_method); //request get list of acceptable method back
+	request::method_array::const_iterator method_it;
+	request::method_array::const_iterator method_end(existing_method.end());
+
+
+	if (args_it == args_end) //if there is any argument
+	{
+		std::cerr << "Error: " << filename << ": 1 method required " << *args_it << "at line " << line_no << std::endl;
+		return false;
+	}
+	while (args_it != args_end)
+	{
+		method_it = existing_method.begin();
+		while (1)
+		{
+			if (*args_it == *method_it)
+				break;
+			else if (method_it + 1 == method_end)
+			{
+				std::cerr << "Error: " << filename << ": Unknow method " << *args_it << "at line " << line_no << std::endl;
+				return false;
+			}
+			++method_it;
+		}
+		++args_it;
+	}
 	return true;
 }
 
-bool parser::check_prop_listen(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+bool parser::check_prop_listen(const std::vector<std::string>& args, int line_no) const //not test
 {
-	(void)args;
-	(void)line_no;
-	(void)block_id;
+
+	if (args.size() != 0)
+	{
+		std::cerr << "Error: " << filename << ": Invalid number of argument, only need one. At line " << line_no << std::endl;
+		return false;
+	}
+	const std::string &number(args[0]);
+	size_t i(0);
+
+	while (i < number.size())
+	{
+		if (number[i] < '0' && number[i] > '9')
+		{
+			std::cerr << "Error: " << filename << ": Invalid argument, charset must between 0 and 9. AT line " << line_no << std::endl;
+			return false;
+		}
+		++i;
+	}
+
 	return true;
 }
 

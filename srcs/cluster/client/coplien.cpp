@@ -1,42 +1,42 @@
-#include "../include/client.hpp"
-#include <sys/time.h>
-#include <fstream>      // std::ofstream
-#include <unistd.h>
-
-#include <iostream>
+#include "client.hpp"
 
 // defining all functions used for canonique mode.
 
-client::client() : fd(-1), pars(), is_read(false), rcm(2000), rq()
+client::client() : fd(-1), read(false), pars(), rcm(2000), req() // constructor by default
 {}
 
-client::client(const client& other)
-{
-	fd = other.fd;
-	time = other.time;
-	rcm = other.rcm;
-	rq = other.rq;
-	pars = other.pars;
-	listen = other.listen;
-}
-
-client &client::operator=(const client& other)
-{
-	fd = other.fd;
-	time = other.time;
-	rcm = other.rcm;
-	rq = other.rq;
-	pars = other.pars;
-	listen = other.listen;
-	return *this;
-}
-
-// defining "normal" constructor used to creat a new client.
-// _fd is the new client fd.
-
-client::client(int _fd, bool _listen, const parser &_pars) : fd(_fd), listen(_listen), pars(_pars), is_read(false), rcm(2000), rq()
+// constructor used
+client::client(int _fd, bool _listen, const parser &_pars) : fd(_fd), listen(_listen), read(false), pars(_pars), rcm(2000), req()
 {
     gettimeofday(&time, NULL);
 }
 
-client::~client(){}
+client::client(int _fd, bool _listen, const client &other) : fd(_fd), listen(_listen), read(false), pars(other.pars), rcm(2000), req()
+{
+    gettimeofday(&time, NULL);
+}
+
+client::client(const client& other) // constructor by copy
+{
+	fd = other.fd;
+	time = other.time;
+	rcm = other.rcm;
+	req = other.req;
+	pars = other.pars;
+	listen = other.listen;
+	read = other.read;
+}
+
+client &client::operator=(const client& other) // assignation
+{
+	fd = other.fd;
+	time = other.time;
+	rcm = other.rcm;
+	req = other.req;
+	pars = other.pars;
+	listen = other.listen;
+	read = other.read;
+	return *this;
+}
+
+client::~client(){} // destructor

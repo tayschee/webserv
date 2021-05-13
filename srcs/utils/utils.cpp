@@ -93,3 +93,23 @@ size_t		ft_strlen(const char *str)
 
 	return pos == str.npos ? "" : str.substr(pos);
 }*/
+
+//this function van be put in utils.hpp, it gives list of files inside directory
+std::list<std::string>	files_in_dir(const std::string &path)
+{
+	DIR *directory = opendir(path.c_str());
+	struct dirent *entry;
+	std::list<std::string> files;
+
+	if (directory == NULL)
+	{
+		//do something
+	}
+	while ((entry = readdir(directory)))
+	{
+		if (entry->d_type == DT_REG || entry->d_type == DT_LNK) //if this is s file
+			files.push_back(entry->d_name);
+	}
+	closedir(directory);
+	return files;
+}

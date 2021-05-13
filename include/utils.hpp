@@ -3,6 +3,8 @@
 
 # include <string> //size_t, std::string
 # include <vector> //std::vector
+# include <list> //std::list
+# include <dirent.h> //DIR, struct dirent, readdir, closedir
 
 
 bool		is_horizontal_space(int c); //return 1 for space and tab and 0 for newline vertical tab and all other...
@@ -36,6 +38,7 @@ template<class T> 	T	ft_atoi(const std::string &str)
 }
 
 std::string get_extension(const std::string& str); // Get a file exension (with prefix)
+std::list<std::string>	files_in_dir(const std::string &path);
 
 /*why not do same function for vertical space*/
 
