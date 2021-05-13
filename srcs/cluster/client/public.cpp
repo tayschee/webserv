@@ -9,7 +9,9 @@ void                            client::receive() // call recieve
 ssize_t                         client::sent() // send response
 {
     read = false;
+    // std::cout << req.get() << std::endl;
+    // std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
     response rp(req, pars);
-//    std::cout << rp.get() << std::endl;
+    // std::cout << rp.get() << std::endl;
     return send(fd, rp.get().c_str(), rp.get().size(), 0);
 }

@@ -25,6 +25,8 @@
 # define BLOCK_LOCATION "location"
 # define BLOCK_ERROR "location_error"
 # define BLOCK_CGI "cgi"
+# define AUTH_BASIC_USER_FILE "auth_basic_user_file"
+# define AUTH_BASIC "auth_basic"
 
 /*parser variable*/
 # define ACCEPT "accept"
@@ -47,7 +49,7 @@
 # define LOCATION "Location"
 # define TRANSFERT_ENCODING "Transfert-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
-# define WWW_AUTHENTIFICATE "WWW-Authentificate"
+# define WWW_AUTHENTICATE "WWW-Authenticate"
 
 /*define methods*/
 # define GET "GET"

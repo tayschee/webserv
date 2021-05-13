@@ -33,6 +33,7 @@ response::response(const request &req, const parser &pars) : message()
 		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
 
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
+
 		method_function header_field_function = find_method_function(req.get_method(), allow_method); //give function associate with request
 		
 		main_header(allow_method); /*add header_field which are present in all method*/
@@ -40,10 +41,9 @@ response::response(const request &req, const parser &pars) : message()
 		
 		first_line.status = (this->*header_field_function)(req, pars);
 		if (first_line.status == 401)
-			header.insert(value_type("WWW-Authenticate", "Basic realm=\"Accès au site de staging\", charset=\"UTF-8\""));
+			header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
 		if (first_line.status < 200 || first_line.status > 299)
 			get_error(first_line.status, pars);
-
 		first_line.status_string = find_status_string();
 
 		first_line.version = req.get_version();
