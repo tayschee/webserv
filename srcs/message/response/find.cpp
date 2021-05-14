@@ -55,6 +55,8 @@ std::string	response::find_path(const parser::block &block, const request &req) 
 	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
 		//determine if this is complete path or if this not for that verify if this is a directory
+		if (is_open(file_stat))
+			return path;
 		std::list<std::string> files(files_in_dir(path));
 		if (*(--path.end()) != '/')
 		path.push_back('/');

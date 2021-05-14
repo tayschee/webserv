@@ -20,7 +20,8 @@ const std::string				&response::get_version() const
 }
 
 /*get response, hf == header_field, by default hf_sep == ": " and eol == end_of_line by default eol == CRLF*/
-std::string				response::get(const std::string &hf_sep, const std::string &eol) const
+
+std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
 	std::string resp_str;
 	const_iterator	it(header.begin());
@@ -34,6 +35,5 @@ std::string				response::get(const std::string &hf_sep, const std::string &eol) 
 	}
 	resp_str += eol;
 	resp_str += body;
-
 	return resp_str;
 }

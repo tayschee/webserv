@@ -1,4 +1,6 @@
 #include "message/response.hpp"
+#include <string>
+
 
 int		response::method_is_head(const request &req, const parser &pars)
 {
@@ -17,28 +19,6 @@ int		response::method_is_head(const request &req, const parser &pars)
 	add_content_type(file, req);
 
 	return 200; //value of OK response
-}
-
-int				is_open(const struct stat &file)
-{
-	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
-	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 
-	// IXUSR:  printf("le propriétaire a le droit d'exécution\n");
-	// IRWXG:  printf("lecture/écriture/exécution du groupe\n");
-	// IRGRP:  printf("le groupe a le droit de lecture\n");
-	// IWGRP:  printf("le groupe a le droit d'écriture\n");      
-	// IXGRP:  printf("le groupe a le droit d'exécution\n");   
-	// IRWXO:  printf("lecture/écriture/exécution des autres\n");   
-	// IROTH:  printf("les autres ont le droit de lecture\n");   
-	// IWOTH:  printf("les autres ont le droit d'écriture\n");   
-	// IXOTH:  printf("les autres ont le droit d'exécution\n");
-	if (!(file.st_mode & S_IRUSR)) // check read
-		return (403);
-	// if (!(file.st_mode & S_IWUSR)) // check write
-	// 	return (403);
-	// if (!(file.st_mode & S_IXUSR)) // check execution
-	// 	return (403);
-	return 0;
 }
 
 std::string		index(const std::string &path, std::string root, std::string add)
@@ -91,7 +71,6 @@ int		response::method_is_get(const request &req, const parser &pars)
 {
 	int		fd = -1;
 	struct stat file_stat; //information about file
-
 	std::string file = find_path(pars.get_block("location", req.get_uri()), req);
 
 	//403 interdiction
@@ -103,85 +82,59 @@ int		response::method_is_get(const request &req, const parser &pars)
 		return ret;
 	if (!is_authorize(req, pars))
 		return 401;
-	//file = pars.get_block("server").conf.find("root")->second[0] + req.get_uri();
 	std::cout << "path = " << file << std::endl;
-	if (get_extension(file) == ".jpg")
+	std::string type = (find_media_type(get_extension(file)).second);
+	if (type != DEFAULT_TYPE)
 	{
+		char buf[4096 + 1] = {0};
+		int fd;
+		int res;
+
+		fd = open(file.c_str(), O_RDONLY);
+		while ((res = read(fd, buf, 4096)) > 0)
+		{
+			for (size_t j = 0; j < (size_t)res; ++j)
+				body.push_back(buf[j]);
+			memset(buf, 0, 4097);
+		}
+		close(fd);
+		std::string ext(get_extension(file));
+		ext.erase(ext.begin());
+		header.insert(value_type(CONTENT_TYPE, type + ext));
+		header.insert(value_type("Accept_Ranges", "bytes"));
+		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+		return 200;
+	}
+	else if (get_extension(file) == ".php")
+	{
+		cgi(req, pars, body);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+	}
+	else if (get_extension(file) == ".html")
+	{	
+		std::cout << "je suis un html" << std::endl;
 		fd = open(file.c_str(), O_RDONLY);
 		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
 		{
 			close(fd);
 			return error_file(errno);
 		}
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-		header.insert(value_type(CONTENT_TYPE, "text/jpeg"));
-		return 200;
-	}
-	if (get_extension(file) == ".php")
-	{
-		cgi(req, pars, body);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
 	}
 	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
 		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
 		body = index(file, req.get_uri(), add);
 	}
-	else if (get_extension(file) == ".html")
-	{	
-		fd = open(file.c_str(), O_RDONLY);
-		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
-		{
-			close(fd);
-			return error_file(errno);
-		}
-		/* almost same than method_is_head but we dont call it because we need struct stat to fill body */
-		//add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		add_content_type(file, req);
-
-	}
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	//add_content_type(file);
-	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+	//add_content_type(file, req);
 	header.insert(value_type(CONTENT_TYPE, "text/html"));
+	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	if (fd > 0)
 		close(fd);
 	return 200;
 }
-/*
-int		response::method_is_get(const request &req)
-{
-	int		fd;
-	struct stat file_stat; //information about file
-	std::string	file = req.get_uri();
-
-	//403 interdiction
-	if ((fd = open(file.c_str(), O_RDONLY)) < 0)
-	{
-		return (error_file(errno));
-	}
-	if (lstat(file.c_str(), &file_stat) < 0)
-		return (error_file(errno));
-
-	if (add_body(fd, file_stat)) //body is filled by content of fd//
-	{
-		close(fd);
-		return error_file(errno);
-	}
-	close(fd);
-
-	// almost same than method_is_head but we dont call it because we need struct stat to fill body //
-	add_content_length(req.get_header(), file_stat.st_size); // st_size = total size in byte //
-	add_last_modified(file_stat.st_mtime); // st_mtime = hour of last modification //
-	add_content_type(file);
-
-	return 200;
-}*/
 
 int		response::method_is_delete(const request &req, const parser &pars)
 {

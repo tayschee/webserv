@@ -55,6 +55,7 @@ class response : public message
 		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
 		std::list<std::string> files_in_dir(const std::string &path) const;
+		int				is_open(const struct stat &file) const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/

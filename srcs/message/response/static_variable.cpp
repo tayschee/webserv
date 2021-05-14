@@ -30,14 +30,14 @@ response::media_type_array	response::initialise_existing_media_type()
 	//APPLICATION
 	map.insert(media_type_array::value_type(BMP, APP));
 	map.insert(media_type_array::value_type(GIF, APP));
-	map.insert(media_type_array::value_type(JPEG, APP));
+	//map.insert(media_type_array::value_type(JPEG, APP));
 	map.insert(media_type_array::value_type(PNG, APP));
 	map.insert(media_type_array::value_type(WEBP, APP));
 
 	//AUDIO
 	map.insert(media_type_array::value_type(BMP, AUDIO));
 	map.insert(media_type_array::value_type(GIF, AUDIO));
-	map.insert(media_type_array::value_type(JPEG, AUDIO));
+	//map.insert(media_type_array::value_type(JPEG, AUDIO));
 	map.insert(media_type_array::value_type(PNG, AUDIO));
 	map.insert(media_type_array::value_type(WEBP, AUDIO));
 
@@ -45,6 +45,7 @@ response::media_type_array	response::initialise_existing_media_type()
 	map.insert(media_type_array::value_type(BMP, IMAGE));
 	map.insert(media_type_array::value_type(GIF, IMAGE));
 	map.insert(media_type_array::value_type(JPEG, IMAGE));
+	map.insert(media_type_array::value_type(JPG, IMAGE));
 	map.insert(media_type_array::value_type(PNG, IMAGE));
 	map.insert(media_type_array::value_type(WEBP, IMAGE));
 
@@ -54,9 +55,10 @@ response::media_type_array	response::initialise_existing_media_type()
 	map.insert(media_type_array::value_type(JS, TXT));
 
 	//VIDEO
+	map.insert(media_type_array::value_type(MP4, VIDEO));
 	map.insert(media_type_array::value_type(BMP, VIDEO));
 	map.insert(media_type_array::value_type(GIF, VIDEO));
-	map.insert(media_type_array::value_type(JPEG, VIDEO));
+	//map.insert(media_type_array::value_type(JPEG, VIDEO));
 	map.insert(media_type_array::value_type(PNG, VIDEO));
 	map.insert(media_type_array::value_type(WEBP, VIDEO));
 

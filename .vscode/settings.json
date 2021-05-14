@@ -43,10 +43,5 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
-    },
-    "files.exclude": {
-        "**/.o": true,
-        "**/*.o": true
-    },
-    "search.useGlobalIgnoreFiles": true
+    }
 }

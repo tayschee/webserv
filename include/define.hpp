@@ -123,17 +123,19 @@
 
 /*define subtype*/
 
-# define BMP	"bmp"
-# define CSS 	"css"
-# define HTML	"html"
-# define GIF	"gif"
-# define JPEG	"jpeg"
-# define JS		"javascript"
-# define OGG	"ogg"
-# define PNG	"png"
-# define WAV	"wav"
-# define WEBP	"webp"
-# define WEBM	"webm"
+# define BMP	".bmp"
+# define CSS 	".css"
+# define HTML	".html"
+# define GIF	".gif"
+# define JPEG	".jpeg"
+# define JPG	".jpg"
+# define MP4	".mp4"
+# define JS		".javascript"
+# define OGG	".ogg"
+# define PNG	".png"
+# define WAV	".wav"
+# define WEBP	".webp"
+# define WEBM	".webm"
 
 # define DEFAULT_SUBTYPE "plain"
 
