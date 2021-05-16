@@ -28,6 +28,7 @@
 #define PARSER_INDEX "index"
 #define PARSER_AUTOINDEX "autoindex"
 #define PARSER_ROOT "root"
+#define PARSER_SCRIPT_NAME "script_name"
 
 class parser
 {
@@ -64,7 +65,8 @@ public:
 	};
 
 private:
-	typedef bool (parser::*check_func)(const std::string&, const std::vector<std::string>&, int) const;
+	typedef bool (parser::*check_prop_func)(const std::string&, const std::vector<std::string>&, int) const;
+	typedef bool (parser::*check_block_func)(const std::vector<std::string>&, int) const;
 
 	std::string filename;
 	blocks _blocks;
@@ -92,6 +94,8 @@ private:
 	bool check_prop_accept(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_listen(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_err_page(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_autoindex(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_script_name(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
 
