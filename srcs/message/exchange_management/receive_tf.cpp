@@ -35,11 +35,11 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 		buffer = new char[default_buf_size + 1];
 		if ((i = read(socket, buffer, default_buf_size)) < 0)
 			return 500;
-		if (i == 0)
-			return -1;
 		buffer[i] = 0;
 		this->msg += std::string(buffer);
 		delete[] buffer;
+		if (i == 0)
+			return -1;
 		return(check(req));
 	}
 	else
@@ -47,11 +47,11 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 		buffer = new char[this->buf_size + 1];
 		if ((i = read(socket, buffer, this->buf_size)) < 0)
 			return 500;
-		if (i == 0)
-			return -1;
 		buffer[i] = 0;
 		this->msg += std::string(buffer);
 		delete[] buffer;
+		if (i == 0)
+			return -1;
 		this->buf_size -= i;
 		return 0;
 	}

@@ -32,12 +32,11 @@ int		receive_management::receive_header::receive(const int socket, message *req)
 		delete[] buffer;
 		return 500; //throw exception
 	}
-	std::cout << "i = " << i << std::endl;
-	if (i == 0)
-		return -1;
 	buffer[i] = 0;
 	msg += buffer;
 	delete[] buffer;
+	if (i == 0)
+		return -1;
 	return check(req);
 }
 

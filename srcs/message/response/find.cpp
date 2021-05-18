@@ -65,9 +65,8 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 std::string	response::find_path(const parser::block &block, const request &req) const
 {
 	parser::entries entries(block.conf);
-	std::cout << "1111111111111111" << std::endl;
 	std::string path(entries.find("root")->second[0] + req.get_uri());
-	std::cout << "222222222222222222" << std::endl;
+
 	struct stat file_stat;
 
 	if (stat(path.c_str(), &file_stat) < 0)
@@ -82,8 +81,8 @@ std::string	response::find_path(const parser::block &block, const request &req) 
 		std::list<std::string> files(files_in_dir(path));
 		if (*(--path.end()) != '/')
 		path.push_back('/');
-
-		return (path + find_index(entries, files));
+		std::string ret = path + find_index(entries, files);
+		return (ret);
 	}
 	return path;
 }
@@ -94,6 +93,8 @@ std::string response::find_index(const parser::entries &entries, const std::list
 	std::list<std::string>::const_iterator end_f;
 	try
 	{
+		if (entries.find("index") == entries.end())
+			return "";
 		std::vector<std::string> index(entries.find("index")->second);
 		std::vector<std::string>::iterator it_i(index.begin());
 		std::vector<std::string>::iterator end_i(index.end());

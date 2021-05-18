@@ -10,6 +10,7 @@ class request;
 # include <dirent.h>
 # include <sys/stat.h> 
 # include "cgi.hpp"
+# include "utils.hpp" //files_in_dir
 
 #include <list>
 

@@ -46,7 +46,7 @@ void			response::add_last_modified(time_t time)
 /*add field Last_Modified to response::header, those function may change to replace "webserv" by server_name*/
 void			response::add_server()
 {
-	header.insert(std::pair<std::string, std::string>(SERVER, WEBSERV));
+	header.insert(std::pair<std::string, std::string>(PARSER_SERVER, WEBSERV));
 }
 
 /*add field Content-Type to response::header, if accept-charset is in request precise charset*/
@@ -110,7 +110,7 @@ void			response::add_content_type(const std::string &file) //pas tester
 
 	if (pos == file.npos)
 		return ;	//no encoding
- 
+
  	extension = file.substr(pos + 1);
 	val = get_encoding_type(extension);
 
@@ -123,7 +123,7 @@ bool			response::add_body(int fd, struct stat &file_stat)
 	char	buffer[file_stat.st_size + 1]; //st_size contains size of file + 1 for '\0'
 
 	/*read fd and put it's content in buffer*/
-	if (read(fd, buffer, file_stat.st_size) < 0) 
+	if (read(fd, buffer, file_stat.st_size) < 0)
 	{
 		return 1; //check errno
 	}
