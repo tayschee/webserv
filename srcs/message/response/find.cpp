@@ -42,10 +42,10 @@ response::find_media_type(const std::string subtype) const
 	return (*val);
 }
 
-std::string	response::find_path(const parser::block &block) const
+std::string	response::find_path(const parser::block &block, const std::string &partial_path) const
 {
 	parser::entries entries(block.conf);
-	std::string path(entries.find("root")->second[0] + block.args[0]);
+	std::string path(entries.find("root")->second[0] + partial_path);
 	struct stat file_stat;
 
 	if (stat(path.c_str(), &file_stat) < 0)
@@ -68,10 +68,9 @@ std::string	response::find_path(const parser::block &block) const
 	}
 	else
 	{
-		std::cout << "file\n";
-		return path;
+		return "";
+		//return find_language(path, files_in_dir(path));
 	}
-
 }
 
 std::string response::find_index(const parser::entries &entries, const std::list<std::string> &files) const
@@ -95,4 +94,52 @@ std::string response::find_index(const parser::entries &entries, const std::list
 		++it_i;
 	}
 	return "";
+}
+
+std::string response::find_charset() const
+{
+	header_type::const_iterator it_tag;
+
+	if ((it_tag = header.find(ACCEPT_CHARSET)) == header.end())
+		return "";
+
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+
+	if (it == end)
+		return "";
+	else
+		return it->second;
+}
+
+/*find if there is equivalent file for a specific language if there is, add content-language header field to header*/
+std::string response::find_language(const std::string &complete_path)
+{
+	header_type::const_iterator it_tag;
+
+	if ((it_tag = header.find(ACCEPT_LANGUAGE)) == header.end())
+		return complete_path;
+
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+	struct stat file_stat; //information about file
+
+	while (it != end)
+	{
+		std::string new_path(complete_path + "." + it->second);
+		if (stat(new_path.c_str(), &file_stat) < 0)
+		{
+			if (!(errno == ENOENT)) //file doesnt exist or new_path is empty chain
+				return ""; //error do something else
+		}
+		else
+		{
+			add_content_language(it->second);
+			return new_path;
+		}
+		++it;
+	}
+	return complete_path;
 }

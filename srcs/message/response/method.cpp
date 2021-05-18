@@ -16,7 +16,7 @@ int		response::method_is_head(const request &req, const parser &pars)
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_type(file, req);
 
-	return 200; //value of OK response
+	return 200; //OK
 }
 
 std::string		index(std::string path)
@@ -196,19 +196,15 @@ int		response::method_is_delete(const request &req, const parser &pars)
 
 int		response::method_is_options(const request &req, const parser &pars)
 {
-	(void)pars;
-	struct stat file_stat; //information about file
-	std::string	file = req.get_uri();
-
-	if (stat(file.c_str(), &file_stat) < 0)
-		return error_file(errno); //check errno
-
-	/* two next line can maybe be add to main_header */
-	add_content_length(0); /* st_size = total size in byte */
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_type(file, req);
-
-	return 200; //value of OK response
+	if (req.get_uri() == "*")
+	{
+		//do something
+		return 200;
+	}
+	else
+	{
+		return (method_is_get(req, pars)); //should become MUST
+	}
 }
 
 int		response::method_is_put(const request &req, const parser &pars)

@@ -23,18 +23,19 @@ void	response::get_error(int error, const parser &pars)
 
 response::response(const request &req, const parser &pars) : message()
 {
-	std::cout << "ooooooooook\n";
-	if (req.validity() != 0)
+	int status;
+
+	if ((status = req.validity()) != 0)
 	{
-		std::cout << "noooooot     ooooooooook\n";
-		//create error message
+		default_error(status);
 	}
 	else
 	{
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
 
-		std::cout << find_path(pars.get_block(BLOCK_LOCATION, req.get_uri())) << "\n";
+		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second); //segfault possible
+
+		std::cout << find_path(pars.get_block(BLOCK_LOCATION), req.get_uri()) << "\n";
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
 		method_function header_field_function = find_method_function(req.get_method(), allow_method); //give function associate with request
 		main_header(allow_method); /*add header_field which are present in all method*/
@@ -48,7 +49,6 @@ response::response(const request &req, const parser &pars) : message()
 		first_line.status_string = find_status_string();
 
 		first_line.version = req.get_version();
-		std::cout << "ooook\n";
 	}
 }
 

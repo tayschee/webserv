@@ -24,9 +24,7 @@ int		request::validity() const
 	header_type::const_iterator end(header.end());
 	std::pair<header_type::const_iterator, header_type::const_iterator> range_host(header.equal_range(HOST));
 
-	if (range_host.first == end)
-		return 400;
-	else if (++range_host.first != range_host.second)
+	if (range_host.first == end || ++range_host.first != range_host.second)
 		return 400;
 	//maybe check tf
 	return 0;

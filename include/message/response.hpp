@@ -12,7 +12,8 @@ class request;
 # include "cgi.hpp"
 # include "utils.hpp" //files_in_dir
 
-#include <list>
+# include <list>
+# include <map>
 
 class parser;
 class request;
@@ -55,14 +56,17 @@ class response : public message
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
+		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
 		method_array::value_type::second_type	find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
-		std::string								find_path(const parser::block &block) const;
+		std::string								find_path(const parser::block &block, const std::string &partial_path) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
+		std::string 							find_charset() const;
+		std::string								find_language(const std::string &complete_path);
 
 	private : //method_is_* function, apply one of method
 		int					method_is_head(const request &req, const parser &pars); //HEAD
@@ -80,6 +84,7 @@ class response : public message
 		void				add_server(); //Server
 		void				add_content_type(const std::string &file, const request &req); //Content-type
 		void				add_content_type(const std::string &file); //Content-type without precise charset
+		void				add_content_language(const std::string &language); //Content-Language
 		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
 
 		bool				add_body(int fd, struct stat &file_stat); //body
@@ -91,7 +96,7 @@ class response : public message
 	public : //get_* functions, inside getter.cpp, this function are used to have access private variable
 		const response_line	&get_first_line() const;
 
-		int				get_status() const;
+		int						get_status() const;
 		const std::string		&get_status_string() const;
 		const std::string		&get_version() const;
 	

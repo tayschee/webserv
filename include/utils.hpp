@@ -10,6 +10,8 @@
 bool		is_horizontal_space(int c); //return 1 for space and tab and 0 for newline vertical tab and all other...
 size_t		nb_horizontal_space(const std::string &str); //return number of succesive horizontal_space
 std::string	clean_string(std::string &str); //delete useless horizontal space in a string
+std::string string_without(std::string str, const std::string &elem_to_erase);
+std::string replace(std::string str, const std::string &elem_to_replace, const std::string &replacing_elem);
 std::vector<std::string> split(const std::string &str, const std::string &delimiters); //split string with delimiters
 
 std::string				ft_itoa(const int nb);
@@ -36,6 +38,9 @@ template<class T> 	T	ft_atoi(const std::string &str)
 	}
 	return nb;
 }
+
+template <>
+float					ft_atoi<float>(const std::string &str);
 
 std::string get_extension(const std::string& str); // Get a file exension (with prefix)
 std::list<std::string>	files_in_dir(const std::string &path);

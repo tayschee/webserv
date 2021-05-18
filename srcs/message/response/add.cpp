@@ -55,30 +55,33 @@ void			response::add_content_type(const std::string &file, const request &req) /
 	std::string extension;
 	size_t		pos = file.find_first_of(".");
 	request::header_type head = req.get_header();
-	request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+
+	std::string							charset_type;
 
 	if (pos != file.npos)
 	{
  		extension = file.substr(pos + 1);
-		media_type_array::value_type	media_type(find_media_type(extension));
+		media_type_array::value_type		media_type(find_media_type(extension));
 
-		if (it != head.end())
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-		else
+		charset_type = find_charset();
+		if (charset_type == "")
 			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+		else
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + charset_type));
 	}
 	else
 	{
-		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+		media_type_array::value_type		media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
 
-		if (it != head.end())
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-		else
+		charset_type = find_charset();
+		if (charset_type == "")
 			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+		else
+			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + charset_type));
 	}
 }
 
-/*add field Content-Type to response::header, without precise charser*/
+/*add field Content-Type to response::header, without precise charset*/
 void			response::add_content_type(const std::string &file) //pas tester
 {
 	std::string extension;
@@ -113,6 +116,12 @@ void			response::add_content_type(const std::string &file) //pas tester
 
 	header.insert(value_type(CONTENT_TYPE, val.first + val.second));
 }*/
+
+/* add field content_language, it s call by find_language if an appropriate language is find */
+void				response::add_content_language(const std::string &language)
+{
+	header.insert(std::pair<std::string, std::string>(CONTENT_LANGUAGE, language));
+}
 
 /* this time, this is not a field it's the body of response which be add */
 bool			response::add_body(int fd, struct stat &file_stat)

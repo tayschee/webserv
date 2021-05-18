@@ -16,7 +16,7 @@ class request : public message
 		{
 			std::string	method;
 			std::string uri;
-			//add query_string after ?
+			std::string query_string;
 			std::string version;
 
 			void	clear();
