@@ -37,7 +37,7 @@ std::string		response::header_first_line() const
 	return str_first_line;
 }
 
-int				response::is_open(const struct stat &file) const
+int			response::is_open(const struct stat &file) const
 {
 	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
 	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 

@@ -11,7 +11,10 @@ response::find_status_string() const
 	if (it == existing_status.end())
 		return UNKNOW_STATUS;
 	else
+	{
+		std::cout << "return status = " << existing_status.find(first_line.status)->second << std::endl;
 		return existing_status.find(first_line.status)->second;
+	}
 }
 
 /*this function return function associated to a method*/
@@ -30,22 +33,41 @@ response::find_method_function(const std::string &method, const std::vector<std:
 	return &response::method_is_unknow;
 }
 
-response::media_type_array::value_type //std::pair<std::string, std::string>
-response::find_media_type(const std::string subtype) const
+//response::media_type_array::value_type //std::pair<std::string, std::string>
+std::string
+response::find_media_type(const std::string subtype, const parser &pars) const
 {
-	media_type_array::const_iterator	val(existing_media_type.find(subtype));
+	std::string type;
+	if (subtype.empty())
+		return subtype;
+	try		
+	{
+		std::cout << "extension = " << subtype << std::endl;
+		parser::entries block = pars.get_block("types", "mime").conf;
+		if (block.find(subtype) != block.end())
+			type = block.find(subtype)->second[0];
+	}
+	catch(const std::exception& e)
+	{
+		type = "";
+	}
+	return type;
 
-	/*if subtype doesn't exist return default value*/
-	if (val == existing_media_type.end())
-		return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+	// media_type_array::const_iterator	val(existing_media_type.find(subtype));
 
-	return (*val);
+	// /*if subtype doesn't exist return default value*/
+	// if (val == existing_media_type.end())
+	// 	return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+
+	// return (*val);
 }
 
 std::string	response::find_path(const parser::block &block, const request &req) const
 {
 	parser::entries entries(block.conf);
+	std::cout << "1111111111111111" << std::endl;
 	std::string path(entries.find("root")->second[0] + req.get_uri());
+	std::cout << "222222222222222222" << std::endl;
 	struct stat file_stat;
 
 	if (stat(path.c_str(), &file_stat) < 0)

@@ -1,7 +1,6 @@
 #include "message/response.hpp"
 #include <string>
 
-
 int		response::method_is_head(const request &req, const parser &pars)
 {
 	(void)pars;
@@ -83,8 +82,22 @@ int		response::method_is_get(const request &req, const parser &pars)
 	if (!is_authorize(req, pars))
 		return 401;
 	std::cout << "path = " << file << std::endl;
-	std::string type = (find_media_type(get_extension(file)).second);
-	if (type != DEFAULT_TYPE)
+	std::string type = find_media_type(get_extension(file), pars);
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	{
+		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
+		body = index(file, req.get_uri(), add);
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
+	}
+	else if (get_extension(file) == ".php")
+	{
+		std::cout << "je suis un php" << std::endl;
+		cgi(req, pars, body, file);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
+	}
+	else
 	{
 		char buf[4096 + 1] = {0};
 		int fd;
@@ -93,42 +106,14 @@ int		response::method_is_get(const request &req, const parser &pars)
 		fd = open(file.c_str(), O_RDONLY);
 		while ((res = read(fd, buf, 4096)) > 0)
 		{
-			for (size_t j = 0; j < (size_t)res; ++j)
-				body.push_back(buf[j]);
+			body.insert(body.end(), buf, buf + res);
 			memset(buf, 0, 4097);
 		}
-		close(fd);
-		std::string ext(get_extension(file));
-		ext.erase(ext.begin());
-		header.insert(value_type(CONTENT_TYPE, type + ext));
-		header.insert(value_type("Accept_Ranges", "bytes"));
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-		return 200;
+		if (!type.empty())
+			header.insert(value_type(CONTENT_TYPE, type));
+		else
+			header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
 	}
-	else if (get_extension(file) == ".php")
-	{
-		cgi(req, pars, body);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
-	}
-	else if (get_extension(file) == ".html")
-	{	
-		std::cout << "je suis un html" << std::endl;
-		fd = open(file.c_str(), O_RDONLY);
-		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
-		{
-			close(fd);
-			return error_file(errno);
-		}
-	}
-	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-	{
-		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
-		body = index(file, req.get_uri(), add);
-	}
-	//add_content_type(file, req);
-	header.insert(value_type(CONTENT_TYPE, "text/html"));
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	if (fd > 0)

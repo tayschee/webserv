@@ -15,7 +15,7 @@ class client
         int                             fd;
         struct timeval                  time;
         bool                            listen; // is socket for listening or a new client
-        bool                            read;   // finished to read or not 
+        int                             read;   // finished to read or not 
         parser                          pars;
         message::receive_management     rcm;
         request                         req;
@@ -25,6 +25,7 @@ class client
         client();
 
     public: /*public function*/
+		bool			is_close;
         client(const int pfd, const bool _listen, const parser &_pars);
         client(int _fd, bool _listen, const client &other);
 
@@ -34,11 +35,11 @@ class client
 
         int                             get_fd() const;
         void                            receive(); // manage receive
-        ssize_t                         sent(); // send response
+        long                            sent(); // send response
         bool                            is_empty() const;
         bool                            is_listen() const; // Check if listening socket
         bool                            is_time() const; // Check if the time is finished
-        bool                            is_read() const; // Check if read
+        int                             is_read() const; // Check if read
 };
 
 #endif

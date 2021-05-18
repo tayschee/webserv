@@ -4,6 +4,7 @@
 void parser::parse_file()
 {
 	std::ifstream ifs(filename.c_str());
+	std::ifstream ifs2("/home/user42/42/webserv/mime");
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
@@ -15,7 +16,24 @@ void parser::parse_file()
 		line_no++;
 		if (line.empty())
 			continue;
-
+		line = remove_comments(line);
+		if (line.empty())
+			continue;
+		line = clean_string(line);
+		if (line.empty())
+			continue;
+		if (!check_line(line, line_no))
+		{
+			_blocks.clear();
+			return;
+		}
+		parse_line(line, line_no, block_id);
+	}
+	while (std::getline(ifs2, line))
+	{
+		line_no++;
+		if (line.empty())
+			continue;
 		line = remove_comments(line);
 		if (line.empty())
 			continue;

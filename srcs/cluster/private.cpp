@@ -75,8 +75,12 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 	else
 	{
 		cli.receive(); // no of new client / juste call receive
-		if (cli.is_empty()) // if method is void / close client
+		std::cout << "recieve past" << std::endl;
+		if (cli.is_read() == -1) // if method is void / close client
+		{
 			close_client(it);
+			return -1;
+		}
 	}
 	return 1;
 }

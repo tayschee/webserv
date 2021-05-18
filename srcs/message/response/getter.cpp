@@ -26,8 +26,8 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 	std::string resp_str;
 	const_iterator	it(header.begin());
 	const_iterator	end(header.end());
-
 	resp_str = first_line.version + " " + ft_itoa(first_line.status) + " " + first_line.status_string + eol;
+	std::cout << resp_str << std::endl;
 	while (it != end)
 	{
 		resp_str += it->first + hf_sep + it->second + eol;

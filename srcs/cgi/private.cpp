@@ -1,10 +1,9 @@
 #include "cgi.hpp"
 
-char            **cgi::init_env(const request &req, const parser &pars)
+char            **cgi::init_env(const request &req, const parser &pars, const std::string &path)
 {
     std::map<std::string, std::string> env_tmp;
 	std::string root = pars.get_block("server").conf.find("root")->second[0];
-	std::string path(root + "/" + req.get_uri());
 
 	env_tmp["AUTH_TYPE"] = ""; // idendify type
 	env_tmp["CONTENT_LENGTH"] = ft_itoa(path.size());
@@ -51,7 +50,6 @@ void		cgi::son(const int save_in, const int save_out, int fd[2], const char *scr
 	close(fd[0]);
 	dup2(fd[1], STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
-	
 	execve(script_name, nll, env);
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
