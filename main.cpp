@@ -2,7 +2,7 @@
 
 int		main()
 {
-	cluster cl("/home/user42/42/webserv/conf/conf2");
+	cluster cl("./conf/conf2");
 	cl.init_listen();
 	try
 	{
