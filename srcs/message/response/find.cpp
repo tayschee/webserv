@@ -62,7 +62,7 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	// return (*val);
 }
 
-std::string	response::find_path(const parser::block &block, const request &req) const
+std::string	response::find_path(const parser::block &block, const request &req, const bool index) const
 {
 	parser::entries entries(block.conf);
 	std::string path(entries.find("root")->second[0] + req.get_uri());
@@ -73,7 +73,7 @@ std::string	response::find_path(const parser::block &block, const request &req) 
 	{
 		//do something
 	}
-	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
+	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
 		//determine if this is complete path or if this not for that verify if this is a directory
 		if (is_open(file_stat))

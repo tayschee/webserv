@@ -18,7 +18,6 @@ void			response::add_allow(const std::vector<std::string> &allow_method_array)
 		allow_method_string += ", ";
 		++it;
 	}
-
 	header.insert(std::pair<std::string, std::string>(ALLOW, allow_method_string));
 }
 

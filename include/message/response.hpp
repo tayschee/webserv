@@ -63,7 +63,7 @@ class response : public message
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
 		//media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
-		std::string								find_path(const parser::block &block, const request &req) const;
+		std::string								find_path(const parser::block &block, const request &req, const bool index = 1) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
 
 	private : //method_is_* function, apply one of method
@@ -72,6 +72,7 @@ class response : public message
 		int										method_is_delete(const request &req, const parser &pars); //DELETE
 		int										method_is_options(const request &req, const parser &pars); //OPTION
 		int										method_is_put(const request &req, const parser &pars); //PUT
+		int										method_is_post(const request &req, const parser &pars); //POST
 		int										method_is_unknow(const request &req, const parser &pars); //UNKNOW
 
 	private : //add_* functions, add something inside class like header_field or body
@@ -110,6 +111,10 @@ class response : public message
 		void									default_error(int error_status);
 
 	public :
+
+int		del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
+int		check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars);
+
 												response(const request &req, const parser &pars);
 												response(int status, const parser &pars);
 												~response();
