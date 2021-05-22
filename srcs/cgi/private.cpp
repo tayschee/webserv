@@ -2,26 +2,29 @@
 
 char            **cgi::init_env(const request &req, const parser &pars, const std::string &path)
 {
+	std::cout << req.get() << std::endl;
     std::map<std::string, std::string> env_tmp;
 	std::string root = pars.get_block("server").conf.find("root")->second[0];
 
-	env_tmp["AUTH_TYPE"] = ""; // idendify type
-	env_tmp["CONTENT_LENGTH"] = ft_itoa(req.get_body().size());
-	env_tmp["CONTENT_TYPE"] = "application/x-www-form-urlencoded";
-	env_tmp["GATEWAY_INTERFACE"] = "CGI/1.1";
+	std::cout << "QUERY = " << req.get_query() << std::endl;
+
+	env_tmp["AUTH_TYPE"] = req.get_auth_type();
+	env_tmp["CONTENT_LENGTH"] = req.get_content_length();
+	env_tmp["CONTENT_TYPE"] = req.get_content_type();
+	env_tmp["GATEWAY_INTERFACE"] = GATEWAY_INTERFACE;
 	env_tmp["PATH_INFO"] = req.get_uri();
 	env_tmp["PATH_TRANSLATED"] = path;
-	env_tmp["QUERY_STRING"] = "";//req.get_uri();
-	env_tmp["REMOTE_ADDR"] = ""; // client's IP
-	env_tmp["REMOTE_IDENT"] = ""; //distance user
-	env_tmp["REMOTE_USER"] = ""; // user id
+	env_tmp["QUERY_STRING"] = req.get_query();
+	env_tmp["REMOTE_ADDR"] = req.get_host();
+	env_tmp["REMOTE_IDENT"] = req.get_user();
+	env_tmp["REMOTE_USER"] = req.get_user(); // user id
 	env_tmp["REQUEST_METHOD"] = req.get_method();
 	env_tmp["REQUEST_URI"] = req.get_uri();
 	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", ".php").conf.find("script_name")->second[0];
 	env_tmp["SEVER_NAME"] = pars.get_block("server").name;
 	env_tmp["SERVER_PORT"] = pars.get_block("server").conf.find("listen")->second[0];
-	env_tmp["SERVER_PROTOCOL"] = req.get_version();
-	env_tmp["SERVER_SOFTWARE"] = "WEBSERV 1.0";
+	env_tmp["SERVER_PROTOCOL"] = HTTP_VERSION;
+	env_tmp["SERVER_SOFTWARE"] = WEBSERV;
 
 	char	**env = new char*[env_tmp.size() + 1];
 	int	j = 0;

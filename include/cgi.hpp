@@ -10,7 +10,7 @@ class cgi
 {
     private: /*private function*/
         cgi(const cgi& other);
-        cgi& operator=(const cgi& other);
+        cgi &operator=(const cgi& other);
         
         void			        clear(char **env);
         std::string             exec(char **env, const request &req, const parser &pars);
