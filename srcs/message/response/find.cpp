@@ -11,7 +11,10 @@ response::find_status_string() const
 	if (it == existing_status.end())
 		return UNKNOW_STATUS;
 	else
+	{
+		std::cout << "return status = " << existing_status.find(first_line.status)->second << std::endl;
 		return existing_status.find(first_line.status)->second;
+	}
 }
 
 /*this function return function associated to a method*/
@@ -30,16 +33,33 @@ response::find_method_function(const std::string &method, const std::vector<std:
 	return &response::method_is_unknow;
 }
 
-response::media_type_array::value_type //std::pair<std::string, std::string>
-response::find_media_type(const std::string subtype) const
+//response::media_type_array::value_type //std::pair<std::string, std::string>
+std::string
+response::find_media_type(const std::string subtype, const parser &pars) const
 {
-	media_type_array::const_iterator	val(existing_media_type.find(subtype));
+	std::string type;
+	if (subtype.empty())
+		return subtype;
+	try		
+	{
+		std::cout << "extension = " << subtype << std::endl;
+		parser::entries block = pars.get_block("types", "mime").conf;
+		if (block.find(subtype) != block.end())
+			type = block.find(subtype)->second[0];
+	}
+	catch(const std::exception& e)
+	{
+		type = "";
+	}
+	return type;
 
-	/*if subtype doesn't exist return default value*/
-	if (val == existing_media_type.end())
-		return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+	// media_type_array::const_iterator	val(existing_media_type.find(subtype));
 
-	return (*val);
+	// /*if subtype doesn't exist return default value*/
+	// if (val == existing_media_type.end())
+	// 	return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
+
+	// return (*val);
 }
 
 std::string	response::find_path(const parser::block &block, const std::string &partial_path) const
@@ -52,55 +72,61 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	{
 		//do something
 	}
-	std::cout << "path" << path << '\n';
-	//determine if this is complete path or if this not for that verify if this is a directory
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
+	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
-		std::string index;
-
-		std::cout << "directory\n";
+		//determine if this is complete path or if this not for that verify if this is a directory
+		if (is_open(file_stat))
+			return path;
 		std::list<std::string> files(files_in_dir(path));
-		index = find_index(entries, files);
-		if (index == "")
-			return index;
-		else
-			return (path + index);
+		if (*(--path.end()) != '/')
+		path.push_back('/');
+		std::string ret = path + find_index(entries, files);
+		return (ret);
 	}
 	else
 	{
-		return "";
+		return path;
 		//return find_language(path, files_in_dir(path));
 	}
+	return path;
 }
 
 std::string response::find_index(const parser::entries &entries, const std::list<std::string> &files) const
 {
 	std::list<std::string>::const_iterator it_f;
-	std::list<std::string>::const_iterator end_f(files.end());
-
-	std::vector<std::string> index(entries.find("index")->second);
-	std::vector<std::string>::iterator it_i(index.begin());
-	std::vector<std::string>::iterator end_i(index.end());
-
-	while (it_i != end_i)
+	std::list<std::string>::const_iterator end_f;
+	try
 	{
-		it_f = files.begin();
-		while (it_f != end_f)
+		if (entries.find("index") == entries.end())
+			return "";
+		std::vector<std::string> index(entries.find("index")->second);
+		std::vector<std::string>::iterator it_i(index.begin());
+		std::vector<std::string>::iterator end_i(index.end());
+		end_f = files.end();
+		while (it_i != end_i)
 		{
-			if (*it_i == *it_f)
-				return *it_i;
-			++it_f;
+			it_f = files.begin();
+			while (it_f != end_f)
+			{
+				if (*it_i == *it_f)
+					return *it_i;
+				++it_f;
+			}
+			++it_i;
 		}
-		++it_i;
+	}
+	catch(const std::exception& e)
+	{
+		//std::cerr << e.what() << '\n';
 	}
 	return "";
 }
 
-std::string response::find_charset() const
+std::string response::find_charset(const request &req) const
 {
 	header_type::const_iterator it_tag;
-
-	if ((it_tag = header.find(ACCEPT_CHARSET)) == header.end())
+	header_type head(req.get_header());
+	if ((it_tag = head.find(ACCEPT_CHARSET)) == head.end())
 		return "";
 
 	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting

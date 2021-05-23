@@ -14,7 +14,7 @@ int		response::error_file(int errnum) const
 		return 500; //server error ?
 }
 
-void	response::default_error(int error_status)
+void	response::default_error(int error_status, const request &req)
 {
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
@@ -29,4 +29,36 @@ void	response::default_error(int error_status)
 	}
 	add_content_length(body.size());
 	add_content_type(DEFAULT_ERROR_FILE_EXT);
+
+	/*do something else if there is particular thing for all method*/
+	if (req.get_method() == HEAD)
+		body.clear();
+}
+
+void response::error_msg(const std::string &path, const request &req, const parser &pars)
+{
+	int status;
+
+	status = method_is_get(path, req, pars);
+	if (status > 399)
+		default_error(status, req);
+	else
+	{
+		if (req.get_method() == HEAD)
+			body.clear();
+	}
+}
+
+void	response::error_response(int status, const request &req, const parser &pars)
+{
+	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
+	std::map<int, std::string>::const_iterator it(block.find(status));
+	std::map<int, std::string>::const_iterator end(block.end());
+
+	if (it == end)
+		default_error(status, req);
+	else
+	{
+		error_msg(it->second, req, pars);
+	}
 }

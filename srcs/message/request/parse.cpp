@@ -17,7 +17,7 @@ void			request::parse_start_line(const std::string &start_line)
 			first_line.query_string = cmd_split[1].substr(pos);
 			cmd_split[1].erase(pos);
 		}
-		first_line.uri = cmd_split[1].substr(pos);
+		first_line.uri = cmd_split[1];
 	}
 	if (cmd_split.size() >= 3)
 		first_line.version = cmd_split[2];

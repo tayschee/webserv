@@ -30,14 +30,14 @@ response::media_type_array	response::initialise_existing_media_type()
 	//APPLICATION
 	map.insert(media_type_array::value_type(BMP, APP));
 	map.insert(media_type_array::value_type(GIF, APP));
-	map.insert(media_type_array::value_type(JPEG, APP));
+	//map.insert(media_type_array::value_type(JPEG, APP));
 	map.insert(media_type_array::value_type(PNG, APP));
 	map.insert(media_type_array::value_type(WEBP, APP));
 
 	//AUDIO
 	map.insert(media_type_array::value_type(BMP, AUDIO));
 	map.insert(media_type_array::value_type(GIF, AUDIO));
-	map.insert(media_type_array::value_type(JPEG, AUDIO));
+	//map.insert(media_type_array::value_type(JPEG, AUDIO));
 	map.insert(media_type_array::value_type(PNG, AUDIO));
 	map.insert(media_type_array::value_type(WEBP, AUDIO));
 
@@ -45,6 +45,7 @@ response::media_type_array	response::initialise_existing_media_type()
 	map.insert(media_type_array::value_type(BMP, IMAGE));
 	map.insert(media_type_array::value_type(GIF, IMAGE));
 	map.insert(media_type_array::value_type(JPEG, IMAGE));
+	map.insert(media_type_array::value_type(JPG, IMAGE));
 	map.insert(media_type_array::value_type(PNG, IMAGE));
 	map.insert(media_type_array::value_type(WEBP, IMAGE));
 
@@ -54,9 +55,10 @@ response::media_type_array	response::initialise_existing_media_type()
 	map.insert(media_type_array::value_type(JS, TXT));
 
 	//VIDEO
+	map.insert(media_type_array::value_type(MP4, VIDEO));
 	map.insert(media_type_array::value_type(BMP, VIDEO));
 	map.insert(media_type_array::value_type(GIF, VIDEO));
-	map.insert(media_type_array::value_type(JPEG, VIDEO));
+	//map.insert(media_type_array::value_type(JPEG, VIDEO));
 	map.insert(media_type_array::value_type(PNG, VIDEO));
 	map.insert(media_type_array::value_type(WEBP, VIDEO));
 
@@ -74,8 +76,8 @@ response::status_array			response::initialise_existing_status()
 									300, 301, 302, 303, 304, 305, 307,
 									400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 417, 426,
 									501, 502, 503, 504, 505}; //key array
-	const std::string msg_status[size] = {STATUS_200, STATUS_201, STATUS_202, STATUS_203, STATUS_204, STATUS_204, STATUS_205,
-										STATUS_301, STATUS_302, STATUS_303, STATUS_304, STATUS_305, STATUS_307,
+	const std::string msg_status[size] = {STATUS_200, STATUS_201, STATUS_202, STATUS_203, STATUS_204, STATUS_205, STATUS_206,
+										STATUS_300, STATUS_301, STATUS_302, STATUS_303, STATUS_304, STATUS_305, STATUS_307,
 										STATUS_400, STATUS_401, STATUS_402, STATUS_403, STATUS_404, STATUS_405, STATUS_406, STATUS_407,
 										STATUS_408, STATUS_409, STATUS_410, STATUS_411, STATUS_412, STATUS_413, STATUS_414, STATUS_415, STATUS_417, STATUS_426,
 										STATUS_501, STATUS_502, STATUS_503, STATUS_504, STATUS_505}; //value_array

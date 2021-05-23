@@ -1,8 +1,8 @@
 #include "cgi.hpp"
 
-cgi::cgi(const request &req, const parser &pars, std::string &body)
+cgi::cgi(const request &req, const parser &pars, std::string &body, const std::string &path)
 {
-	body = exec(init_env(req, pars), pars);
+	body = exec(init_env(req, pars, path), pars);
 
 		if (body[0] == '5')
 			return;

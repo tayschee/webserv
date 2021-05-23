@@ -157,12 +157,12 @@ size_t		ft_strlen(const char *str)
 	return i;
 }
 
-/*std::string get_extension(const std::string& str)
+std::string get_extension(const std::string& str)
 {
 	std::string::size_type pos = str.find('.');
 
 	return pos == str.npos ? "" : str.substr(pos);
-}*/
+}
 
 //It gives list of files + symbolic links inside directory
 std::list<std::string>	files_in_dir(const std::string &path)

@@ -13,11 +13,15 @@ std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v)
 
 std::ostream &operator<<(std::ostream &os, const parser::block &b)
 {
-	os << "Name : " << b.name << std::endl;
-	os << "Args : " << b.args << std::endl;
-	os << "Conf : " << std::endl;
+	os << "Name: " << b.name << std::endl;
+	os << "Args: " << b.args << std::endl;
 
+	os << "Conf: " << std::endl;
 	for (parser::entries::const_iterator it = b.conf.begin(); it != b.conf.end(); it++)
+		os << " - " << it->first << " -> " << it->second << std::endl;
+
+	os << "Errors: " << std::endl;
+	for (std::map<int, std::string>::const_iterator it = b.errors.begin(); it != b.errors.end(); it++)
 		os << " - " << it->first << " -> " << it->second << std::endl;
 	return os;
 }

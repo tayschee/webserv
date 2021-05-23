@@ -23,6 +23,14 @@ class request : public message
 		};
 
 	public :
+		/*class exception : public std::exception
+		{
+			private :
+				int 			status;
+				std::string 	method;
+		};*/
+
+	public :
 		typedef std::vector<std::string> method_array;
 
 	public : //public variable

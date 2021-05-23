@@ -4,12 +4,19 @@ void                            client::receive() // call recieve
 {
     reset_time();
     read = req.receive(fd, rcm);
+    std::cout << "read = " << read << std::endl;
 }
 
-ssize_t                         client::sent() // send response
+long                         client::sent() // send response
 {
-    read = false;
+    read = 0;
     response rp(req, pars);
-//    std::cout << rp.get() << std::endl;
-    return send(fd, rp.get().c_str(), rp.get().size(), 0);
+    std::string s(rp.get());
+    // std::cout << "=====================================================" << std::endl;
+    // std::cout << req.get() << std::endl;
+    //  std::cout << "=====================================================" << std::endl;
+    //  std::cout << s << std::endl;
+    // std::cout << "=====================================================" << std::endl;
+    send(fd, s.c_str(), s.size(), 0);
+    return 0;
 }

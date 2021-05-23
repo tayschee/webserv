@@ -1,4 +1,4 @@
-#include <message/response.hpp>
+#include "message/response.hpp"
 
 /*Convert header_type to a syntax adapt for http do same thing than (std::string std::string::operator=(const header_type &)),
 that doesn't exist for now, but it can be implement*/
@@ -66,4 +66,72 @@ std::multimap<int, std::string>	response::tag_priority(std::string tag) const
 		++it;
 	}
 	return map;
+}
+
+bool	response::is_authorize(const std::string &path_file, const request &req, const parser &pars) const
+{
+	parser::entries path(pars.get_block(BLOCK_LOCATION, path_file).conf);
+	if (path.find(AUTH_BASIC) != path.end())
+	{
+		message::header_type gh = req.get_header();
+		if (gh.find(AUTHORIZATION) == gh.end())
+			return false;
+		std::vector<std::string> tab;
+		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
+		char buf[4096];
+		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
+		int ret = read(fd, buf, 499);
+		buf[ret] = '\0';
+		tab = split(buf, "\t\r\n");
+		close(fd);
+		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+			if (Authorization == *it)
+				return true;
+		return false;
+	}
+	return true;
+}
+
+std::string		response::index(const std::string &path, std::string root, std::string add) const
+{
+	DIR *dir = opendir(path.c_str());
+	struct dirent *dp;
+	std::string index =\
+	"<html>\n\
+	<head><title>Index of " + root + "</title></head>\n\
+	<body bgcolor=\"white\">\n\
+		<h1>Index of " + root + "</h1>\n\
+		<hr><pre><a href=\"../\">../</a>\n";
+		while ((dp = readdir(dir)) != NULL)
+		{
+			if (dp->d_name != std::string(".") && dp->d_name != std::string(".."))
+				index += "<a href=\"" + add + std::string(dp->d_name) + "\">" + std::string(dp->d_name) + "/" + "</a>\n";
+		}
+        closedir(dir);
+	index +=\
+	"</pre><hr></body>\n\
+	</html>";
+	return index;
+}
+
+int			response::is_open(const struct stat &file) const
+{
+	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
+	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 
+	// IXUSR:  printf("le propriétaire a le droit d'exécution\n");
+	// IRWXG:  printf("lecture/écriture/exécution du groupe\n");
+	// IRGRP:  printf("le groupe a le droit de lecture\n");
+	// IWGRP:  printf("le groupe a le droit d'écriture\n");      
+	// IXGRP:  printf("le groupe a le droit d'exécution\n");   
+	// IRWXO:  printf("lecture/écriture/exécution des autres\n");   
+	// IROTH:  printf("les autres ont le droit de lecture\n");   
+	// IWOTH:  printf("les autres ont le droit d'écriture\n");   
+	// IXOTH:  printf("les autres ont le droit d'exécution\n");
+	if (!(file.st_mode & S_IRUSR)) // check read
+		return (403);
+	// if (!(file.st_mode & S_IWUSR)) // check write
+	// 	return (403);
+	// if (!(file.st_mode & S_IXUSR)) // check execution
+	// 	return (403);
+	return 0;
 }

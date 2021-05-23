@@ -14,13 +14,6 @@ std::vector<std::string> parser::split(const std::string &str, const std::string
 	return result;
 }
 
-std::string get_extension(const std::string& str)
-{
-	std::string::size_type pos = str.find('.');
-
-	return pos == str.npos ? "" : str.substr(pos);
-}
-
 std::vector<parser> parser::parse_folder(std::string path)
 {
 	std::vector<parser> res;
