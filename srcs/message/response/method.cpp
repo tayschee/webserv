@@ -25,7 +25,7 @@ int		response::method_is_get(const std::string &path, const request &req, const 
 {
 	int		fd = -1;
 	struct stat file_stat; //information about file
-	std::string file = find_path(pars.get_block(PARSER_LOCATION, path), path);
+	std::string file = find_path(pars.get_block(PARSER_LOCATION, path), path, req);
 
 	std::cout << "path is : " << path << "\n";
 	std::cout << "file is : " << file << "\n";

@@ -42,7 +42,7 @@ std::multimap<int, std::string>	response::tag_priority(std::string tag) const
 {
 	const char tag_sep[] = ",";
 	const char value_sep[] = ";q=";
-	//tag.replace(0, tag.npos, " "); //must add replace function to delete alll white space
+	tag = string_without(tag, " \t"); //delete one of those elem in string
 	std::vector<std::string> split_tag(split(tag, tag_sep));
 	std::vector<std::string>::const_iterator it(split_tag.begin());
 	std::vector<std::string>::const_iterator end(split_tag.end());

@@ -65,13 +65,13 @@ class response : public message
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
 		method_array::value_type::second_type	find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
-		std::string								find_path(const parser::block &block, const std::string &partial_path) const;
+		std::string								find_path(const parser::block &block, const std::string &partial_path,  const request &req) const;
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_path(const parser::block &block, const request &req) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
 		std::string 							find_charset(const request &req) const;
-		std::string								find_language(const std::string &complete_path);
+		std::string								find_language(const std::string &complete_path, const request &req);
 
 	private : //method_is_* function, apply one of method
 		int										method_is_head(const std::string &path, const request &req, const parser &pars); //HEAD

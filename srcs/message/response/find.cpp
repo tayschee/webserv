@@ -62,8 +62,9 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	// return (*val);
 }
 
-std::string	response::find_path(const parser::block &block, const std::string &partial_path) const
+std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req) const
 {
+	(void)req;
 	parser::entries entries(block.conf);
 	std::string path(entries.find("root")->second[0] + partial_path);
 	struct stat file_stat;
@@ -86,7 +87,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	else
 	{
 		return path;
-		//return find_language(path, files_in_dir(path));
+		//return find_language(path, files_in_dir(path), req);
 	}
 	return path;
 }
@@ -140,11 +141,11 @@ std::string response::find_charset(const request &req) const
 }
 
 /*find if there is equivalent file for a specific language if there is, add content-language header field to header*/
-std::string response::find_language(const std::string &complete_path)
+std::string response::find_language(const std::string &complete_path, const request &req)
 {
 	header_type::const_iterator it_tag;
 
-	if ((it_tag = header.find(ACCEPT_LANGUAGE)) == header.end())
+	if ((it_tag = req.get_header().find(ACCEPT_LANGUAGE)) == header.end())
 		return complete_path;
 
 	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
