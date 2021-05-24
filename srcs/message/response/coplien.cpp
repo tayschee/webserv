@@ -5,10 +5,7 @@ void	response::get_code(const parser &pars)
 {
 	(void)pars;
 	struct stat file_stat; //information about file
-	if (first_line.status == 401)
-		add_www_autentificate();
-	if (first_line.status == 503)
-		add_retry_after(200);
+	status_header();
 	std::string file_error = "/home/user42/42/webserv/error/" + std::string(ft_itoa(first_line.status)) + ".html";
 	if (lstat(file_error.c_str(), &file_stat) < 0)
 	{
@@ -65,30 +62,37 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 
 response::response(const request &req, const parser &pars) : message()
 {
+	std::cout << "allo?\n";
 	if (req.validity() != 0)
 	{
-		first_line.status = 404;
+		first_line.status = 400;
 		get_code(pars);
 		first_line.status_string = find_status_string();
 	}
 	else
 	{
+		std::cout << "ok\n";
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-		
-		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+		std::cout << "ok1\n";
+		//std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+		std::vector<std::string> allow_method(1, GET);
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
-
+		std::cout << "ok2\n";
 		method_function header_field_function = find_method_function(req.get_method(), allow_method); //give function associate with request
-
+		std::cout << "ok3\n";
 		main_header(allow_method); /*add header_field which are present in all method*/
 		/*call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way*/
 		if (!is_redirect(path_info, pars))
 		{
-
+			std::cout << "ok4\n";
 			first_line.status = (this->*header_field_function)(req.get_uri(), req, pars);
-
-			if (first_line.status != 200)
-				get_code(pars);
+			std::cout << "ok5\n";
+			if (first_line.status > 299)
+			{
+				std::cout << "ok6\n";
+				first_line.status = error_response(first_line.status, req, pars);
+				std::cout << "ok7\n";
+			}
 		}
 		
 		first_line.status_string = find_status_string();

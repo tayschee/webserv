@@ -27,6 +27,8 @@ int		response::method_is_get(const std::string &path, const request &req, const 
 	struct stat file_stat; //information about file
 	std::string file = find_path(pars.get_block(PARSER_LOCATION, path), path);
 
+	std::cout << "path is : " << path << "\n";
+	std::cout << "file is : " << file << "\n";
 	//403 interdiction
 	if (file.empty())
 		return 404;

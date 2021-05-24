@@ -35,30 +35,48 @@ void	response::default_error(int error_status, const request &req)
 		body.clear();
 }
 
-void response::error_msg(const std::string &path, const request &req, const parser &pars)
+int response::error_msg(const std::string &path, const request &req, const parser &pars)
 {
 	int status;
 
 	status = method_is_get(path, req, pars);
-	if (status > 399)
-		default_error(status, req);
-	else
+	std::cout << "status : " << status << "\n";
+	if (status == 404)
 	{
-		if (req.get_method() == HEAD)
-			body.clear();
+		std::cout << "nive\n";
+		default_error(status, req);
+		return 200;
 	}
+	else if (status > 299)
+		return status;
+	else
+		return 200;
 }
 
-void	response::error_response(int status, const request &req, const parser &pars)
+int	response::error_response(int status, const request &req, const parser &pars)
 {
+	int status_error(status);
 	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
-	std::map<int, std::string>::const_iterator it(block.find(status));
+	std::map<int, std::string>::iterator it;
 	std::map<int, std::string>::const_iterator end(block.end());
 
-	if (it == end)
-		default_error(status, req);
-	else
+	while (status > 299)
 	{
-		error_msg(it->second, req, pars);
+		status_error = status;
+		std::cout << "HERE !!!!!\n";
+		it = block.find(status);
+		if (it == end)
+		{
+			default_error(status, req);
+			break;
+		}
+		else
+		{
+			status = error_msg(it->second, req, pars);
+		}
 	}
+	status_header();
+	if (req.get_method() == HEAD)
+		body.clear();
+	return status_error;
 }

@@ -114,6 +114,16 @@ std::string		response::index(const std::string &path, std::string root, std::str
 	return index;
 }
 
+void		response::status_header()
+{
+	if (first_line.status == 401)
+		add_www_autentificate();
+	if (first_line.status == 503)
+		add_retry_after(200);
+	if (first_line.status > 299 && first_line.status < 400)
+		add_retry_after(1);
+}
+
 int			response::is_open(const struct stat &file) const
 {
 	// IRWXU:  printf("le propriétaire a le droit de lecture\n");

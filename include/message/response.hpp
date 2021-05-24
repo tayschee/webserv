@@ -59,6 +59,7 @@ class response : public message
 		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 		bool			is_authorize(const std::string &path_file, const request &req, const parser &pars) const;
 		std::string		index(const std::string &path, std::string root, std::string add) const;
+		void			status_header();
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
@@ -117,8 +118,8 @@ class response : public message
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function
 		void									default_error(int error_status, const request &req);
-		void									error_response(int status, const request &req, const parser &pars);
-		void									error_msg(const std::string &path, const request &req, const parser &pars);
+		int										error_response(int status, const request &req, const parser &pars);
+		int										error_msg(const std::string &path, const request &req, const parser &pars);
 
 	public :
 												response(const request &req, const parser &pars);

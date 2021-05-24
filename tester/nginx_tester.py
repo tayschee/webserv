@@ -2,7 +2,7 @@ import sys, getopt, os, socket, time
 
 def client(txt) :
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #cree une socket pour communiquer
-	sock.connect(('127.0.0.1', 80)) #destinataire de la com
+	sock.connect(('127.0.0.1', 8080)) #destinataire de la com
 	sock.send(txt) #envoie du message
 	txt2 = sock.recv(10000)
 	sock.close() #arrete la socket
