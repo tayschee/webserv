@@ -73,6 +73,7 @@ class response : public message
 		int										method_is_options(const request &req, const parser &pars); //OPTION
 		int										method_is_put(const request &req, const parser &pars); //PUT
 		int										method_is_post(const request &req, const parser &pars); //POST
+		int										method_is_trace(const request &req, const parser &pars); //POST
 		int										method_is_unknow(const request &req, const parser &pars); //UNKNOW
 
 	private : //add_* functions, add something inside class like header_field or body
@@ -81,11 +82,12 @@ class response : public message
 		void									add_content_length(const off_t &bytes_size); //Content-Length
 		void									add_last_modified(time_t time); //Last-Modified
 		void									add_server(); //Server
-		void									add_content_type(const std::string &file, const request &req); //Content-type
-		void									add_content_type(const std::string &file); //Content-type without precise charset
+		void									add_content_type(const std::string &type); //Content-type
+		//void									add_content_type(const std::string &file); //Content-type without precise charset
 		void									add_transfert_encoding(const std::string &file); //Transfert-Encoding
 
-		bool									add_body(int fd, struct stat &file_stat); //body
+		int										add_body(const std::string &path);
+
 
 	public :
 		void 									parse_start_line(const std::string &start_line){ (void)start_line; }

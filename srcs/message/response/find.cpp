@@ -12,7 +12,6 @@ response::find_status_string() const
 		return UNKNOW_STATUS;
 	else
 	{
-		std::cout << "return status = " << existing_status.find(first_line.status)->second << std::endl;
 		return existing_status.find(first_line.status)->second;
 	}
 }
@@ -23,7 +22,6 @@ response::find_method_function(const std::string &method, const std::vector<std:
 {
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
-
 	while (it < end)
 	{
 		if (method == *it)
@@ -42,7 +40,6 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 		return subtype;
 	try		
 	{
-		std::cout << "extension = " << subtype << std::endl;
 		parser::entries block = pars.get_block("types", "mime").conf;
 		if (block.find(subtype) != block.end())
 			type = block.find(subtype)->second[0];

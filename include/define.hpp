@@ -38,6 +38,7 @@
 # define ACCEPT_LANGUAGE "Accept-Language"
 # define AUTHORIZATION "Authorization"
 # define CONTENT_LENGTH "Content-Length"
+# define CONTENT_LOCATION "Content-Location"
 # define REFERER "Referer"
 # define USER_AGENT "User-Agent"
 # define HOST "Host"

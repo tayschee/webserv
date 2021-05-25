@@ -11,7 +11,8 @@ void			request::parse_start_line(const std::string &start_line)
 	first_line.version = cmd_split[2];
 	cmd_split = split(cmd_split[1], "?");
 	first_line.uri = cmd_split[0];
-	header.insert(value_type(QUERY_STRING, cmd_split[1]));
+	if (cmd_split.size() > 1)
+		header.insert(value_type(QUERY_STRING, cmd_split[1]));
 }
 
 /*parse header which were read*/

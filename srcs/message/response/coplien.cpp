@@ -87,7 +87,7 @@ response::response(const request &req, const parser &pars) : message()
 
 			first_line.status = (this->*header_field_function)(req, pars);
 
-			if (first_line.status != 200)
+			if (first_line.status < 200 || first_line.status > 299)
 				get_code(pars);
 		}
 		

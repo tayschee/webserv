@@ -3,21 +3,10 @@
 
 int		response::method_is_head(const request &req, const parser &pars)
 {
-	(void)pars;
-	struct stat file_stat; //information about file
-	std::string	file = req.get_uri();
-
-	if (lstat(file.c_str(), &file_stat) < 0)
-	{
-		return (error_file(errno));
-	}
-
-	/* two next line can maybe be add to main_header */
-	add_content_length(file_stat.st_size); /* st_size = total size in byte */
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_type(file, req);
-
-	return 200; //value of OK response
+	int ret = method_is_get(req, pars);
+	body.clear();
+	add_content_length(0);
+	return ret; //value of OK response
 }
 
 std::string		index(const std::string &path, std::string root, std::string add)
@@ -66,74 +55,69 @@ bool	is_authorize(const request &req, const parser &pars)
 	return true;
 }
 
-int		response::method_is_get(const request &req, const parser &pars)
-{
-	int		fd = -1;
-	struct stat file_stat; //information about file
-	std::string file = find_path(pars.get_block("location", req.get_uri()), req);
-
-	//403 interdiction
-	if (file.empty())
-		return 404;
-	if (lstat(file.c_str(), &file_stat) < 0)
-		return (error_file(errno));
-	if (int ret = is_open(file_stat))
-		return ret;
-	if (!is_authorize(req, pars))
-		return 401;
-
-	std::cout << "path = " << file << std::endl;
-	std::string type = find_media_type(get_extension(file), pars);
-	
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-	{
-		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
-		body = index(file, req.get_uri(), add);
-		header.insert(value_type(CONTENT_TYPE, "text/html"));
-	}
-	else if (get_extension(file) == ".php")
-	{
-		std::cout << "je suis un php" << std::endl;
-		cgi(req, pars, body, file);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
-		header.insert(value_type(CONTENT_TYPE, "text/html"));
-	}
-	else
-	{
-		char buf[4096 + 1] = {0};
-		int fd;
-		int res;
-
-		fd = open(file.c_str(), O_RDONLY);
-		while ((res = read(fd, buf, 4096)) > 0)
-		{
-			body.insert(body.end(), buf, buf + res);
-			memset(buf, 0, 4097);
-		}
-		if (!type.empty())
-			header.insert(value_type(CONTENT_TYPE, type));
-		else
-			header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
-	}
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-	if (fd > 0)
-		close(fd);
-	return 200;
-}
-
 int		response::check_path(const std::string &path, struct stat &file_stat, const request &req, const parser &pars)
 {
 	if (path.empty())
 		return 404;
 	if (lstat(path.c_str(), &file_stat) < 0)
-		return (error_file(errno));
+		return 404;
 	if (int ret = is_open(file_stat))
 		return ret;
 	if (!is_authorize(req, pars))
 		return 401;
 	return (0);
+}
+
+bool		is_cgi(const std::string &type, const parser &pars)
+{
+	std::cout << "TYPE = " << type << std::endl;
+	try
+	{
+		pars.get_block("cgi", type);
+	}
+	catch(const std::exception& e)
+	{
+		return false;
+	}
+	return true;
+}
+
+int		response::method_is_get(const request &req, const parser &pars)
+{
+	struct stat file_stat; //information about file
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	//403 interdiction
+	int ret = check_path(path, file_stat, req, pars);
+	if (ret != 0)
+		return ret;
+
+	std::string type = find_media_type(get_extension(path), pars);
+	
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	{
+		std::string add = (path.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
+		body = index(path, req.get_uri(), add);
+		add_content_type("text/html");
+	}
+	else if (is_cgi(get_extension(path), pars))
+	{
+		cgi(req, pars, body, path);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+		add_content_type("text/html");
+	}
+	else
+	{
+		if ((ret = add_body(path)) != 0)
+			return ret;
+		if (type.empty())
+			add_content_type("application/octet-stream");
+		else
+			add_content_type(type);
+	}
+	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+	add_content_length(body.size());
+	return 200;
 }
 
 int		response::del_content(std::string path, const request &req, const parser &pars, const bool del)
@@ -153,7 +137,6 @@ int		response::del_content(std::string path, const request &req, const parser &p
 			{
 				if (path.begin() != path.end() && *(--path.end()) != '/')
 					path.push_back('/');
-				std::cout << "path = " << path +  std::string(dp->d_name) << std::endl;
 				if ((ret = del_content(path + std::string(dp->d_name), req, pars, del)) != 0)
 				{
 					closedir(dir);
@@ -167,7 +150,7 @@ int		response::del_content(std::string path, const request &req, const parser &p
 	}
 	else if (del && (ret = unlink(path.c_str())) != 0) //delete the file, if there is a fd associted whith this file, deleted it when the fd is close
 	{
-		return error_file(errno); //check errno
+		return 403;
 	}
 	return 0;
 }
@@ -186,79 +169,126 @@ int		response::method_is_delete(const request &req, const parser &pars)
 
 int		response::method_is_options(const request &req, const parser &pars)
 {
-	(void)pars;
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req, 0);
 	struct stat file_stat; //information about file
-	std::string	file = req.get_uri();
+	if (path.empty())
+		return 404;
+	if (stat(path.c_str(), &file_stat) < 0 && req.get_uri() != std::string("/*"))
+		return 403;
 
-	if (stat(file.c_str(), &file_stat) < 0)
-		return error_file(errno); //check errno
-
-	/* two next line can maybe be add to main_header */
-	add_content_length(0); /* st_size = total size in byte */
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_type(file, req);
-
+	if (req.get_uri() == std::string("/*"))
+	{
+		parser::entries path_info(pars.get_block("server").conf);
+		if (path_info.find("accept") != path_info.end())
+		{
+			std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+			add_allow(allow_method);
+		}
+	}
+	else
+	{
+		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
+		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+		add_allow(allow_method);
+	}
+	add_content_length(0);
 	return 200; //value of OK response
 }
 
 int		response::method_is_put(const request &req, const parser &pars)
 {
-	(void)pars;
 	int		fd;
 	int		response_value = 204;
-	std::string	file = req.get_uri();
-	std::string body = req.get_body();
+
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	struct stat file_stat; //information about file
+	if (!is_authorize(req, pars))
+		return 401;
 
 	/*verify if content exist*/
-	if ((fd = open(file.c_str(), O_WRONLY)) < 0)
+	if (lstat(path.c_str(), &file_stat) < 0)
 	{
-		response_value = 201; //CREATE
-		if ((fd = open(file.c_str(), O_WRONLY | O_CREAT)) < 0) //content doesn't exist so create it
-		{	
-			return (error_file(errno));
+		if ((fd = open(path.c_str(), O_WRONLY)) < 0)
+		{
+			response_value = 201; //CREATE
+			if ((fd = open(path.c_str(), O_WRONLY | O_CREAT)) < 0) //content doesn't exist so create it
+			{
+				close(fd);
+				return 403;
+			}
+			if (write(fd, req.get_body().c_str(), req.get_body().size()) < 0)
+			{
+				close(fd);
+				return 403;
+			}
+			/* this header field are specific if file didn't exists */
+			add_content_length(0);
+			close(fd);
+		}
+	}
+	else
+	{
+		if (int ret = is_open(file_stat))
+			return ret;
+		if ((fd = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
+		{
+			close(fd);
+			return 403;
+		}
+		if (write(fd, req.get_body().c_str(), req.get_body().size()) < 0)
+		{
+			close(fd);
+			return 403;
 		}
 		/* this header field are specific if file didn't exists */
-		add_content_length(0); //Content-length is for size of body and there is no body
-		//must add location
+		response_value = 204; //CREATE
+		close(fd);
 	}
-	if (write(fd, body.c_str(), body.size()) < 0)
-		return 500;
-	close(fd);
-
-	add_content_type(file, req);
+	header.insert(value_type(CONTENT_LOCATION, req.get_uri()));
+	add_content_type("text/html");
 
 	return response_value;
-}
-
-std::map<std::string, std::string>		get_tab_query(std::string query)
-{
-	std::map<std::string, std::string> ret;
-	std::vector<std::string>tab = split(query, "& ");
-	for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-	{
-		std::vector<std::string>tab2 = split(*it, ":");
-		ret.insert(std::pair<std::string, std::string>(tab2[0], tab2[1]));
-	}
-	return ret;
 }
 
 int		response::method_is_post(const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
-	int ret = del_content(path, req, pars, 0);
+	struct stat file_stat; //information about file
+	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
 	cgi(req, pars, body, path);
 	if (body[0] == '5')
 		return ft_atoi<int>(body);
-	header.insert(value_type(CONTENT_TYPE, "text/html"));
-	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+	add_content_type("text/html");
+	add_content_length(body.size());
+
+	return 200;
+}
+
+int		response::method_is_trace(const request &req, const parser &pars)
+{
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	struct stat file_stat; //information about file
+	int ret = check_path(path, file_stat, req, pars);
+	if (ret != 0)
+		return ret;
+	body = req.get_body();
+	header.clear();
+	message::header_type header_rcv = req.get_header();
+	for (message::header_type::iterator it = header_rcv.begin(); it != header_rcv.end(); ++it)
+		header.insert(value_type(it->first, it->second));
+	header.erase(CONTENT_TYPE);
+	header.erase(CONTENT_LENGTH);
+	add_content_type("message/http");
+	add_content_length(body.size());
 
 	return 200;
 }
 
 int			response::method_is_unknow(const request &req, const parser &pars)
 {
+	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;
 	(void)req;
 

@@ -6,8 +6,6 @@ char            **cgi::init_env(const request &req, const parser &pars, const st
     std::map<std::string, std::string> env_tmp;
 	std::string root = pars.get_block("server").conf.find("root")->second[0];
 
-	std::cout << "QUERY = " << req.get_query() << std::endl;
-
 	env_tmp["AUTH_TYPE"] = req.get_auth_type();
 	env_tmp["CONTENT_LENGTH"] = req.get_content_length();
 	env_tmp["CONTENT_TYPE"] = req.get_content_type();
@@ -20,7 +18,7 @@ char            **cgi::init_env(const request &req, const parser &pars, const st
 	env_tmp["REMOTE_USER"] = req.get_user(); // user id
 	env_tmp["REQUEST_METHOD"] = req.get_method();
 	env_tmp["REQUEST_URI"] = req.get_uri();
-	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", ".php").conf.find("script_name")->second[0];
+	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0];
 	env_tmp["SEVER_NAME"] = pars.get_block("server").name;
 	env_tmp["SERVER_PORT"] = pars.get_block("server").conf.find("listen")->second[0];
 	env_tmp["SERVER_PROTOCOL"] = HTTP_VERSION;

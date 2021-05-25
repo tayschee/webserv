@@ -33,6 +33,7 @@ void			response::add_date()
 void			response::add_content_length(const off_t &bytes_size) //off_t == long long on mac
 {
 	/*Warning dont know of type off_t is larger than int*/
+	header.erase(CONTENT_LENGTH);
 	header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
 }
 
@@ -49,10 +50,14 @@ void			response::add_server()
 }
 
 /*add field Content-Type to response::header, if accept-charset is in request precise charset*/
-void			response::add_content_type(const std::string &file, const request &req) //pas tester
+void			response::add_content_type(const std::string &type) //pas tester
 {
-	(void)file;
-	(void)req;
+	// (void)file;
+	 //(void)req;
+	header.erase(CONTENT_TYPE);
+	header.insert(value_type(CONTENT_TYPE, type));
+
+
 	// std::string extension;
 	// size_t		pos = file.find_first_of(".");
 	// request::header_type head = req.get_header();
@@ -79,28 +84,6 @@ void			response::add_content_type(const std::string &file, const request &req) /
 	// }
 }
 
-/*add field Content-Type to response::header, without precise charser*/
-void			response::add_content_type(const std::string &file) //pas tester
-{
-	(void)file;
-	// std::string extension;
-	// size_t		pos = file.find_first_of(".");
-
-	// if (pos != file.npos)
-	// {
- 	// 	extension = file.substr(pos + 1);
-	// 	media_type_array::value_type	media_type(find_media_type(extension));
-
-	// 	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
-	// else
-	// {
-	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
-
-	// 	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
-}
-
 /*void				response::add_transfert_encoding(const std::string &file)
 {
 	std::string extension;
@@ -117,16 +100,20 @@ void			response::add_content_type(const std::string &file) //pas tester
 }*/
 
 /* this time, this is not a field it's the body of response which be add */
-bool			response::add_body(int fd, struct stat &file_stat)
-{
-	char	buffer[file_stat.st_size + 1]; //st_size contains size of file + 1 for '\0'
 
-	/*read fd and put it's content in buffer*/
-	if (read(fd, buffer, file_stat.st_size) < 0)
+int			response::add_body(const std::string &path)
+{
+	char buf[4096 + 1] = {0};
+	int fd;
+	int res;
+
+	if ((fd = open(path.c_str(), O_RDONLY)) < 0)
+		return 403;
+	while ((res = read(fd, buf, 4096)) > 0)
 	{
-		return 1; //check errno
+		body.insert(body.end(), buf, buf + res);
+		memset(buf, 0, 4097);
 	}
-	buffer[file_stat.st_size] = 0;
-	body = buffer;
+	close(fd);
 	return 0;
 }
