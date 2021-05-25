@@ -26,13 +26,14 @@ int 	cluster::start() // cluster manage the list of socket
 			return 0;
 		for(iterator it = list_client.begin(); it != list_client.end(); ++it)
 		{
+			int ret = 0;
 			client cli = *it;
 			if (FD_ISSET(it->get_fd(), &readfds)) // is there a modification on the current list_client ?
 			{
-				if(!receive(cli, it->get_fd(), it))
+				if((ret = receive(cli, it->get_fd(), it)) == 0)
 					return 0;
 			}
-			if (cli.is_read())
+			if (ret > 0 && cli.is_read() == 1)
 			{
 				if (send_response(cli) == -1)
 					close_client(it);

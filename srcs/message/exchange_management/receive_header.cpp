@@ -24,17 +24,19 @@ receive_management::receive_header &receive_management::receive_header::operator
 /*read header and when end is reached return 1 to change internal_receive struct and read body */
 int		receive_management::receive_header::receive(const int socket, message *req)
 {
-	char		*buffer = new(std::nothrow) char[buf_size + 1];
+	char		*buffer = new char[buf_size + 1];
 
 	ssize_t		i; //this just a long return type of read
-
 	if ((i = read(socket, buffer, buf_size)) < 0)
+	{
+		delete[] buffer;
 		return 500; //throw exception
-	
+	}
 	buffer[i] = 0;
 	msg += buffer;
 	delete[] buffer;
-
+	if (i == 0)
+		return -1;
 	return check(req);
 }
 

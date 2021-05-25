@@ -1,4 +1,4 @@
-#include <message/response.hpp>
+#include "message/response.hpp"
 
 /*This file regroup all functions add_*, they are all private and are use to complete header header field by header field */
 
@@ -18,7 +18,6 @@ void			response::add_allow(const std::vector<std::string> &allow_method_array)
 		allow_method_string += ", ";
 		++it;
 	}
-
 	header.insert(std::pair<std::string, std::string>(ALLOW, allow_method_string));
 }
 
@@ -52,51 +51,54 @@ void			response::add_server()
 /*add field Content-Type to response::header, if accept-charset is in request precise charset*/
 void			response::add_content_type(const std::string &file, const request &req) //pas tester
 {
-	std::string extension;
-	size_t		pos = file.find_first_of(".");
-	request::header_type head = req.get_header();
-	request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+	(void)file;
+	(void)req;
+	// std::string extension;
+	// size_t		pos = file.find_first_of(".");
+	// request::header_type head = req.get_header();
+	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
 
-	if (pos != file.npos)
-	{
- 		extension = file.substr(pos + 1);
-		media_type_array::value_type	media_type(find_media_type(extension));
+	// if (pos != file.npos)
+	// {
+ 	// 	extension = file.substr(pos + 1);
+	// 	media_type_array::value_type	media_type(find_media_type(extension));
 
-		if (it != head.end())
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-		else
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	}
-	else
-	{
-		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+	// else
+	// {
+	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
 
-		if (it != head.end())
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-		else
-			header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	}
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
 }
 
 /*add field Content-Type to response::header, without precise charser*/
 void			response::add_content_type(const std::string &file) //pas tester
 {
-	std::string extension;
-	size_t		pos = file.find_first_of(".");
+	(void)file;
+	// std::string extension;
+	// size_t		pos = file.find_first_of(".");
 
-	if (pos != file.npos)
-	{
- 		extension = file.substr(pos + 1);
-		media_type_array::value_type	media_type(find_media_type(extension));
+	// if (pos != file.npos)
+	// {
+ 	// 	extension = file.substr(pos + 1);
+	// 	media_type_array::value_type	media_type(find_media_type(extension));
 
-		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	}
-	else
-	{
-		media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+	// 	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+	// else
+	// {
+	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
 
-		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	}
+	// 	header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
 }
 
 /*void				response::add_transfert_encoding(const std::string &file)

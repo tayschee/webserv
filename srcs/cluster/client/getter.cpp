@@ -10,7 +10,7 @@ bool        client::is_listen() const // Check if listening socket
     return listen;
 }
 
-bool        client::is_read() const // Check if the time is finished
+int         client::is_read() const // Check if the time is finished
 {
     return read;
 }

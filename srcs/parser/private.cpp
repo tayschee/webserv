@@ -87,6 +87,7 @@ bool parser::getline(int fd, std::string &line)
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
+	int file2 = open("/home/user42/42/webserv/mime", O_RDONLY);
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
@@ -107,7 +108,26 @@ void parser::parse_file()
 
 		if (line.empty())
 			continue;
+		line = remove_comments(line);
+		if (line.empty())
+			continue;
+		line = clean_string(line);
+		if (line.empty())
+			continue;
+		if (!check_line(line, line_no))
+		{
+			_blocks.clear();
+			return;
+		}
+		parse_line(line, line_no, block_id);
+	}
+	close(file);
 
+	while (getline(file2, line))
+	{
+		line_no++;
+		if (line.empty())
+			continue;
 		line = remove_comments(line);
 		if (line.empty())
 			continue;
@@ -125,7 +145,7 @@ void parser::parse_file()
 			return;
 	}
 
-	close(file);
+	close(file2);
 	buffer.clear();
 }
 
@@ -252,19 +272,70 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	prop_checker[PARSER_ERROR_PAGE] = &parser::check_prop_err_page;
 	prop_checker[PARSER_AUTOINDEX] = &parser::check_prop_autoindex;
 	prop_checker[PARSER_SCRIPT_NAME] = &parser::check_prop_script_name;
+	prop_checker[PARSER_RETURN] = &parser::check_return;
+	prop_checker[PARSER_AUTH_BASIC] = &parser::check_auth_basic;
+	prop_checker[PARSER_AUTH_BASIC_USER_FILE] = &parser::check_auth_basic_user_file;
 
 	try
 	{
+		if (block_id == "types")
+			return (1);
 		bool res = (this->*prop_checker.at(name))(block_id, args, line_no);
 		error = error | !res;
 		return res;
 	}
 	catch (const std::out_of_range &e)
 	{
+		std::cout << block_id << std::endl;
 		std::cerr << "Error: " << filename << ": Unknown property '" << name << "' at line " << line_no << ".\n";
 		return false;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+bool parser::check_block_location_error(const std::vector<std::string>& args, int line_no) const
+{
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_block_types(const std::vector<std::string>& args, int line_no) const
+{
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	(void)block_id;
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	(void)block_id;
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	(void)block_id;
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 bool parser::check_block(const std::string &name, const std::vector<std::string>& args, int line_no)
 {
@@ -272,6 +343,8 @@ bool parser::check_block(const std::string &name, const std::vector<std::string>
 
 	block_checker[PARSER_LOCATION] = &parser::check_block_location;
 	block_checker[PARSER_CGI] = &parser::check_block_cgi;
+	block_checker[PARSER_LOCATION_ERROR] = &parser::check_block_types;
+	block_checker[PARSER_TYPES] = &parser::check_block_location_error;
 
 	try
 	{

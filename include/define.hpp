@@ -4,6 +4,7 @@
 /*Server*/
 # define WEBSERV "webserv"
 # define HTTP_VERSION "HTTP/1.1"
+# define GATEWAY_INTERFACE "CGI/1.1"
 
 /*line return*/
 # define CRLF "\r\n"
@@ -50,6 +51,9 @@
 # define TRANSFERT_ENCODING "Transfert-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
 # define WWW_AUTHENTICATE "WWW-Authenticate"
+
+/*define header field for CGI*/
+# define QUERY_STRING "QUERY_STRING"
 
 /*define methods*/
 # define GET "GET"

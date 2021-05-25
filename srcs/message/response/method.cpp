@@ -1,7 +1,6 @@
 #include "message/response.hpp"
 #include <string>
 
-
 int		response::method_is_head(const request &req, const parser &pars)
 {
 	(void)pars;
@@ -82,9 +81,25 @@ int		response::method_is_get(const request &req, const parser &pars)
 		return ret;
 	if (!is_authorize(req, pars))
 		return 401;
+
 	std::cout << "path = " << file << std::endl;
-	std::string type = (find_media_type(get_extension(file)).second);
-	if (type != DEFAULT_TYPE)
+	std::string type = find_media_type(get_extension(file), pars);
+	
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	{
+		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
+		body = index(file, req.get_uri(), add);
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
+	}
+	else if (get_extension(file) == ".php")
+	{
+		std::cout << "je suis un php" << std::endl;
+		cgi(req, pars, body, file);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+		header.insert(value_type(CONTENT_TYPE, "text/html"));
+	}
+	else
 	{
 		char buf[4096 + 1] = {0};
 		int fd;
@@ -93,42 +108,14 @@ int		response::method_is_get(const request &req, const parser &pars)
 		fd = open(file.c_str(), O_RDONLY);
 		while ((res = read(fd, buf, 4096)) > 0)
 		{
-			for (size_t j = 0; j < (size_t)res; ++j)
-				body.push_back(buf[j]);
+			body.insert(body.end(), buf, buf + res);
 			memset(buf, 0, 4097);
 		}
-		close(fd);
-		std::string ext(get_extension(file));
-		ext.erase(ext.begin());
-		header.insert(value_type(CONTENT_TYPE, type + ext));
-		header.insert(value_type("Accept_Ranges", "bytes"));
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-		return 200;
+		if (!type.empty())
+			header.insert(value_type(CONTENT_TYPE, type));
+		else
+			header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
 	}
-	else if (get_extension(file) == ".php")
-	{
-		cgi(req, pars, body);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
-	}
-	else if (get_extension(file) == ".html")
-	{	
-		std::cout << "je suis un html" << std::endl;
-		fd = open(file.c_str(), O_RDONLY);
-		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
-		{
-			close(fd);
-			return error_file(errno);
-		}
-	}
-	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-	{
-		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
-		body = index(file, req.get_uri(), add);
-	}
-	//add_content_type(file, req);
-	header.insert(value_type(CONTENT_TYPE, "text/html"));
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	if (fd > 0)
@@ -136,18 +123,64 @@ int		response::method_is_get(const request &req, const parser &pars)
 	return 200;
 }
 
-int		response::method_is_delete(const request &req, const parser &pars)
+int		response::check_path(const std::string &path, struct stat &file_stat, const request &req, const parser &pars)
 {
-	(void)pars;
-	std::string	file = req.get_uri();
+	if (path.empty())
+		return 404;
+	if (lstat(path.c_str(), &file_stat) < 0)
+		return (error_file(errno));
+	if (int ret = is_open(file_stat))
+		return ret;
+	if (!is_authorize(req, pars))
+		return 401;
+	return (0);
+}
 
-	//check if path is valid
-
-	if (unlink(file.c_str())) //delete the file, if there is a fd associted whith this file, deleted it when the fd is close
+int		response::del_content(std::string path, const request &req, const parser &pars, const bool del)
+{
+	struct stat file_stat; //information about file
+	int ret = check_path(path, file_stat, req, pars);
+	if (ret != 0)
+		return ret;
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
+	{
+		DIR *dir = opendir(path.c_str());
+		struct dirent *dp;
+		while ((dp = readdir(dir)) != NULL)
+		{
+			int ret = 0;
+			if (std::string(dp->d_name) != std::string(".") && std::string(dp->d_name) != std::string(".."))
+			{
+				if (path.begin() != path.end() && *(--path.end()) != '/')
+					path.push_back('/');
+				std::cout << "path = " << path +  std::string(dp->d_name) << std::endl;
+				if ((ret = del_content(path + std::string(dp->d_name), req, pars, del)) != 0)
+				{
+					closedir(dir);
+					return ret;
+				}
+			}
+		}
+		closedir(dir);
+		if (del)
+			rmdir(path.c_str());
+	}
+	else if (del && (ret = unlink(path.c_str())) != 0) //delete the file, if there is a fd associted whith this file, deleted it when the fd is close
 	{
 		return error_file(errno); //check errno
 	}
+	return 0;
+}
 
+int		response::method_is_delete(const request &req, const parser &pars)
+{
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req, 0);
+	int ret = del_content(path, req, pars, 0);
+	if (ret != 0)
+		return ret;
+	ret = del_content(path, req, pars);
+	if (ret != 0)
+		return ret;
 	return 204;
 }
 
@@ -195,6 +228,33 @@ int		response::method_is_put(const request &req, const parser &pars)
 	add_content_type(file, req);
 
 	return response_value;
+}
+
+std::map<std::string, std::string>		get_tab_query(std::string query)
+{
+	std::map<std::string, std::string> ret;
+	std::vector<std::string>tab = split(query, "& ");
+	for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+	{
+		std::vector<std::string>tab2 = split(*it, ":");
+		ret.insert(std::pair<std::string, std::string>(tab2[0], tab2[1]));
+	}
+	return ret;
+}
+
+int		response::method_is_post(const request &req, const parser &pars)
+{
+	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	int ret = del_content(path, req, pars, 0);
+	if (ret != 0)
+		return ret;
+	cgi(req, pars, body, path);
+	if (body[0] == '5')
+		return ft_atoi<int>(body);
+	header.insert(value_type(CONTENT_TYPE, "text/html"));
+	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+
+	return 200;
 }
 
 int			response::method_is_unknow(const request &req, const parser &pars)

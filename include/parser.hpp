@@ -29,6 +29,13 @@
 #define PARSER_AUTOINDEX "autoindex"
 #define PARSER_ROOT "root"
 #define PARSER_SCRIPT_NAME "script_name"
+//////////////////////////////////////////////////
+#define PARSER_RETURN "return"
+#define PARSER_AUTH_BASIC "auth_basic"
+#define PARSER_LOCATION_ERROR "location_error"
+#define PARSER_TYPES "types"
+#define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
+/////////////////////////////////////////////////
 
 class parser
 {
@@ -98,6 +105,18 @@ private:
 	bool check_prop_script_name(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	bool check_block_location_error(const std::vector<std::string>& args, int line_no) const;
+	bool check_block_types(const std::vector<std::string>& args, int line_no) const;
+	bool check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 
 	std::string find_best_match(std::string arg) const;
 	std::string remove_comments(const std::string &line) const;

@@ -8,8 +8,10 @@ void			request::parse_start_line(const std::string &start_line)
 	cmd_split = split(start_line.c_str(), " "); //NEED FT_SPLIT PISCINE to verify tab + space
 
 	first_line.method = cmd_split[0];
-	first_line.uri = cmd_split[1];
 	first_line.version = cmd_split[2];
+	cmd_split = split(cmd_split[1], "?");
+	first_line.uri = cmd_split[0];
+	header.insert(value_type(QUERY_STRING, cmd_split[1]));
 }
 
 /*parse header which were read*/
