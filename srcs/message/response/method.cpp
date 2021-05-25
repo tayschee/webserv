@@ -1,4 +1,6 @@
 #include "message/response.hpp"
+#include <string>
+
 
 int		response::method_is_head(const request &req, const parser &pars)
 {
@@ -19,45 +21,40 @@ int		response::method_is_head(const request &req, const parser &pars)
 	return 200; //value of OK response
 }
 
-std::string		index(std::string path)
+std::string		index(const std::string &path, std::string root, std::string add)
 {
-    errno = 0;
-	DIR *dir = opendir(path.c_str());\
+	DIR *dir = opendir(path.c_str());
 	struct dirent *dp;
 	std::string index =\
 	"<html>\n\
-	<head><title>Index of /</title></head>\n\
-	<body>\n\
-		<h2>Index of /</h2>\n\
-		<ui>\n\
-		<ur>";\
-			while ((dp = readdir(dir)) != NULL)
-			{
-				index += "<li><a href=\"" + std::string(dp->d_name) + "\">" + std::string(dp->d_name) + "</a></li>\n";
-			}
-			if (errno != 0)
-				return "500";
-            closedir(dir);
-
+	<head><title>Index of " + root + "</title></head>\n\
+	<body bgcolor=\"white\">\n\
+		<h1>Index of " + root + "</h1>\n\
+		<hr><pre><a href=\"../\">../</a>\n";
+		while ((dp = readdir(dir)) != NULL)
+		{
+			if (dp->d_name != std::string(".") && dp->d_name != std::string(".."))
+				index += "<a href=\"" + add + std::string(dp->d_name) + "\">" + std::string(dp->d_name) + "/" + "</a>\n";
+		}
+        closedir(dir);
 	index +=\
-		"<ui>\n\
-	</body>\n\
+	"</pre><hr></body>\n\
 	</html>";
 	return index;
 }
 
 bool	is_authorize(const request &req, const parser &pars)
 {
-	parser::entries path = pars.get_block("location", "/").conf;
-	if (path.find("auth_basic") != path.end())
+	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
+	if (path.find(AUTH_BASIC) != path.end())
 	{
 		message::header_type gh = req.get_header();
-		if (gh.find("Authorization") == gh.end())
+		if (gh.find(AUTHORIZATION) == gh.end())
 			return false;
 		std::vector<std::string> tab;
-		std::string Authorization(req.get_header().find("Authorization")->second);
-		char buf[500];
-		int fd = open(path.find("auth_basic_user_file")->second[0].c_str(), O_RDONLY);
+		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
+		char buf[4096];
+		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
 		int ret = read(fd, buf, 499);
 		buf[ret] = '\0';
 		tab = split(buf, "\t\r\n");
@@ -74,110 +71,70 @@ int		response::method_is_get(const request &req, const parser &pars)
 {
 	int		fd = -1;
 	struct stat file_stat; //information about file
-
-	std::string	file = pars.get_block("server").conf.find("root")->second[0] + req.get_uri();
+	std::string file = find_path(pars.get_block("location", req.get_uri()), req);
 
 	//403 interdiction
-	
+	if (file.empty())
+		return 404;
 	if (lstat(file.c_str(), &file_stat) < 0)
 		return (error_file(errno));
-	std::string CGI(req.get_uri());
-	std::string::iterator it = CGI.end();
-	while (--it != CGI.begin())
+	if (int ret = is_open(file_stat))
+		return ret;
+	if (!is_authorize(req, pars))
+		return 401;
+	std::cout << "path = " << file << std::endl;
+	std::string type = (find_media_type(get_extension(file)).second);
+	if (type != DEFAULT_TYPE)
 	{
-		if (*it == '.')
-			break;
+		char buf[4096 + 1] = {0};
+		int fd;
+		int res;
+
+		fd = open(file.c_str(), O_RDONLY);
+		while ((res = read(fd, buf, 4096)) > 0)
+		{
+			for (size_t j = 0; j < (size_t)res; ++j)
+				body.push_back(buf[j]);
+			memset(buf, 0, 4097);
+		}
+		close(fd);
+		std::string ext(get_extension(file));
+		ext.erase(ext.begin());
+		header.insert(value_type(CONTENT_TYPE, type + ext));
+		header.insert(value_type("Accept_Ranges", "bytes"));
+		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+		return 200;
 	}
-	std::string cmp(it, CGI.end());
-	if (cmp == ".jpg")
+	else if (get_extension(file) == ".php")
 	{
-		if (!is_authorize(req, pars))
-			return 401;
+		cgi(req, pars, body);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+	}
+	else if (get_extension(file) == ".html")
+	{	
+		std::cout << "je suis un html" << std::endl;
 		fd = open(file.c_str(), O_RDONLY);
 		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
 		{
 			close(fd);
 			return error_file(errno);
 		}
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-		header.insert(value_type(CONTENT_TYPE, "text/jpeg"));
-		return 200;
 	}
-	if (cmp == ".php")
+	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
-		if (!is_authorize(req, pars))
-			return 401;
-		cgi(req, pars, body);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
+		std::string add = (file.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
+		body = index(file, req.get_uri(), add);
 	}
-	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
-	{
-		body = index(file);
-	}
-	else 
-	{
-		if (!is_authorize(req, pars))
-			return 401;
-		if ((fd = open(file.c_str(), O_RDONLY)) < 0)
-		{
-			return (error_file(errno));
-		}
-		if (lstat(file.c_str(), &file_stat) < 0)
-			return (error_file(errno));
-		if (add_body(fd, file_stat)) /*body is filled by content of fd*/
-		{
-			close(fd);
-			return error_file(errno);
-		}
-		/* almost same than method_is_head but we dont call it because we need struct stat to fill body */
-		//add_content_length(req.get_header(), file_stat.st_size); /* st_size = total size in byte */
-		header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
-
-		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-		add_content_type(file, req);
-		if (cmp == ".jpg")
-			header.insert(value_type(CONTENT_TYPE, "image/jpeg"));
-
-	}
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	//add_content_type(file);
-	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
+	//add_content_type(file, req);
 	header.insert(value_type(CONTENT_TYPE, "text/html"));
+	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
+	header.insert(value_type(CONTENT_LENGTH, ft_itoa(body.size())));
 	if (fd > 0)
 		close(fd);
 	return 200;
 }
-/*
-int		response::method_is_get(const request &req)
-{
-	int		fd;
-	struct stat file_stat; //information about file
-	std::string	file = req.get_uri();
-
-	//403 interdiction
-	if ((fd = open(file.c_str(), O_RDONLY)) < 0)
-	{
-		return (error_file(errno));
-	}
-	if (lstat(file.c_str(), &file_stat) < 0)
-		return (error_file(errno));
-
-	if (add_body(fd, file_stat)) //body is filled by content of fd//
-	{
-		close(fd);
-		return error_file(errno);
-	}
-	close(fd);
-
-	// almost same than method_is_head but we dont call it because we need struct stat to fill body //
-	add_content_length(req.get_header(), file_stat.st_size); // st_size = total size in byte //
-	add_last_modified(file_stat.st_mtime); // st_mtime = hour of last modification //
-	add_content_type(file);
-
-	return 200;
-}*/
 
 int		response::method_is_delete(const request &req, const parser &pars)
 {

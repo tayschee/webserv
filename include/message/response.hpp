@@ -8,7 +8,7 @@ class request;
 # include "message/request.hpp"
 # include "message/exchange_management.hpp"
 # include <dirent.h>
-# include <sys/stat.h> 
+# include <sys/stat.h>
 # include "cgi.hpp"
 # include "utils.hpp" //files_in_dir
 
@@ -55,13 +55,15 @@ class response : public message
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 		void			main_header(const std::vector<std::string> &allow_method);
 		std::string		header_first_line() const;
+		std::list<std::string> files_in_dir(const std::string &path) const;
+		int				is_open(const struct stat &file) const;
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
 		method_array::value_type::second_type	find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
-		std::string								find_path(const parser::block &block) const;
+		std::string								find_path(const parser::block &block, const request &req) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
 
 	private : //method_is_* function, apply one of method
@@ -94,7 +96,7 @@ class response : public message
 		int				get_status() const;
 		const std::string		&get_status_string() const;
 		const std::string		&get_version() const;
-	
+
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 		void			get_error(int error, const parser &pars);
