@@ -28,6 +28,35 @@ parser &parser::operator=(const parser &other)
 	return *this;
 }
 
+parser::block &parser::block::operator=(const parser::block &x)
+{
+	this->name = x.name;
+	this->args = x.args;
+	if (x.name == PARSER_SERVER)
+	{
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >("listen", std::vector<std::string>(1, "80")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >("keep_alive", std::vector<std::string>(1, "60")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >("body_size", std::vector<std::string>(1, "1000")));
+	}
+	return *this;
+}
+
+void parser::block::create_block(const std::string name, const std::vector<std::string> &args, const block &serv_block)
+{
+	this->name = name;
+	this->args = args;
+
+	if (serv_block.name == PARSER_SERVER)
+	{
+		if (this->name == PARSER_LOCATION)
+		{
+			this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT,
+			serv_block.conf.find(PARSER_ACCEPT)->second));
+		}
+	}
+}
+
 parser::block::block()
 {
 }
@@ -39,8 +68,9 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 	if (name == PARSER_SERVER)
 	{
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("port", std::vector<std::string>(1, "80")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >("listen", std::vector<std::string>(1, "80")));
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >("keep_alive", std::vector<std::string>(1, "60")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >("body_size", std::vector<std::string>(1, "60")));
 	}
 }
 

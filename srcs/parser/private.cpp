@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include "message/request.hpp"
+#include "message/response.hpp"
 
 #include <cstdio>
 #include <climits>
@@ -103,7 +104,7 @@ bool parser::getline(int fd, std::string &line)
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
-	int file2 = open("/home/user42/42/webserv/mime", O_RDONLY);
+	int file2 = open("/home/user42/42/webserv/mime", O_RDONLY); //WARNING
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
@@ -196,7 +197,7 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 				splitted[0].erase(splitted[0].length() - 1);
 		}
 		block_id = std::make_pair(name, splitted);
-		_blocks[block_id] = parser::block(block_id.first, block_id.second);
+		_blocks[block_id].create_block(block_id.first, block_id.second, _blocks[entries::value_type(PARSER_SERVER, std::vector<std::string>())]); //dont work
 	}
 	else if (!block && check_prop(name, block_id.first, splitted, line_no))
 	{
@@ -446,9 +447,10 @@ bool parser::check_prop_accept(const std::string &block_id, const std::vector<st
 	std::vector<std::string>::const_iterator args_it(args.begin());
 	std::vector<std::string>::const_iterator args_end(args.end());
 
-	const request::method_array &existing_method(request::existing_method); //request get list of acceptable method back
+	const block blck(_blocks.find(entries::value_type(PARSER_SERVER, std::vector<std::string>()))->second);
+	const request::method_array possible_method(blck.conf.find(PARSER_ACCEPT)->second); //dont work); //request get list of acceptable method back
 	request::method_array::const_iterator method_it;
-	request::method_array::const_iterator method_end(existing_method.end());
+	request::method_array::const_iterator method_end(possible_method.end());
 
 	std::vector<std::string> expected;
 	expected.push_back(PARSER_SERVER);
@@ -463,14 +465,14 @@ bool parser::check_prop_accept(const std::string &block_id, const std::vector<st
 	}
 	while (args_it != args_end)
 	{
-		method_it = existing_method.begin();
+		method_it = possible_method.begin();
 		while (1)
 		{
 			if (*args_it == *method_it)
 				break;
 			else if (method_it + 1 == method_end)
 			{
-				std::cerr << "Error: " << filename << ": Unknow method " << *args_it << "at line " << line_no << std::endl;
+				std::cerr << "Error: " << filename << ": Unknow method " << *args_it << " at line " << line_no << std::endl;
 				return false;
 			}
 			++method_it;
@@ -510,6 +512,10 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 bool parser::check_prop_err_page(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
 	std::vector<std::string> expected;
+	const response::status_array &status_list = response::existing_status;
+	const response::status_array::const_iterator end = status_list.end();
+	size_t i(0);
+
 	expected.push_back(PARSER_SERVER);
 	expected.push_back(PARSER_LOCATION);
 
@@ -519,6 +525,16 @@ bool parser::check_prop_err_page(const std::string &block_id, const std::vector<
 		return false;
 	if (!advanced_chk_err_code(args, line_no)) //tbigot change it
 		return false;
+	while (i < args.size())
+	{
+		if (status_list.find(ft_atoi<size_t>(args[i])) == end)
+		{
+			std::cerr << "Error: " << filename << ": error status \"499\" is not implemented. (line: " << line_no << ")\n";
+			return false;
+		}
+		++i;
+	}
+
 	return true;
 }
 

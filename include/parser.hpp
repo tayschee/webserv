@@ -69,6 +69,8 @@ public:
 
 		block();
 		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>());
+		block	&operator=(const block &x);
+		void	create_block(const std::string name,  const std::vector<std::string> &args, const block &serv_block);
 	};
 
 private:

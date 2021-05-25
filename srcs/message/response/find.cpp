@@ -18,7 +18,7 @@ response::find_status_string() const
 }
 
 /*this function return function associated to a method*/
-response::method_array::value_type::second_type //method_function
+response::method_array::mapped_type //method_function
 response::find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const
 {
 	std::vector<std::string>::const_iterator it(allow_method.begin());
