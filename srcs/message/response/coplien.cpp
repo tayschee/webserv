@@ -60,7 +60,7 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 	return 0;
 }
 
-response::response(const request &req, const parser &pars) : message()
+response::response(const request &req, const parser &pars) : message(), first_line()
 {
 	std::cout << "allo?\n";
 	if (req.validity(pars) != 0)
@@ -100,14 +100,18 @@ response::response(const request &req, const parser &pars) : message()
 	}
 }
 
-/*response::response(int status, const parser &pars) : message()
+response::response(const request::exception except, const parser &pars) : message(), first_line()
 {
-	first_line.status = status;
-	first_line.status_string = find_status_string();
+	first_line.status = except.get_status();
 	first_line.version = HTTP_VERSION;
 
-	error_response(status, pars);
-}*/
+	request small_size_request(except);
+
+	main_header();
+	first_line.status = error_response(first_line.status, small_size_request, pars);
+	first_line.status_string = find_status_string();
+	first_line.version = HTTP_VERSION;
+}
 
 response::~response(){};
 

@@ -27,6 +27,13 @@ void			response::main_header(const std::vector<std::string> &allow_method)
 	add_server(); //server field add in header
 }
 
+/*add inside response:header all field which are in all method and in all condition without allow use for error constructor*/
+void			response::main_header()
+{
+	add_date(); //date field add in header
+	add_server(); //server field add in header
+}
+
 /*create first line of response header */ 
 std::string		response::header_first_line() const
 {

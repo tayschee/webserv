@@ -56,6 +56,7 @@ class response : public message
 	private : //utils
 		std::string		header_to_string() const; //convert header to a string which be merge with other string to form response message
 		void			main_header(const std::vector<std::string> &allow_method);
+		void			main_header();
 		std::string		header_first_line() const;
 		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 		bool			is_authorize(const std::string &path_file, const request &req, const parser &pars) const;
@@ -124,7 +125,7 @@ class response : public message
 
 	public :
 												response(const request &req, const parser &pars);
-												response(int status, const parser &pars);
+												response(const request::exception except, const parser &pars);
 												~response();
 };
 

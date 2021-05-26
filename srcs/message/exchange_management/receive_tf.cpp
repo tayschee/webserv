@@ -69,7 +69,7 @@ int receive_management::receive_tf::check(message *req)
 
 	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi<size_t>(msg.substr(pos)); //store size of next_buffer
+		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next_buffer
 		if (buf_size == 0) //verify if it's end
 		{
 			if (pos == 0)
