@@ -63,7 +63,7 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 response::response(const request &req, const parser &pars) : message()
 {
 	std::cout << "allo?\n";
-	if (req.validity() != 0)
+	if (req.validity(pars) != 0)
 	{
 		first_line.status = 400;
 		get_code(pars);

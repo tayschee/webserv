@@ -71,7 +71,7 @@ class request : public message
 		~request();
 
 		int				receive(const int socket, receive_management &recv_data);
-		int				validity() const;
+		int				validity(const parser &pars) const;
 };
 
 #endif
