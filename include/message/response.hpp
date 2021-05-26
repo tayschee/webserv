@@ -94,9 +94,10 @@ class response : public message
 		void 									parse_header(const std::string &start_line){ (void)start_line; }
 
 	public : //get_* functions, inside getter.cpp, this function are used to have access private variable
-		const response_line						&get_first_line() const;
 		int										is_open(const struct stat &file) const;
-
+		bool									is_cgi(const std::string &type, const parser &pars) const;
+		bool									is_authorize(const request &req, const parser &pars) const;
+		const response_line						&get_first_line() const;
 		int										get_status() const;
 		const std::string						&get_status_string() const;
 		const std::string						&get_version() const;
@@ -115,7 +116,9 @@ class response : public message
 	public :
 
 int		del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
-int		check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars);
+int		check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
+std::string		index(const std::string &path, std::string root, std::string add) const;
+
 
 												response(const request &req, const parser &pars);
 												response(int status, const parser &pars);

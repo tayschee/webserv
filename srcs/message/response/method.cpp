@@ -1,5 +1,4 @@
 #include "message/response.hpp"
-#include <string>
 
 int		response::method_is_head(const request &req, const parser &pars)
 {
@@ -7,79 +6,6 @@ int		response::method_is_head(const request &req, const parser &pars)
 	body.clear();
 	add_content_length(0);
 	return ret; //value of OK response
-}
-
-std::string		index(const std::string &path, std::string root, std::string add)
-{
-	DIR *dir = opendir(path.c_str());
-	struct dirent *dp;
-	std::string index =\
-	"<html>\n\
-	<head><title>Index of " + root + "</title></head>\n\
-	<body bgcolor=\"white\">\n\
-		<h1>Index of " + root + "</h1>\n\
-		<hr><pre><a href=\"../\">../</a>\n";
-		while ((dp = readdir(dir)) != NULL)
-		{
-			if (dp->d_name != std::string(".") && dp->d_name != std::string(".."))
-				index += "<a href=\"" + add + std::string(dp->d_name) + "\">" + std::string(dp->d_name) + "/" + "</a>\n";
-		}
-        closedir(dir);
-	index +=\
-	"</pre><hr></body>\n\
-	</html>";
-	return index;
-}
-
-bool	is_authorize(const request &req, const parser &pars)
-{
-	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-	if (path.find(AUTH_BASIC) != path.end())
-	{
-		message::header_type gh = req.get_header();
-		if (gh.find(AUTHORIZATION) == gh.end())
-			return false;
-		std::vector<std::string> tab;
-		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
-		char buf[4096];
-		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
-		int ret = read(fd, buf, 499);
-		buf[ret] = '\0';
-		tab = split(buf, "\t\r\n");
-		close(fd);
-		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-			if (Authorization == *it)
-				return true;
-		return false;
-	}
-	return true;
-}
-
-int		response::check_path(const std::string &path, struct stat &file_stat, const request &req, const parser &pars)
-{
-	if (path.empty())
-		return 404;
-	if (lstat(path.c_str(), &file_stat) < 0)
-		return 404;
-	if (int ret = is_open(file_stat))
-		return ret;
-	if (!is_authorize(req, pars))
-		return 401;
-	return (0);
-}
-
-bool		is_cgi(const std::string &type, const parser &pars)
-{
-	std::cout << "TYPE = " << type << std::endl;
-	try
-	{
-		pars.get_block("cgi", type);
-	}
-	catch(const std::exception& e)
-	{
-		return false;
-	}
-	return true;
 }
 
 int		response::method_is_get(const request &req, const parser &pars)
@@ -118,41 +44,6 @@ int		response::method_is_get(const request &req, const parser &pars)
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_length(body.size());
 	return 200;
-}
-
-int		response::del_content(std::string path, const request &req, const parser &pars, const bool del)
-{
-	struct stat file_stat; //information about file
-	int ret = check_path(path, file_stat, req, pars);
-	if (ret != 0)
-		return ret;
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
-	{
-		DIR *dir = opendir(path.c_str());
-		struct dirent *dp;
-		while ((dp = readdir(dir)) != NULL)
-		{
-			int ret = 0;
-			if (std::string(dp->d_name) != std::string(".") && std::string(dp->d_name) != std::string(".."))
-			{
-				if (path.begin() != path.end() && *(--path.end()) != '/')
-					path.push_back('/');
-				if ((ret = del_content(path + std::string(dp->d_name), req, pars, del)) != 0)
-				{
-					closedir(dir);
-					return ret;
-				}
-			}
-		}
-		closedir(dir);
-		if (del)
-			rmdir(path.c_str());
-	}
-	else if (del && (ret = unlink(path.c_str())) != 0) //delete the file, if there is a fd associted whith this file, deleted it when the fd is close
-	{
-		return 403;
-	}
-	return 0;
 }
 
 int		response::method_is_delete(const request &req, const parser &pars)
@@ -257,6 +148,8 @@ int		response::method_is_post(const request &req, const parser &pars)
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+		return 404;
 	cgi(req, pars, body, path);
 	if (body[0] == '5')
 		return ft_atoi<int>(body);
@@ -291,6 +184,8 @@ int			response::method_is_unknow(const request &req, const parser &pars)
 	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;
 	(void)req;
+	header.erase("GET");
 
-	return 405; //Method Not Allowed
+	//Method Not Allowed
+	return 405;
 }

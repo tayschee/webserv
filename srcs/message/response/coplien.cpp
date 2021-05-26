@@ -1,68 +1,6 @@
 #include "message/response.hpp"
 #include <iostream>
 
-void	response::get_code(const parser &pars)
-{
-	(void)pars;
-	struct stat file_stat; //information about file
-	if (first_line.status == 401)
-		header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
-	if (first_line.status == 503)
-		header.insert(value_type("Retry-after",  "20000"));
-	std::string file_error = "/home/user42/42/webserv/error/" + std::string(ft_itoa(first_line.status)) + ".html";
-	if (lstat(file_error.c_str(), &file_stat) < 0)
-	{
-		file_error = "/home/user42/42/webserv/error/404.html";
-		lstat(file_error.c_str(), &file_stat);
-	}
-	int fd = open(file_error.c_str(), O_RDONLY);
-	char buf[file_stat.st_size + 1];
-	int ret = read(fd, buf, file_stat.st_size);
-	buf[ret] = '\0';
-	body = buf;
-	header.insert(value_type(CONTENT_LENGTH,  ft_itoa(body.size())));
-	header.insert(value_type(CONTENT_TYPE,  "text/html"));
-	header.insert(value_type("Request Method",  GET));
-	close(fd);
-}
-
-bool		response::is_redirect(parser::entries &block, const parser &pars)
-{
-//	try
-//	{
-		std::string redirect;
-
-		if (block.find("return") == block.end())
-			return 0;
-
-		redirect = block.find("return")->second[0];
-
-		if (!redirect.empty())
-		{
-
-			first_line.status = ft_atoi<int>(redirect);
-		//	header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
-
-
-			std::string location = block.find("return")->second[1];
-
-			if (first_line.status == 301 || first_line.status == 302 || first_line.status == 303
-			|| first_line.status == 307 || first_line.status == 308)
-			{
-				header.insert(value_type(LOCATION, location));
-				get_code(pars);
-			}
-			else
-				body = location;
-			return 1;
-		}
-//	}
-//	catch(const std::exception& e)
-//	{
-//	}
-	return 0;
-}
-
 response::response(const request &req, const parser &pars) : message()
 {
 	if (req.validity() != 0)

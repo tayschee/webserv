@@ -80,7 +80,7 @@ void			cgi::father(const int fd[2], std::string &new_body)
 	close(fd[0]);
 }
 
-std::string     cgi::exec(char **env, const request &req, const parser &pars)
+std::string     cgi::exec(char **env, const request &req, const parser &pars, const std::string &path)
 {
     pid_t			pid;
 	int				save_in, save_out;
@@ -108,10 +108,10 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars)
 	else if (pid == 0)
 	{
 		son(save_in, save_out, fd, fd2,
-		pars.get_block("cgi", ".php").conf.find("script_name")->second[0].c_str(), env);
+		pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0].c_str(), env);
 	}
 	else
-		father(fd2, new_body);	
+		father(fd2, new_body);
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
 	clear(env);
