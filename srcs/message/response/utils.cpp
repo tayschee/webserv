@@ -152,3 +152,21 @@ int			response::is_open(const struct stat &file) const
 	// 	return (403);
 	return 0;
 }
+
+/*if there is accept-language header field delete extension of langauge*/
+std::string		&response::file_without_language_ext(std::string &path) const
+{
+	header_type::const_iterator it = header.find(ACCEPT_CHARSET);
+	header_type::const_iterator end = header.end();
+	size_t pos;
+
+	if (it == end)
+		return path;
+
+	pos = path.find_last_of("." + it->second);
+	if (pos != path.npos)
+		return path.erase(pos);
+	else
+		return path;
+
+}

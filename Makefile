@@ -24,7 +24,7 @@ SRCS = main.cpp $(EXCHANGE_DIR)receive_function.cpp $(EXCHANGE_DIR)receive_heade
 				$(MESSAGE_DIR)coplien.cpp $(MESSAGE_DIR)parse.cpp $(MESSAGE_DIR)getter.cpp $(MESSAGE_DIR)utils.cpp\
 				$(CLIENT_DIR)coplien.cpp $(CLIENT_DIR)getter.cpp $(CLIENT_DIR)private.cpp $(CLIENT_DIR)public.cpp\
 				$(CLUSTER_DIR)public.cpp $(CLUSTER_DIR)private.cpp $(CLUSTER_DIR)coplien.cpp\
-				$(SERVER_DIR)getter.cpp $(SERVER_DIR)coplien.cpp\
+				$(SERVER_DIR)utils.cpp $(SERVER_DIR)coplien.cpp \
 				$(CGI_DIR)coplien.cpp $(CGI_DIR)private.cpp\
 				$(UTILS_DIR)utils.cpp
 	

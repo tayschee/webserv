@@ -517,6 +517,33 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 	return true;
 }
 
+bool parser::check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const //not test
+{
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_SERVER);
+
+	if (!basic_chk_block(PARSER_LISTEN, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_LISTEN, args.size(), 1, true, line_no))
+		return false;
+	const std::string &number(args[0]);
+	char *end;
+
+	int nb = strtol(number.c_str(), &end, 10);
+
+	if (end != (number.c_str() + number.length()))
+	{
+		std::cerr << "Error: " << filename << ": keep_alive takes only digit in parameter. (line: " << line_no << ")\n";
+		return false;
+	}
+	if (nb < 0)
+	{
+		std::cerr << "Error: " << filename << ": Number must be positive. (line: " << line_no << ")\n";
+		return false;
+	}
+	return true;
+}
+
 bool parser::check_prop_err_page(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
 	std::vector<std::string> expected;
@@ -584,3 +611,16 @@ bool parser::check_block_cgi(const std::vector<std::string>& args, int line_no) 
 {
 	return basic_chk_args(PARSER_CGI, args.size(), 1, true, line_no);
 }
+
+parser::block	parser::create_default_mime_type() const
+{
+	block	default_mime_type(PARSER_TYPES, std::vector<std::string>());
+
+	default_mime_type.conf.insert(std::make_pair(".html", std::vector<std::string>(1, "text/html")));
+	default_mime_type.conf.insert(std::make_pair(".htm", std::vector<std::string>(1, "text/html")));
+	default_mime_type.conf.insert(std::make_pair(".bmp", std::vector<std::string>(1, "image/x-ms-bmp")));
+	default_mime_type.conf.insert(std::make_pair(".jpg", std::vector<std::string>(1, "image/jpeg")));
+	default_mime_type.conf.insert(std::make_pair(".png", std::vector<std::string>(1, "image/png")));
+
+	return default_mime_type;
+};

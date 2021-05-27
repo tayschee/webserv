@@ -138,6 +138,11 @@ int		response::method_is_put(const std::string &path, const request &req, const 
 	return response_value;
 }
 
+/*int			response::method_is_connect(const std::string &path, const request &req, const parser &pars)
+{
+	
+}*/
+
 int			response::method_is_unknow(const std::string &path, const request &req, const parser &pars)
 {
 	(void)path;

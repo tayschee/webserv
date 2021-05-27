@@ -14,6 +14,17 @@ int		response::error_file(int errnum) const
 		return 500; //server error ?
 }
 
+void	response::error_special_case(const request &req)
+{
+	if (req.get_method() == HEAD)
+		body.clear();
+	if (req.get_method() == CONNECT)
+	{
+		body.clear();
+		header.erase(CONTENT_LENGTH);
+	}
+}
+
 void	response::default_error(int error_status, const request &req)
 {
 	size_t pos(0);
@@ -76,7 +87,7 @@ int	response::error_response(int status, const request &req, const parser &pars)
 		}
 	}
 	status_header();
-	if (req.get_method() == HEAD)
-		body.clear();
+	error_special_case(req); //delete things which are note in specific method
+
 	return status_error;
 }

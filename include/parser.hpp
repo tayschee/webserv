@@ -85,6 +85,8 @@ private:
 private:
 	parser(const std::string &_filename);
 
+	block	create_default_mime_type() const;
+
 	bool getline(int fd, std::string& line);
 	void parse_file();
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
@@ -116,6 +118,7 @@ private:
 	bool check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

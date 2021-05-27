@@ -62,6 +62,7 @@ class response : public message
 		bool			is_authorize(const std::string &path_file, const request &req, const parser &pars) const;
 		std::string		index(const std::string &path, std::string root, std::string add) const;
 		void			status_header();
+		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
@@ -122,6 +123,7 @@ class response : public message
 		void									default_error(int error_status, const request &req);
 		int										error_response(int status, const request &req, const parser &pars);
 		int										error_msg(const std::string &path, const request &req, const parser &pars);
+		void									error_special_case(const request &req);
 
 	public :
 												response(const request &req, const parser &pars);

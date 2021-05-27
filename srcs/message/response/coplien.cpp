@@ -27,6 +27,7 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 {
 //	try
 //	{
+		(void)pars;
 		std::string redirect;
 
 		if (block.find("return") == block.end())
@@ -47,7 +48,7 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 			|| first_line.status == 307 || first_line.status == 308)
 			{
 				header.insert(value_type(LOCATION, location));
-				get_code(pars);
+				//get_code(pars);
 			}
 			else
 				body = location;
@@ -66,7 +67,7 @@ response::response(const request &req, const parser &pars) : message(), first_li
 	if (req.validity(pars) != 0)
 	{
 		first_line.status = 400;
-		get_code(pars);
+		//get_code(pars);
 		first_line.status_string = find_status_string();
 	}
 	else
@@ -84,7 +85,7 @@ response::response(const request &req, const parser &pars) : message(), first_li
 		/*call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way*/
 		if (!is_redirect(path_info, pars))
 		{
-			std::cout << "ok4\n";
+		//	std::cout << "ok4\n";
 			first_line.status = (this->*header_field_function)(req.get_uri(), req, pars);
 			std::cout << "ok5\n";
 			if (first_line.status > 299)

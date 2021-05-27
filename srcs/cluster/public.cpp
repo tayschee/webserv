@@ -44,3 +44,8 @@ int 	cluster::start() // cluster manage the list of socket
 	}
 	return (0);
 }
+
+/*int		cluster::connect_to(int sockfd, std::string adress, int port)
+{
+
+}*/

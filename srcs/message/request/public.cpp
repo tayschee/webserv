@@ -26,7 +26,7 @@ int		request::validity(const parser &pars) const
 
 	if (range_host.first == end || ++range_host.first != range_host.second)
 		return 400;
-	if (ft_atoi<size_t>(pars.get_block(PARSER_SERVER).conf.find("body_size")->second[0]) > body.size())
+	if (ft_atoi<size_t>(pars.get_block(PARSER_SERVER).conf.find("body_size")->second[0]) < body.size())
 		return 413;
 	//maybe check tf
 	return 0;
