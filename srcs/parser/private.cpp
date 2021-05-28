@@ -50,7 +50,7 @@ bool parser::advanced_chk_err_code(const std::vector<std::string> &err, int line
 	long nb;
 	size_t i(0);
 	size_t j;
-	
+
 	while (i < err.size() - 1)
 	{
 		j = 0;
@@ -104,7 +104,7 @@ bool parser::getline(int fd, std::string &line)
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
-	int file2 = open("/home/user42/42/webserv/mime", O_RDONLY); //WARNING
+	int file2 = open("mime", O_RDONLY); //WARNING
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
@@ -137,6 +137,8 @@ void parser::parse_file()
 			return;
 		}
 		parse_line(line, line_no, block_id);
+		if (_blocks.empty())
+			return ;
 	}
 	close(file);
 
@@ -187,6 +189,8 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 	splitted = split(line);
 	name = splitted[0];
 	splitted.erase(splitted.begin());
+	if (name == PARSER_ACCEPT)
+		std::cout << "parsing an accept... block : " << std::boolalpha << block << std::noboolalpha << std::endl;
 	if (block && check_block(name, splitted, line_no))
 	{
 		if (name == PARSER_LOCATION && splitted[0] != "/")
@@ -211,8 +215,9 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 		else
 			_blocks[block_id].conf[name] = splitted;
 	}
-	else
+	else{
 		_blocks.clear();
+	}
 }
 
 std::string parser::find_best_match(std::string arg) const
@@ -294,9 +299,10 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	prop_checker[PARSER_ERROR_PAGE] = &parser::check_prop_err_page;
 	prop_checker[PARSER_AUTOINDEX] = &parser::check_prop_autoindex;
 	prop_checker[PARSER_SCRIPT_NAME] = &parser::check_prop_script_name;
-	prop_checker[PARSER_RETURN] = &parser::check_return;
-	prop_checker[PARSER_AUTH_BASIC] = &parser::check_auth_basic;
-	prop_checker[PARSER_AUTH_BASIC_USER_FILE] = &parser::check_auth_basic_user_file;
+	prop_checker[PARSER_RETURN] = &parser::check_prop_return;
+	prop_checker[PARSER_AUTH_BASIC] = &parser::check_prop_auth_basic;
+	prop_checker[PARSER_AUTH_BASIC_USER_FILE] = &parser::check_prop_auth_basic_user_file;
+	prop_checker[PARSER_KEEP_ALIVE] = &parser::check_prop_keep_alive;
 
 	try
 	{
@@ -317,12 +323,6 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-bool parser::check_block_location_error(const std::vector<std::string>& args, int line_no) const
-{
-	(void)args;
-	(void)line_no;
-	return true;
-}
 
 bool parser::check_block_types(const std::vector<std::string>& args, int line_no) const
 {
@@ -331,27 +331,39 @@ bool parser::check_block_types(const std::vector<std::string>& args, int line_no
 	return true;
 }
 
-bool parser::check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+bool parser::check_prop_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	(void)block_id;
-	(void)args;
-	(void)line_no;
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
+
+	if (!basic_chk_block(PARSER_RETURN, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_RETURN, args.size(), 2, true, line_no))
+		return false;
+	return true;;
+}
+
+bool parser::check_prop_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
+
+	if (!basic_chk_block(PARSER_AUTH_BASIC, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_AUTH_BASIC, args.size(), 1, true, line_no))
+		return false;
 	return true;
 }
 
-bool parser::check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+bool parser::check_prop_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	(void)block_id;
-	(void)args;
-	(void)line_no;
-	return true;
-}
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
 
-bool parser::check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
-{
-	(void)block_id;
-	(void)args;
-	(void)line_no;
+	if (!basic_chk_block(PARSER_AUTH_BASIC_USER_FILE, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_AUTH_BASIC_USER_FILE, args.size(), 1, true, line_no))
+		return false;
 	return true;
 }
 
@@ -365,8 +377,7 @@ bool parser::check_block(const std::string &name, const std::vector<std::string>
 
 	block_checker[PARSER_LOCATION] = &parser::check_block_location;
 	block_checker[PARSER_CGI] = &parser::check_block_cgi;
-	block_checker[PARSER_LOCATION_ERROR] = &parser::check_block_types;
-	block_checker[PARSER_TYPES] = &parser::check_block_location_error;
+	block_checker[PARSER_TYPES] = &parser::check_block_types;
 
 	try
 	{
@@ -453,7 +464,7 @@ bool parser::check_prop_accept(const std::string &block_id, const std::vector<st
 	if (possible_it == possible_end)
 	{
 		std::cerr << "Error: " << filename << ": Can't check method, server methods are invalid." << " At line " << line_no << std::endl;
-			return false;	
+			return false;
 	}
 
 	const request::method_array possible_method(possible_it->second); //dont work); //request get list of acceptable method back
@@ -522,9 +533,9 @@ bool parser::check_prop_keep_alive(const std::string &block_id, const std::vecto
 	std::vector<std::string> expected;
 	expected.push_back(PARSER_SERVER);
 
-	if (!basic_chk_block(PARSER_LISTEN, block_id, expected, line_no))
+	if (!basic_chk_block(PARSER_KEEP_ALIVE, block_id, expected, line_no))
 		return false;
-	if (!basic_chk_args(PARSER_LISTEN, args.size(), 1, true, line_no))
+	if (!basic_chk_args(PARSER_KEEP_ALIVE, args.size(), 1, true, line_no))
 		return false;
 	const std::string &number(args[0]);
 	char *end;
@@ -534,6 +545,11 @@ bool parser::check_prop_keep_alive(const std::string &block_id, const std::vecto
 	if (end != (number.c_str() + number.length()))
 	{
 		std::cerr << "Error: " << filename << ": keep_alive takes only digit in parameter. (line: " << line_no << ")\n";
+		return false;
+	}
+	if (errno != 0)
+	{
+		std::cerr << "Error: " << filename << ": conversion of parameter failed. (line: " << line_no << ")\n";
 		return false;
 	}
 	if (nb < 0)

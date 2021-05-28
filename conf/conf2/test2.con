@@ -1,0 +1,31 @@
+server_name		127.0.0.1
+listen			8080
+root			./www
+
+accept POST GET TRACE HEAD PUT
+
+error_page 404 /
+location / {
+	accept POST PUT
+	root www
+	index io
+}
+
+error_page 404 /
+location /bonjour {
+	accept POST GET HEAD POST LOL
+	root ./www
+}
+
+location /test/t1/ {
+	root ./www
+
+location test/ {
+	root ./www
+}
+
+#error_page 402 403 404 407 501 /403.html
+#error_page 407 /error/403.html
+cgi .php {
+	script_name		/usr/bin/php-cgi
+}

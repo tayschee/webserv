@@ -19,6 +19,7 @@
 // TODO: move these defines to define.hpp
 #define PARSER_SERVER "server"
 #define PARSER_LOCATION "location"
+#define PARSER_TYPES "types"
 #define PARSER_CGI "cgi"
 
 #define PARSER_ACCEPT "accept"
@@ -29,11 +30,10 @@
 #define PARSER_AUTOINDEX "autoindex"
 #define PARSER_ROOT "root"
 #define PARSER_SCRIPT_NAME "script_name"
+#define PARSER_KEEP_ALIVE "keep_alive"
 //////////////////////////////////////////////////
 #define PARSER_RETURN "return"
 #define PARSER_AUTH_BASIC "auth_basic"
-#define PARSER_LOCATION_ERROR "location_error"
-#define PARSER_TYPES "types"
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
 /////////////////////////////////////////////////
 
@@ -113,11 +113,10 @@ private:
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
-	bool check_block_location_error(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_types(const std::vector<std::string>& args, int line_no) const;
-	bool check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
-	bool check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
-	bool check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

@@ -2,9 +2,16 @@
 
 int		main()
 {
-	cluster cl("conf/conf2");
+	std::vector<parser> pars = parser::parse_folder("./conf/conf2");
+
+	//parser::block block = pars[1].get_block(PARSER_SERVER);
+
+	for (size_t i = 0; i < pars.size(); i++)
+		std::cout << pars[i] << std::endl;
+
+	/*cluster cl("./conf/conf2");
 	cl.init_listen();
 	cl.start();
-	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
+	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;*/
 	return 0;
 }

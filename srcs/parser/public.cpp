@@ -35,8 +35,8 @@ std::vector<parser> parser::parse_folder(std::string path)
 		}
 	}
 	closedir(dir);
-	if (res.empty())
-		throw std::runtime_error("All the files in " + path + " are invalid.");
+	//if (res.empty())
+	//	throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
 }
 
