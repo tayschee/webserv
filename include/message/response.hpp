@@ -48,6 +48,7 @@ class response : public message
 		static response::media_type_array		initialise_existing_media_type();
 		const static media_type_array			existing_media_type; //std::map<std::string, std::string> to store existing type and find it with sub_type
 
+	public:
 		static response::status_array			initialise_existing_status();
 		const static status_array				existing_status; //std::map<int, std::string> to store status_string and find it with status
 
