@@ -1,6 +1,9 @@
 #include "parser.hpp"
 #include "message/request.hpp"
 
+std::string parser::buffer;
+parser::block parser::mime;
+
 parser::parser()
 {
 }

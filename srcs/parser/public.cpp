@@ -19,6 +19,8 @@ std::vector<parser> parser::parse_folder(std::string path)
 	std::vector<parser> res;
 	DIR *dir = opendir(path.c_str());
 
+	mime = create_default_mime_type();
+
 	if (path[path.length() - 1] == '/')
 		path.erase(path.end());
 
@@ -27,7 +29,10 @@ std::vector<parser> parser::parse_folder(std::string path)
 
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
 	{
-		if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
+		//std::cout << entry->d_name << std::endl;
+		if (entry->d_type == DT_REG && std::string(entry->d_name) == "mime")
+			parse_mime(path + "/" + entry->d_name);
+		else if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
 			res.push_back(parser(path + "/" + entry->d_name));
 			if (!res.rbegin()->is_valid())
@@ -36,7 +41,7 @@ std::vector<parser> parser::parse_folder(std::string path)
 	}
 	closedir(dir);
 	//if (res.empty())
-	//	throw std::runtime_error("All the files in " + path + " are invalid.");
+		//throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
 }
 

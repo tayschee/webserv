@@ -103,7 +103,6 @@ bool parser::getline(int fd, std::string &line)
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
-	int file2 = open("mime", O_RDONLY); //WARNING
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
@@ -141,7 +140,24 @@ void parser::parse_file()
 	}
 	close(file);
 
-	while (getline(file2, line))
+	buffer.clear();
+}
+
+void parser::parse_mime(const std::string& filename)
+{
+	buffer.assign(BUFFER_SIZE, '\0');
+
+	int file = open(filename.c_str(), O_RDONLY); //WARNING
+	std::string line;
+	int line_no = 0;
+
+	if (file == -1)
+	{
+		std::cerr << "Error: " << strerror(errno) << std::endl;
+		return;
+	}
+
+	while (getline(file, line))
 	{
 		line_no++;
 		if (line.empty())
@@ -152,19 +168,28 @@ void parser::parse_file()
 		line = clean_string(line);
 		if (line.empty())
 			continue;
-		if (!check_line(line, line_no))
-		{
-			_blocks.clear();
-			return;
-		}
-		parse_line(line, line_no, block_id);
+		if (line.find('{') != line.npos ||
+			line.find('}') != line.npos)
+			continue; // Lines delimitting a block are ignored (to simplify how the file is written)
 
-		if (_blocks.empty())
-			return;
+		parse_line_mime(filename, line, line_no);
 	}
 
-	close(file2);
+	close(file);
 	buffer.clear();
+}
+
+void parser::parse_line_mime(const std::string &filename, const std::string& line, int line_no)
+{
+	std::vector<std::string> splitted = split(line);
+
+	if (splitted.size() != 2)
+	{
+		std::cerr << "Error: " << filename << ": Mime requires exactly 2 arguments which is, in this order, extension and type. (line: " << line_no << ")\n";
+		return ;
+	}
+
+	mime.conf[splitted[0]] = std::vector<std::string>(1, splitted[1]);
 }
 
 void parser::parse_line(std::string line, int line_no, blocks::key_type &block_id)
@@ -188,8 +213,6 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 	splitted = split(line);
 	name = splitted[0];
 	splitted.erase(splitted.begin());
-	if (name == PARSER_ACCEPT)
-		std::cout << "parsing an accept... block : " << std::boolalpha << block << std::noboolalpha << std::endl;
 	if (block && check_block(name, splitted, line_no))
 	{
 		if (name == PARSER_LOCATION && splitted[0] != "/")
@@ -239,7 +262,7 @@ std::string parser::find_best_match(std::string arg) const
 	return "/";
 }
 
-std::string parser::remove_comments(const std::string &line) const
+std::string parser::remove_comments(const std::string &line)
 {
 	std::string::size_type pos = line.find('#');
 
@@ -313,8 +336,8 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	}
 	catch (const std::out_of_range &e)
 	{
-		std::cout << block_id << std::endl;
 		std::cerr << "Error: " << filename << ": Unknown property '" << name << "' at line " << line_no << ".\n";
+		error = true;
 		return false;
 	}
 }
@@ -387,6 +410,7 @@ bool parser::check_block(const std::string &name, const std::vector<std::string>
 	catch (const std::out_of_range &e)
 	{
 		std::cerr << "Error: " << filename << ": Unknown block '" << name << "' at line " << line_no << ".\n";
+		error = true;
 		return false;
 	}
 }
@@ -627,9 +651,9 @@ bool parser::check_block_cgi(const std::vector<std::string>& args, int line_no) 
 	return basic_chk_args(PARSER_CGI, args.size(), 1, true, line_no);
 }
 
-parser::block	parser::create_default_mime_type() const
+parser::block	parser::create_default_mime_type()
 {
-	block	default_mime_type(PARSER_TYPES, std::vector<std::string>());
+	block	default_mime_type(PARSER_TYPES);
 
 	default_mime_type.conf.insert(std::make_pair(".html", std::vector<std::string>(1, "text/html")));
 	default_mime_type.conf.insert(std::make_pair(".htm", std::vector<std::string>(1, "text/html")));

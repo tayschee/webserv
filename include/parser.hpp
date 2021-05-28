@@ -79,17 +79,20 @@ private:
 
 	std::string filename;
 	blocks _blocks;
-	std::string buffer;
+	static std::string buffer;
 	bool error;
+	static block mime;
 
 private:
 	parser(const std::string &_filename);
 
-	block	create_default_mime_type() const;
+	static block	create_default_mime_type();
 
-	bool getline(int fd, std::string& line);
+	static bool getline(int fd, std::string& line);
 	void parse_file();
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
+	static void parse_mime(const std::string& path); // get the block with get_mime()
+	static void parse_line_mime(const std::string& filename, const std::string& line, int line_no);
 
 	bool basic_chk_block(const std::string& name, const std::string& actual, const std::vector<std::string>& expected, int line_no) const;
 	bool basic_chk_args(const std::string& name, int actual, int expected, bool exact, int line_no) const;
@@ -107,23 +110,17 @@ private:
 	bool check_prop_err_page(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_autoindex(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_script_name(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
-	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
-	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
-
-	///////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////
-	bool check_block_types(const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
-	///////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////
+	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
+	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
+
+	bool check_block_types(const std::vector<std::string>& args, int line_no) const;
 
 	std::string find_best_match(std::string arg) const;
-	std::string remove_comments(const std::string &line) const;
+	static std::string remove_comments(const std::string &line);
 
 public:
 	parser();
@@ -137,6 +134,8 @@ public:
 
 	const block &get_block(const std::string &block_name, const std::vector<std::string> &block_args = std::vector<std::string>()) const;
 	const block &get_block(const std::string &block_name, const std::string &block_arg) const;
+
+	static const block& get_mime();
 
 	friend std::ostream &operator<<(std::ostream &os, const parser &parsed);
 };
