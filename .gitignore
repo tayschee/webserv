@@ -1,3 +1,5 @@
 tester/
 nginx_serv/
 .vscode
+.vscode/settings.json
+**/*.o
