@@ -64,6 +64,12 @@ class request : public message
 		const std::string	&get_method() const;
 		const std::string	&get_uri() const;
 		const std::string	&get_version() const;
+		const std::string	get_content_type() const;
+		const std::string	get_auth_type() const;
+		const std::string	get_user() const;
+		const std::string	get_content_length() const;
+		const std::string	get_host() const;
+		const std::string	get_query() const;
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 

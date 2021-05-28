@@ -12,7 +12,6 @@ response::find_status_string() const
 		return UNKNOW_STATUS;
 	else
 	{
-		std::cout << "return status = " << existing_status.find(first_line.status)->second << std::endl;
 		return existing_status.find(first_line.status)->second;
 	}
 }
@@ -23,7 +22,6 @@ response::find_method_function(const std::string &method, const std::vector<std:
 {
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
-
 	while (it < end)
 	{
 		if (method == *it)
@@ -42,7 +40,6 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 		return subtype;
 	try		
 	{
-		std::cout << "extension = " << subtype << std::endl;
 		parser::entries block = pars.get_block("types", "mime").conf;
 		if (block.find(subtype) != block.end())
 			type = block.find(subtype)->second[0];
@@ -62,7 +59,7 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	// return (*val);
 }
 
-std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req) const
+std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index) const
 {
 	(void)req;
 	parser::entries entries(block.conf);
@@ -73,7 +70,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	{
 		//do something
 	}
-	else if ((file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
+	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
 		//determine if this is complete path or if this not for that verify if this is a directory
 		if (is_open(file_stat))

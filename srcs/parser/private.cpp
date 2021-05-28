@@ -104,7 +104,7 @@ bool parser::getline(int fd, std::string &line)
 void parser::parse_file()
 {
 	int file = open(filename.c_str(), O_RDONLY);
-	int file2 = open("/home/user42/42/webserv/mime", O_RDONLY); //WARNING
+	int file2 = open("/Users/tatay/Desktop/webserv/mime", O_RDONLY); //WARNING
 	std::string line;
 	int line_no = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());

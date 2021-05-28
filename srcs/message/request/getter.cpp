@@ -19,10 +19,53 @@ const std::string	&request::get_uri() const
 	return first_line.uri;
 }
 
+/*more specific than get_first_line simply use for query*/
+const std::string	request::get_query() const
+{
+	if (header.find(QUERY_STRING) == header.end())
+		return "";
+	return header.find(QUERY_STRING)->second;
+}
+
 /*more specific than get_first_line simply use for version*/
 const std::string		&request::get_version() const
 {
 	return first_line.version;
+}
+
+const std::string	request::get_content_type() const
+{
+	if (header.find(CONTENT_TYPE) == header.end())
+		return "";
+	return header.find(CONTENT_TYPE)->second;
+}
+
+const std::string	request::get_auth_type() const
+{
+	if (header.find(AUTH_BASIC) == header.end())
+		return "";
+	return header.find(AUTH_BASIC)->second;
+}
+
+const std::string	request::get_user() const
+{
+	if (header.find(AUTHORIZATION) == header.end())
+		return "";
+	return header.find(AUTHORIZATION)->second;
+}
+
+const std::string	request::get_content_length() const
+{
+	if (header.find(CONTENT_LENGTH) == header.end())
+		return "";
+	return header.find(CONTENT_LENGTH)->second;
+}
+
+const std::string	request::get_host() const
+{
+	if (header.find(HOST) == header.end())
+		return "";
+	return header.find(HOST)->second;
 }
 
 /*to have request information in the form of std::string*/

@@ -4,6 +4,7 @@
 /*Server*/
 # define WEBSERV "webserv"
 # define HTTP_VERSION "HTTP/1.1"
+# define GATEWAY_INTERFACE "CGI/1.1"
 
 /*line return*/
 # define CRLF "\r\n"
@@ -37,6 +38,7 @@
 # define ACCEPT_LANGUAGE "Accept-Language"
 # define AUTHORIZATION "Authorization"
 # define CONTENT_LENGTH "Content-Length"
+# define CONTENT_LOCATION "Content-Location"
 # define REFERER "Referer"
 # define USER_AGENT "User-Agent"
 # define HOST "Host"
@@ -50,6 +52,9 @@
 # define TRANSFERT_ENCODING "Transfert-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
 # define WWW_AUTHENTICATE "WWW-Authenticate"
+
+/*define header field for CGI*/
+# define QUERY_STRING "QUERY_STRING"
 
 /*define methods*/
 # define GET "GET"
