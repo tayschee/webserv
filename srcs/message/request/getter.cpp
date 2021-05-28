@@ -1,4 +1,5 @@
 #include "message/request.hpp"
+#include "message/response.hpp"
 
 /*use to have all information about first line in the structure of request to store first_line*/
 const request::request_line	&request::get_first_line() const

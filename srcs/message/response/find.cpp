@@ -12,18 +12,16 @@ response::find_status_string() const
 		return UNKNOW_STATUS;
 	else
 	{
-		std::cout << "return status = " << existing_status.find(first_line.status)->second << std::endl;
 		return existing_status.find(first_line.status)->second;
 	}
 }
 
 /*this function return function associated to a method*/
-response::method_array::value_type::second_type //method_function
+response::method_array::mapped_type //method_function
 response::find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const
 {
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
-
 	while (it < end)
 	{
 		if (method == *it)
@@ -42,7 +40,6 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 		return subtype;
 	try
 	{
-		std::cout << "extension = " << subtype << std::endl;
 		parser::entries block = pars.get_block("types", "mime").conf;
 		if (block.find(subtype) != block.end())
 			type = block.find(subtype)->second[0];
@@ -62,11 +59,11 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	// return (*val);
 }
 
-std::string	response::find_path(const parser::block &block, const request &req, const bool index) const
+std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index) const
 {
+	(void)req;
 	parser::entries entries(block.conf);
-	std::string path(entries.find("root")->second[0] + req.get_uri());
-
+	std::string path(entries.find("root")->second[0] + partial_path);
 	struct stat file_stat;
 
 	if (stat(path.c_str(), &file_stat) < 0)
@@ -83,6 +80,11 @@ std::string	response::find_path(const parser::block &block, const request &req, 
 		path.push_back('/');
 		std::string ret = path + find_index(entries, files);
 		return (ret);
+	}
+	else
+	{
+		return path;
+		//return find_language(path, files_in_dir(path), req);
 	}
 	return path;
 }
@@ -116,4 +118,52 @@ std::string response::find_index(const parser::entries &entries, const std::list
 		//std::cerr << e.what() << '\n';
 	}
 	return "";
+}
+
+std::string response::find_charset(const request &req) const
+{
+	header_type::const_iterator it_tag;
+	header_type head(req.get_header());
+	if ((it_tag = head.find(ACCEPT_CHARSET)) == head.end())
+		return "";
+
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+
+	if (it == end)
+		return "";
+	else
+		return it->second;
+}
+
+/*find if there is equivalent file for a specific language if there is, add content-language header field to header*/
+std::string response::find_language(const std::string &complete_path, const request &req)
+{
+	header_type::const_iterator it_tag;
+
+	if ((it_tag = req.get_header().find(ACCEPT_LANGUAGE)) == header.end())
+		return complete_path;
+
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+	struct stat file_stat; //information about file
+
+	while (it != end)
+	{
+		std::string new_path(complete_path + "." + it->second);
+		if (stat(new_path.c_str(), &file_stat) < 0)
+		{
+			if (!(errno == ENOENT)) //file doesnt exist or new_path is empty chain
+				return ""; //error do something else
+		}
+		else
+		{
+			add_content_language(it->second);
+			return new_path;
+		}
+		++it;
+	}
+	return complete_path;
 }

@@ -35,7 +35,10 @@ int receive_management::receive_cl::receive(const int socket, message *req)
 	ssize_t i;
 
 	if ((i = read(socket, buffer, this->buf_size)) < 0)
+	{
+		delete[] buffer;
 		return 500;
+	}
 	buffer[i] = 0;
 	this->msg += buffer;
 	delete[] buffer;

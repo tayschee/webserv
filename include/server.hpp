@@ -32,6 +32,7 @@ class   server
 		~server(); // destructor
 
 		int						get_socket_host() const; // get host
+		int 					ip_resolution(const std::string &ip) const;
 };
 
 #endif

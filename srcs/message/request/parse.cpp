@@ -1,17 +1,26 @@
 #include "message/request.hpp"
 
-/* Store information about request (cmd, arg and version)*/
+/* Store information about request (cmd, uri, query and version)*/
 void			request::parse_start_line(const std::string &start_line)
 {
 	std::vector<std::string> cmd_split;
+	size_t pos;
 
 	cmd_split = split(start_line.c_str(), " "); //NEED FT_SPLIT PISCINE to verify tab + space
 
-	first_line.method = cmd_split[0];
-	first_line.version = cmd_split[2];
-	cmd_split = split(cmd_split[1], "?");
-	first_line.uri = cmd_split[0];
-	header.insert(value_type(QUERY_STRING, cmd_split[1]));
+	if (cmd_split.size() >= 1)
+		first_line.method = cmd_split[0];
+	if (cmd_split.size() >= 2)
+	{
+		if ((pos = cmd_split[1].find("?")) != cmd_split[1].npos)
+		{
+			first_line.query_string = cmd_split[1].substr(pos);
+			cmd_split[1].erase(pos);
+		}
+		first_line.uri = cmd_split[1];
+	}
+	if (cmd_split.size() >= 3)
+		first_line.version = cmd_split[2];
 }
 
 /*parse header which were read*/

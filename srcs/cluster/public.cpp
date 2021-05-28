@@ -44,3 +44,24 @@ int 	cluster::start() // cluster manage the list of socket
 	}
 	return (0);
 }
+
+//connect to a another server, will be useful to connect to client together
+/*int		cluster::connect_to(std::string address, std::string ip)
+{
+	sockaddr_in	address_in;
+	int sockfd;
+	int res;
+
+	address_in.sin_family = AF_INET; //dont know why
+    address_in.sin_port = htons(sockfd); //dont know why
+
+	//check if he exists
+	sockfd = socket(ip_resolution(address), SOCK_STREAM, AF_INET);
+	
+	res = connect(sockfd, (struct sockaddr *)(&address_in), sizeof(sockaddr_in));
+	if (i < 0)
+	{
+		//error
+	}
+	//list_client.push_back(res, false, );
+}*/

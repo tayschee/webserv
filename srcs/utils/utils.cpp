@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <iostream>
 
 bool	is_horizontal_space(const int c) //verify if c is space or tab
 {
@@ -48,6 +49,39 @@ std::string clean_string(std::string &str)
 	return str;
 }
 
+std::string string_without(std::string str, const std::string &elem_to_erase)
+{
+	size_t i(0);
+	size_t j;
+
+	while (i < str.size())
+	{
+		j = 0;
+		while (j < elem_to_erase.size())
+		{
+			if (str[i] == elem_to_erase[j])
+			{
+				str.erase(i, 1);
+				break;
+			}
+			++j;
+		}
+		++i;
+	}
+	return str;
+}
+
+std::string replace(std::string str, const std::string &elem_to_replace, const std::string &replacing_elem)
+{
+	size_t i(0);
+
+	while((i = str.find(elem_to_replace)) != str.npos)
+	{
+		str.replace(i, elem_to_replace.size(), replacing_elem);
+	}
+	return str;
+}
+
 std::vector<std::string> split(const std::string &str, const std::string &delimiters)
 {
 	std::vector<std::string> result;
@@ -60,9 +94,12 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 	}
 	return result;
 }
+
 std::string ft_itoa(int nb)
 {
 	std::string str;
+	if (nb == 0)
+		return "0";
 	long n = nb;
 	bool sign = n < 0;
 
@@ -73,6 +110,42 @@ std::string ft_itoa(int nb)
 		n /= 10;
 	}
 	return (sign ? "-" : "") + str;
+}
+
+template <>
+float ft_atoi(const std::string &str)
+{
+	size_t	i(0);
+	float	nb(0);
+
+	if (str.size() != 0)
+	{
+		if (str[0] == '-')
+		{
+			nb *= -1; //NO XD
+			++i;
+		}
+		else if (str[0] == '+')
+			++i;
+		while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+		{
+			nb = 10 * nb + str[i] - '0';
+			++i;
+		}
+		if (i < str.size() && str[i] == '.')
+		{
+			float multiplier(0.1);
+
+			++i;
+			while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+			{
+				nb += (str[i] - '0') * multiplier;
+				multiplier *= 0.1;
+				++i;
+			}
+		}
+	}
+	return nb;
 }
 
 size_t		ft_strlen(const char *str)
@@ -92,4 +165,24 @@ std::string get_extension(const std::string& str)
 	std::string::size_type pos = str.find('.');
 
 	return pos == str.npos ? "" : str.substr(pos);
+}
+
+//It gives list of files + symbolic links inside directory
+std::list<std::string>	files_in_dir(const std::string &path)
+{
+	DIR *directory = opendir(path.c_str());
+	struct dirent *entry;
+	std::list<std::string> files;
+
+	if (directory == NULL)
+	{
+		//do something
+	}
+	while ((entry = readdir(directory)))
+	{
+		if (entry->d_type == DT_REG || entry->d_type == DT_LNK) //if this is s file
+			files.push_back(entry->d_name);
+	}
+	closedir(directory);
+	return files;
 }

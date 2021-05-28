@@ -34,7 +34,10 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	{
 		buffer = new char[default_buf_size + 1];
 		if ((i = read(socket, buffer, default_buf_size)) < 0)
+		{
+			delete[] buffer;
 			return 500;
+		}
 		buffer[i] = 0;
 		this->msg += std::string(buffer);
 		delete[] buffer;
@@ -66,7 +69,7 @@ int receive_management::receive_tf::check(message *req)
 
 	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi<size_t>(msg.substr(pos)); //store size of next_buffer
+		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next_buffer
 		if (buf_size == 0) //verify if it's end
 		{
 			if (pos == 0)

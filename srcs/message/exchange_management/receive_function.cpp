@@ -19,7 +19,9 @@ int		receive_management::receive(const int socket, message *req)
 			clear();
 	}
 	else if (i == -1) //which case read can fail ?
+	{
 		clear();
+	}
 	return i;
 }
 

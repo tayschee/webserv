@@ -6,8 +6,6 @@ char            **cgi::init_env(const request &req, const parser &pars, const st
     std::map<std::string, std::string> env_tmp;
 	std::string root = pars.get_block("server").conf.find("root")->second[0];
 
-	std::cout << "QUERY = " << req.get_query() << std::endl;
-
 	env_tmp["AUTH_TYPE"] = req.get_auth_type();
 	env_tmp["CONTENT_LENGTH"] = req.get_content_length();
 	env_tmp["CONTENT_TYPE"] = req.get_content_type();
@@ -20,7 +18,7 @@ char            **cgi::init_env(const request &req, const parser &pars, const st
 	env_tmp["REMOTE_USER"] = req.get_user(); // user id
 	env_tmp["REQUEST_METHOD"] = req.get_method();
 	env_tmp["REQUEST_URI"] = req.get_uri();
-	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", ".php").conf.find("script_name")->second[0];
+	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0];
 	env_tmp["SEVER_NAME"] = pars.get_block("server").name;
 	env_tmp["SERVER_PORT"] = pars.get_block("server").conf.find("listen")->second[0];
 	env_tmp["SERVER_PROTOCOL"] = HTTP_VERSION;
@@ -82,7 +80,7 @@ void			cgi::father(const int fd[2], std::string &new_body)
 	close(fd[0]);
 }
 
-std::string     cgi::exec(char **env, const request &req, const parser &pars)
+std::string     cgi::exec(char **env, const request &req, const parser &pars, const std::string &path)
 {
     pid_t			pid;
 	int				save_in, save_out;
@@ -110,10 +108,10 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars)
 	else if (pid == 0)
 	{
 		son(save_in, save_out, fd, fd2,
-		pars.get_block("cgi", ".php").conf.find("script_name")->second[0].c_str(), env);
+		pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0].c_str(), env);
 	}
 	else
-		father(fd2, new_body);	
+		father(fd2, new_body);
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
 	clear(env);

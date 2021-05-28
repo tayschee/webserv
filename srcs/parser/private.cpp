@@ -50,7 +50,6 @@ bool parser::advanced_chk_err_code(const std::vector<std::string> &err, int line
 	long nb;
 	size_t i(0);
 	size_t j;
-
 	while (i < err.size() - 1)
 	{
 		j = 0;
@@ -639,4 +638,4 @@ parser::block	parser::create_default_mime_type() const
 	default_mime_type.conf.insert(std::make_pair(".png", std::vector<std::string>(1, "image/png")));
 
 	return default_mime_type;
-};
+}
