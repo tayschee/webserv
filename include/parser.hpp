@@ -31,11 +31,9 @@
 #define PARSER_ROOT "root"
 #define PARSER_SCRIPT_NAME "script_name"
 #define PARSER_KEEP_ALIVE "keep_alive"
-//////////////////////////////////////////////////
 #define PARSER_RETURN "return"
 #define PARSER_AUTH_BASIC "auth_basic"
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
-/////////////////////////////////////////////////
 
 class parser
 {
@@ -117,8 +115,6 @@ private:
 	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
 
-	bool check_block_types(const std::vector<std::string>& args, int line_no) const;
-
 	std::string find_best_match(std::string arg) const;
 	static std::string remove_comments(const std::string &line);
 
@@ -142,5 +138,7 @@ public:
 
 std::ostream &operator<<(std::ostream &os, const std::vector<std::string> &v);
 std::ostream &operator<<(std::ostream &os, const parser::block &b);
+
+void append_buffer(std::string &buffer, std::string &line, size_t limit, bool resize);
 
 #endif //WEBSERV_PARSER_HPP
