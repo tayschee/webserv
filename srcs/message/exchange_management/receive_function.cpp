@@ -8,6 +8,7 @@ int		receive_management::receive(const int socket, message *req)
 {
 	int i;
 
+	std::cout << "begin : " <<data->msg << "\n";
 	if ((i = data->receive(socket, req)) == 1)
 	{
 		if (dynamic_cast<receive_header *>(data) != NULL) //check type of data
@@ -22,6 +23,7 @@ int		receive_management::receive(const int socket, message *req)
 	{
 		clear();
 	}
+	std::cout << "end : "  << data->msg << "\n";
 	return i;
 }
 

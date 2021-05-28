@@ -62,6 +62,6 @@ receive_management::receive_cl	*receive_management::receive_cl::clone() const
 {
 	receive_cl	*clone_obj;
 
-	clone_obj = new(std::nothrow) receive_cl(*this);
+	clone_obj = new receive_cl(*this);
 	return clone_obj;
 }
