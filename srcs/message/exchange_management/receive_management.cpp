@@ -7,12 +7,12 @@ it used to receive header and body through is internal class and it variable whi
 (read header, cl_body, tf_body), it's also child class of exchange_management. It is used with function receive of request */
 
 //receive_mangement constructor destructor
-receive_management::receive_management() : exchange_management(), data(NULL) {}
+receive_management::receive_management() : exchange_management(), data(NULL), buf_size(1) {}
 
-receive_management::receive_management(size_t buf_size) : exchange_management(), data(new receive_header(buf_size)) {}
+receive_management::receive_management(size_t buf_size) : exchange_management(), data(new receive_header(buf_size)), buf_size(buf_size) {}
 
 receive_management::receive_management(const receive_management &x) : 
-exchange_management(), data(x.clone()){}
+exchange_management(), data(x.clone()), buf_size(x.buf_size){}
 
 receive_management::~receive_management()
 {
@@ -24,6 +24,7 @@ receive_management::~receive_management()
 receive_management &receive_management::operator=(const receive_management &x)
 {
 	data = x.clone();
+	buf_size = x.buf_size;
 	return *this;
 }
 

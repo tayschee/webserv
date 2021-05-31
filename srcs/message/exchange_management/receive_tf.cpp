@@ -6,16 +6,17 @@ by receive_management once header is read */
 typedef message::receive_management receive_management;
 
 //constructor destructor
-receive_management::receive_tf::receive_tf() : internal_receive(), pos(0) {}
-receive_management::receive_tf::receive_tf(const std::string &msg) : internal_receive(msg, 0), pos(0) {}
-receive_management::receive_tf::receive_tf(const std::string &msg, const size_t pos) : internal_receive(msg, 0), pos(pos){}
-receive_management::receive_tf::receive_tf(const receive_tf &x) : internal_receive(x), pos(x.pos) {}
+receive_management::receive_tf::receive_tf() : internal_receive(), pos(0), body("") {}
+receive_management::receive_tf::receive_tf(const std::string &msg) : internal_receive(msg, 0), pos(0), body("") {}
+receive_management::receive_tf::receive_tf(const std::string &msg, const std::string &body) : internal_receive(msg, 0), pos(0), body(body){}
+receive_management::receive_tf::receive_tf(const receive_tf &x) : internal_receive(x), pos(x.pos), body(x.body) {}
 receive_management::receive_tf::~receive_tf(){}
 
 //operator =
 receive_management::receive_tf	&receive_management::receive_tf::operator=(const receive_tf &x)
 {
 	msg = x.msg;
+	body = x.body;
 	buf_size = x.buf_size;
 	pos = x.pos;
 	
@@ -41,7 +42,7 @@ int receive_management::receive_tf::receive(const int socket)
 			return 500;
 		}
 		buffer[i] = 0;
-		this->msg += buffer;
+		this->body += buffer;
 		delete[] buffer;
 		if (i == 0)
 			return -1;
@@ -53,7 +54,7 @@ int receive_management::receive_tf::receive(const int socket)
 		if ((i = read(socket, buffer, this->buf_size)) < 0)
 			return 500;
 		buffer[i] = 0;
-		this->msg += buffer;
+		this->body += buffer;
 		delete[] buffer;
 		if (i == 0)
 			return -1;
@@ -68,29 +69,29 @@ int receive_management::receive_tf::check()
 {
 	size_t	i;
 	size_t	CRLF_size(ft_strlen(CRLF));
-	size_t	msg_size(msg.size());
+	size_t	body_size(body.size());
 
 	std::cout << "pos : " << pos << "\n";
-	std::cout << "msg size : " <<msg.size() << "\n";
-	if (!(pos < msg.size()))
+	std::cout << "body size : " <<body.size() << "\n";
+	if (!(pos < body.size()))
 		return 0;
 
-	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
+	while ((i = body.find(CRLF, pos)) != body.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next buffer
+		buf_size = ft_atoi_base<size_t>(body.substr(pos), HEXADECIMAL_BASE); //store size of next buffer
 		std::cout << "buf_size = " << buf_size << "\n";
 		if (buf_size == 0) //verify if it's end
 		{
-			std::cout << "size : " << msg.size() << "\n";
+			std::cout << "size : " << body.size() << "\n";
 			std::cout << "i : " << i + (CRLF_size * 2) << "\n";
-			if (msg.size() >= i + (CRLF_size * 2))
+			if (body.size() >= i + (CRLF_size * 2))
 			{
 				std::cout << "victory\n";
 				if (pos == 0)
-					msg.erase(pos, 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is
+					body.erase(pos, 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is
 				else
-					msg.erase(pos - CRLF_size, CRLF_size + 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is + \r\n before
-				//std::cout << "-----------\n" << msg << "-------------\n";
+					body.erase(pos - CRLF_size, CRLF_size + 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is + \r\n before
+				//std::cout << "-----------\n" << body << "-------------\n";
 				return 1;
 			}
 			else
@@ -102,17 +103,17 @@ int receive_management::receive_tf::check()
 		}
 		buf_size += CRLF_size;
 		if (pos == 0)
-			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
+			body.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk
 		else
 		{
 			pos = pos - CRLF_size;
-			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk + \r\n before, to have request without size
+			body.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk + \r\n before, to have request without size
 		}
-		msg_size = msg.size();
+		body_size = body.size();
 		pos += buf_size;
-		if (msg_size < pos) //if size of buffer not again read
+		if (body_size < pos) //if size of buffer not again read
 		{
-			buf_size = buf_size - (pos - msg_size);
+			buf_size = buf_size - (pos - body_size);
 			return 0;
 		}
 		buf_size = 0;
@@ -120,11 +121,16 @@ int receive_management::receive_tf::check()
 	return 0;
 }
 
-receive_management::internal_receive *receive_management::receive_tf::next_step() const
+receive_management::internal_receive *receive_management::receive_tf::next_step()
 {
-	internal_receive *new_data = NULL;
+	internal_receive *new_data = new receive_header(msg, 10);
 
 	return new_data;
+}
+
+std::string 						receive_management::receive_tf::get_msg() const
+{
+	return msg + SEPARATOR + body;
 }
 
 receive_management::receive_tf	*receive_management::receive_tf::clone() const

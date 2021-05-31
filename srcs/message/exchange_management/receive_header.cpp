@@ -8,6 +8,7 @@ typedef  message::receive_management receive_management;
 //receive_header constructor destructor
 receive_management::receive_header::receive_header() : internal_receive(){}
 receive_management::receive_header::receive_header(size_t buf_size) : internal_receive(buf_size){}
+receive_management::receive_header::receive_header(const std::string &msg, size_t buf_size) : internal_receive(msg, buf_size){}
 receive_management::receive_header::receive_header(const receive_header &x) : internal_receive(x){}
 receive_management::receive_header::~receive_header(){}
 
@@ -51,7 +52,7 @@ int			receive_management::receive_header::check()
 	return 0;
 }
 
-receive_management::internal_receive *receive_management::receive_header::next_step() const
+receive_management::internal_receive *receive_management::receive_header::next_step()
 {
 	receive_management::internal_receive *new_data;
 	size_t pos(msg.find(TRANSFERT_ENCODING ":"));
@@ -59,7 +60,9 @@ receive_management::internal_receive *receive_management::receive_header::next_s
 
 	if (pos != end)
 	{
-		new_data = new receive_tf(msg, msg.find(SEPARATOR) + ft_strlen(SEPARATOR));
+		std::string header(msg.substr(0, msg.find(SEPARATOR)));
+		msg.erase(0, msg.find(SEPARATOR) + ft_strlen(SEPARATOR));
+		new_data = new receive_tf(header, msg);
 		std::cout << "transfert encoding nice detected\n";
 	}
 	else
@@ -76,6 +79,11 @@ receive_management::internal_receive *receive_management::receive_header::next_s
 		new_data = new receive_cl(msg, 0);
 	}*/
 	return new_data;
+}
+
+std::string 						receive_management::receive_header::get_msg() const
+{
+	return msg;
 }
 
 receive_management::receive_header	*receive_management::receive_header::clone() const

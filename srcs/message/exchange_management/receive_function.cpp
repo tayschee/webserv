@@ -14,12 +14,11 @@ int		receive_management::receive(const int socket)
 		clear();
 		return i;
 	}
-	i = next_step();
-	std::cout << "return i = " << i << "\n";
+	//i = check();
 	return i;
 }
 
-int receive_management::next_step()
+int receive_management::check()
 {
 	//std::cout << data->check() << "\n";
 	while (data->check())
@@ -40,7 +39,7 @@ int receive_management::next_step()
 
 std::string							receive_management::get_msg() const
 {
-	return data->msg;
+	return data->get_msg();
 }
 
 receive_management::internal_receive *receive_management::clone() const

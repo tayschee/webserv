@@ -5,8 +5,16 @@ void                            client::receive() // call recieve
     reset_time();
     read = rcm.receive(fd);
 	//read == request::receive(fd, rcm);
-	if (read == 1)
-		std::cout << "-------------------\n" << rcm.get_msg() << "-------------------\n";
+	
+	while ((read = rcm.check())) //check dest_fd that could be a request
+	{
+		int buf = 10; // do a function
+		request	req(rcm.get_msg().c_str());
+		response resp(req, pars);
+
+		sdm.add_element_to_send(resp, buf);
+	}
+	
 	// req = rcm.get_request()
 
 }

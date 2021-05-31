@@ -45,7 +45,8 @@ class message::receive_management : public exchange_management
 				virtual int		receive(const int socket) = 0;
 				virtual int		check() = 0;
 				virtual internal_receive *clone() const = 0;
-				virtual internal_receive *next_step() const = 0;
+				virtual internal_receive *next_step() = 0;
+				virtual std::string		get_msg() const = 0;
 
 			public :
 				internal_receive();
@@ -67,11 +68,13 @@ class message::receive_management : public exchange_management
 				int		receive(const int socket);
 				int		check();
 				receive_header *clone() const;
-				internal_receive *next_step() const;
+				internal_receive *next_step();
+				std::string get_msg() const;
 
 			public :
 				receive_header();
 				receive_header(size_t buf_size);
+				receive_header(const std::string &msg, size_t buf_size);
 				receive_header(const receive_header &x);
 				receive_header &operator=(const receive_header &x);
 
@@ -105,8 +108,8 @@ class message::receive_management : public exchange_management
 		struct receive_tf : public internal_receive
 		{
 			public :
-				//std::string body;
 				size_t		pos; //position of next buf_size
+				std::string body;
 				//size_t	buf_size; //store the size of body or rest of size
 				//std::string msg; //to store body during parsing
 	
@@ -114,13 +117,14 @@ class message::receive_management : public exchange_management
 				int				receive(const int socket);
 				int				check();
 				receive_tf		*clone() const;
-				internal_receive *next_step() const;
+				internal_receive *next_step();
+				std::string get_msg() const;
 
 			public :
 				receive_tf();
 				receive_tf(const std::string &msg);
 				receive_tf(const receive_tf &x);
-				receive_tf(const std::string &msg, const size_t pos);
+				receive_tf(const std::string &msg, const std::string &body);
 				receive_tf &operator=(const receive_tf &x);
 				receive_tf(internal_receive *x);
 
@@ -130,12 +134,13 @@ class message::receive_management : public exchange_management
 
 	private :
 		internal_receive *data;
+		size_t			buf_size;
 
 	private :
-		int		next_step();
 		internal_receive *clone() const;
 
 	public :
+		int		check();
 		std::string	get_msg() const;
 		int			receive(const int socket);
 		void		clear();
@@ -153,15 +158,38 @@ class message::receive_management : public exchange_management
 
 class message::send_management : public message::exchange_management
 {
+	private:
+		struct internal_send : public internal_exchange
+		{
+
+			public :
+				int			status;
+				size_t		buf_size;
+				std::string msg; //to store header to form of string during parsing / other utility for child class
+
+			private : 
+				static int find_status_value(const message &msg);
+
+			public :
+				internal_send();
+				internal_send(int status, size_t buf_size, const std::string &msg);
+				internal_send(const message &msg, size_t buf_size);
+				internal_send(const internal_send &x);
+				internal_send &operator=(const internal_send &x);
+
+				virtual ~internal_send();
+		};
+
 	private :
-		std::string msg;
-		size_t buf_size;
+		std::list<internal_send>	data_list;
+		int dest_fd;
 
 	public :
+		int		send();
+		void	add_element_to_send(const message &msg, const size_t buf_size);
+	public :
 		send_management();
-		send_management(message *msg);
-		send_management(message *msg, size_t buf_size);
-		send_management(std::string msg, size_t buf_size);
+		send_management(const message &msg, const size_t buf_size, const int dest_fd);
 		send_management(const send_management &x);
 		send_management &operator=(const send_management &x);
 
