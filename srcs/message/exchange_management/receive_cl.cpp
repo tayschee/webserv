@@ -29,8 +29,9 @@ receive_management::receive_cl	&receive_management::receive_cl::operator=(const 
 }
 
 //read body and when end is reached return 1 to delete object inside message::receive_management
-int receive_management::receive_cl::receive(const int socket, message *req)
+int receive_management::receive_cl::receive(const int socket)
 {
+	std::cout << "buf_size : " << buf_size << "\n";
 	char *buffer = new char[buf_size + 1];
 	ssize_t i;
 
@@ -39,16 +40,22 @@ int receive_management::receive_cl::receive(const int socket, message *req)
 		delete[] buffer;
 		return 500;
 	}
+	else if (i == 0)
+	{
+		std::cout << "i : " << i << "\n";
+		delete[] buffer;
+		std::cout << "ok\n";
+		return -1;
+	}
+	std::cout << "i : " << i << "\n";
 	buffer[i] = 0;
 	this->msg += buffer;
 	delete[] buffer;
-	if (i == 0)
-		return -1;
-	return this->check(req);
+	return this->check();
 }
 
 //check if object have reached end of read body and return 1 if it's true
-int receive_management::receive_cl::check(message *req)
+int receive_management::receive_cl::check()
 {
 	if (buf_size == 0)
 	{

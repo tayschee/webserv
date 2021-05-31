@@ -21,7 +21,7 @@ receive_management::receive_header &receive_management::receive_header::operator
 }
 
 /*read header and when end is reached return 1 to change internal_receive struct and read body */
-int		receive_management::receive_header::receive(const int socket, message *req)
+int		receive_management::receive_header::receive(const int socket)
 {
 	char		*buffer = new char[buf_size + 1];
 	ssize_t		i; //this just a long return type of read
@@ -32,36 +32,57 @@ int		receive_management::receive_header::receive(const int socket, message *req)
 		return 500; //throw exception
 	}
 	buffer[i] = 0;
-	std::cout << "buf : " << buffer << "\n";
-	std::cout << "msg : " <<  msg << "\n";
 	msg += buffer;
-	std::cout << "msg + buf : " << msg << "\n";
 	delete[] buffer;
 	if (i == 0)
 		return -1;
-	return check(req);
+	//return check();
+	return 0;
 }
 
 /*check if header is end*/
-int			receive_management::receive_header::check(message *req)
+int			receive_management::receive_header::check()
 {
 	size_t pos;
 
-	pos = msg.find(SEPARATOR);
-	if (pos != msg.npos) //if there is double /r/n prepare receive_body
+	pos = header_is_end(msg);
+	if (pos != msg.npos)
+		return 1;
+	return 0;
+}
+
+receive_management::internal_receive *receive_management::receive_header::next_step() const
+{
+	receive_management::internal_receive *new_data;
+	size_t pos(msg.find(TRANSFERT_ENCODING ":"));
+	size_t end(msg.npos);
+
+	if (pos != end)
 	{
-		req->parse_header(msg.substr(0, pos)); //fill header + request_line
-		msg.erase(0, pos + ft_strlen(SEPARATOR));
-		return 1; //header end
+		new_data = new receive_tf(msg, msg.find(SEPARATOR) + ft_strlen(SEPARATOR));
+		std::cout << "transfert encoding nice detected\n";
 	}
-	return 0; //header not end
+	else
+	{
+		new_data = NULL;
+	}
+	/*else if ((pos = msg.find(CONTENT_LENGTH ":")) != end)
+	{
+		size_t buf_size(ft_atoi<size_t>(msg.substr(pos + ft_strlen(CONTENT_LENGTH ":"))));
+		new_data = new receive_cl(msg, buf_size - pos));
+	}
+	else
+	{
+		new_data = new receive_cl(msg, 0);
+	}*/
+	return new_data;
 }
 
 receive_management::receive_header	*receive_management::receive_header::clone() const
 {
 	receive_header *clone_obj;
 
-	clone_obj = new(std::nothrow) receive_management::receive_header(*this);
+	clone_obj = new receive_management::receive_header(*this);
 
 	return clone_obj;
 }

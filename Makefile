@@ -15,8 +15,9 @@ EXCHANGE_DIR = $(MESSAGE_DIR)exchange_management/
 REQUEST_DIR = $(MESSAGE_DIR)request/
 RESPONSE_DIR = $(MESSAGE_DIR)response/
 
-SRCS = main.cpp $(EXCHANGE_DIR)receive_function.cpp $(EXCHANGE_DIR)receive_header.cpp $(EXCHANGE_DIR)receive_tf.cpp $(EXCHANGE_DIR)receive_cl.cpp\
-				$(EXCHANGE_DIR)exchange_management.cpp $(EXCHANGE_DIR)receive_management.cpp $(EXCHANGE_DIR)receive_function.cpp\
+#$(EXCHANGE_DIR)receive_cl.cpp
+SRCS = main.cpp $(EXCHANGE_DIR)receive_function.cpp $(EXCHANGE_DIR)receive_header.cpp $(EXCHANGE_DIR)receive_tf.cpp \
+				$(EXCHANGE_DIR)exchange_management.cpp $(EXCHANGE_DIR)send_management.cpp $(EXCHANGE_DIR)receive_management.cpp $(EXCHANGE_DIR)receive_function.cpp\
 				$(REQUEST_DIR)coplien.cpp $(REQUEST_DIR)static_variable.cpp $(REQUEST_DIR)public.cpp $(REQUEST_DIR)getter.cpp $(REQUEST_DIR)parse.cpp $(REQUEST_DIR)private.cpp $(REQUEST_DIR)exception.cpp\
 				$(RESPONSE_DIR)find.cpp $(RESPONSE_DIR)static_variable.cpp $(RESPONSE_DIR)utils.cpp $(RESPONSE_DIR)add.cpp \
 				$(RESPONSE_DIR)coplien.cpp $(RESPONSE_DIR)error.cpp $(RESPONSE_DIR)getter.cpp $(RESPONSE_DIR)method.cpp\

@@ -3,16 +3,16 @@
 
 response::response(const request &req, const parser &pars) : message()
 {
-	std::cout << "allo?\n";
+	std::cout << "response\n";
 	if (req.validity(pars) != 0)
 	{
-		first_line.status = 400;
-		//get_code(pars);
+		std::cout << "here\n";
+		first_line.status = error_response(400, req, pars);
 		first_line.status_string = find_status_string();
 	}
 	else
 	{
-		std::cout << "ok\n";
+		std::cout << "or here\n";
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
 		std::cout << "ok1\n";
 		//std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);

@@ -3,7 +3,17 @@
 void                            client::receive() // call recieve
 {
     reset_time();
-    read = req.receive(fd, rcm);
+    read = rcm.receive(fd);
+	//read == request::receive(fd, rcm);
+	if (read == 1)
+		std::cout << "-------------------\n" << rcm.get_msg() << "-------------------\n";
+	// req = rcm.get_request()
+
+}
+
+void							client::reset_rcm(size_t buf_size)
+{
+	rcm.reset(buf_size);
 }
 
 long                         client::sent() // send response
@@ -17,6 +27,7 @@ long                         client::sent() // send response
     std::string s(rp.get());
     //    std::cout << s << std::endl;
     // std::cout << "=====================================================" << std::endl;
+	std::cout << "\n-------------------------------\n" << s << "\n-------------------------------\n";
     send(fd, s.c_str(), s.size(), 0);
     return 0;
 }

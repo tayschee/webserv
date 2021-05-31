@@ -52,7 +52,7 @@ int response::error_msg(const std::string &path, const request &req, const parse
 
 	status = method_is_get(path, req, pars);
 	std::cout << "status : " << status << "\n";
-	if (status == 404) //a changer
+	if (first_line.status == 404 && status == 404)
 	{
 		std::cout << "nive\n";
 		default_error(status, req);

@@ -20,10 +20,10 @@
 class message
 {
 	public :
-		/*structure will be use to store information during receive and send process*/
-		class exchange_management;	
+		/*class will be use to store information during receive and send process*/
+		class exchange_management; //parent abstract class
 		class receive_management;
-		//class send_management;
+		class send_management;
 
 	public :
 		typedef std::multimap<std::string, std::string>		header_type;
@@ -40,6 +40,8 @@ class message
 
 	protected : //parse.cpp
 		void			parse_body(std::string &request_str);
+		static size_t	header_is_end(const std::string header_str); /*to know if header is complete*/
+
 	private :
 		virtual void 	parse_start_line(const std::string &start_line) = 0;
 		virtual void	parse_header(const std::string &header_str) = 0;
@@ -47,6 +49,7 @@ class message
 	public : //getter.cpp this function are used to have acess to private or protected variable
 		const header_type 	&get_header() const;
 		const std::string 	&get_body() const;
+		virtual	std::string	get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const = 0;
 
 	public : //coplien.cpp
 		message();

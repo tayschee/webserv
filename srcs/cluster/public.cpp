@@ -11,6 +11,11 @@ int		cluster::init_listen() // start sockets
 			std::cerr << "Failed to listen. Error: " << strerror(errno) << std::endl;
 			return 0;
 		}
+		else
+		{
+			if (debug_mode)
+				std::cout << "Connection etablished with " << it->get_fd() << std::endl; //change to put ip + port will be better
+		}
 	}
 	return (1);
 }
@@ -24,22 +29,39 @@ int 	cluster::start() // cluster manage the list of socket
 	{
 		if (!wait_activity(readfds, writefds))
 			return 0;
+		if (debug_mode)
+			std::cout << "Activity detected" << std::endl;
 		for(iterator it = list_client.begin(); it != list_client.end(); ++it)
 		{
 			int ret = 0;
-			client cli = *it;
+			client &cli = *it;
+
 			if (FD_ISSET(it->get_fd(), &readfds)) // is there a modification on the current list_client ?
 			{
-				if((ret = receive(cli, it->get_fd(), it)) == 0)
+				if (debug_mode)
+					std::cout << "Receive message from " << cli.get_fd() << std::endl;
+				if ((ret = receive(cli, it->get_fd(), it)) == 0)
 					return 0;
+				//while (check)
+				//	reponse
+				//  add list response
+				//check
 			}
+			//std::cout << "ret : " << ret << "\n";
+			//std::cout << "is_Read : " << cli.is_read() << "\n";
 			if (ret > 0 && cli.is_read() == 1)
 			{
 				if (send_response(cli) == -1)
 					close_client(it);
 			}
 			else if (cli.is_time())
+			{
+				if (debug_mode)
+					std::cout << "Timeout of " << cli.get_fd() << std::endl;
+				std::cout << "not ok\n";
 				close_client(it);
+			}
+			std::cout << "pass\n";
 		}
 	}
 	return (0);

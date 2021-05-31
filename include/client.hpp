@@ -18,7 +18,9 @@ class client
         int                             read;   // finished to read or not 
         parser                          pars;
         message::receive_management     rcm;
-        request                         req;
+        request                         req; // le pointeur
+		// reponse 					res; //le pointeur
+		//message::send_management		*sdm; 
 		//int							fd_dest;
 
         void                            reset_time(); // Set the time at the current time
@@ -41,6 +43,7 @@ class client
         bool                            is_listen() const; // Check if listening socket
         bool                            is_time() const; // Check if the time is finished
         int                             is_read() const; // Check if read
+		void							reset_rcm(size_t buf_size);
 };
 
 #endif

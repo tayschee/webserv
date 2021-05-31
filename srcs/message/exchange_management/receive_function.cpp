@@ -4,50 +4,43 @@ typedef message::receive_management receive_management;
 /*this file contain receive_management main functions*/
 
 /*this function call by receive request is used to change type of read (header, body) to store all request correctly */
-int		receive_management::receive(const int socket, message *req)
+int		receive_management::receive(const int socket)
 {
 	int i;
 
-	std::cout << "begin : " <<data->msg << "\n";
-	if ((i = data->receive(socket, req)) == 1)
-	{
-		if (dynamic_cast<receive_header *>(data) != NULL) //check type of data
-		{
-			i = specialization(req);
-			i = data->check(req);
-		}
-		else
-			clear();
-	}
-	else if (i == -1) //which case read can fail ?
+	i = data->receive(socket);
+	if (i == -1)
 	{
 		clear();
+		return i;
 	}
-	std::cout << "end : "  << data->msg << "\n";
+	i = next_step();
+	std::cout << "return i = " << i << "\n";
 	return i;
 }
 
-int		receive_management::specialization(message *req)
+int receive_management::next_step()
 {
-	receive_management::internal_receive *new_data;
-	iterator it(req->header.find(TRANSFERT_ENCODING));
-	const_iterator end(req->header.end());
+	//std::cout << data->check() << "\n";
+	while (data->check())
+	{
+		if (dynamic_cast<receive_header *>(data) != NULL)
+		{
+			internal_receive *new_data(data->next_step());
+			delete data;
+			data = new_data;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 
-	if (it != end)
-	{
-		new_data = new receive_tf(this->data->msg);
-	}
-	else if ((it = it = req->header.find(CONTENT_LENGTH)) != end)
-	{
-		new_data = new receive_cl(*this->data, ft_atoi<size_t>(it->second));
-	}
-	else
-	{
-		new_data = new receive_cl(*this->data, 0);
-	}
-	delete data;
-	data = new_data;
-	return 1;
+std::string							receive_management::get_msg() const
+{
+	return data->msg;
 }
 
 receive_management::internal_receive *receive_management::clone() const

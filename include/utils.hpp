@@ -7,9 +7,13 @@
 # include <dirent.h> //DIR, struct dirent, readdir, closedir
 
 # define HEXADECIMAL_BASE "0123456789abcdef"
+# define WHITE_SPACE " \t\n\v\f\r"
 
 bool		is_horizontal_space(int c); //return 1 for space and tab and 0 for newline vertical tab and all other...
 size_t		nb_horizontal_space(const std::string &str); //return number of succesive horizontal_space
+
+size_t		skip(const std::string &str, const std::string char_to_ignore);
+
 std::string	clean_string(std::string &str); //delete useless horizontal space in a string
 std::string string_without(std::string str, const std::string &elem_to_erase);
 std::string replace(std::string str, const std::string &elem_to_replace, const std::string &replacing_elem);

@@ -3,7 +3,7 @@
 cluster::cluster() // constructor by defautl defined as private
 {}
 
-cluster::cluster(const std::string _path) : list_client() // constructor used
+cluster::cluster(const std::string _path, bool debug_mode) : list_client(), debug_mode(debug_mode)// constructor used
 {
     std::vector<parser> pars = parser::parse_folder(_path);
 	for (std::vector<parser>::iterator it = pars.begin(); it != pars.end(); ++it)
@@ -13,7 +13,7 @@ cluster::cluster(const std::string _path) : list_client() // constructor used
 	}
 }
 
-cluster::cluster(const cluster& other) // constructor by copy
+cluster::cluster(const cluster& other) : debug_mode(other.debug_mode) // constructor by copy
 {
 	(void)other;
 }

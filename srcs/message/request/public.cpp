@@ -6,7 +6,9 @@ int		request::receive(const int socket, receive_management &recv_data)
 
 	try
 	{
-		i = recv_data.receive(socket, this);
+		std::cout << "np1\n";
+		i = recv_data.receive(socket);
+		std::cout << "np2\n";
 	}
 	catch(const std::exception& e)
 	{

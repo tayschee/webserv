@@ -8,6 +8,7 @@ typedef message::receive_management receive_management;
 //constructor destructor
 receive_management::receive_tf::receive_tf() : internal_receive(), pos(0) {}
 receive_management::receive_tf::receive_tf(const std::string &msg) : internal_receive(msg, 0), pos(0) {}
+receive_management::receive_tf::receive_tf(const std::string &msg, const size_t pos) : internal_receive(msg, 0), pos(pos){}
 receive_management::receive_tf::receive_tf(const receive_tf &x) : internal_receive(x), pos(x.pos) {}
 receive_management::receive_tf::~receive_tf(){}
 
@@ -22,12 +23,13 @@ receive_management::receive_tf	&receive_management::receive_tf::operator=(const 
 }
 
 //read body and when end is reached return 1 to delete object inside message::receive_management
-int receive_management::receive_tf::receive(const int socket, message *req)
+int receive_management::receive_tf::receive(const int socket)
 {
 	const size_t default_buf_size(10);
 	char *buffer;
 	ssize_t i;
 
+	std::cout << "perfecto\n";
 	/*for now read the future size to read or read define size to optimise this it will be read define_size
 	+ suppose the numer of char in an int*/
 	if (this->buf_size == 0)
@@ -39,11 +41,11 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 			return 500;
 		}
 		buffer[i] = 0;
-		this->msg += std::string(buffer);
+		this->msg += buffer;
 		delete[] buffer;
 		if (i == 0)
 			return -1;
-		return(check(req));
+		//return(check());
 	}
 	else
 	{
@@ -51,33 +53,52 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 		if ((i = read(socket, buffer, this->buf_size)) < 0)
 			return 500;
 		buffer[i] = 0;
-		this->msg += std::string(buffer);
+		this->msg += buffer;
 		delete[] buffer;
 		if (i == 0)
 			return -1;
 		this->buf_size -= i;
-		return 0;
+		//return(check());
 	}
+	return 0;
 }
 
 //check if object have reached end of read body ("0" + CRLF) and return 1 if it's true
-int receive_management::receive_tf::check(message *req)
+int receive_management::receive_tf::check()
 {
 	size_t	i;
 	size_t	CRLF_size(ft_strlen(CRLF));
 	size_t	msg_size(msg.size());
 
+	std::cout << "pos : " << pos << "\n";
+	std::cout << "msg size : " <<msg.size() << "\n";
+	if (!(pos < msg.size()))
+		return 0;
+
 	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next_buffer
+		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next buffer
+		std::cout << "buf_size = " << buf_size << "\n";
 		if (buf_size == 0) //verify if it's end
 		{
-			if (pos == 0)
-				msg.erase(pos); //erase 0\r\n + all after if there is
+			std::cout << "size : " << msg.size() << "\n";
+			std::cout << "i : " << i + (CRLF_size * 2) << "\n";
+			if (msg.size() >= i + (CRLF_size * 2))
+			{
+				std::cout << "victory\n";
+				if (pos == 0)
+					msg.erase(pos, 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is
+				else
+					msg.erase(pos - CRLF_size, CRLF_size + 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is + \r\n before
+				//std::cout << "-----------\n" << msg << "-------------\n";
+				return 1;
+			}
 			else
-				msg.erase(pos - CRLF_size); //erase 0\r\n + all after if there is + \r\n before
-			req->body = msg; //complete req, it can be use
-			return 1;
+			{
+				//exit(0);
+				buf_size = CRLF_size;
+				return 0;
+			}
 		}
 		buf_size += CRLF_size;
 		if (pos == 0)
@@ -99,10 +120,17 @@ int receive_management::receive_tf::check(message *req)
 	return 0;
 }
 
+receive_management::internal_receive *receive_management::receive_tf::next_step() const
+{
+	internal_receive *new_data = NULL;
+
+	return new_data;
+}
+
 receive_management::receive_tf	*receive_management::receive_tf::clone() const
 {
 	receive_tf	*clone_obj;
 
-	clone_obj = new(std::nothrow) receive_tf(*this);
+	clone_obj = new receive_tf(*this);
 	return clone_obj;
 }

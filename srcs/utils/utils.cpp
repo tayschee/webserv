@@ -82,7 +82,16 @@ std::string replace(std::string str, const std::string &elem_to_replace, const s
 	return str;
 }
 
-std::vector<std::string> split(const std::string &str, const std::string &delimiters)
+size_t						skip(const std::string &str, const std::string char_to_ignore)
+{
+	size_t i(0);
+
+	while (char_to_ignore.find(str[i]) != char_to_ignore.npos)
+		++i;
+	return i;
+}
+
+std::vector<std::string>	split(const std::string &str, const std::string &delimiters)
 {
 	std::vector<std::string> result;
 

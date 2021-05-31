@@ -38,7 +38,7 @@ void			request::parse_header(const std::string &header_str)
 
 		for (i = 1; i < sub_header.size(); i++) //while sub_header[i] exist
 		{
-			pos = sub_header[i].find(":"); //find return string::npos() if there is no ":"
+			pos = sub_header[i].find(":"); //find return string::npos if there is no ":"
 			if (pos == sub_header[i].npos) //if there is not ":"
 			{
 				header.insert(value_type(clean_string(sub_header[i]), ""));

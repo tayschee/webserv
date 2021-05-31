@@ -18,7 +18,7 @@ int		main()
 		++it;
 	}*/
 
-	cluster cl("./conf/conf2");
+	cluster cl("./conf/conf2", 1);
 	cl.init_listen();
 	cl.start();
 	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
