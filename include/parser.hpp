@@ -24,7 +24,7 @@
 
 #define PARSER_ACCEPT "accept"
 #define PARSER_LISTEN "listen"
-#define PARSER_SERVER_NAME "server_name"
+#define PARSER_HOST "host"
 #define PARSER_ERROR_PAGE "error_page"
 #define PARSER_INDEX "index"
 #define PARSER_AUTOINDEX "autoindex"
@@ -34,6 +34,8 @@
 #define PARSER_RETURN "return"
 #define PARSER_AUTH_BASIC "auth_basic"
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
+#define PARSER_BODY_SIZE_MAX "body_size_max"
+#define PARSER_SERVER_NAME "server_name"
 
 class parser
 {
@@ -102,7 +104,7 @@ private:
 	bool check_block(const std::string &name, const std::vector<std::string>& args, int line_no);
 	bool check_prop_root(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_index(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
-	bool check_prop_serv_name(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
+	bool check_prop_host(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_accept(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_listen(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
 	bool check_prop_err_page(const std::string& block_id, const std::vector<std::string>& args, int line_no) const;
@@ -112,6 +114,8 @@ private:
 	bool check_prop_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_serv_name(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_body_size_max(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
 

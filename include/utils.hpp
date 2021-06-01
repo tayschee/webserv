@@ -5,6 +5,7 @@
 # include <vector> //std::vector
 # include <list> //std::list
 # include <dirent.h> //DIR, struct dirent, readdir, closedir
+# include <exception> //std::out_of_range, std::invalid_argument
 
 # define HEXADECIMAL_BASE "0123456789abcdef"
 
@@ -17,6 +18,8 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 
 std::string				ft_itoa(const int nb);
 size_t					ft_strlen(const char *str);
+long int				ft_strtol(const char *str, char **endptr, int base); // acts like the real strtol
+
 template<class T> 	T	ft_atoi(const std::string &str)
 {
 	size_t	i(0);
