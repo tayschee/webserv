@@ -47,8 +47,9 @@ bool parser::check_prop_return(const std::string &block_id, const std::vector<st
 		return false;
 	if (!basic_chk_args(PARSER_RETURN, args.size(), 2, true, line_no))
 		return false;
+	if (!advanced_chk_err_code(args, line_no))
+		return false;
 	return true;
-	;
 }
 
 bool parser::check_prop_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
@@ -259,11 +260,6 @@ bool parser::check_prop_keep_alive(const std::string &block_id, const std::vecto
 		std::cerr << "Error: " << filename << ": keep_alive takes only digit in parameter. (line: " << line_no << ")\n";
 		return false;
 	}
-	if (errno != 0)
-	{
-		std::cerr << "Error: " << filename << ": conversion of parameter failed. (line: " << line_no << ")\n";
-		return false;
-	}
 	if (nb < 0)
 	{
 		std::cerr << "Error: " << filename << ": Number must be positive. (line: " << line_no << ")\n";
@@ -352,7 +348,31 @@ bool parser::check_prop_body_size_max(const std::string &block_id, const std::ve
 	if (!basic_chk_args(PARSER_BODY_SIZE_MAX, args.size(), 1, true, line_no))
 		return false;
 
-	return false;
+	std::string number = args[0];
+	char *end;
+	int nb;
+
+	try
+	{
+		nb = ft_strtol(number.c_str(), &end, 10);
+	}
+	catch (const std::out_of_range& e)
+	{
+		std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
+		return false;
+	}
+
+	if (end != (number.c_str() + number.length()))
+	{
+		std::cerr << "Error: " << filename << ": keep_alive takes only digit in parameter. (line: " << line_no << ")\n";
+		return false;
+	}
+	if (nb < 0)
+	{
+		std::cerr << "Error: " << filename << ": Number must be positive. (line: " << line_no << ")\n";
+		return false;
+	}
+	return true;
 }
 
 bool parser::check_block(const std::string &name, const std::vector<std::string> &args, int line_no)
