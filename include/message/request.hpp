@@ -3,7 +3,7 @@
 
 # include "parser.hpp"
 # include "message/message.hpp"
-# include "message/exchange_management.hpp"
+# include "message/exchange.hpp"
 
 class parser;
 class response;
@@ -87,7 +87,7 @@ class request : public message
 		request operator=(const request &x);
 		~request();
 
-		int				receive(const int socket, receive_management &recv_data);
+		//int				receive(const int socket, receive_management &recv_data);
 		int				validity(const parser &pars) const;
 };
 

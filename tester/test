@@ -1,6 +1,48 @@
-CONNECT server.example.com:80 HTTP/1.1
+GET / HTTP/1.1
 Host: 127.0.0.1
-Content-Language: en, fr;q=0.8
-Content-Length: 11
+Transfert-Encoding: chunked
 
-aaaaaaaaaaa
+c
+aaaaaaaaaaaa
+5
+bbbbb
+10
+1111111111111111
+0
+
+POST / HTTP/1.1
+Host: 127.0.0.2
+Transfert-Encoding: chunked
+
+b
+ooooooooooo
+4
+bbbb
+11
+22222222222222222
+0
+
+PUT / HTTP/1.1
+Host: 127.0.0.3
+Transfert-Encoding: chunked
+
+d
+aaaaaaaaaaaaa
+6
+bbbbbb
+f
+111111111111111
+0
+
+L / HTTP/1.1
+Host: 127.0.0.3
+Transfert-Encoding: chunked
+
+c
+aaaaaaaaaaaa
+5
+bbbbb
+10
+1111111111111111
+0
+

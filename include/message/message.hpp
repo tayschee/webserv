@@ -21,9 +21,9 @@ class message
 {
 	public :
 		/*class will be use to store information during receive and send process*/
-		class exchange_management; //parent abstract class
-		class receive_management;
-		class send_management;
+		class exchange; //parent abstract class
+		class receive;
+		class send;
 
 	public :
 		typedef std::multimap<std::string, std::string>		header_type;
