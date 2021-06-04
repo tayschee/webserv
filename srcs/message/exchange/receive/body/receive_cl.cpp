@@ -76,7 +76,6 @@ receive::cl_body	*receive::cl_body::clone() const
 
 std::string receive::cl_body::get()
 {
-	//std::cout << "here" << "\n";
 	return (msg.substr(0, pos));
 }
 

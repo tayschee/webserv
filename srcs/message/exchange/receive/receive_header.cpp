@@ -72,8 +72,7 @@ receive::body *receive::header::next_step()
 
 	if (pos != end)
 	{
-		//new_data = new tf_body(msg, (header_is_end + SEPARATOR));
-		return NULL;
+		new_data = new tf_body(msg, header_is_end(msg) + ft_strlen(SEPARATOR));
 	}
 	else if ((pos = header.find(CONTENT_LENGTH ":")) != end)
 	{
