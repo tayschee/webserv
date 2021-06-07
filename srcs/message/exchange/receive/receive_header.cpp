@@ -56,7 +56,7 @@ int			receive::header::check()
 }
 
 /*must not be use*/
-std::string							receive::header::get()
+std::string							receive::header::get_buffer() const
 {
 	return msg;
 }

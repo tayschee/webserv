@@ -74,14 +74,14 @@ receive::cl_body	*receive::cl_body::clone() const
 	return clone_obj;
 }
 
-std::string receive::cl_body::get()
+std::string 						receive::cl_body::get_header_buffer()
 {
-	return (msg.substr(0, pos));
-}
+	size_t pos(header_is_end(msg));
+	std::string header(msg.substr(0, pos));
 
-receive::header *receive::cl_body::previous_step(const size_t buf_size)
-{
-	receive::header *new_data = new header(buf_size, msg.substr(pos));
+	pos = pos + ft_strlen(SEPARATOR);
+	msg.erase(0, pos);
+	this->pos -= pos;
 
-	return new_data;
+	return header;
 }

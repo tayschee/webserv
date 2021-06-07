@@ -42,6 +42,8 @@ int receive::operator()()
 
 int		receive::check()
 {
+	int ret(0);
+
 	while (data->check() == 1)
 	{
 		if (dynamic_cast<body *>(data) == NULL) //if true this is header
@@ -50,13 +52,14 @@ int		receive::check()
 
 			delete data;
 			data = new_data;
+			ret = 2;
 		}
 		else
 		{
 			return 1;
 		}
 	}
-	return 0;
+	return ret;
 }
 
 receive::header		*receive::clone() const
@@ -69,19 +72,29 @@ void				receive::clear()
 	delete data;
 }
 
-std::string			receive::get()
+std::string			receive::get_buffer()
 {
-	std::string str(data->get());
+	std::string str(data->get_buffer());
 	body *body_data(dynamic_cast<body *>(data));
 
 	if (body_data != NULL) //if true this is NOT header
 	{
 		header *new_data;
+		//std::cout << "wrong\n";
 		new_data = body_data->previous_step(buf_size);
+		//std::cout << "wrong\n";
 
 		delete data;
 		data = new_data;
 	}
+	return str;
+}
+
+std::string			receive::get_header_buffer()
+{
+	body *body_data(dynamic_cast<body *>(data));
+	std::string str(body_data->get_header_buffer());
+
 	return str;
 }
 
