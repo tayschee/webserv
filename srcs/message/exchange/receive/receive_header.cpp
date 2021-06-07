@@ -90,6 +90,11 @@ receive::body *receive::header::next_step()
 	return new_data;
 }
 
+void		receive::header::set_buf_size(size_t buf_size)
+{
+	this->buf_size = buf_size;
+}
+
 receive::header	*receive::header::clone() const
 {
 	header *clone_obj;

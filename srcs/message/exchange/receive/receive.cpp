@@ -84,3 +84,23 @@ std::string			receive::get()
 	}
 	return str;
 }
+
+void				receive::set_buf_size(size_t buf_size)
+{
+	this->buf_size = buf_size;
+	header *head(dynamic_cast<body *>(data));
+
+	if (head == NULL)
+	{
+		head->set_buf_size(buf_size);
+	}
+}
+
+void				receive::reset(const int fd, const size_t buf_size)
+{
+	delete data;
+
+	this->fd = fd;
+	this->buf_size = buf_size;
+	data = new header(buf_size);
+}

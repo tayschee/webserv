@@ -8,14 +8,21 @@ int		receive_management::receive(const int socket)
 {
 	int i;
 
-	i = data->receive(socket);
-	if (i == -1)
+	try
 	{
-		clear();
+		i = data->receive(socket);
+		if (i == -1)
+		{
+			clear();
+			return i;
+		}
+		i = check();
 		return i;
 	}
-	i = check();
-	return i;
+	catch(std::bad_alloc &e)
+	{
+		throw std::exception()
+	}
 }
 
 int receive_management::check()
