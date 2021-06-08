@@ -39,7 +39,7 @@ class message::receive : public exchange
 				virtual int			receive(const int socket);
 				virtual int			check();
 				virtual header		*clone() const;
-				virtual std::string	get_buffer() const;
+				virtual std::string	get_buffer();
 				body		*next_step();
 				void		set_buf_size(size_t buf_size);
 
@@ -62,10 +62,10 @@ class message::receive : public exchange
 				virtual int			receive(const int socket) = 0;
 				virtual int			check() = 0;
 				virtual body		*clone() const = 0;
-				virtual std::string	get_header_buffer() = 0;
 
 			public :
-				std::string	get_buffer() const;
+				std::string	get_header_buffer();
+				std::string	get_buffer();
 				header		*previous_step(const size_t buf_size) const;
 
 			public :
@@ -92,7 +92,6 @@ class message::receive : public exchange
 				cl_body(const std::string &msg = "", const size_t buf_size = 0, size_t body_begin = 0);
 				cl_body(const cl_body &x);
 				cl_body &operator=(const cl_body &x);
-				std::string			get_header_buffer();
 
 				virtual ~cl_body();
 		};
@@ -100,7 +99,7 @@ class message::receive : public exchange
 		class tf_body : public body
 		{
 			public :
-				size_t			msg_begin;
+				bool			msg_begin;
 				//size_t		buf_size; //store the size of body or rest of size
 				//std::string	msg; //to store body during parsing
 				//size_t		pos; //position of next buf_size
@@ -113,7 +112,6 @@ class message::receive : public exchange
 				int					receive(const int socket);
 				int					check();
 				tf_body				*clone() const;
-				std::string			get_header_buffer();
 
 			public :
 				tf_body(const std::string &msg = "", const size_t pos = 0);
@@ -124,7 +122,7 @@ class message::receive : public exchange
 		};
 
 	public :
-		enum {NOTHING_END, HEADER_END, BODY_END};
+		enum {NOTHING_END, HEADER_END, BODY_END, MESSAGE_END};
 
 	private :
 		//int				fd;
@@ -141,6 +139,7 @@ class message::receive : public exchange
 		int				check();
 		std::string		get_header_buffer();
 		std::string		get_buffer();
+		void			prepare_next();
 		int	operator()(void);
 
 	public :

@@ -73,15 +73,3 @@ receive::cl_body	*receive::cl_body::clone() const
 	clone_obj = new cl_body(*this);
 	return clone_obj;
 }
-
-std::string 						receive::cl_body::get_header_buffer()
-{
-	size_t pos(header_is_end(msg));
-	std::string header(msg.substr(0, pos));
-
-	pos = pos + ft_strlen(SEPARATOR);
-	msg.erase(0, pos);
-	this->pos -= pos;
-
-	return header;
-}

@@ -17,16 +17,31 @@ receive::body &receive::body::operator=(const body &x)
 	return *this;
 }
 
-std::string 						receive::body::get_buffer() const
+std::string 						receive::body::get_buffer()
 {
-	return msg.substr(0, pos);
+	std::string buffer(msg.substr(0, pos));
+	msg.erase(0, pos);
+	return buffer;
+}
+
+std::string 						receive::body::get_header_buffer()
+{
+	size_t pos(header_is_end(msg));
+	std::string header(msg.substr(0, pos));
+
+	pos = pos + ft_strlen(SEPARATOR);
+	msg.erase(0, pos);
+	this->pos -= pos;
+
+	return header;
 }
 
 receive::header		*receive::body::previous_step(const size_t buf_size) const
 {
 	//std::cout << "msg : " << msg << "\n";
 	//std::cout << "pos : " << pos << "\n";
-	receive::header *new_data = new header(buf_size, msg.substr(pos));
+	//receive::header *new_data = new header(buf_size, msg.substr(pos));
+	receive::header *new_data = new header(buf_size, msg);
 
 	return new_data;
 }

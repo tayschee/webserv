@@ -6,7 +6,7 @@ by receive once header is read */
 typedef message::receive receive;
 
 //constructor destructor
-receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(pos) {}
+receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(1) {}
 receive::tf_body::tf_body(const tf_body &x) : body(x), msg_begin(x.msg_begin) {}
 receive::tf_body::~tf_body(){}
 
@@ -47,7 +47,7 @@ int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 {
 	if (msg.size() >= i + (CRLF_size * 2))
 	{
-		if (pos == msg_begin)
+		if (msg_begin)
 		{
 			msg.erase(pos, 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is
 		}
@@ -71,7 +71,7 @@ int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 size_t				receive::tf_body::erase_tf_signature(const size_t i, const size_t CRLF_size, size_t pos)
 {
 	//std::cout << "before erase :" << msg.substr(pos) << "\n";
-	if (pos == msg_begin) //find something
+	if (msg_begin) //find something
 	{
 		size_t nb_to_delete(i + CRLF_size - pos);
 
@@ -121,19 +121,6 @@ int receive::tf_body::check()
 	if (buf_size == 0)
 		buf_size = default_buf_size;
 	return 0;
-}
-
-std::string 						receive::tf_body::get_header_buffer()
-{
-	size_t pos(header_is_end(msg));
-	std::string header(msg.substr(0, pos));
-
-	pos = pos + ft_strlen(SEPARATOR);
-	msg.erase(0, pos);
-	this->pos -= pos;
-	this->msg_begin -= pos;
-
-	return header;
 }
 
 receive::tf_body	*receive::tf_body::clone() const

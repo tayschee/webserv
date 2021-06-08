@@ -52,13 +52,14 @@ int		receive::check()
 
 			delete data;
 			data = new_data;
-			ret = 2;
+			ret = HEADER_END;
 		}
 		else
 		{
-			return 1;
+			return BODY_END;
 		}
 	}
+	//std::cout << "XXXXXX : "<< data->get_buffer();
 	return ret;
 }
 
@@ -74,20 +75,8 @@ void				receive::clear()
 
 std::string			receive::get_buffer()
 {
-	std::string str(data->get_buffer());
-	body *body_data(dynamic_cast<body *>(data));
 
-	if (body_data != NULL) //if true this is NOT header
-	{
-		header *new_data;
-		//std::cout << "wrong\n";
-		new_data = body_data->previous_step(buf_size);
-		//std::cout << "wrong\n";
-
-		delete data;
-		data = new_data;
-	}
-	return str;
+	return data->get_buffer();
 }
 
 std::string			receive::get_header_buffer()
@@ -106,6 +95,20 @@ void				receive::set_buf_size(size_t buf_size)
 	if (head == NULL)
 	{
 		head->set_buf_size(buf_size);
+	}
+}
+
+void				receive::prepare_next()
+{
+	body *body_data(dynamic_cast<body *>(data));
+
+	if (body_data != NULL) //if true this is NOT header
+	{
+		header *new_data;
+		new_data = body_data->previous_step(buf_size);
+
+		delete data;
+		data = new_data;
 	}
 }
 
