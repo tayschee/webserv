@@ -36,7 +36,7 @@ int receive::operator()()
 	i = data->receive(fd);
 	if (i != 0)
 		return i;
-	i = check();
+	//i = check(); //do it manually
 	return i;
 }
 
@@ -56,7 +56,7 @@ int		receive::check()
 		}
 		else
 		{
-			return BODY_END;
+			return ret + BODY_END;
 		}
 	}
 	//std::cout << "XXXXXX : "<< data->get_buffer();

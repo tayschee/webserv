@@ -39,6 +39,7 @@ class response : public message
 
 	private :
 		response_line	first_line; //information about first line of response
+		int				fd;
 		//header_type		header; //header of response
 		//std::string		body;	//body of response maybe put a fd instead
 

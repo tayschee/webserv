@@ -12,9 +12,7 @@ response::response(const request &req, const parser &pars) : message()
 	}
 	else
 	{
-		std::cout << "or here\n";
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-		std::cout << "ok1\n";
 		//std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
 		std::vector<std::string> allow_method(1, GET);
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/

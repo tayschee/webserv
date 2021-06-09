@@ -3,21 +3,29 @@
 void                            client::receive() // call recieve
 {
 	int i;
+	std::string msg;
 
     reset_time();
-    i = rcm.receive(fd);
-
-	while (i == 1)
+    i = rcv();
+	if (i == -1)
 	{
-		std::string message(rcm.get_data());
+		read = -1;
 	}
-	// req = rcm.get_request()
-
+	else
+	{
+		if (rcv.check() | rcv.BODY_MASK)
+		{
+			msg = rcv.get_buffer();
+			rcv.prepare_next();
+			read = 1;
+			req = request(msg.c_str());
+		}
+	}
 }
 
-void							client::reset_rcm(size_t buf_size)
+void							client::reset_rcv(size_t buf_size)
 {
-	rcm.reset(buf_size);
+	rcv.reset(fd, buf_size);
 }
 
 long                         client::sent() // send response

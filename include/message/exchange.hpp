@@ -123,7 +123,7 @@ class message::receive : public exchange
 
 	public :
 		enum {NOTHING_END, HEADER_END, BODY_END, MESSAGE_END};
-
+		enum {HEADER_MASK = 1, BODY_MASK = 2};
 	private :
 		//int				fd;
 		receive::header		*data;

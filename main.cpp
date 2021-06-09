@@ -3,7 +3,7 @@
 
 int		main()
 {
-	int a;
+	/*int a;
 	int fd = open("file", O_RDONLY);
 	message::receive rcv(fd, 27);
 
@@ -26,10 +26,21 @@ int		main()
 			}
 			//std::cout << "rcv_check() : " << a << "\n";
 		}
-	}
+	}*/
 	//std::cout << a << "\n";
 	//std::cout << "------------------------\n" << rcv.get_buffer() << "\n-----------------------\n";
+	//close(fd);
 
-	close(fd);
+	cluster cl("conf/conf2", true);
+	try
+	{
+		cl.init_listen();
+		cl.start();
+		std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
+	}
+	catch(const std::string &e)
+	{
+	}
+
 	return 0;
 }

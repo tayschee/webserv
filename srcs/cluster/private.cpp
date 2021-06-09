@@ -10,12 +10,12 @@ void sighandler(const int signal) // catch the signals
 
 void	cluster::close_client(iterator &it) // close a client
 {
-	std::cout << "Close client: " << it->get_fd() << std::endl;
 	close(it->get_fd());
 	iterator tmp = it;
 	it--;
 	list_client.erase(tmp);
-	std::cout << "erase " << std::endl;	
+	if (debug_mode)
+		std::cout << "Close client: " << it->get_fd() << std::endl;
 }
 
 void	cluster::set_list_fd(fd_set &readfds, fd_set &writefds, int &max) // initialize the list of sockets
@@ -74,7 +74,7 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 	}
 	else
 	{
-		cli.receive(); // no of new client / juste call receive
+		cli.receive();
 		//std::cout << "recieve past" << std::endl;
 		if (cli.is_read() == -1) // if method is void / close client
 		{
@@ -85,7 +85,7 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 	return 1;
 }
 
-int		cluster::send_response(client &cli) // send of response
+int		cluster::send_response(client &cli) //send of response
 {
 		if(cli.sent() < 0)
 		{
