@@ -49,7 +49,11 @@ void			response::add_server()
 	header.insert(std::pair<std::string, std::string>(PARSER_SERVER, WEBSERV));
 }
 
-/*add field Content-Type to response::header, if accept-charset is in request precise charset*/
+void			response::add_retry_after(size_t sec)
+{
+	header.insert(std::pair<std::string, std::string>(RETRY_AFTER, ft_itoa(sec)));
+}
+
 void			response::add_content_type(const std::string &type) //pas tester
 {
 	// (void)file;
@@ -84,6 +88,34 @@ void			response::add_content_type(const std::string &type) //pas tester
 	// }
 }
 
+/*void			response::add_content_type(const std::string &type) //pas tester
+{
+	// std::string extension;
+	// size_t		pos = file.find_first_of(".");
+	// request::header_type head = req.get_header();
+	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+
+	// if (pos != file.npos)
+	// {
+ 	// 	extension = file.substr(pos + 1);
+	// 	media_type_array::value_type	media_type(find_media_type(extension));
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+	// else
+	// {
+	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+}*/
+
 /*void				response::add_transfert_encoding(const std::string &file)
 {
 	std::string extension;
@@ -98,6 +130,17 @@ void			response::add_content_type(const std::string &type) //pas tester
 
 	header.insert(value_type(CONTENT_TYPE, val.first + val.second));
 }*/
+
+/* add field content_language, it s call by find_language if an appropriate language is find */
+void				response::add_content_language(const std::string &language)
+{
+	header.insert(std::pair<std::string, std::string>(CONTENT_LANGUAGE, language));
+}
+
+void				response::add_www_autentificate()
+{
+	header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\"")); //must change charset
+}
 
 /* this time, this is not a field it's the body of response which be add */
 

@@ -35,6 +35,8 @@
 #define PARSER_LOCATION_ERROR "location_error"
 #define PARSER_TYPES "types"
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
+#define PARSER_ALIAS "alias"
+#define PARSER_MAXBODY "maxBody"
 /////////////////////////////////////////////////
 
 class parser
@@ -69,6 +71,8 @@ public:
 
 		block();
 		block(const std::string &name, const std::vector<std::string> &args = std::vector<std::string>());
+		block	&operator=(const block &x);
+		void	create_block(const std::string name,  const std::vector<std::string> &args, const block &serv_block);
 	};
 
 private:
@@ -83,13 +87,15 @@ private:
 private:
 	parser(const std::string &_filename);
 
+	block	create_default_mime_type() const;
+
 	bool getline(int fd, std::string& line);
 	void parse_file();
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
 
 	bool basic_chk_block(const std::string& name, const std::string& actual, const std::vector<std::string>& expected, int line_no) const;
 	bool basic_chk_args(const std::string& name, int actual, int expected, bool exact, int line_no) const;
-	bool advanced_chk_err_code(const std::string& err, int line_no) const;
+	bool advanced_chk_err_code(const std::vector<std::string>& err, int line_no) const;
 
 	bool is_valid() const;
 	bool check_line(const std::string& line, int line_no) const;
@@ -114,6 +120,9 @@ private:
 	bool check_return(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_alias(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_maxBody(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

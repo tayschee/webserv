@@ -31,13 +31,24 @@ receive_management::receive_cl	&receive_management::receive_cl::operator=(const 
 //read body and when end is reached return 1 to delete object inside message::receive_management
 int receive_management::receive_cl::receive(const int socket, message *req)
 {
+	buf_size = 4096;
 	char *buffer = new char[buf_size + 1];
 	ssize_t i;
 
-	if ((i = read(socket, buffer, this->buf_size)) < 0)
+	buffer[0] = 0;
+	fcntl(socket, F_SETFL, O_NONBLOCK);
+	while ((i = read(socket, buffer, this->buf_size)) > 0)
+	{
+		buffer[i] = 0;
+		this->msg += buffer;
+		//std::cout << "============" << std::endl;
+		//std::cout << "CL MSG = " << msg << std::endl;
+	}
+	if (i < 0 && !buffer[0])
+	{
+		delete[] buffer;
 		return 500;
-	buffer[i] = 0;
-	this->msg += buffer;
+	}
 	delete[] buffer;
 	if (i == 0)
 		return -1;
@@ -47,7 +58,7 @@ int receive_management::receive_cl::receive(const int socket, message *req)
 //check if object have reached end of read body and return 1 if it's true
 int receive_management::receive_cl::check(message *req)
 {
-	if (buf_size == 0)
+	if (buf_size <= msg.size())
 	{
 		req->body = this->msg;
 		return 1;
@@ -59,6 +70,6 @@ receive_management::receive_cl	*receive_management::receive_cl::clone() const
 {
 	receive_cl	*clone_obj;
 
-	clone_obj = new(std::nothrow) receive_cl(*this);
+	clone_obj = new receive_cl(*this);
 	return clone_obj;
 }

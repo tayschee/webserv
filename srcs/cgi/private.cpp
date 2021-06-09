@@ -2,10 +2,10 @@
 
 char            **cgi::init_env(const request &req, const parser &pars, const std::string &path)
 {
-	std::cout << req.get() << std::endl;
     std::map<std::string, std::string> env_tmp;
 	std::string root = pars.get_block("server").conf.find("root")->second[0];
 
+	env_tmp["HTTP_X_SECRET_HEADER_FOR_TEST"] = "1";
 	env_tmp["AUTH_TYPE"] = req.get_auth_type();
 	env_tmp["CONTENT_LENGTH"] = req.get_content_length();
 	env_tmp["CONTENT_TYPE"] = req.get_content_type();
@@ -45,39 +45,34 @@ void			cgi::clear(char **env)
 	delete[](env);
 }
 
-void		cgi::son(const int save_in, const int save_out, int fd[2], int fd2[2], const char *script_name, char **env)
+void		cgi::son(long fdin, long fdout, const char *script_name, char **env)
 {
 	char **nll = NULL;
-
-	close(fd2[0]);
-	dup2(fd[0], STDIN_FILENO);
-	dup2(fd2[1], STDOUT_FILENO);
+	dup2(fdout, STDOUT_FILENO);
+	dup2(fdin, STDIN_FILENO);
 	execve(script_name, nll, env);
-	dup2(save_in, STDIN_FILENO);
-	dup2(save_out, STDOUT_FILENO);
-	close(fd[0]);
-	close(fd[1]);
-	close(fd2[1]);
+	close(fdin);
+	close(fdout);
 	clear(env);
 	std::cerr << "Execve crashed." << std::endl;
 	throw std::string("quit");
-	close(fd2[1]);
 }
 
-void			cgi::father(const int fd[2], std::string &new_body)
+void			cgi::father(long fdout, std::string &new_body)
 {
-	close(fd[1]);
+	waitpid(-1, NULL, 0);
+	lseek(fdout, 0, SEEK_SET);
 	char	buffer[2048];
 	int ret = 1;
 	while (ret > 0)
 	{
 		memset(buffer, 0, 2048);
-		ret = read(fd[0], buffer, 2048 - 1);
+		ret = read(fdout, buffer, 2048 - 1);
 		new_body += buffer;
 	}
 	if (!new_body.size())
 		new_body = "500";
-	close(fd[0]);
+	close(fdout);
 }
 
 std::string     cgi::exec(char **env, const request &req, const parser &pars, const std::string &path)
@@ -90,28 +85,39 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 	save_in = dup(STDIN_FILENO);
 	save_out = dup(STDOUT_FILENO);
 
-	int fd[2];
-	int fd2[2];
-	pipe(fd);
-	pipe(fd2);
+	FILE* file_in = tmpfile();
+	FILE* file_out = tmpfile();
+	
+	long fdin;
+	long fdout;
 
-	if (write (fd[1], req.get_body().c_str(), req.get_body().size()) == -1)
-		return "500";
+	fdin = fileno(file_in);
+	fdout = fileno(file_out);
+	if (req.get_body().size() > 0)
+	{
+		write(fdin, req.get_body().c_str(), req.get_body().size());
+		lseek(fdin, 0, SEEK_SET);
+	}
+	else
+		close(fdin);
+	std::cout << "start cgi" << std::endl;
 
 	pid = fork();
 	if (pid == -1)
 	{
-        close(fd[0]);
-        close(fd[1]);
+		close(fdin);
+		close(fdout);
 		std::cerr << "Fork crashed." << std::endl;
 	}
 	else if (pid == 0)
 	{
-		son(save_in, save_out, fd, fd2,
-		pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0].c_str(), env);
+		son(fdin, fdout, pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0].c_str(), env);
 	}
 	else
-		father(fd2, new_body);
+	{
+		close(fdin);
+		father(fdout, new_body);
+	}
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
 	clear(env);

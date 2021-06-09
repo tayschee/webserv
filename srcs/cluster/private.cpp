@@ -51,7 +51,7 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 			return 0;
 		time_select.tv_sec = 20;
 		time_select.tv_usec = 0;
-		std::cout << "WAIT..." << std::endl;
+		//std::cout << "WAIT..." << std::endl;
 		if ((activity = select(max + 1, &readfds, NULL, NULL, &time_select)) < 0 && errno != EINTR)
 			std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
 	}
@@ -87,10 +87,13 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 
 int		cluster::send_response(client &cli) // send of response
 {
-		if(cli.sent() < 0)
-		{
-			std::cerr << "send()" << strerror(errno) << std::endl;
-			return -1;
-		}
-		return 1;
+	int ret = cli.sent();
+	if(ret < 0)
+	{
+		std::cerr << "send()" << strerror(errno) << std::endl;
+		return -1;
+	}
+	else if (!ret)
+		cli = client(cli.get_fd(), false, cli);
+	return 1;
 }

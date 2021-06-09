@@ -9,7 +9,6 @@ typedef message::exchange_management exchange_management;
 //constructor destructor
 exchange_management::exchange_management(){}
 exchange_management::exchange_management(const exchange_management &x){ (void)x; }
-exchange_management::exchange_management::exchange_management(const internal_exchange *x) { (void)x; }
 exchange_management::~exchange_management(){}
 
 //operator =

@@ -32,9 +32,13 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	+ suppose the numer of char in an int*/
 	if (this->buf_size == 0)
 	{
+		// std::cout << "===========  " << default_buf_size << " ============" << std::endl;
 		buffer = new char[default_buf_size + 1];
 		if ((i = read(socket, buffer, default_buf_size)) < 0)
+		{
+			delete[] buffer;
 			return 500;
+		}
 		buffer[i] = 0;
 		this->msg += std::string(buffer);
 		delete[] buffer;
@@ -44,11 +48,13 @@ int receive_management::receive_tf::receive(const int socket, message *req)
 	}
 	else
 	{
+		// std::cout << "SIZE = " << buf_size << std::endl;
 		buffer = new char[this->buf_size + 1];
 		if ((i = read(socket, buffer, this->buf_size)) < 0)
 			return 500;
 		buffer[i] = 0;
 		this->msg += std::string(buffer);
+		// std::cout << "I = " << i << std::endl;
 		delete[] buffer;
 		if (i == 0)
 			return -1;
@@ -66,7 +72,8 @@ int receive_management::receive_tf::check(message *req)
 
 	while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 	{
-		buf_size = ft_atoi<size_t>(msg.substr(pos)); //store size of next_buffer
+		buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next_buffer
+		// std::cout << "buf_size = " << buf_size << std::endl;
 		if (buf_size == 0) //verify if it's end
 		{
 			if (pos == 0)
@@ -84,14 +91,24 @@ int receive_management::receive_tf::check(message *req)
 			pos = pos - CRLF_size;
 			msg.erase(pos, (i + CRLF_size) - pos); //delete length of current chunk + \r\n before, to have request without size
 		}
+		// std::cout << "buf_size2 = " << buf_size << std::endl;
 		msg_size = msg.size();
 		pos += buf_size;
+		// std::cout << "message stocker = " << msg << std::endl;
 		if (msg_size < pos) //if size of buffer not again read
 		{
-			buf_size = buf_size - (pos - msg_size);
+			// std::cout << "buf_size3 = " << buf_size << std::endl;
+			// std::cout << "size stocker = " << msg_size << std::endl;
+			// std::cout << "pos = " << pos << std::endl;
+
+			buf_size = (pos - msg_size);
+		
+			// std::cout << "buf_size4 = " << buf_size << std::endl;
+			
 			return 0;
 		}
 		buf_size = 0;
+		// std::cout << "buf_size5 = " << buf_size << std::endl;
 	}
 	return 0;
 }

@@ -4,6 +4,7 @@ void	request::request_line::clear()
 {
 	method.clear();
 	uri.clear();
+	query_string.clear();
 	version.clear();
 }
 

@@ -1,4 +1,5 @@
 #include "message/request.hpp"
+#include "message/response.hpp"
 
 /*use to have all information about first line in the structure of request to store first_line*/
 const request::request_line	&request::get_first_line() const
@@ -21,9 +22,7 @@ const std::string	&request::get_uri() const
 /*more specific than get_first_line simply use for query*/
 const std::string	request::get_query() const
 {
-	if (header.find(QUERY_STRING) == header.end())
-		return "";
-	return header.find(QUERY_STRING)->second;
+	return first_line.query_string;
 }
 
 /*more specific than get_first_line simply use for version*/

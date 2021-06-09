@@ -28,6 +28,13 @@ void			response::main_header(const std::vector<std::string> &allow_method)
 	add_server(); //server field add in header
 }
 
+/*add inside response:header all field which are in all method and in all condition without allow use for error constructor*/
+void			response::main_header()
+{
+	add_date(); //date field add in header
+	add_server(); //server field add in header
+}
+
 /*create first line of response header */ 
 std::string		response::header_first_line() const
 {
@@ -36,6 +43,71 @@ std::string		response::header_first_line() const
 	str_first_line = first_line.version + " " + ft_itoa(first_line.status) + " " + first_line.version + CRLF;
 
 	return str_first_line;
+}
+
+/*parse value of accept* header-field*/
+std::multimap<int, std::string>	response::tag_priority(std::string tag) const
+{
+	const char tag_sep[] = ",";
+	const char value_sep[] = ";q=";
+	tag = string_without(tag, " \t"); //delete one of those elem in string
+	std::vector<std::string> split_tag(split(tag, tag_sep));
+	std::vector<std::string>::const_iterator it(split_tag.begin());
+	std::vector<std::string>::const_iterator end(split_tag.end());
+	std::multimap<int, std::string>			 map;
+
+	while (it < end)
+	{
+		size_t pos;
+		const std::string key_tag(*it);
+
+		if ((pos = key_tag.find(value_sep)) != key_tag.npos)
+		{
+			map.insert(std::map<int, std::string>::value_type
+			(ft_atoi<float>(key_tag.substr(pos + strlen(value_sep))) * 100, key_tag.substr(0, pos)));
+		}
+		else
+		{
+			map.insert(std::map<int, std::string>::value_type(1 * 100, key_tag));
+		}
+		++it;
+	}
+	return map;
+}
+
+// Check authorizations
+bool	response::is_authorize(const request &req, const parser &pars) const
+{
+	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
+	if (path.find(AUTH_BASIC) != path.end())
+	{
+		message::header_type gh = req.get_header();
+		if (gh.find(AUTHORIZATION) == gh.end())
+			return false;
+		std::vector<std::string> tab;
+		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
+		char buf[4096];
+		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
+		int ret = read(fd, buf, 499);
+		buf[ret] = '\0';
+		tab = split(buf, "\t\r\n");
+		close(fd);
+		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+			if (Authorization == *it)
+				return true;
+		return false;
+	}
+	return true;
+}
+
+void		response::status_header()
+{
+	if (first_line.status == 401)
+		add_www_autentificate();
+	if (first_line.status == 503)
+		add_retry_after(200);
+	if (first_line.status > 299 && first_line.status < 400)
+		add_retry_after(1);
 }
 
 int			response::is_open(const struct stat &file) const
@@ -60,24 +132,22 @@ int			response::is_open(const struct stat &file) const
 	return 0;
 }
 
-//this function van be put in utils.hpp, it gives list of files inside directory
-std::list<std::string>	response::files_in_dir(const std::string &path) const
+/*if there is accept-language header field delete extension of langauge*/
+std::string		&response::file_without_language_ext(std::string &path) const
 {
-	DIR *directory = opendir(path.c_str());
-	struct dirent *entry;
-	std::list<std::string> files;
+	header_type::const_iterator it = header.find(ACCEPT_CHARSET);
+	header_type::const_iterator end = header.end();
+	size_t pos;
 
-	if (directory == NULL)
-	{
-		//do something
-	}
-	while ((entry = readdir(directory)))
-	{
-		if (entry->d_type == DT_REG || entry->d_type == DT_LNK) //if this is s file
-			files.push_back(entry->d_name);
-	}
-	closedir(directory);
-	return files;
+	if (it == end)
+		return path;
+
+	pos = path.find_last_of("." + it->second);
+	if (pos != path.npos)
+		return path.erase(pos);
+	else
+		return path;
+
 }
 
 // Delete function is a recursive called by method_is_delete
@@ -116,31 +186,6 @@ int		response::del_content(std::string path, const request &req, const parser &p
 	return 0;
 }
 
-// Check authorizations
-bool	response::is_authorize(const request &req, const parser &pars) const
-{
-	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-	if (path.find(AUTH_BASIC) != path.end())
-	{
-		message::header_type gh = req.get_header();
-		if (gh.find(AUTHORIZATION) == gh.end())
-			return false;
-		std::vector<std::string> tab;
-		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
-		char buf[4096];
-		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
-		int ret = read(fd, buf, 499);
-		buf[ret] = '\0';
-		tab = split(buf, "\t\r\n");
-		close(fd);
-		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-			if (Authorization == *it)
-				return true;
-		return false;
-	}
-	return true;
-}
-
 // Check the path
 int		response::check_path(const std::string &path, struct stat &file_stat, const request &req, const parser &pars) const
 {
@@ -158,7 +203,8 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 // Check if the type is a CGI
 bool		response::is_cgi(const std::string &type, const parser &pars) const
 {
-	std::cout << "TYPE = " << type << std::endl;
+	if (type == ".bla")
+		return false;
 	try
 	{
 		pars.get_block("cgi", type);
@@ -202,10 +248,10 @@ void	response::get_code(const parser &pars)
 		header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
 	if (first_line.status == 503)
 		header.insert(value_type("Retry-after",  "20000"));
-	std::string file_error = "/home/user42/42/webserv/error/" + std::string(ft_itoa(first_line.status)) + ".html";
+	std::string file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/" + std::string(ft_itoa(first_line.status)) + ".html";
 	if (lstat(file_error.c_str(), &file_stat) < 0)
 	{
-		file_error = "/home/user42/42/webserv/error/404.html";
+		file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/404.html";
 		lstat(file_error.c_str(), &file_stat);
 	}
 	int fd = open(file_error.c_str(), O_RDONLY);
@@ -248,4 +294,22 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 		return 1;
 	}
 	return 0;
+}
+
+std::string			response::ft_itoa_base(long nb, std::string &base)
+{
+	std::string ret;
+	
+	if (nb == 0)
+		return "0";
+	else if (nb < 0)
+	{
+		nb *= -1;
+		ret = "-";
+	}
+	if (nb / base.size() > 0)
+		ret += ft_itoa_base(nb / base.size(), base);
+	ret += base[nb % base.size()];
+
+	return ret;
 }

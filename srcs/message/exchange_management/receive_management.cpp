@@ -9,10 +9,7 @@ it used to receive header and body through is internal class and it variable whi
 //receive_mangement constructor destructor
 receive_management::receive_management() : exchange_management(), data(NULL) {}
 
-receive_management::receive_management(size_t buf_size) : exchange_management(), data(new(std::nothrow) receive_header(buf_size)) {}
-
-receive_management::receive_management(const receive_management *x) : 
-exchange_management(), data(x->data == NULL ? x->data : x->clone()){}
+receive_management::receive_management(size_t buf_size) : exchange_management(), data(new receive_header(buf_size)) {}
 
 receive_management::receive_management(const receive_management &x) : 
 exchange_management(), data(x.clone()){}

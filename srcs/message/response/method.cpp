@@ -1,28 +1,37 @@
 #include "message/response.hpp"
 
-int		response::method_is_head(const request &req, const parser &pars)
+int		response::method_is_head(const std::string &uri, const request &req, const parser &pars)
 {
-	int ret = method_is_get(req, pars);
+	int ret = method_is_get(uri, req, pars);
 	body.clear();
 	add_content_length(0);
 	return ret; //value of OK response
 }
 
-int		response::method_is_get(const request &req, const parser &pars)
+int		response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
 	struct stat file_stat; //information about file
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	std::string path = find_path(pars.get_block("location", uri), uri, req);
 	//403 interdiction
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-
-	std::string type = find_media_type(get_extension(path), pars);
+	std::string type = find_media_type(get_extension(path), pars);	
 	
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
-		std::string add = (path.substr(pars.get_block("location", req.get_uri()).conf.find("root")->second[0].size()));
-		body = index(path, req.get_uri(), add);
+		try
+		{
+			if (pars.get_block("location", uri).conf.find("autoindex")->second[0] == "off")
+				return 404;
+		}
+		catch(const std::exception& e)
+		{
+			return 404;
+		}
+		
+		std::string add = (path.substr(pars.get_block("location", uri).conf.find("root")->second[0].size()));
+		body = index(path, uri, add);
 		add_content_type("text/html");
 	}
 	else if (is_cgi(get_extension(path), pars))
@@ -30,13 +39,16 @@ int		response::method_is_get(const request &req, const parser &pars)
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
-		add_content_type("text/html");
+		header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
+		add_content_type("text/html; charset=utf-8");
 	}
 	else
 	{
 		if ((ret = add_body(path)) != 0)
 			return ret;
-		if (type.empty())
+		if (is_cgi(get_extension(path), pars))
+			add_content_type("text/plain");
+		else if (type.empty())
 			add_content_type("application/octet-stream");
 		else
 			add_content_type(type);
@@ -46,9 +58,9 @@ int		response::method_is_get(const request &req, const parser &pars)
 	return 200;
 }
 
-int		response::method_is_delete(const request &req, const parser &pars)
+int		response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req, 0);
+	std::string path = find_path(pars.get_block("location", uri), uri, req, 0);
 	int ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
@@ -58,16 +70,16 @@ int		response::method_is_delete(const request &req, const parser &pars)
 	return 204;
 }
 
-int		response::method_is_options(const request &req, const parser &pars)
+int		response::method_is_options(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req, 0);
+	std::string path = find_path(pars.get_block("location", uri), uri, req, 0);
 	struct stat file_stat; //information about file
 	if (path.empty())
 		return 404;
-	if (stat(path.c_str(), &file_stat) < 0 && req.get_uri() != std::string("/*"))
+	if (stat(path.c_str(), &file_stat) < 0 && uri != std::string("/*"))
 		return 403;
 
-	if (req.get_uri() == std::string("/*"))
+	if (uri == std::string("/*"))
 	{
 		parser::entries path_info(pars.get_block("server").conf);
 		if (path_info.find("accept") != path_info.end())
@@ -78,7 +90,7 @@ int		response::method_is_options(const request &req, const parser &pars)
 	}
 	else
 	{
-		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
+		parser::entries path_info(pars.get_block(BLOCK_LOCATION, uri).conf);
 		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
 		add_allow(allow_method);
 	}
@@ -86,12 +98,12 @@ int		response::method_is_options(const request &req, const parser &pars)
 	return 200; //value of OK response
 }
 
-int		response::method_is_put(const request &req, const parser &pars)
+int		response::method_is_put(const std::string &uri, const request &req, const parser &pars)
 {
 	int		fd;
 	int		response_value = 204;
 
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	std::string path = find_path(pars.get_block("location", uri), uri, req);
 	struct stat file_stat; //information about file
 	if (!is_authorize(req, pars))
 		return 401;
@@ -135,33 +147,40 @@ int		response::method_is_put(const request &req, const parser &pars)
 		response_value = 204; //CREATE
 		close(fd);
 	}
-	header.insert(value_type(CONTENT_LOCATION, req.get_uri()));
+	header.insert(value_type(CONTENT_LOCATION, uri));
 	add_content_type("text/html");
 
 	return response_value;
 }
 
-int		response::method_is_post(const request &req, const parser &pars)
+int		response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
-	struct stat file_stat; //information about file
-	int ret = check_path(path, file_stat, req, pars);
-	if (ret != 0)
-		return ret;
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-		return 404;
-	cgi(req, pars, body, path);
-	if (body[0] == '5')
-		return ft_atoi<int>(body);
-	add_content_type("text/html");
-	add_content_length(body.size());
+	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	//if (!is_cgi(get_extension(path), pars))
+	//	return 404;
+	//struct stat file_stat; //information about file
+	//int ret = check_path(path, file_stat, req, pars);
+	//if (ret != 0)
+	//	return ret;
+	//if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	//	return 404;
+	if (get_extension(path) == ".bla")
+	{
+		cgi(req, pars, body, path);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+	}
+	add_content_type("text/html; charset=utf-8");
+	//add_content_length(654);
+	header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
+
 
 	return 200;
 }
 
-int		response::method_is_trace(const request &req, const parser &pars)
+int		response::method_is_trace(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", req.get_uri()), req);
+	std::string path = find_path(pars.get_block("location", uri), uri, req);
 	struct stat file_stat; //information about file
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
@@ -179,11 +198,12 @@ int		response::method_is_trace(const request &req, const parser &pars)
 	return 200;
 }
 
-int			response::method_is_unknow(const request &req, const parser &pars)
+int			response::method_is_unknow(const std::string &uri, const request &req, const parser &pars)
 {
 	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;
 	(void)req;
+	(void)uri;
 	header.erase("GET");
 
 	//Method Not Allowed

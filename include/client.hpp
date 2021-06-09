@@ -19,6 +19,8 @@ class client
         parser                          pars;
         message::receive_management     rcm;
         request                         req;
+        response                        rep;
+		//int							fd_dest;
 
         void                            reset_time(); // Set the time at the current time
 
