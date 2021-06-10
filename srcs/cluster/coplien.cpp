@@ -5,6 +5,7 @@ cluster::cluster() // constructor by defautl defined as private
 
 cluster::cluster(const std::string _path, bool debug_mode) : list_client(), debug_mode(debug_mode)// constructor used
 {
+	(void)_path;
     std::vector<parser> pars = parser::parse_folder(_path);
 	for (std::vector<parser>::iterator it = pars.begin(); it != pars.end(); ++it)
 	{

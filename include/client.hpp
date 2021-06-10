@@ -17,7 +17,7 @@ class client
         bool                            listen; // is socket for listening or a new client
         int                             read;   // finished to read or not 
         const parser					*pars;
-        //message::receive    			rcv;
+        message::receive    			rcv;
         request                         req;
         response                        rep;
 		//int							fd_dest;

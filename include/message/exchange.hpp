@@ -93,7 +93,7 @@ class message::receive : public exchange
 				cl_body(const cl_body &x);
 				cl_body &operator=(const cl_body &x);
 
-				virtual ~cl_body();
+				~cl_body();
 		};
 
 		class tf_body : public body

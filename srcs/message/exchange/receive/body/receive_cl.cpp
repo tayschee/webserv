@@ -39,8 +39,6 @@ int receive::cl_body::receive(const int socket)
 	char *buffer = new char[buf_size + 1];
 	ssize_t i;
 
-	if (buf_size == 0)
-		return 1;
 	if ((i = read(socket, buffer, this->buf_size)) <= 0)
 	{
 		delete[] buffer;

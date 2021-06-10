@@ -8,13 +8,17 @@ it used to receive header and body through is internal class and it variable whi
 
 //receive_mangement constructor destructor
 
-receive::receive(size_t fd, size_t buf_size) : exchange(fd), data(new header(buf_size)), buf_size(buf_size) {}
+receive::receive(size_t fd, size_t buf_size) : exchange(fd), data(new header(buf_size)), buf_size(buf_size)
+{
+	write(1, "voila\n", 6);
+}
 
 receive::receive(const receive &x) : 
 exchange(x), data(x.clone()), buf_size(x.buf_size){}
 
 receive::~receive()
 {
+	write(1, "delete\n", 7);
 	clear();
 }
 
@@ -22,6 +26,8 @@ receive::~receive()
 receive &receive::operator=(const receive &x)
 {
 	fd = x.fd;
+	if (data != NULL)
+		delete data;
 	data = x.clone();
 	buf_size = x.buf_size;
 	return *this;
@@ -70,7 +76,8 @@ receive::header		*receive::clone() const
 
 void				receive::clear()
 {
-	delete data;
+	if (data != NULL)
+		delete data;
 	data = NULL;
 }
 
