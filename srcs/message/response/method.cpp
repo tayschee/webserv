@@ -16,11 +16,20 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-
-	std::string type = find_media_type(get_extension(path), pars);
+	std::string type = find_media_type(get_extension(path), pars);	
 	
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
+		try
+		{
+			if (pars.get_block("location", uri).conf.find("autoindex")->second[0] == "off")
+				return 404;
+		}
+		catch(const std::exception& e)
+		{
+			return 404;
+		}
+		
 		std::string add = (path.substr(pars.get_block("location", uri).conf.find("root")->second[0].size()));
 		body = index(path, uri, add);
 		add_content_type("text/html");
@@ -30,13 +39,16 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
-		add_content_type("text/html");
+		header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
+		add_content_type("text/html; charset=utf-8");
 	}
 	else
 	{
 		if ((ret = add_body(path)) != 0)
 			return ret;
-		if (type.empty())
+		if (is_cgi(get_extension(path), pars))
+			add_content_type("text/plain");
+		else if (type.empty())
 			add_content_type("application/octet-stream");
 		else
 			add_content_type(type);
@@ -93,7 +105,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 
 	std::string path = find_path(pars.get_block("location", uri), uri, req);
 	struct stat file_stat; //information about file
-	if (!is_authorize(uri, req, pars))
+	if (!is_authorize(req, pars))
 		return 401;
 
 	/*verify if content exist*/
@@ -144,17 +156,24 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 int		response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block("location", uri), uri, req);
-	struct stat file_stat; //information about file
-	int ret = check_path(path, file_stat, req, pars);
-	if (ret != 0)
-		return ret;
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-		return 404;
-	cgi(req, pars, body, path);
-	if (body[0] == '5')
-		return ft_atoi<int>(body);
-	add_content_type("text/html");
-	add_content_length(body.size());
+	//if (!is_cgi(get_extension(path), pars))
+	//	return 404;
+	//struct stat file_stat; //information about file
+	//int ret = check_path(path, file_stat, req, pars);
+	//if (ret != 0)
+	//	return ret;
+	//if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	//	return 404;
+	if (get_extension(path) == ".bla")
+	{
+		cgi(req, pars, body, path);
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+	}
+	add_content_type("text/html; charset=utf-8");
+	//add_content_length(654);
+	header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
+
 
 	return 200;
 }

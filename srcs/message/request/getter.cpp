@@ -22,9 +22,7 @@ const std::string	&request::get_uri() const
 /*more specific than get_first_line simply use for query*/
 const std::string	request::get_query() const
 {
-	if (header.find(QUERY_STRING) == header.end())
-		return "";
-	return header.find(QUERY_STRING)->second;
+	return first_line.query_string;
 }
 
 /*more specific than get_first_line simply use for version*/

@@ -9,7 +9,7 @@ cluster::cluster(const std::string _path, bool debug_mode) : list_client(), debu
 	for (std::vector<parser>::iterator it = pars.begin(); it != pars.end(); ++it)
 	{
 		int		sock = server(*it).get_socket_host();
-		list_client.push_back(client(sock, true, *it));
+		list_client.push_back(client(sock, true, &*it));
 	}
 }
 

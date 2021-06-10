@@ -1,0 +1,31 @@
+GET ..
+gefre
+thgrf
+ntgrfsd
+tngrfsd
+Content-Length: 21
+
+123456789012345678901XC
+Transfert-Encoding: chunked
+
+1
+a
+1
+b
+1
+c
+1
+d
+1
+E
+12
+123456789012345678
+7
+3456789
+20
+12345678901234567890123456789012
+0
+
+
+
+

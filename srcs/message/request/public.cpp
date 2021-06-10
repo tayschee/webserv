@@ -15,7 +15,6 @@
 		i = 500; //la valeur peut fluctuer
 		recv_data.clear();
 	}
-
 	return i;
 }*/
 

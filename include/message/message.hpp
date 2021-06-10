@@ -23,7 +23,7 @@ class message
 		/*class will be use to store information during receive and send process*/
 		class exchange; //parent abstract class
 		class receive;
-		class send;
+		//class send;
 
 	public :
 		typedef std::multimap<std::string, std::string>		header_type;

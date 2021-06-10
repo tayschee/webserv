@@ -14,7 +14,7 @@ void			request::parse_start_line(const std::string &start_line)
 	{
 		if ((pos = cmd_split[1].find("?")) != cmd_split[1].npos)
 		{
-			first_line.query_string = cmd_split[1].substr(pos);
+			first_line.query_string = cmd_split[1].substr(pos + 1);
 			cmd_split[1].erase(pos);
 		}
 		first_line.uri = cmd_split[1];

@@ -6,7 +6,7 @@ def client(txt) :
 	except :
 		return ""
 	try :
-		sock.connect(('localhost', 80)) #destinataire de la com
+		sock.connect(('localhost', 8080)) #destinataire de la com
 		sock.send(txt) #envoie du message
 		txt2 = sock.recv(10000)
 		sock.close() #arrete la socket

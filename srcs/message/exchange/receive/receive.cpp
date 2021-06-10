@@ -71,6 +71,7 @@ receive::header		*receive::clone() const
 void				receive::clear()
 {
 	delete data;
+	data = NULL;
 }
 
 std::string			receive::get_buffer()

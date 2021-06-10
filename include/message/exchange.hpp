@@ -150,7 +150,7 @@ class message::receive : public exchange
 		~receive();
 };
 
-class message::send : public message::exchange
+/*class message::send : public message::exchange
 {
 	private:
 		class internal
@@ -193,6 +193,6 @@ class message::send : public message::exchange
 		send &operator=(const send &x);
 
 		~send();
-};
+};*/
 
 #endif

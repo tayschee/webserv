@@ -3,44 +3,30 @@
 
 int		main()
 {
-	/*int a;
-	int fd = open("file", O_RDONLY);
-	message::receive rcv(fd, 27);
+	/*std::vector<parser> pars = parser::parse_folder("./conf/conf2");
 
-	while ((a = rcv()) != -1)
+	//parser::block block = pars[1].get_block(PARSER_SERVER);
+	parser::block block = pars[0].get_block(PARSER_LOCATION, "/");
+	parser::entries map = block.conf;
+
+	parser::entries::iterator it = map.begin();
+	parser::entries::iterator end = map.end();
+
+
+	while (it != end)
 	{
-		//std::cout << a << "\n";
-		if (a == rcv.HEADER_END)
-		{
-			std::cout << "//////////////////////////////\n" << rcv.get_header_buffer() << "\n-----------------------\n";
-		}
-		else if (a == rcv.BODY_END)
-		{
-			std::cout << "------------------------\n" << rcv.get_buffer() << "\n-----------------------\n";
-			rcv.prepare_next();
-			while ((a = rcv.check()) == 1)
-			{
-				//std::cout << "check : " << rcv.check() << "\n";
-				std::cout << "------------------------\n" << rcv.get_buffer() << "\n-----------------------\n";
-				rcv.prepare_next();
-			}
-			//std::cout << "rcv_check() : " << a << "\n";
-		}
+		std::cout << it->first << " : "  << it->second << "\n";
+		++it;
 	}*/
-	//std::cout << a << "\n";
-	//std::cout << "------------------------\n" << rcv.get_buffer() << "\n-----------------------\n";
-	//close(fd);
 
-	cluster cl("conf/conf2", true);
-	try
-	{
-		cl.init_listen();
-		cl.start();
-		std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;
-	}
-	catch(const std::string &e)
-	{
-	}
+	/*cluster cl("./conf/conf2", true);
+	cl.init_listen();
+	cl.start();
+	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;*/
 
+	char *a = NULL;
+
+	delete a;
+	
 	return 0;
 }

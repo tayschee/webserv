@@ -63,7 +63,17 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 {
 	(void)req;
 	parser::entries entries(block.conf);
-	std::string path(entries.find("root")->second[0] + partial_path);
+	std::string path;
+
+	std::string alias;
+	if (entries.find("alias") == entries.end())
+		path = entries.find("root")->second[0] + partial_path;
+	else
+	{
+		alias = entries.find("alias")->second[0];
+		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
+	}
+
 	struct stat file_stat;
 
 	if (stat(path.c_str(), &file_stat) < 0)
@@ -77,7 +87,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 			return path;
 		std::list<std::string> files(files_in_dir(path));
 		if (*(--path.end()) != '/')
-		path.push_back('/');
+			path.push_back('/');
 		std::string ret = path + find_index(entries, files);
 		return (ret);
 	}

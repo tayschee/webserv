@@ -10,12 +10,12 @@ void sighandler(const int signal) // catch the signals
 
 void	cluster::close_client(iterator &it) // close a client
 {
+	if (debug_mode)
+		std::cout << "Client closed : " << it->get_fd() << std::endl;
 	close(it->get_fd());
 	iterator tmp = it;
-	it--;
+	--it;
 	list_client.erase(tmp);
-	if (debug_mode)
-		std::cout << "Close client: " << it->get_fd() << std::endl;
 }
 
 void	cluster::set_list_fd(fd_set &readfds, fd_set &writefds, int &max) // initialize the list of sockets
@@ -51,7 +51,6 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 			return 0;
 		time_select.tv_sec = 20;
 		time_select.tv_usec = 0;
-		std::cout << "WAIT..." << std::endl;
 		if ((activity = select(max + 1, &readfds, NULL, NULL, &time_select)) < 0 && errno != EINTR)
 			std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
 	}
@@ -70,14 +69,21 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 		res = accept(fd, (struct sockaddr *)&address_in, (socklen_t *)&size);
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
-		list_client.push_back(client(res, false, cli));
+		else //change that
+		{
+			if (debug_mode)
+				std::cout << "Connection etablished with " << res << "\n";
+			list_client.push_back(client(res, false, cli));
+			close_client(--list_client.end());
+		}
 	}
 	else
 	{
 		cli.receive();
-		//std::cout << "recieve past" << std::endl;
-		if (cli.is_read() == -1) // if method is void / close client
+		if (cli.is_read() == -1)
 		{
+			if (debug_mode)
+				std::cout << "Client quit : ";
 			close_client(it);
 			return -1;
 		}
@@ -87,10 +93,15 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 
 int		cluster::send_response(client &cli) //send of response
 {
-		if(cli.sent() < 0)
-		{
-			std::cerr << "send()" << strerror(errno) << std::endl;
-			return -1;
-		}
-		return 1;
+	if (debug_mode)
+		std::cout << "Send response to " << cli.get_fd() << "\n";
+	int ret = cli.sent();
+	if(ret < 0)
+	{
+		std::cerr << "send()" << strerror(errno) << std::endl;
+		return -1;
+	}
+	else if (!ret)
+		cli = client(cli.get_fd(), false, cli); 
+	return 1;
 }

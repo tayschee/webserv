@@ -49,7 +49,7 @@
 # define CONTENT_TYPE "Content-Type"
 # define DATE "Date"
 # define LOCATION "Location"
-# define TRANSFERT_ENCODING "Transfert-Encoding"
+# define TRANSFERT_ENCODING "Transfer-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
 # define WWW_AUTHENTICATE "WWW-Authenticate"
 

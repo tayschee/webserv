@@ -35,6 +35,8 @@
 #define PARSER_LOCATION_ERROR "location_error"
 #define PARSER_TYPES "types"
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
+#define PARSER_ALIAS "alias"
+#define PARSER_MAXBODY "maxBody"
 /////////////////////////////////////////////////
 
 class parser
@@ -119,6 +121,8 @@ private:
 	bool check_auth_basic(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_alias(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_maxBody(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

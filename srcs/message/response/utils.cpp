@@ -57,7 +57,6 @@ std::multimap<int, std::string>	response::tag_priority(std::string tag) const
 
 	while (it < end)
 	{
-		std::cout << "ok\n";
 		size_t pos;
 		const std::string key_tag(*it);
 
@@ -75,9 +74,10 @@ std::multimap<int, std::string>	response::tag_priority(std::string tag) const
 	return map;
 }
 
-bool	response::is_authorize(const std::string &path_file, const request &req, const parser &pars) const
+// Check authorizations
+bool	response::is_authorize(const request &req, const parser &pars) const
 {
-	parser::entries path(pars.get_block(BLOCK_LOCATION, path_file).conf);
+	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
 	if (path.find(AUTH_BASIC) != path.end())
 	{
 		message::header_type gh = req.get_header();
@@ -194,7 +194,7 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 		return 404;
 	if (int ret = is_open(file_stat))
 		return ret;
-	if (!is_authorize(path, req, pars))
+	if (!is_authorize(req, pars))
 		return 401;
 	return (0);
 }
@@ -202,7 +202,8 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 // Check if the type is a CGI
 bool		response::is_cgi(const std::string &type, const parser &pars) const
 {
-	std::cout << "TYPE = " << type << std::endl;
+	if (type == ".bla")
+		return false;
 	try
 	{
 		pars.get_block("cgi", type);
@@ -246,10 +247,10 @@ void	response::get_code(const parser &pars)
 		header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
 	if (first_line.status == 503)
 		header.insert(value_type("Retry-after",  "20000"));
-	std::string file_error = "/home/user42/42/webserv/error/" + std::string(ft_itoa(first_line.status)) + ".html";
+	std::string file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/" + std::string(ft_itoa(first_line.status)) + ".html";
 	if (lstat(file_error.c_str(), &file_stat) < 0)
 	{
-		file_error = "/home/user42/42/webserv/error/404.html";
+		file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/404.html";
 		lstat(file_error.c_str(), &file_stat);
 	}
 	int fd = open(file_error.c_str(), O_RDONLY);
@@ -292,4 +293,22 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 		return 1;
 	}
 	return 0;
+}
+
+std::string			response::ft_itoa_base(long nb, std::string &base)
+{
+	std::string ret;
+	
+	if (nb == 0)
+		return "0";
+	else if (nb < 0)
+	{
+		nb *= -1;
+		ret = "-";
+	}
+	if (nb / base.size() > 0)
+		ret += ft_itoa_base(nb / base.size(), base);
+	ret += base[nb % base.size()];
+
+	return ret;
 }

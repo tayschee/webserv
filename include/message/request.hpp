@@ -70,6 +70,7 @@ class request : public message
 		const std::string	get_content_length() const;
 		const std::string	get_host() const;
 		const std::string	get_query() const;
+
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 
@@ -82,7 +83,7 @@ class request : public message
 	public :
 		request();
 		request(const exception &except);
-		request(const char *request_char); //take in parameter the char * of receive or read to parse him
+		request(const std::string &const_request_str); //take in parameter the char * of receive or read to parse him
 		//request(const request &x);
 		request operator=(const request &x);
 		~request();

@@ -297,6 +297,8 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	prop_checker[PARSER_RETURN] = &parser::check_return;
 	prop_checker[PARSER_AUTH_BASIC] = &parser::check_auth_basic;
 	prop_checker[PARSER_AUTH_BASIC_USER_FILE] = &parser::check_auth_basic_user_file;
+	prop_checker[PARSER_ALIAS] = &parser::check_auth_basic_user_file;
+	prop_checker[PARSER_MAXBODY] = &parser::check_prop_maxBody;
 
 	try
 	{
@@ -348,6 +350,22 @@ bool parser::check_auth_basic(const std::string &block_id, const std::vector<std
 }
 
 bool parser::check_auth_basic_user_file(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	(void)block_id;
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_prop_alias(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	(void)block_id;
+	(void)args;
+	(void)line_no;
+	return true;
+}
+
+bool parser::check_prop_maxBody(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
 	(void)block_id;
 	(void)args;

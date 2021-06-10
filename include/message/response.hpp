@@ -7,6 +7,7 @@ class request;
 # include "message/message.hpp"
 # include "message/request.hpp"
 # include "message/exchange.hpp"
+# include "server.hpp"
 # include <dirent.h>
 # include <sys/stat.h> 
 # include "cgi.hpp"
@@ -39,7 +40,7 @@ class response : public message
 
 	private :
 		response_line	first_line; //information about first line of response
-		int				fd;
+		int 			first_time;
 		//header_type		header; //header of response
 		//std::string		body;	//body of response maybe put a fd instead
 
@@ -62,12 +63,14 @@ class response : public message
 		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 		int				is_open(const struct stat &file) const;
 		bool			is_cgi(const std::string &type, const parser &pars) const;
-		bool			is_authorize(const std::string &path_file, const request &req, const parser &pars) const;
+		bool			is_authorize(const request &req, const parser &pars) const;
 		void			status_header();
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
 		int					del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
 		int					check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
 		std::string			index(const std::string &path, std::string root, std::string add) const;
+		std::string			ft_itoa_base(long nb, std::string &base); //WARNING !!!!!!
+
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
@@ -118,7 +121,7 @@ class response : public message
 		int									get_status() const;
 		const std::string					&get_status_string() const;
 		const std::string					&get_version() const;
-	
+
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 
@@ -126,6 +129,7 @@ class response : public message
 		bool									is_redirect(parser::entries &block, const parser &pars);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
+		int										sent(int fd, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function
@@ -135,6 +139,7 @@ class response : public message
 		void									error_special_case(const request &req);
 
 	public :
+		response();
 		response(const request &req, const parser &pars);
 		response(const request::exception except, const parser &pars);
 		~response();
