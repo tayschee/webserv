@@ -24,9 +24,28 @@ int		main()
 	cl.start();
 	std::cout << "WEBSER C'EST FERMER CORRECTEMENT" << std::endl;*/
 
-	char *a = NULL;
+	int fd = open("file", O_RDONLY);
+	message::receive rcv(fd, 1);
+	int i;
+	std::string msg;
 
-	delete a;
+	while (1)
+	{
+		i = rcv();
+		if (i == -1)
+		{
+			return 1;
+		}
+		else
+		{
+			while ((rcv.check() & rcv.BODY_MASK))
+			{
+				msg = rcv.get_buffer();
+				rcv.prepare_next();
+				std::cout << "------------------\n" << msg << "------------------\n";
+			}
+		}
+	}
 	
 	return 0;
 }

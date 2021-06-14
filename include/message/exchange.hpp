@@ -61,11 +61,11 @@ class message::receive : public exchange
 			public :
 				virtual int			receive(const int socket) = 0;
 				virtual int			check() = 0;
+				virtual std::string	get_buffer() = 0;
+				virtual std::string	get_header_buffer() = 0;
 				virtual body		*clone() const = 0;
 
 			public :
-				std::string	get_header_buffer();
-				std::string	get_buffer();
 				header		*previous_step(const size_t buf_size) const;
 
 			public :
@@ -85,6 +85,8 @@ class message::receive : public exchange
 
 			public :
 				int			receive(const int socket);
+				std::string	get_buffer();
+				std::string	get_header_buffer();
 				int			check();
 				cl_body		*clone() const;
 
@@ -110,6 +112,8 @@ class message::receive : public exchange
 
 			public :
 				int					receive(const int socket);
+				std::string			get_buffer();
+				std::string			get_header_buffer();
 				int					check();
 				tf_body				*clone() const;
 
