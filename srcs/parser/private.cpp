@@ -13,6 +13,8 @@ void parser::parse_file()
 		return;
 	}
 
+	std::cout << "parsing file : " << filename << std::endl;
+
 	_blocks[block_id] = block(block_id.first, block_id.second);
 	buffer.assign(BUFFER_SIZE, '\0');
 	error = false;
@@ -77,17 +79,55 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 		_blocks[block_id].create_block(block_id.first, block_id.second, _blocks[entries::value_type(PARSER_SERVER, std::vector<std::string>())]); //dont work
 	}
 	else if (!block && check_prop(name, block_id.first, splitted, line_no))
-	{
-		if (name == PARSER_ERROR_PAGE) //this block change
-		{
-			size_t i(0);
-
-			for (i = 0; i < splitted.size() - 1; i++)
-				_blocks[block_id].errors[ft_atoi<int>(splitted[i].c_str())] = splitted[splitted.size() - 1];
-		}
-		else
-			_blocks[block_id].conf[name] = splitted;
-	}
+		add_property(block_id, name, splitted, line_no);
 	else
 		_blocks.clear();
+}
+
+void parser::add_property(const blocks::key_type &block_id, const std::string &name, const std::vector<std::string> &splitted, int line_no)
+{
+	if (name == PARSER_SERVER_NAME)
+	{
+		std::map<std::string, ServerNameEntry>::iterator it;
+		bool done = false;
+		ServerNameEntry entry;
+		entry.filename = filename;
+		entry.line_no = line_no;
+
+		try {
+			blocks::key_type key = std::make_pair(PARSER_SERVER, std::vector<std::string>());
+			entry.host = _blocks[key].conf.at(PARSER_HOST)[0];
+			entry.port = _blocks[key].conf.at(PARSER_LISTEN)[0];
+
+			std::cout << "Entry host : " << entry.host << std::endl;
+			std::cout << "Entry port : " << entry.port << std::endl;
+		}
+		catch (const std::out_of_range& e)
+		{
+			std::cout << "Error: " << filename << ": If server_name is used, host and port must be specified before it. (line_no : " << line_no << ")\n";
+		}
+
+		for (it = names.begin(); !done && it != names.end(); it++)
+		{
+			if (it->second.filename == filename)
+			{
+				names.erase(it);
+				names[splitted[0]] = entry;
+				done = true;
+			}
+		}
+
+		if (!done)
+			names[splitted[0]] = entry;
+	}
+
+	if (name == PARSER_ERROR_PAGE) //this block change
+	{
+		size_t i(0);
+
+		for (i = 0; i < splitted.size() - 1; i++)
+			_blocks[block_id].errors[ft_atoi<int>(splitted[i].c_str())] = splitted[splitted.size() - 1];
+	}
+	else
+		_blocks[block_id].conf[name] = splitted;
 }

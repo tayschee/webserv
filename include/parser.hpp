@@ -36,6 +36,7 @@
 #define PARSER_AUTH_BASIC_USER_FILE "auth_basic_user_file"
 #define PARSER_BODY_SIZE_MAX "body_size_max"
 #define PARSER_SERVER_NAME "server_name"
+#define PARSER_ALIAS "alias"
 
 class parser
 {
@@ -77,11 +78,21 @@ private:
 	typedef bool (parser::*check_prop_func)(const std::string&, const std::vector<std::string>&, int) const;
 	typedef bool (parser::*check_block_func)(const std::vector<std::string>&, int) const;
 
+	struct ServerNameEntry
+	{
+		std::string filename;
+		int line_no;
+		std::string host;
+		std::string port;
+	};
+
 	std::string filename;
 	blocks _blocks;
 	static std::string buffer;
 	bool error;
 	static block mime;
+
+	static std::map<std::string, ServerNameEntry> names; // server_name -> (filename, line)
 
 private:
 	parser(const std::string &_filename);
@@ -99,7 +110,7 @@ private:
 	bool basic_chk_args(const std::string& name, int actual, int expected, bool exact, int line_no) const;
 	bool advanced_chk_err_code(const std::vector<std::string>& err, int line_no) const;
 
-	bool is_valid() const;
+	bool validate();
 	bool check_line(const std::string& line, int line_no) const;
 	bool check_prop(const std::string& name, const std::string& block_id, const std::vector<std::string>& args, int line_no);
 	bool check_block(const std::string &name, const std::vector<std::string>& args, int line_no);
@@ -117,11 +128,14 @@ private:
 	bool check_prop_keep_alive(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_serv_name(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_prop_body_size_max(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
+	bool check_prop_alias(const std::string &block_id, const std::vector<std::string> &args, int line_no) const;
 	bool check_block_location(const std::vector<std::string>& args, int line_no) const;
 	bool check_block_cgi(const std::vector<std::string>& args, int line_no) const;
 
 	std::string find_best_match(std::string arg) const;
 	static std::string remove_comments(const std::string &line);
+
+	void add_property(const blocks::key_type& block_id, const std::string& name, const std::vector<std::string> &splitted, int line_no);
 
 public:
 	parser();

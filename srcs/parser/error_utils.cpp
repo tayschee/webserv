@@ -60,10 +60,13 @@ bool parser::advanced_chk_err_code(const std::vector<std::string> &err, int line
 	return true;
 }
 
-bool parser::is_valid() const
+bool parser::validate()
 {
 	if (error)
 		return (false);
+
+	blocks::key_type server = std::make_pair(PARSER_SERVER, std::vector<std::string>());
+	_blocks[server].conf.insert(std::make_pair(PARSER_LISTEN, std::vector<std::string>(1, "80")));
 
 	blocks::const_iterator it = _blocks.find(std::make_pair(PARSER_LOCATION, std::vector<std::string>(1, "/")));
 	if (it == _blocks.end())

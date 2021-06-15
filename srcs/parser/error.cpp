@@ -20,6 +20,7 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	prop_checker[PARSER_KEEP_ALIVE] = &parser::check_prop_keep_alive;
 	prop_checker[PARSER_SERVER_NAME] = &parser::check_prop_serv_name;
 	prop_checker[PARSER_BODY_SIZE_MAX] = &parser::check_prop_body_size_max;
+	prop_checker[PARSER_ALIAS] = &parser::check_prop_alias;
 
 	try
 	{
@@ -169,6 +170,7 @@ bool parser::check_prop_accept(const std::string &block_id, const std::vector<st
 	std::vector<std::string> expected;
 	expected.push_back(PARSER_SERVER);
 	expected.push_back(PARSER_LOCATION);
+	expected.push_back(PARSER_CGI);
 
 	if (!basic_chk_block(PARSER_ACCEPT, block_id, expected, line_no))
 		return false;
@@ -335,6 +337,18 @@ bool parser::check_prop_serv_name(const std::string &block_id, const std::vector
 		return false;
 	if (!basic_chk_args(PARSER_SERVER_NAME, args.size(), 1, true, line_no))
 		return false;
+
+	std::map<std::string, ServerNameEntry>::const_iterator it = names.find(args[0]);
+	blocks::key_type key = std::make_pair(PARSER_SERVER, std::vector<std::string>());
+	std::string host = _blocks.at(key).conf.at(PARSER_HOST)[0];
+	std::string port = _blocks.at(key).conf.at(PARSER_LISTEN)[0];
+	if (it != names.end() && port == it->second.port && host == it->second.host)
+	{
+		ServerNameEntry entry = it->second;
+
+		std::cerr << "Error: " << filename << ": The name '" << args[0] << "' is already used in " << entry.filename << " with the same host and port:" << entry.line_no << ". (line: " << line_no << ")\n";
+		return false;
+	}
 	return true;
 }
 
@@ -372,6 +386,18 @@ bool parser::check_prop_body_size_max(const std::string &block_id, const std::ve
 		std::cerr << "Error: " << filename << ": Number must be positive. (line: " << line_no << ")\n";
 		return false;
 	}
+	return true;
+}
+
+bool parser::check_prop_alias(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
+{
+	std::vector<std::string> expected;
+	expected.push_back(PARSER_LOCATION);
+
+	if (!basic_chk_block(PARSER_ALIAS, block_id, expected, line_no))
+		return false;
+	if (!basic_chk_args(PARSER_ALIAS, args.size(), 1, true, line_no))
+		return false;
 	return true;
 }
 
