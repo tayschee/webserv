@@ -6,7 +6,7 @@
 //{}
 
 // constructor used
-client::client(int _fd, bool _listen, const parser *_pars) : fd(_fd), listen(_listen), read(false), pars(_pars), rcv(fd, 10), req()
+client::client(int _fd, bool _listen, const  parser::address_conf *_pars) : fd(_fd), listen(_listen), read(false), pars(_pars), rcv(fd, 10), req()
 {
 	//(void)_pars;
     gettimeofday(&time, NULL);

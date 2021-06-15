@@ -1,4 +1,5 @@
 #include "message/response.hpp"
+#include "message/request.hpp"
 
 /*this file regroup get function, get dont refer to the method but function to get a value through an other*/
 
@@ -176,4 +177,24 @@ std::string response::find_language(const std::string &complete_path, const requ
 		++it;
 	}
 	return complete_path;
+}
+
+const parser		*response::find_parser(const parser::address_conf *pars, const request &req) const
+{
+	size_t i(0);
+	size_t j;
+
+	while (i < (*pars).size())
+	{
+		std::vector<std::string> server_name_vec((*pars)[i].get_block(PARSER_SERVER).conf.find(PARSER_SERVER_NAME)->second);
+		j = 0;
+		while (j < server_name_vec.size())
+		{
+			if (req.get_header().find(PARSER_SERVER_NAME)->second == server_name_vec[j])
+				return &(*pars)[i];
+			++j;
+		}
+		++i;
+	}
+	return NULL;
 }

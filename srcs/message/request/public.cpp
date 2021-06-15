@@ -18,15 +18,14 @@
 	return i;
 }*/
 
-int		request::validity(const parser &pars) const
+int		 request::validity(const parser *pars) const
 {
-	(void)pars;
 	if (first_line.version != HTTP_VERSION)
 		return 505;
 	header_type::const_iterator end(header.end());
 	std::pair<header_type::const_iterator, header_type::const_iterator> range_host(header.equal_range(HOST));
 
-	if (range_host.first == end || ++range_host.first != range_host.second)
+	if (range_host.first == end || ++range_host.first != range_host.second || pars == NULL)
 		return 400;
 	//if (ft_atoi<size_t>(pars.get_block(PARSER_SERVER).conf.find(BUFFER_SIZE)->second[0]) < body.size())
 	//	return 413;

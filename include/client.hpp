@@ -16,7 +16,7 @@ class client
         struct timeval                  time;
         bool                            listen; // is socket for listening or a new client
         int                             read;   // finished to read or not 
-        const parser					*pars;
+        const parser::address_conf		*pars;
         message::receive    			rcv;
         request                         req;
         response                        rep;
@@ -28,7 +28,7 @@ class client
 
     public: /*public function*/
 		bool			is_close;
-        client(const int pfd, const bool _listen, const parser *_pars);
+        client(const int pfd, const bool _listen, const  parser::address_conf *_pars);
         client(int _fd, bool _listen, const client &other);
 
         client(const client& other);

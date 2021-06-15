@@ -310,9 +310,10 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	}
 	catch (const std::out_of_range &e)
 	{
-		std::cout << block_id << std::endl;
+		/*std::cout << block_id << std::endl;
 		std::cerr << "Error: " << filename << ": Unknown property '" << name << "' at line " << line_no << ".\n";
-		return false;
+		return false;*/
+		return true;
 	}
 }
 
@@ -427,7 +428,7 @@ bool parser::check_prop_index(const std::string &block_id, const std::vector<std
 
 bool parser::check_prop_serv_name(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	std::vector<std::string> expected;
+	/*std::vector<std::string> expected;
 	expected.push_back(PARSER_SERVER);
 
 	if (!basic_chk_block(PARSER_SERVER_NAME, block_id, expected, line_no))
@@ -457,6 +458,10 @@ bool parser::check_prop_serv_name(const std::string &block_id, const std::vector
 			return false;
 		}
 	}
+	return true;*/
+	(void)block_id;
+	(void)args;
+	(void)line_no;
 	return true;
 }
 

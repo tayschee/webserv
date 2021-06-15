@@ -14,9 +14,9 @@ std::vector<std::string> parser::split(const std::string &str, const std::string
 	return result;
 }
 
-std::vector<parser> parser::parse_folder(std::string path)
+std::vector<parser::address_conf> parser::parse_folder(std::string path)
 {
-	std::vector<parser> res;
+	std::vector<address_conf> res;
 	DIR *dir = opendir(path.c_str());
 
 	if (path[path.length() - 1] == '/')
@@ -29,15 +29,38 @@ std::vector<parser> parser::parse_folder(std::string path)
 	{
 		if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
-			res.push_back(parser(path + "/" + entry->d_name));
-			if (!res.rbegin()->is_valid())
-				res.pop_back();
+			//res.push_back();
+			insert_parse_folder(res, parser(path + "/" + entry->d_name));
 		}
 	}
 	closedir(dir);
 	if (res.empty())
 		throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
+}
+
+void		parser::insert_parse_folder(std::vector<address_conf> &pars, const parser &new_object)
+{
+	size_t i = 0;
+
+	if (!new_object.is_valid())
+		return ;
+
+	entries pars_new_object(new_object.get_block(PARSER_SERVER).conf);
+
+	while (i < pars.size())
+	{
+		entries pars_block(pars[i][0].get_block(PARSER_SERVER).conf); //just check host and port of first block to know if he is in same categorie
+
+		if (pars_block.find(PARSER_HOST)->second == pars_new_object.find(PARSER_HOST)->second
+			&& pars_block.find(PARSER_LISTEN)->second == pars_new_object.find(PARSER_LISTEN)->second)
+		{
+			pars[i].push_back(new_object);
+			return ;
+		}
+		++i;
+	}
+	pars.push_back(std::vector<parser>(1, new_object));
 }
 
 const parser::block &parser::get_block(const std::string& block_name, const std::vector<std::string>& block_args) const

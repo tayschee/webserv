@@ -23,6 +23,7 @@
 
 #define PARSER_ACCEPT "accept"
 #define PARSER_LISTEN "listen"
+#define PARSER_HOST "host"
 #define PARSER_SERVER_NAME "server_name"
 #define PARSER_ERROR_PAGE "error_page"
 #define PARSER_INDEX "index"
@@ -46,6 +47,7 @@ public:
 
 	typedef std::map<std::string, std::vector<std::string> > entries;
 	typedef std::map<std::pair<std::string, std::vector<std::string> >, block> blocks;
+	typedef std::vector<parser> address_conf;
 
 	class BlockNotFound : public std::exception
 	{
@@ -128,6 +130,7 @@ private:
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	std::string find_best_match(std::string arg) const;
+	static void		insert_parse_folder(std::vector<address_conf> &pars, const parser &new_object);
 	std::string remove_comments(const std::string &line) const;
 
 public:
@@ -137,7 +140,7 @@ public:
 
 	parser &operator=(const parser &other);
 
-	static std::vector<parser> parse_folder(std::string path);
+	static std::vector<address_conf> parse_folder(std::string path);
 	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
 
 	const block &get_block(const std::string &block_name, const std::vector<std::string> &block_args = std::vector<std::string>()) const;

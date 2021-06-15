@@ -14,6 +14,7 @@ class cluster
         typedef std::list<client>::iterator iterator;
 
     private: /*private function*/
+		std::vector<parser::address_conf> vec_parser;
         std::list<client>       list_client; // list all clients
 		bool					debug_mode; // 1 activate
 
