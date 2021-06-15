@@ -54,6 +54,28 @@ int receive::cl_body::receive(const int socket)
 	return 0;
 }
 
+std::string 						receive::cl_body::get_buffer()
+{
+	size_t del_pos = msg.size() < pos ? msg.size() : pos;
+	std::string buffer(msg.substr(0, del_pos));
+	
+	pos -= del_pos;
+	msg.erase(0, del_pos);
+	return buffer;
+}
+
+std::string 						receive::cl_body::get_header_buffer()
+{
+	size_t pos(header_is_end(msg));
+	std::string header(msg.substr(0, pos));
+
+	pos = pos + ft_strlen(SEPARATOR);
+	msg.erase(0, pos);
+	this->pos -= pos;
+
+	return header;
+}
+
 //check if object have reached end of read body and return 1 if it's true
 int receive::cl_body::check()
 {

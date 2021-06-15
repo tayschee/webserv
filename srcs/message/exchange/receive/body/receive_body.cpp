@@ -17,13 +17,6 @@ receive::body &receive::body::operator=(const body &x)
 	return *this;
 }
 
-std::string 						receive::body::get_buffer()
-{
-	std::string buffer(msg.substr(0, pos));
-	msg.erase(0, pos);
-	return buffer;
-}
-
 std::string 						receive::body::get_header_buffer()
 {
 	size_t pos(header_is_end(msg));

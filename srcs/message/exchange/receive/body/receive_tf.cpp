@@ -47,7 +47,7 @@ int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 {
 	if (msg.size() >= i + (CRLF_size * 2))
 	{
-		if (msg_begin)
+		if (msg_begin == pos)
 		{
 			msg.erase(pos, 1 + (CRLF_size * 2)); //erase 0\r\n + all after if there is
 		}
@@ -71,7 +71,7 @@ int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 size_t				receive::tf_body::erase_tf_signature(const size_t i, const size_t CRLF_size, size_t pos)
 {
 	//std::cout << "before erase :" << msg.substr(pos) << "\n";
-	if (msg_begin) //find something
+	if (msg_begin == pos) //find something
 	{
 		size_t nb_to_delete(i + CRLF_size - pos);
 
@@ -121,6 +121,30 @@ int receive::tf_body::check()
 	if (buf_size == 0)
 		buf_size = default_buf_size;
 	return 0;
+}
+
+std::string 						receive::tf_body::get_buffer()
+{
+	size_t del_pos = msg.size() < pos ? msg.size() : pos;
+	std::string buffer(msg.substr(0, del_pos));
+	
+	msg_begin = SIZE_T_MAX; //never begin
+	pos -= del_pos;
+	msg.erase(0, del_pos);
+	return buffer;
+}
+
+std::string 						receive::tf_body::get_header_buffer()
+{
+	size_t pos(header_is_end(msg));
+	std::string header(msg.substr(0, pos));
+
+	pos = pos + ft_strlen(SEPARATOR);
+	msg.erase(0, pos);
+	this->pos -= pos;
+	msg_begin -= pos; //never begin
+
+	return header;
 }
 
 receive::tf_body	*receive::tf_body::clone() const
