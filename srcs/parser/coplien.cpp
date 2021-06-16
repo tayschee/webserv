@@ -1,6 +1,10 @@
 #include "parser.hpp"
 #include "message/request.hpp"
 
+std::string parser::buffer;
+parser::block parser::mime;
+std::map<std::string, parser::ServerNameEntry> parser::names;
+
 parser::parser()
 {
 }
@@ -35,9 +39,8 @@ parser::block &parser::block::operator=(const parser::block &x)
 	if (x.name == PARSER_SERVER)
 	{
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("listen", std::vector<std::string>(1, "80")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("keep_alive", std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("body_size", std::vector<std::string>(1, "1000")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "1000")));
 	}
 	return *this;
 }
@@ -68,9 +71,8 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 	if (name == PARSER_SERVER)
 	{
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("listen", std::vector<std::string>(1, "80")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("keep_alive", std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >("body_size", std::vector<std::string>(1, "60")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
 	}
 }
 

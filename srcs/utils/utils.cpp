@@ -195,3 +195,58 @@ std::list<std::string>	files_in_dir(const std::string &path)
 	closedir(directory);
 	return files;
 }
+
+static std::string getBase(int base)
+{
+	if (base < 2 || base > 36)
+		throw std::invalid_argument("Base should be in the range [2;36]");
+
+	std::string b;
+
+	for (int i = 0; i < base; i++)
+	{
+		if (i < 10)
+			b.push_back(i + '0');
+		else
+			b.push_back(i + 'a');
+	}
+	return b;
+}
+
+static char ft_tolower(char c)
+{
+	if ('A' <= c && c <= 'Z')
+		return c + 32;
+	return c;
+}
+
+long int ft_strtol(const char *str, char **endptr, int base)
+{
+	while (9 <= *str && *str <= 13)
+		str++;
+	if (endptr)
+		*endptr = (char *)str;
+	std::string base_str = getBase(base);
+
+	if (!*str && !(base_str.find(ft_tolower(*str)) || *str == '-' || *str == '+'))
+		return 0;
+
+	long int result = 0;
+	int sign = (*str == '-' ? -1 : 1);
+	if (*str == '-' || *str == '+')
+		str++;
+	if (endptr)
+		*endptr = (char *)str;
+	while (base_str.find(ft_tolower(*str)) != base_str.npos)
+	{
+		result = (result * base) + (ft_tolower(*str) - base_str[0]);
+		str++;
+		if (endptr)
+			(*endptr)++;
+		if (result < 0)
+			throw std::out_of_range("argument is too big");
+	}
+	if (*str && endptr)
+		*endptr = (char *)str;
+	return result * sign;
+}

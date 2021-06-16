@@ -9,7 +9,7 @@ class request;
 # include "message/exchange.hpp"
 # include "server.hpp"
 # include <dirent.h>
-# include <sys/stat.h> 
+# include <sys/stat.h>
 # include "cgi.hpp"
 # include "utils.hpp" //files_in_dir
 

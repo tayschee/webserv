@@ -34,7 +34,7 @@ void			response::main_header()
 	add_server(); //server field add in header
 }
 
-/*create first line of response header */ 
+/*create first line of response header */
 std::string		response::header_first_line() const
 {
 	std::string		str_first_line;
@@ -112,15 +112,15 @@ void		response::status_header()
 int			response::is_open(const struct stat &file) const
 {
 	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
-	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 
+	// IWUSR:  printf("le propriétaire a le droit d'écriture\n");
 	// IXUSR:  printf("le propriétaire a le droit d'exécution\n");
 	// IRWXG:  printf("lecture/écriture/exécution du groupe\n");
 	// IRGRP:  printf("le groupe a le droit de lecture\n");
-	// IWGRP:  printf("le groupe a le droit d'écriture\n");      
-	// IXGRP:  printf("le groupe a le droit d'exécution\n");   
-	// IRWXO:  printf("lecture/écriture/exécution des autres\n");   
-	// IROTH:  printf("les autres ont le droit de lecture\n");   
-	// IWOTH:  printf("les autres ont le droit d'écriture\n");   
+	// IWGRP:  printf("le groupe a le droit d'écriture\n");
+	// IXGRP:  printf("le groupe a le droit d'exécution\n");
+	// IRWXO:  printf("lecture/écriture/exécution des autres\n");
+	// IROTH:  printf("les autres ont le droit de lecture\n");
+	// IWOTH:  printf("les autres ont le droit d'écriture\n");
 	// IXOTH:  printf("les autres ont le droit d'exécution\n");
 	if (!(file.st_mode & S_IRUSR)) // check read
 		return (403);

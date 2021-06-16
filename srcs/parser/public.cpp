@@ -19,6 +19,8 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 	std::vector<address_conf> res;
 	DIR *dir = opendir(path.c_str());
 
+	mime = create_default_mime_type();
+
 	if (path[path.length() - 1] == '/')
 		path.erase(path.end());
 
@@ -27,23 +29,29 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
 	{
-		if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
+		if (entry->d_type == DT_REG && std::string(entry->d_name) == "mime")
+			parse_mime(path + "/" + entry->d_name);
+		else if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
-			//res.push_back();
-			insert_parse_folder(res, parser(path + "/" + entry->d_name));
+			parser new_object(parser(path + "/" + entry->d_name));
+			insert_parse_folder(res, new_object);
 		}
 	}
+
+	names.clear();
+	buffer.clear();
+
 	closedir(dir);
-	if (res.empty())
-		throw std::runtime_error("All the files in " + path + " are invalid.");
+	//if (res.empty())
+		//throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
 }
 
-void		parser::insert_parse_folder(std::vector<address_conf> &pars, const parser &new_object)
+void		parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_object)
 {
 	size_t i = 0;
 
-	if (!new_object.is_valid())
+	if (!new_object.validate())
 		return ;
 
 	entries pars_new_object(new_object.get_block(PARSER_SERVER).conf);

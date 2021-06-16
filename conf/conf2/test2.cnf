@@ -1,20 +1,19 @@
-host		127.0.0.1
+server_name		127.0.0.1
 listen			8080
 root			./www
-server_name		1
 
-accept POST GET TRACE
-
-keep_alive 54
+accept POST GET TRACE HEAD PUT
 
 error_page 404 /
 location / {
-	accept POST GET TRACE
+	accept POST PUT
 	root www
 	index io
 }
 
+error_page 404 /
 location /bonjour {
+	accept POST GET HEAD POST
 	root ./www
 }
 

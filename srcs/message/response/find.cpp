@@ -8,7 +8,7 @@ response::status_array::value_type::second_type //std::string
 response::find_status_string() const
 {
 	status_array::const_iterator it(existing_status.find(first_line.status));
-	
+
 	if (it == existing_status.end())
 		return UNKNOW_STATUS;
 	else
@@ -39,7 +39,7 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	std::string type;
 	if (subtype.empty())
 		return subtype;
-	try		
+	try
 	{
 		parser::entries block = pars.get_block("types", "mime").conf;
 		if (block.find(subtype) != block.end())
