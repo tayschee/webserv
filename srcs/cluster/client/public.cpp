@@ -2,7 +2,7 @@
 
 void                            client::receive() // call recieve
 {
-	/*int i;
+	int i;
 	std::string msg;
 
     reset_time();
@@ -19,8 +19,9 @@ void                            client::receive() // call recieve
 			rcv.prepare_next();
 			read = 1;
 			req = request(msg);
+			rep = response(req, pars);
 		}
-	}*/
+	}
 }
 
 void							client::reset_rcv(size_t buf_size)
@@ -37,6 +38,6 @@ long                         client::sent() // send response
 	// //std::cout << "allow = " << pars.get_block("server").conf.find("allow")->second << std::endl;
     // std::cout << req.get() << std::endl;
 	read = rep.sent(fd);
-    //td::cout << "=====================================================3" << std::endl;
+    //std::cout << "=====================================================" << std::endl;
     return read;
 }

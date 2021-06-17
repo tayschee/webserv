@@ -11,7 +11,9 @@ parser::parser()
 
 parser::parser(const parser &other)
 {
-	*this = other;
+	filename = other.filename;
+	_blocks = other._blocks;
+	error = other.error;
 }
 
 parser::parser(const std::string &_filename) : filename(_filename)
@@ -36,11 +38,13 @@ parser::block &parser::block::operator=(const parser::block &x)
 {
 	this->name = x.name;
 	this->args = x.args;
-	if (x.name == PARSER_SERVER)
+
+	if (name == PARSER_SERVER)
 	{
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "1000")));
+		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
+		//this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
 	}
 	return *this;
 }
@@ -60,9 +64,7 @@ void parser::block::create_block(const std::string name, const std::vector<std::
 	}
 }
 
-parser::block::block()
-{
-}
+parser::block::block(){}
 
 parser::block::block(const std::string &name, const std::vector<std::string> &args)
 {
@@ -73,6 +75,7 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
+		//this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
 	}
 }
 

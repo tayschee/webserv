@@ -41,7 +41,7 @@ OBJS = $(SRCS:.cpp=.o)
 #To activate implicit rules to compile in cpp use CXX
 CXX = clang++
 INCLUDE = -I ./include
-CPPFLAGS = $(INCLUDE) -std=c++98 -Wall -Wextra -Werror 
+CPPFLAGS = $(INCLUDE) -fsanitize=address -g -std=c++98 -Wall -Wextra -Werror 
 
 
 all : $(EXEC)

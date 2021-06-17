@@ -1,9 +1,3 @@
 GET / HTTP/1.1
-Host: 127.0.0.1
-Transfer-Encoding: chunked
-
-a
-1234567890
-0
-
+Host: 1
 

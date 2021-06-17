@@ -74,7 +74,6 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 			if (debug_mode)
 				std::cout << "Connection etablished with " << res << "\n";
 			list_client.push_back(client(res, false, cli));
-			close_client(--list_client.end());
 		}
 	}
 	else
@@ -86,6 +85,9 @@ int		cluster::receive(client &cli, const int &fd, iterator &it) // there is some
 				std::cout << "Client quit : ";
 			close_client(it);
 			return -1;
+		}
+		else if (cli.is_read() == 1)
+		{
 		}
 	}
 	return 1;

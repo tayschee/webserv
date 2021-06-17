@@ -179,22 +179,26 @@ std::string response::find_language(const std::string &complete_path, const requ
 	return complete_path;
 }
 
-const parser		*response::find_parser(const parser::address_conf *pars, const request &req) const
+const parser::address_conf::const_iterator	response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
 {
 	size_t i(0);
-	size_t j;
 
-	while (i < (*pars).size())
+	parser::address_conf::const_iterator end(pars_list->end());
+	parser::address_conf::const_iterator it(pars_list->begin());
+	const std::string host(req.get_header().find(HOST)->second);
+	while (it != end)
 	{
-		std::vector<std::string> server_name_vec((*pars)[i].get_block(PARSER_SERVER).conf.find(PARSER_SERVER_NAME)->second);
-		j = 0;
-		while (j < server_name_vec.size())
+		std::cout << "i\n";
+		std::vector<std::string> server_name_vec(it->get_block(PARSER_SERVER).conf.find(PARSER_SERVER_NAME)->second);
+		i = 0;
+		while (i < server_name_vec.size())
 		{
-			if (req.get_header().find(PARSER_SERVER_NAME)->second == server_name_vec[j])
-				return &(*pars)[i];
-			++j;
+			std::cout << "|" << host << "| : |"<< server_name_vec[i] << "|\n";
+			if (host == server_name_vec[i])
+				return (it);
+			++i;
 		}
-		++i;
+		++it;
 	}
-	return NULL;
+	return end;
 }

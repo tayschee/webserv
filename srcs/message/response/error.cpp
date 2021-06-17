@@ -66,10 +66,15 @@ int response::error_msg(const std::string &path, const request &req, const parse
 
 int	response::error_response(int status, const request &req, const parser &pars)
 {
+	std::cout << "abc\n";
 	int status_error(status);
+	std::cout << "ded\n";
 	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
+	std::cout << "kjl\n";
 	std::map<int, std::string>::iterator it;
+	std::cout << "xxx\n";
 	std::map<int, std::string>::const_iterator end(block.end());
+	std::cout << "yyy\n";
 
 	while (status > 299)
 	{
@@ -90,4 +95,13 @@ int	response::error_response(int status, const request &req, const parser &pars)
 	error_special_case(req); //delete things which are note in specific method
 
 	return status_error;
+}
+
+int	response::error_response(int status, const request &req)
+{
+	default_error(status, req);
+	status_header();
+	error_special_case(req); //delete things which are note in specific method
+
+	return status;
 }

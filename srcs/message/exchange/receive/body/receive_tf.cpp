@@ -6,7 +6,7 @@ by receive once header is read */
 typedef message::receive receive;
 
 //constructor destructor
-receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(1) {}
+receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(message::header_is_end(msg) + ft_strlen(SEPARATOR)) {}
 receive::tf_body::tf_body(const tf_body &x) : body(x), msg_begin(x.msg_begin) {}
 receive::tf_body::~tf_body(){}
 

@@ -10,40 +10,56 @@ int		response::method_is_head(const std::string &uri, const request &req, const 
 
 int		response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
+	std::cout << "get\n";
 	struct stat file_stat; //information about file
 	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	std::cout << "oups\n";
 	//403 interdiction
 	int ret = check_path(path, file_stat, req, pars);
+	std::cout << "oups1\n";
 	if (ret != 0)
 		return ret;
-	std::string type = find_media_type(get_extension(path), pars);	
+	std::string type = find_media_type(get_extension(path), pars);
+	std::cout << "oups2\n";	
 	
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
+		std::cout << "oups2.5\n";
 		try
 		{
-			if (pars.get_block("location", uri).conf.find("autoindex")->second[0] == "off")
+			std::cout << "oupsX\n";
+			std::cout << (pars.get_block(PARSER_LOCATION, uri).conf.find(PARSER_AUTOINDEX) == pars.get_block(PARSER_LOCATION, uri).conf.end()) << "\n";
+			if (pars.get_block(PARSER_LOCATION, uri).conf.find(PARSER_AUTOINDEX)->second[0] == "off")
+			{
+				std::cout << "oupsZz\n";
 				return 404;
+			}
+			std::cout << "oupsZ\n";
 		}
 		catch(const std::exception& e)
 		{
+			std::cout << "oupsY\n";
 			return 404;
 		}
-		
+		std::cout << "oups3\n";
 		std::string add = (path.substr(pars.get_block("location", uri).conf.find("root")->second[0].size()));
 		body = index(path, uri, add);
 		add_content_type("text/html");
+		std::cout << "oups4\n";
 	}
 	else if (is_cgi(get_extension(path), pars))
 	{
+		std::cout << "oups5\n";
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
 		header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
 		add_content_type("text/html; charset=utf-8");
+		std::cout << "oups6\n";
 	}
 	else
 	{
+		std::cout << "oups7\n";
 		if ((ret = add_body(path)) != 0)
 			return ret;
 		if (is_cgi(get_extension(path), pars))
@@ -52,7 +68,9 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 			add_content_type("application/octet-stream");
 		else
 			add_content_type(type);
+		std::cout << "oups8\n";
 	}
+	std::cout << "oups10\n";	
 	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	add_content_length(body.size());
 	return 200;

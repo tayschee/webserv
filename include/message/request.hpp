@@ -74,7 +74,7 @@ class request : public message
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 
-		response		get_response(const parser::address_conf *pars) const; //to have response object
+		response		get_response(const std::vector<parser::address_conf>::const_iterator pars) const; //to have response object
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const; //to have complete request of the form of std::string
 
 	public :
@@ -89,7 +89,7 @@ class request : public message
 		~request();
 
 		//int				receive(const int socket, receive_management &recv_data);
-		int				validity(const parser *pars) const;
+		int				validity(const parser &pars) const;
 };
 
 #endif

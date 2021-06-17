@@ -83,7 +83,7 @@ class response : public message
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
 		std::string 							find_charset(const request &req) const;
 		std::string								find_language(const std::string &complete_path, const request &req);
-		const parser							*find_parser(const parser::address_conf *pars, const request &req) const;
+		const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
 
 	private : //method_is_* function, apply one of method
 		int										method_is_head(const std::string &uri, const request &req, const parser &pars); //HEAD
@@ -136,12 +136,13 @@ class response : public message
 		int										error_file(int errnum) const; //can maybe be change by find_* function
 		void									default_error(int error_status, const request &req);
 		int										error_response(int status, const request &req, const parser &pars);
+		int										error_response(int status, const request &req);
 		int										error_msg(const std::string &path, const request &req, const parser &pars);
 		void									error_special_case(const request &req);
 
 	public :
 		response();
-		response(const request &req, const parser::address_conf *pars_vec);
+		response(const request &req, const std::vector<parser::address_conf>::const_iterator &pars_list);
 		response(const request::exception except, const parser &pars);
 		~response();
 };
