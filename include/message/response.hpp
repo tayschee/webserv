@@ -66,10 +66,11 @@ class response : public message
 		bool			is_authorize(const request &req, const parser &pars) const;
 		void			status_header();
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
-		int					del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
-		int					check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
-		std::string			index(const std::string &path, std::string root, std::string add) const;
-		std::string			ft_itoa_base(long nb, std::string &base); //WARNING !!!!!!
+		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
+		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
+		std::string		index(const std::string &path, std::string root, std::string add) const;
+		std::string		ft_itoa_base(long nb, std::string &base); //WARNING !!!!!!
+		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 
 
 	private : //find_* functions, they return a value with a key without map
@@ -127,7 +128,7 @@ class response : public message
 		//const header_type	&get_header() const;
 
 		void									get_code(const parser &pars);
-		bool									is_redirect(parser::entries &block, const parser &pars);
+		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 		int										sent(int fd, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
@@ -137,7 +138,7 @@ class response : public message
 		void									default_error(int error_status, const request &req);
 		int										error_response(int status, const request &req, const parser &pars);
 		int										error_response(int status, const request &req);
-		int										error_msg(const std::string &path, const request &req, const parser &pars);
+		int										redirect_to_error(const std::string &path, const request &req, const parser &pars);
 		void									error_special_case(const request &req);
 
 	public :

@@ -264,35 +264,24 @@ void	response::get_code(const parser &pars)
 }
 
 // Manage redirections
-bool		response::is_redirect(parser::entries &block, const parser &pars)
+int		response::is_redirect(const parser::entries &block, const parser &pars, const request &req)
 {
+	parser::entries::const_iterator return_line(block.find("return"));
 	std::string redirect;
+	int			status;
 
-	if (block.find("return") == block.end())
+	(void)pars;
+	if (return_line == block.end())
 		return 0;
 
-	redirect = block.find("return")->second[0];
+	std::vector<std::string>::const_iterator return_arg = block.find("return")->second.begin();
 
-	if (!redirect.empty())
-	{
+	header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
+	status = ft_atoi<int>(*return_arg);
+	header.insert(value_type(LOCATION, *++return_arg));
+	default_error(status, req);
 
-		first_line.status = ft_atoi<int>(redirect);
-	//	header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
-
-
-		std::string location = block.find("return")->second[1];
-
-		if (first_line.status == 301 || first_line.status == 302 || first_line.status == 303
-		|| first_line.status == 307 || first_line.status == 308)
-		{
-			header.insert(value_type(LOCATION, location));
-			get_code(pars);
-		}
-		else
-			body = location;
-		return 1;
-	}
-	return 0;
+	return status;
 }
 
 std::string			response::ft_itoa_base(long nb, std::string &base)
@@ -311,4 +300,26 @@ std::string			response::ft_itoa_base(long nb, std::string &base)
 	ret += base[nb % base.size()];
 
 	return ret;
+}
+
+int	response::generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method)
+{
+	int status;
+
+	if (!(status = is_redirect(path_info, pars, req))) //do function with all condition
+	{
+		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way
+		status = (this->*method)(req.get_uri(), req, pars);
+		if (status > 299)
+		{
+			std::cout << "here\n";
+			status = error_response(status, req, pars);
+			std::cout << "status : " << status << "\n";
+		}
+	}
+	else
+	{
+		std::cout << "not here\n";
+	}
+	return status;
 }

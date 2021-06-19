@@ -73,23 +73,17 @@ void		parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_o
 
 const parser::block &parser::get_block(const std::string& block_name, const std::vector<std::string>& block_args) const
 {
-	std::cout << "ok2\n";
 	blocks::key_type key = std::make_pair(block_name, block_args);
 	blocks::const_iterator it = _blocks.find(key);
-	std::cout << "ok3\n";
 
-	std::cout << "ok4\n";
 	if (block_name == "location" && it == _blocks.end())
 	{
-		std::cout << "ok4.5\n";
 		return get_block(block_name, find_best_match(block_args.empty() ? "" : block_args[0]));
 	}
 	else if (it == _blocks.end())
 	{
-		std::cout << "ok5\n";
 		throw BlockNotFound(block_name, block_args);
 	}
-	std::cout << it->second << "ok6\n";
 	return it->second;
 }
 
@@ -97,9 +91,7 @@ const parser::block &parser::get_block(const std::string& block_name, const std:
 {
 	std::vector<std::string> args;
 
-	std::cout << "ok\n";
 	args.push_back(block_arg);
-	std::cout << "ok1\n";
 	return get_block(block_name, args);
 }
 

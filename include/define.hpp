@@ -17,7 +17,7 @@
 							"<head><title>"STR_TO_REPLACE"</title></head>\n"\
 							"<body>\n"\
 							"<center><h1>"STR_TO_REPLACE"</h1></center>\n"\
-							"<hr><center>webserv</center>\n"\
+							"<hr><center>"WEBSERV"</center>\n"\
 							"</body>\n"\
 							"</html>"
 
