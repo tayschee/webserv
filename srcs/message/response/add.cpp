@@ -56,65 +56,9 @@ void			response::add_retry_after(size_t sec)
 
 void			response::add_content_type(const std::string &type) //pas tester
 {
-	// (void)file;
-	 //(void)req;
 	header.erase(CONTENT_TYPE);
 	header.insert(value_type(CONTENT_TYPE, type));
-
-
-	// std::string extension;
-	// size_t		pos = file.find_first_of(".");
-	// request::header_type head = req.get_header();
-	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
-
-	// if (pos != file.npos)
-	// {
- 	// 	extension = file.substr(pos + 1);
-	// 	media_type_array::value_type	media_type(find_media_type(extension));
-
-	// 	if (it != head.end())
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-	// 	else
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
-	// else
-	// {
-	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
-
-	// 	if (it != head.end())
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-	// 	else
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
 }
-
-/*void			response::add_content_type(const std::string &type) //pas tester
-{
-	// std::string extension;
-	// size_t		pos = file.find_first_of(".");
-	// request::header_type head = req.get_header();
-	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
-
-	// if (pos != file.npos)
-	// {
- 	// 	extension = file.substr(pos + 1);
-	// 	media_type_array::value_type	media_type(find_media_type(extension));
-
-	// 	if (it != head.end())
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-	// 	else
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
-	// else
-	// {
-	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
-
-	// 	if (it != head.end())
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
-	// 	else
-	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
-	// }
-}*/
 
 /*void				response::add_transfert_encoding(const std::string &file)
 {

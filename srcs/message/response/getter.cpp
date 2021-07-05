@@ -67,7 +67,7 @@ int		response::sent(int fd, const std::string &hf_sep, const std::string &eol)
 		std::string ssize(ft_itoa_base(size, base));
 		while (pos < end)
 		{
-			resp_str += ssize + "\r\n" + body.substr(pos, size) + "\r\n";
+			resp_str += ssize + CRLF + body.substr(pos, size) + CRLF;
 			pos += size;
 			first_time++;
     		send(fd, resp_str.c_str(), resp_str.size(), 0);
@@ -76,11 +76,11 @@ int		response::sent(int fd, const std::string &hf_sep, const std::string &eol)
 		if (pos < body.size())
 		{
 			size = body.size() - pos;
-			resp_str += ft_itoa_base(size, base) + "\r\n" + body.substr(pos, size) + "\r\n";
+			resp_str += ft_itoa_base(size, base) + CRLF + body.substr(pos, size) + CRLF;
     		send(fd, resp_str.c_str(), resp_str.size(), 0);
 			resp_str = "";
 		}
-		resp_str += "0\r\n\r\n";
+		resp_str += "0"SEPARATOR;
 		first_time = 0;
 	}
     send(fd, resp_str.c_str(), resp_str.size(), 0);

@@ -23,11 +23,6 @@ response::response(const request &req, const std::vector<parser::address_conf>::
 		method_function method = find_method_function(req.get_method(), allow_method); //give function associate with request
 
 		main_header(allow_method); /*add header_field which are present in all method*/
-		/*if (path_info.find("maxBody") != path_info.end() && req.get_body().size() > ft_atoi<unsigned long>(path_info.find("maxBody")->second[0]))
-		{
-			first_line.status = 413;
-			get_code(pars);
-		}*/
 		first_line.status = generate_response(path_info, pars, req, method);
 	}
 	first_line.status_string = find_status_string();

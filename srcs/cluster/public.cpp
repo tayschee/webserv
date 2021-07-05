@@ -27,10 +27,12 @@ int 	cluster::start() // cluster manage the list of socket
 
 	while (true)
 	{
+		//reset timer
 		if (!wait_activity(readfds, writefds))
 			return 0;
 		for(iterator it = list_client.begin(); it != list_client.end(); it++)
 		{
+			//check_timer
 			int ret = 0;
 			client &cli = *it;
 			if (!cli.is_read() && FD_ISSET(it->get_fd(), &readfds)) // is there a modification on the current list_client ?
@@ -59,6 +61,14 @@ int 	cluster::start() // cluster manage the list of socket
 				close_client(it);
 			}
 		}
+
+		/*for(iterator it = list_client.begin(); it != list_client.end(); it++)
+		{
+			if (FD_ISSET(it->get_fd(), &readfds) || FD_ISSET(it->get_fd(), &writefds)) // is there a modification on the current list_client ?
+			{
+				//reset_timer
+			}
+		}*/
 	}
 	return (0);
 }

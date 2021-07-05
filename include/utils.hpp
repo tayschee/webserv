@@ -73,6 +73,7 @@ template<class T> 	T	ft_atoi_base(const std::string &str, const std::string &bas
 
 template <>
 float					ft_atoi<float>(const std::string &str);
+std::string         ft_itoa_base(long nb, const std::string &base);
 
 std::string get_extension(const std::string& str); // Get a file exension (with prefix)
 std::list<std::string>	files_in_dir(const std::string &path);

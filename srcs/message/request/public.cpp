@@ -46,3 +46,18 @@ int		 request::validity(const parser &pars) const
 	//maybe check tf
 	return 0;
 }
+
+/*const std::vector<parser>::const_iterator request::find_parser(const std::vector<parser> &parser_vec) const
+{
+	std::string host(header.find(HOST)->second);
+	std::vector<parser>::const_iterator it(parser_vec.begin());
+	std::vector<parser>::const_iterator end(parser_vec.end());
+
+	while (it != end)
+	{
+		if (it->get_block(PARSER_SERVER).conf.find(PARSER_SERVER_NAME)->second == host)
+			return it;
+		++it;
+	}
+	return it;
+}*/

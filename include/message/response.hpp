@@ -60,7 +60,6 @@ class response : public message
 		void			main_header(const std::vector<std::string> &allow_method);
 		void			main_header();
 		std::string		header_first_line() const;
-		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 		int				is_open(const struct stat &file) const;
 		bool			is_cgi(const std::string &type, const parser &pars) const;
 		bool			is_authorize(const request &req, const parser &pars) const;
@@ -69,7 +68,6 @@ class response : public message
 		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
 		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
 		std::string		index(const std::string &path, std::string root, std::string add) const;
-		std::string		ft_itoa_base(long nb, std::string &base); //WARNING !!!!!!
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 
 
@@ -82,8 +80,6 @@ class response : public message
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index = 1) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
-		std::string 							find_charset(const request &req) const;
-		std::string								find_language(const std::string &complete_path, const request &req);
 		const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
 
 	private : //method_is_* function, apply one of method
@@ -126,8 +122,7 @@ class response : public message
 
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
-
-		void									get_code(const parser &pars);
+	
 		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;

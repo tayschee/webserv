@@ -44,36 +44,6 @@ std::string		response::header_first_line() const
 	return str_first_line;
 }
 
-/*parse value of accept* header-field*/
-std::multimap<int, std::string>	response::tag_priority(std::string tag) const
-{
-	const char tag_sep[] = ",";
-	const char value_sep[] = ";q=";
-	tag = string_without(tag, " \t"); //delete one of those elem in string
-	std::vector<std::string> split_tag(split(tag, tag_sep));
-	std::vector<std::string>::const_iterator it(split_tag.begin());
-	std::vector<std::string>::const_iterator end(split_tag.end());
-	std::multimap<int, std::string>			 map;
-
-	while (it < end)
-	{
-		size_t pos;
-		const std::string key_tag(*it);
-
-		if ((pos = key_tag.find(value_sep)) != key_tag.npos)
-		{
-			map.insert(std::map<int, std::string>::value_type
-			(ft_atoi<float>(key_tag.substr(pos + strlen(value_sep))) * 100, key_tag.substr(0, pos)));
-		}
-		else
-		{
-			map.insert(std::map<int, std::string>::value_type(1 * 100, key_tag));
-		}
-		++it;
-	}
-	return map;
-}
-
 // Check authorizations
 bool	response::is_authorize(const request &req, const parser &pars) const
 {
@@ -89,7 +59,7 @@ bool	response::is_authorize(const request &req, const parser &pars) const
 		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
 		int ret = read(fd, buf, 499);
 		buf[ret] = '\0';
-		tab = split(buf, "\t\r\n");
+		tab = split(buf, WHITE_SPACE); //VERIFY
 		close(fd);
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
 			if (Authorization == *it)
@@ -146,7 +116,6 @@ std::string		&response::file_without_language_ext(std::string &path) const
 		return path.erase(pos);
 	else
 		return path;
-
 }
 
 // Delete function is a recursive called by method_is_delete
@@ -202,7 +171,7 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 // Check if the type is a CGI
 bool		response::is_cgi(const std::string &type, const parser &pars) const
 {
-	if (type == ".bla")
+	if (type == ".bla") //CHANGE
 		return false;
 	try
 	{
@@ -238,35 +207,10 @@ std::string		response::index(const std::string &path, std::string root, std::str
 	return index;
 }
 
-// Manage codes
-void	response::get_code(const parser &pars)
-{
-	(void)pars;
-	struct stat file_stat; //information about file
-	if (first_line.status == 401)
-		header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
-	if (first_line.status == 503)
-		header.insert(value_type("Retry-after",  "20000"));
-	std::string file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/" + std::string(ft_itoa(first_line.status)) + ".html";
-	if (lstat(file_error.c_str(), &file_stat) < 0)
-	{
-		file_error = "/Users/jelarose/Documents/webserv-tbigot3/error/404.html";
-		lstat(file_error.c_str(), &file_stat);
-	}
-	int fd = open(file_error.c_str(), O_RDONLY);
-	char buf[file_stat.st_size + 1];
-	int ret = read(fd, buf, file_stat.st_size);
-	buf[ret] = '\0';
-	body = buf;
-	header.insert(value_type(CONTENT_LENGTH,  ft_itoa(body.size())));
-	header.insert(value_type(CONTENT_TYPE,  "text/html"));
-	close(fd);
-}
-
 // Manage redirections
 int		response::is_redirect(const parser::entries &block, const parser &pars, const request &req)
 {
-	parser::entries::const_iterator return_line(block.find("return"));
+	parser::entries::const_iterator return_line(block.find(PARSER_RETURN));
 	std::string redirect;
 	int			status;
 
@@ -274,32 +218,14 @@ int		response::is_redirect(const parser::entries &block, const parser &pars, con
 	if (return_line == block.end())
 		return 0;
 
-	std::vector<std::string>::const_iterator return_arg = block.find("return")->second.begin();
+	std::vector<std::string>::const_iterator return_arg = block.find(PARSER_RETURN)->second.begin();
 
-	header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
+	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //CHANGE
 	status = ft_atoi<int>(*return_arg);
 	header.insert(value_type(LOCATION, *++return_arg));
 	default_error(status, req);
 
 	return status;
-}
-
-std::string			response::ft_itoa_base(long nb, std::string &base)
-{
-	std::string ret;
-	
-	if (nb == 0)
-		return "0";
-	else if (nb < 0)
-	{
-		nb *= -1;
-		ret = "-";
-	}
-	if (nb / base.size() > 0)
-		ret += ft_itoa_base(nb / base.size(), base);
-	ret += base[nb % base.size()];
-
-	return ret;
 }
 
 int	response::generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method)

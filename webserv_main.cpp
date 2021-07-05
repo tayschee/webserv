@@ -11,13 +11,13 @@ static int check_argument(int c, char **v)
 	}
 	else if (c == 2)
 	{
-		i = 1;
+		i = 0;
 	}
 	else
 	{
 		if (!strcmp(v[1], "-d") || !strcmp(v[1], "--debug"))
 		{
-			i = 2;
+			i = 1;
 		}
 		else
 		{
@@ -36,7 +36,7 @@ int main(int c, char **v)
 	if (i < 0) //bad arguments
 		return 1;
 
-	debug = i == 2; //define debug mode or not
+	debug = i; //define debug mode or not
 
 	try
 	{

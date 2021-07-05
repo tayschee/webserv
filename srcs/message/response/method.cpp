@@ -4,7 +4,7 @@ int		response::method_is_head(const std::string &uri, const request &req, const 
 {
 	int ret = method_is_get(uri, req, pars);
 	body.clear();
-	add_content_length(0);
+	add_content_length(0); //VERIFY
 	return ret; //value of OK response
 }
 
@@ -33,8 +33,8 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
-		header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
-		add_content_type("text/html; charset=utf-8");
+		header.insert(value_type(TRANSFERT_ENCODING, "chunked"));
+		add_content_type("text/html"); //VERIFY
 	}
 	else
 	{
@@ -56,7 +56,7 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 
 int		response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", uri), uri, req, 0);
+	std::string path = find_path(pars.get_block(PARSER_LOCATION, uri), uri, req, 0);
 	int ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
@@ -68,7 +68,7 @@ int		response::method_is_delete(const std::string &uri, const request &req, cons
 
 int		response::method_is_options(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", uri), uri, req, 0);
+	std::string path = find_path(pars.get_block(PARSER_LOCATION, uri), uri, req, 0);
 	struct stat file_stat; //information about file
 	if (path.empty())
 		return 404;
@@ -77,17 +77,17 @@ int		response::method_is_options(const std::string &uri, const request &req, con
 
 	if (uri == std::string("/*"))
 	{
-		parser::entries path_info(pars.get_block("server").conf);
-		if (path_info.find("accept") != path_info.end())
+		parser::entries path_info(pars.get_block(PARSER_SERVER).conf);
+		if (path_info.find(PARSER_ACCEPT) != path_info.end())
 		{
-			std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+			std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second);
 			add_allow(allow_method);
 		}
 	}
 	else
 	{
-		parser::entries path_info(pars.get_block(BLOCK_LOCATION, uri).conf);
-		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
+		parser::entries path_info(pars.get_block(PARSER_LOCATION, uri).conf);
+		std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second);
 		add_allow(allow_method);
 	}
 	add_content_length(0);
@@ -99,7 +99,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 	int		fd;
 	int		response_value = 204;
 
-	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	std::string path = find_path(pars.get_block(PARSER_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
 	if (!is_authorize(req, pars))
 		return 401;
@@ -151,7 +151,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 
 int		response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	std::string path = find_path(pars.get_block(PARSER_LOCATION, uri), uri, req);
 	//if (!is_cgi(get_extension(path), pars))
 	//	return 404;
 	//struct stat file_stat; //information about file
@@ -160,15 +160,15 @@ int		response::method_is_post(const std::string &uri, const request &req, const 
 	//	return ret;
 	//if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	//	return 404;
-	if (get_extension(path) == ".bla")
+	if (get_extension(path) == ".bla") //VERIFY
 	{
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
 	}
-	add_content_type("text/html; charset=utf-8");
+	add_content_type("text/html"); //VERIFY
 	//add_content_length(654);
-	header.insert(value_type(std::string("Transfer-Encoding"), std::string("chunked")));
+	header.insert(value_type(std::string(TRANSFERT_ENCODING), std::string("chunked")));
 
 
 	return 200;
@@ -176,7 +176,7 @@ int		response::method_is_post(const std::string &uri, const request &req, const 
 
 int		response::method_is_trace(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	std::string path = find_path(pars.get_block(PARSER_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
@@ -196,11 +196,9 @@ int		response::method_is_trace(const std::string &uri, const request &req, const
 
 int			response::method_is_unknow(const std::string &uri, const request &req, const parser &pars)
 {
-	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;
 	(void)req;
 	(void)uri;
-	header.erase("GET");
 
 	//Method Not Allowed
 	return 405;

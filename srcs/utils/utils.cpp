@@ -157,6 +157,22 @@ float ft_atoi(const std::string &str)
 	return nb;
 }
 
+std::string         ft_itoa_base(long nb, const std::string &base)
+{
+    std::string ret;
+    if (nb == 0)
+        return "0";
+    else if (nb < 0)
+    {
+        nb *= -1;
+        ret = "-";
+    }
+    if (nb / base.size() > 0)
+        ret += ft_itoa_base(nb / base.size(), base);
+    ret += base[nb % base.size()];
+    return ret;
+}
+
 size_t		ft_strlen(const char *str)
 {
 	size_t i(0);
