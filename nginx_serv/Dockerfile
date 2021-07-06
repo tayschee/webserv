@@ -15,8 +15,11 @@ RUN chmod 777 var \
 && chmod 777 var/www \
 && chmod 777 var/www/html
 
+#server page
+VOLUME ["/config"] 
 
-VOLUME ["/file"]
+#nginx config
+VOLUME ["/etc/nginx/conf.d"]
 
 CMD service php7.3-fpm restart \
 && service nginx restart \
