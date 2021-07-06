@@ -9,11 +9,9 @@ RUN apt install -y nginx-full \
 
 # php config
 RUN apt install -y php-fpm \
-&& service php7.3-fpm start
+&& service php7.3-fpm start 
 
-RUN chmod 777 var \
-&& chmod 777 var/www \
-&& chmod 777 var/www/html
+RUN touch /etc/nginx/conf.d/default.conf
 
 #server page
 VOLUME ["/config"] 
