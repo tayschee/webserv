@@ -14,7 +14,7 @@ RUN apt install -y php-fpm \
 RUN touch /etc/nginx/conf.d/default.conf
 
 #server page
-VOLUME ["/config"] 
+VOLUME ["/srcs"] 
 
 #nginx config
 VOLUME ["/etc/nginx/conf.d"]
