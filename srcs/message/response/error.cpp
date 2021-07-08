@@ -51,10 +51,7 @@ int response::redirect_to_error(const std::string &path, const request &req, con
 	int status;
 
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
-	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //not html ???
-	status = 301;
-	header.insert(value_type(LOCATION, req.get_header().find(HOST)->second + path));
-	default_error(status, req);
+	status = req.get_method(path, req, pars);
 
 	return status;
 }
@@ -72,8 +69,10 @@ int	response::error_response(int status, const request &req, const parser &pars)
 	}
 	else
 	{
-		status = 301;
-		status = redirect_to_error(it->second, req, pars);
+		if (redirect_to_error(it->second, req, pars) == 404)
+		{
+			default_error(status, req);
+		}
 	}
 	status_header();
 	error_special_case(req); //delete things which are note in specific method

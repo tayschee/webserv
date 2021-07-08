@@ -223,7 +223,6 @@ int		response::is_redirect(const parser::entries &block, const parser &pars, con
 	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //CHANGE
 	status = ft_atoi<int>(*return_arg);
 	header.insert(value_type(LOCATION, *++return_arg));
-	default_error(status, req);
 
 	return status;
 }
@@ -236,16 +235,16 @@ int	response::generate_response(const parser::entries &path_info, const parser &
 	{
 		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way
 		status = (this->*method)(req.get_uri(), req, pars);
-		if (status > 299)
-		{
-			std::cout << "here\n";
-			status = error_response(status, req, pars);
-			std::cout << "status : " << status << "\n";
-		}
 	}
 	else
 	{
 		std::cout << "not here\n";
+	}
+	if (status > 299)
+	{
+		std::cout << "here\n";
+		status = error_response(status, req, pars);
+		std::cout << "status : " << status << "\n";
 	}
 	return status;
 }
