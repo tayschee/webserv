@@ -23,16 +23,32 @@ test ()
     curl -i -X $2 $4 127.0.0.1:80$3 >> output
 }
 
+test_put_delete()
+{
+    echo -e "----------------------" $1 " " PUT AND DELETE " " $2 "------------------------\n" >> output
+    curl -i -X PUT $3 127.0.0.1:80$2 >> output
+    curl -i -X PUT $3 127.0.0.1:80$2 >> output
+    curl -i -X GET 127.0.0.1:80$2 >> output
+    curl -i -X DELETE 127.0.0.1:80$2 >> output
+    curl -i -X GET 127.0.0.1:80$2 >> output
+}
+
+test_delete_dir()
+{
+
+    
+}
+
 docker build -t nginx_serv ./$IMAGE_NAME #create image
-echo "" > output; #free output
-echo ""  >error; #free output
+echo "" > output; #clear output
+echo ""  > error; #clear error
 
 #change permission for test can't be applied immediatly because they cant be git push else
 chmod 000 srcs/private
 chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
-<< C
+
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
 docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
@@ -60,7 +76,7 @@ test $NAME_CONFIG GET "/html/3.html"
 
 docker stop $CONTAINER_NAME
 
-C
+
 #REDIRECT TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_REDIRECT_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -72,7 +88,7 @@ test $NAME_CONFIG GET "/html/3.html" "-L"
 
 
 docker stop $CONTAINER_NAME
-<< C
+
 #MULTIPLE ERROR TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_SAME_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -105,6 +121,13 @@ test $NAME_CONFIG GET "/php/"
 test $NAME_CONFIG NO_METHOD3 "/html/3.html"
 test $NAME_CONFIG GET "/unexist.html"
 
+#need other tester cant create and delete 2 times the same file
+#test $NAME_CONFIG PUT "/put_and_delete/new.html" "-d <p>Un fichier cree de toute piece</p>"
+#test $NAME_CONFIG PUT "/put_and_delete/new.html" "-d <p>Un fichier cree de toute piece</p>"
+#test $NAME_CONFIG PUT "/put_and_delete/" "-d <p>Un fichier cree de toute piece</p>" #Dont know result
+
+#test $NAME_CONFIG DELETE "/put_and_delete/new.html"
+#test $NAME_CONFIG DELETE "/put_and_delete/xxxxxxxxx.html"
 docker stop $CONTAINER_NAME
 
 
