@@ -19,7 +19,6 @@ NG_MULTIPLE_CONF=$(pwd)/nginx_config/multiple_config/
 #test "name_of_config" "METHOD" "path_to_test" "to add param"
 test ()
 {
-    echo $4
     echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> output
     curl -i -X $2 $4 127.0.0.1:80$3 >> output
 }
@@ -34,7 +33,6 @@ chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
 << C
-
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
 docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
@@ -62,6 +60,7 @@ test $NAME_CONFIG GET "/html/3.html"
 
 docker stop $CONTAINER_NAME
 
+C
 #REDIRECT TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_REDIRECT_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -73,7 +72,7 @@ test $NAME_CONFIG GET "/html/3.html" "-L"
 
 
 docker stop $CONTAINER_NAME
-
+<< C
 #MULTIPLE ERROR TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_SAME_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -120,7 +119,6 @@ test $NAME_CONFIG GET "/private/" #403
 test $NAME_CONFIG GET "/secret/" #401
 test $NAME_CONFIG GET "/html/cat.html" #405
 
-C
 #MULTIPLE SERVER NAME TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_CONF:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -133,7 +131,7 @@ test "secret.conf" GET "/" "--header \"Host: secret\""
 
 
 docker stop $CONTAINER_NAME
-
+C
 #permission reset
 chmod 755 srcs/private #because it s a directory
 chmod 644 srcs/secret/mdp.html
