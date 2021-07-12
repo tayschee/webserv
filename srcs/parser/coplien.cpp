@@ -38,7 +38,7 @@ parser::block &parser::block::operator=(const parser::block &x)
 {
 	this->name = x.name;
 	this->args = x.args;
-	
+
 	if (name == PARSER_SERVER)
 	{
 		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
@@ -59,12 +59,12 @@ void parser::block::create_block(const std::string name, const std::vector<std::
 		if (this->name == PARSER_LOCATION)
 		{
 			this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT,
-			serv_block.conf.find(PARSER_ACCEPT)->second));
+																				serv_block.conf.find(PARSER_ACCEPT)->second));
 		}
 	}
 }
 
-parser::block::block(){}
+parser::block::block() {}
 
 parser::block::block(const std::string &name, const std::vector<std::string> &args)
 {
@@ -79,7 +79,7 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 	}
 }
 
-parser::BlockNotFound::BlockNotFound(const std::string& n, const std::vector<std::string>& a) throw() : name(n), args(a)
+parser::BlockNotFound::BlockNotFound(const std::string &n, const std::vector<std::string> &a) throw() : name(n), args(a)
 {
 	err = "Error: The block named " + name + " with ";
 

@@ -8,16 +8,16 @@ typedef message::receive receive;
 //constructor destructor
 receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(message::header_is_end(msg) + ft_strlen(SEPARATOR)) {}
 receive::tf_body::tf_body(const tf_body &x) : body(x), msg_begin(x.msg_begin) {}
-receive::tf_body::~tf_body(){}
+receive::tf_body::~tf_body() {}
 
 //operator =
-receive::tf_body	&receive::tf_body::operator=(const tf_body &x)
+receive::tf_body &receive::tf_body::operator=(const tf_body &x)
 {
 	msg = x.msg;
 	buf_size = x.buf_size;
 	pos = x.pos;
 	msg_begin = x.msg_begin;
-	
+
 	return *this;
 }
 
@@ -43,7 +43,7 @@ int receive::tf_body::receive(const int socket)
 	return 0;
 }
 
-int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
+int receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 {
 	if (msg.size() >= i + (CRLF_size * 2))
 	{
@@ -68,7 +68,7 @@ int		receive::tf_body::check_end(const size_t i, const size_t CRLF_size)
 	}
 }
 
-size_t				receive::tf_body::erase_tf_signature(const size_t i, const size_t CRLF_size, size_t pos)
+size_t receive::tf_body::erase_tf_signature(const size_t i, const size_t CRLF_size, size_t pos)
 {
 	//std::cout << "before erase :" << msg.substr(pos) << "\n";
 	if (msg_begin == pos) //find something
@@ -92,9 +92,9 @@ size_t				receive::tf_body::erase_tf_signature(const size_t i, const size_t CRLF
 //check if object have reached end of read body ("0" + CRLF) and return 1 if it's true
 int receive::tf_body::check()
 {
-	size_t	i;
-	size_t	CRLF_size(ft_strlen(CRLF));
-	size_t	msg_size(msg.size());
+	size_t i;
+	size_t CRLF_size(ft_strlen(CRLF));
+	size_t msg_size(msg.size());
 	const size_t default_buf_size = 7;
 
 	if (!(pos >= msg.size()))
@@ -102,7 +102,7 @@ int receive::tf_body::check()
 		while ((i = msg.find(CRLF, pos)) != msg.npos) //check if there is CRLF
 		{
 			buf_size = ft_atoi_base<size_t>(msg.substr(pos), HEXADECIMAL_BASE); //store size of next buffer
-			if (buf_size == 0) //verify if it's end
+			if (buf_size == 0)													//verify if it's end
 			{
 				return (check_end(pos, CRLF_size));
 			}
@@ -123,18 +123,18 @@ int receive::tf_body::check()
 	return 0;
 }
 
-std::string 						receive::tf_body::get_buffer()
+std::string receive::tf_body::get_buffer()
 {
 	size_t del_pos = msg.size() < pos ? msg.size() : pos;
 	std::string buffer(msg.substr(0, del_pos));
-	
-	msg_begin = SIZE_T_MAX; //never begin
+
+	msg_begin = 5555; //never begin
 	pos -= del_pos;
 	msg.erase(0, del_pos);
 	return buffer;
 }
 
-std::string 						receive::tf_body::get_header_buffer()
+std::string receive::tf_body::get_header_buffer()
 {
 	size_t pos(header_is_end(msg));
 	std::string header(msg.substr(0, pos));
@@ -147,9 +147,9 @@ std::string 						receive::tf_body::get_header_buffer()
 	return header;
 }
 
-receive::tf_body	*receive::tf_body::clone() const
+receive::tf_body *receive::tf_body::clone() const
 {
-	tf_body	*clone_obj;
+	tf_body *clone_obj;
 
 	clone_obj = new tf_body(*this);
 	return clone_obj;

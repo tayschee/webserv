@@ -42,17 +42,48 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 	buffer.clear();
 
 	closedir(dir);
-	//if (res.empty())
-		//throw std::runtime_error("All the files in " + path + " are invalid.");
+	chk_def_server(res);
+	if (res.empty())
+		throw std::runtime_error("All the files in " + path + " are invalid.");
 	return res;
 }
 
-void		parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_object)
+void parser::chk_def_server(const std::vector<address_conf> &pars)
+{
+	typedef std::vector<address_conf>::const_iterator const_iterator;
+
+	for (const_iterator it = pars.begin(); it != pars.end(); it++)
+	{
+		if (it->empty())
+			continue;
+
+		bool default_server = false;
+		parser first = (*it)[0];
+		std::string host = first.get_block(PARSER_SERVER).conf.at(PARSER_HOST)[0];
+		std::string port = first.get_block(PARSER_SERVER).conf.at(PARSER_LISTEN)[0];
+		std::string host_port = host + ":" + port;
+
+		for (address_conf::const_iterator it1 = it->begin(); it1 != it->end(); it1++)
+		{
+			if (it1->get_block(PARSER_SERVER).conf.at(PARSER_LISTEN).size() > 1)
+			{
+				if (!default_server)
+					default_server = true;
+				else
+					throw std::runtime_error("There is more than one default_server for " + host_port);
+			}
+		}
+		if (!default_server)
+			throw std::runtime_error("There should be at least one default_server for " + host_port);
+	}
+}
+
+void parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_object)
 {
 	size_t i = 0;
 
 	if (!new_object.validate())
-		return ;
+		return;
 
 	entries pars_new_object(new_object.get_block(PARSER_SERVER).conf);
 
@@ -60,18 +91,17 @@ void		parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_o
 	{
 		entries pars_block(pars[i][0].get_block(PARSER_SERVER).conf); //just check host and port of first block to know if he is in same categorie
 
-		if (pars_block.find(PARSER_HOST)->second == pars_new_object.find(PARSER_HOST)->second
-			&& pars_block.find(PARSER_LISTEN)->second == pars_new_object.find(PARSER_LISTEN)->second)
+		if (pars_block.find(PARSER_HOST)->second == pars_new_object.find(PARSER_HOST)->second && pars_block.find(PARSER_LISTEN)->second[0] == pars_new_object.find(PARSER_LISTEN)->second[0])
 		{
 			pars[i].push_back(new_object);
-			return ;
+			return;
 		}
 		++i;
 	}
 	pars.push_back(std::vector<parser>(1, new_object));
 }
 
-const parser::block &parser::get_block(const std::string& block_name, const std::vector<std::string>& block_args) const
+const parser::block &parser::get_block(const std::string &block_name, const std::vector<std::string> &block_args) const
 {
 	blocks::key_type key = std::make_pair(block_name, block_args);
 	blocks::const_iterator it = _blocks.find(key);
@@ -87,7 +117,7 @@ const parser::block &parser::get_block(const std::string& block_name, const std:
 	return it->second;
 }
 
-const parser::block &parser::get_block(const std::string& block_name, const std::string& block_arg) const
+const parser::block &parser::get_block(const std::string &block_name, const std::string &block_arg) const
 {
 	std::vector<std::string> args;
 

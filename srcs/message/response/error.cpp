@@ -1,20 +1,20 @@
 #include "message/response.hpp"
 
 /*after fail open() or fail stat pass to this function to determinate server error*/
-int		response::error_file(int errnum) const
+int response::error_file(int errnum) const
 {
 	/* maybe add this function to get* but to associate errno value to an error */
 
 	//no authorisation || too much symbolic link (loop symlink) || file was directory
 	if (errnum == EACCES || errnum == ELOOP || errnum == EISDIR)
-		return 403; //Forbidden
+		return 403;									//Forbidden
 	else if (errnum == ENOENT || errnum == ENOTDIR) //file doesnt exist || a element of path is not a directory (except last)
-		return 404; //Not Found
+		return 404;									//Not Found
 	else
 		return 500; //server error ?
 }
 
-void	response::error_special_case(const request &req)
+void response::error_special_case(const request &req)
 {
 	if (req.get_method() == HEAD)
 		body.clear();
@@ -25,7 +25,7 @@ void	response::error_special_case(const request &req)
 	}
 }
 
-void	response::default_error(int error_status, const request &req)
+void response::default_error(int error_status, const request &req)
 {
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
@@ -48,15 +48,16 @@ void	response::default_error(int error_status, const request &req)
 
 int response::redirect_to_error(const std::string &path, const request &req, const parser &pars)
 {
-	int status;
+	int status = 5;
+	(void)req;
 
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
-	status = req.get_method(path, req, pars);
+	//status = req.get_method(path, req, pars);
 
 	return status;
 }
 
-int	response::error_response(int status, const request &req, const parser &pars)
+int response::error_response(int status, const request &req, const parser &pars)
 {
 	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
 	std::map<int, std::string>::iterator it;
@@ -80,7 +81,7 @@ int	response::error_response(int status, const request &req, const parser &pars)
 	return status;
 }
 
-int	response::error_response(int status, const request &req)
+int response::error_response(int status, const request &req)
 {
 	default_error(status, req);
 	status_header();
