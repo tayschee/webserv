@@ -19,9 +19,13 @@ NG_MULTIPLE_CONF=$(pwd)/nginx_config/multiple_config/
 #test "name_of_config" "METHOD" "path_to_test" "to add param"
 test ()
 {
-   test_method $1 GET $2 $3 $4
-   test_method $1 HEAD $2 $3 $4
-   #test_method $1 OPTIONS $2 $3 $4
+    test_method $1 GET $2 $3 $4
+    test_method $1 HEAD $2 $3 $4
+    #test_method $1 OPTIONS $2 $3 $4
+    #if [[ ${test##*.} == "php" ]]; then
+       #test post here
+    #fi
+
    #test_method $1 POST $2 $3 $4
 }
 
@@ -34,9 +38,10 @@ test_method ()
 #test "name_of_config" "METHOD" "path_to_test" "put param" "get and put param"
 test_put()
 {
+    echo $3
     echo -e "----------------------" $1 " " PUT " " $2 "------------------------\n" >> output
-    curl -i -X PUT $4 $3 127.0.0.1:80$2 >> output
-    curl -i -X PUT $4 $3 127.0.0.1:80$2 >> output
+    curl -i -X PUT $3 127.0.0.1:80$2 >> output
+    curl -i -X PUT $3 127.0.0.1:80$2 >> output
     curl -i -X GET $4 127.0.0.1:80$2 >> output
     rm -f .$2
 }
@@ -121,6 +126,7 @@ sleep 5
 
 NAME_CONFIG=multiple_location.conf
 
+<< GET
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
 test $NAME_CONFIG "/jpeg/"
@@ -132,32 +138,40 @@ test $NAME_CONFIG "/error/"
 test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
+GET
 
-<< PUT_DELETE
+#<< PUT
 #need other tester cant create and delete 2 times the same file
-#test_put $NAME_CONFIG "/new.html" "-d <p>impossible</p>"
-#test_put $NAME_CONFIG "/private/impossible.html" "-d <p>Ce fichier ne devrait pas pouvoir etre créé</p>"
-#test_put_delete $NAME_CONFIG "secret/to_delete.html" "-d <p>Ce fichier devrait pouvoir etre cree apres une demande de mot de passe</p>"
-#test_put $NAME_CONFIG "/no_path/new.html" "-d <p>devrait genere une erreur</p>"
-#test_put $NAME_CONFIG "/html/new.html" "-d <p>Ne devrait pas marcher</p>"
-#test_put_delete $NAME_CONFIG "/" "-d <p>pas de souci</p>" #je connais pas le comportement
-#test_put $NAME_CONFIG "/put_test/page.html" "-d <p>PUT : OK</p>"
+#test_put $NAME_CONFIG "/new.html" "-d \"<p>impossible</p>\"" #dont work
+#test_put $NAME_CONFIG "/private/impossible.html" "-d \"impossible2\"" #dont work
+#test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
+#test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
+#test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
+#"/html/new.html" delete in delete_test
+#test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
+
+#test_put $NAME_CONFIG "/" "-d \"<p>work</p>\"" #je connais pas le comportement
 #essayé avec un body tres gros
+#PUT
 
 cp -r srcs/dir_to_copy srcs/dir_to_delete
-test_delete $NAME_CONFIG "/dir_to_delete/cat_symbolic.html"
-test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
+#test_delete $NAME_CONFIG "/dir_to_delete/cat_symbolic.html"
+#test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
 
-test_delete $NAME_CONFIG "/dir_to_delete/1.html"
-test_delete $NAME_CONFIG "/dir_to_delete/php/"
-test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/"
-test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/unexist" #unexist
-test_delete $NAME_CONFIG "/dir_to_delete/"
+#test_delete $NAME_CONFIG "/dir_to_delete/cat.html"
+#test_delete $NAME_CONFIG "/dir_to_delete/1.html"
+#test_delete $NAME_CONFIG "/dir_to_delete/php/"
+#test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/"
+#test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/unexist" #unexist
+#test_delete $NAME_CONFIG "/dir_to_delete/"
 
-test_delete $NAME_CONFIG "/private/"
-#test_delete $NAME_CONFIG "/secret/to_delete.html"
+#test_delete $NAME_CONFIG "/html/new.html" #dont work
+rm -f ./srcs/html/new.html
+#test_delete $NAME_CONFIG "/private/"
+#test_delete $NAME_CONFIG "/secret/to_delete.html" #dont do it
 
-PUT_DELETE
+rm -rf srcs/dir_to_delete
+
 
 docker stop $CONTAINER_NAME
 
@@ -181,8 +195,6 @@ test "default" "/"
 test "gif.conf" "/" "--header \"Host: gif\""
 test "jpeg.conf" "/" "--header \"Host: jpeg\""
 test "secret.conf" "/" "--header \"Host: secret\""
-
-
 
 docker stop $CONTAINER_NAME
 C
