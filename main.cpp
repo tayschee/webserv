@@ -3,7 +3,7 @@
 
 std::string receive_func(int buffer_size, int fd)
 {
-	int i; 
+	int i;
 	message::receive rcv(fd, buffer_size);
 	std::string msg;
 
@@ -13,9 +13,9 @@ std::string receive_func(int buffer_size, int fd)
 		{
 			throw msg;
 		}
-		if ((i= rcv.check()) & rcv.HEADER_MASK)
+		if ((i = rcv.check()) & rcv.HEADER_MASK)
 		{
-			msg += rcv.get_buffer(); 
+			msg += rcv.get_buffer();
 		}
 		else if (i & rcv.BODY_MASK)
 		{
@@ -27,7 +27,7 @@ std::string receive_func(int buffer_size, int fd)
 	return msg;
 }
 
-int		main(int c, char **v)
+int main(int c, char **v)
 {
 	if (c != 3)
 	{
@@ -40,7 +40,7 @@ int		main(int c, char **v)
 	int fd = open(v[1], O_RDONLY);
 	std::string msg_ref;
 	std::string msg;
-	
+
 	msg_ref = receive_func(i, fd);
 	close(fd);
 	std::cout << "check if request is good and press enter\n";
@@ -61,9 +61,12 @@ int		main(int c, char **v)
 		close(fd);
 		if (msg != msg_ref)
 		{
-			std::cout << "-------------------\nGOOD REQUEST\n-----------------------\n" << msg_ref << "\n";
-			std::cout << "-------------------\nBAD REQUEST\n-----------------------\n" << msg << "\n";
-			std::cout << "--------------------\n" << "i : " << i << "\n";
+			std::cout << "-------------------\nGOOD REQUEST\n-----------------------\n"
+					  << msg_ref << "\n";
+			std::cout << "-------------------\nBAD REQUEST\n-----------------------\n"
+					  << msg << "\n";
+			std::cout << "--------------------\n"
+					  << "i : " << i << "\n";
 			return 1;
 		}
 		++i;

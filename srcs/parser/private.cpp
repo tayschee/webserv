@@ -13,8 +13,6 @@ void parser::parse_file()
 		return;
 	}
 
-	std::cout << "parsing file : " << filename << std::endl;
-
 	_blocks[block_id] = block(block_id.first, block_id.second);
 	buffer.assign(BUFFER_SIZE, '\0');
 	error = false;
@@ -94,17 +92,18 @@ void parser::add_property(const blocks::key_type &block_id, const std::string &n
 		entry.filename = filename;
 		entry.line_no = line_no;
 
-		try {
+		try
+		{
 			blocks::key_type key = std::make_pair(PARSER_SERVER, std::vector<std::string>());
+
 			entry.host = _blocks[key].conf.at(PARSER_HOST)[0];
 			entry.port = _blocks[key].conf.at(PARSER_LISTEN)[0];
-
-			std::cout << "Entry host : " << entry.host << std::endl;
-			std::cout << "Entry port : " << entry.port << std::endl;
 		}
-		catch (const std::out_of_range& e)
+		catch (const std::out_of_range &e)
 		{
-			std::cout << "Error: " << filename << ": If server_name is used, host and port must be specified before it. (line_no : " << line_no << ")\n";
+			std::cerr << "Error: " << filename << ": If server_name is used, host and port must be specified before it. (line_no : " << line_no << ")\n";
+			_blocks.clear();
+			return;
 		}
 
 		for (it = names.begin(); !done && it != names.end(); it++)

@@ -126,9 +126,9 @@ bool parser::check_prop_host(const std::string &block_id, const std::vector<std:
 
 		try
 		{
-			 val = ft_strtol(splitted[i].c_str(), &end, 10);
+			val = ft_strtol(splitted[i].c_str(), &end, 10);
 		}
-		catch (const std::out_of_range& e)
+		catch (const std::out_of_range &e)
 		{
 			std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
 			return false;
@@ -205,8 +205,13 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 
 	if (!basic_chk_block(PARSER_LISTEN, block_id, expected, line_no))
 		return false;
-	if (!basic_chk_args(PARSER_LISTEN, args.size(), 1, true, line_no))
+	if (!basic_chk_args(PARSER_LISTEN, args.size(), 1, false, line_no))
 		return false;
+	if (args.size() > 2)
+	{
+		std::cerr << "Error: " << filename << ": Listen takes between 1 and 2 arguments. (line: " << line_no << ")\n";
+		return false;
+	}
 	const std::string &number(args[0]);
 	char *end;
 	int nb;
@@ -215,7 +220,7 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 	{
 		nb = ft_strtol(number.c_str(), &end, 10);
 	}
-	catch (const std::out_of_range& e)
+	catch (const std::out_of_range &e)
 	{
 		std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
 		return false;
@@ -229,6 +234,11 @@ bool parser::check_prop_listen(const std::string &block_id, const std::vector<st
 	if (nb < 0 || nb > 65535)
 	{
 		std::cerr << "Error: " << filename << ": A port is strictly between 0 and 65535. (line: " << line_no << ")\n";
+		return false;
+	}
+	if (args.size() == 2 && args[1] != "default_server")
+	{
+		std::cerr << "Error: " << filename << ": The second argument of listen can only be default_server. (line: " << line_no << ")\n";
 		return false;
 	}
 	return true;
@@ -251,7 +261,7 @@ bool parser::check_prop_keep_alive(const std::string &block_id, const std::vecto
 	{
 		nb = ft_strtol(number.c_str(), &end, 10);
 	}
-	catch (const std::out_of_range& e)
+	catch (const std::out_of_range &e)
 	{
 		std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
 		return false;
@@ -370,7 +380,7 @@ bool parser::check_prop_body_size_max(const std::string &block_id, const std::ve
 	{
 		nb = ft_strtol(number.c_str(), &end, 10);
 	}
-	catch (const std::out_of_range& e)
+	catch (const std::out_of_range &e)
 	{
 		std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
 		return false;

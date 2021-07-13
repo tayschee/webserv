@@ -45,9 +45,9 @@ bool parser::advanced_chk_err_code(const std::vector<std::string> &err, int line
 			++j;
 		}
 		nb = ft_atoi<long>(err[i]);
-		if (nb < 100 || nb >= 600) //must be change with list of error
+		if (nb < 300 || nb >= 600) //must be change with list of error
 		{
-			std::cerr << "Error: " << filename << ": An error code must be an integer between 100 and 599. (line: " << line_no << ")\n";
+			std::cerr << "Error: " << filename << ": An error code must be an integer between 300 and 599. (line: " << line_no << ")\n";
 			return false;
 		}
 		++i;
@@ -62,7 +62,7 @@ bool parser::advanced_chk_err_code(const std::vector<std::string> &err, int line
 
 bool parser::validate()
 {
-	if (error)
+	if (error || _blocks.empty())
 		return (false);
 
 	blocks::key_type server = std::make_pair(PARSER_SERVER, std::vector<std::string>());
