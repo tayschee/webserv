@@ -7,17 +7,16 @@ response::response() : message(), first_time(1)
 response::response(const request &req, const std::vector<parser::address_conf>::const_iterator &pars_list) : message(), first_time(1)
 {
 	first_line.status = 400;
-	parser::address_conf::const_iterator pars_it = find_parser(pars_list, req);
-	if (pars_list->end() == pars_it || (first_line.status = req.validity(*pars_it)) != 0)
+	const parser &pars = find_parser(pars_list, req);
+	if ((first_line.status = req.validity() != 0))
 	{
 		main_header();
 		first_line.status = error_response(first_line.status, req);
 	}
 	else
 	{
-		const parser &pars(*pars_it);
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-		std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second);
+		std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second); //no protect
 
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
 		method_function method = find_method_function(req.get_method(), allow_method); //give function associate with request

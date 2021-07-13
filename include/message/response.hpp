@@ -80,7 +80,7 @@ class response : public message
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index = 1) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
-		const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
+		const parser							&find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
 
 	private : //method_is_* function, apply one of method
 		int										method_is_head(const std::string &uri, const request &req, const parser &pars); //HEAD

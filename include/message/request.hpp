@@ -89,7 +89,7 @@ class request : public message
 		~request();
 
 		//int				receive(const int socket, receive_management &recv_data);
-		int				validity(const parser &pars) const;
+		int				validity() const;
 		const std::vector<parser>::const_iterator find_parser(const std::vector<parser> parser_vec) const;
 };
 
