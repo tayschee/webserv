@@ -1,5 +1,11 @@
 #!/bin/bash
 
+NGINX_IP=127.0.0.1
+NGINX_PORT=80
+
+WEBSERV_IP=127.0.0.2
+WEBSERV_PORT=80
+
 IMAGE_NAME=nginx_serv
 CONTAINER_NAME=nginx_container
 NG_SRCS_PATH=$(pwd)/srcs
@@ -21,16 +27,14 @@ test ()
 {
     test_method $1 GET $2 $3 $4
     test_method $1 HEAD $2 $3 $4
-    #test_method $1 OPTIONS $2 $3 $4
-    #if [[ ${test##*.} == "php" ]]; then
-       #test post here
-    #fi
-
-   #test_method $1 POST $2 $3 $4
 }
 
 test_method ()
 {
+    echo $1
+    echo $2
+    echo $3
+    echo $4
     echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> output
     curl -i -X $2 $4 127.0.0.1:80$3 >> output
 }
@@ -40,21 +44,31 @@ test_put()
 {
     echo $3
     echo -e "----------------------" $1 " " PUT " " $2 "------------------------\n" >> output
-    curl -i -X PUT $3 127.0.0.1:80$2 >> output
-    curl -i -X PUT $3 127.0.0.1:80$2 >> output
-    curl -i -X GET $4 127.0.0.1:80$2 >> output
+    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 >> output
+    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
+    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 >> output
+    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
+    curl -i -X GET $4 $NGINX_IP:$NGINX_PORT$2 >> output
     rm -f .$2
 }
 
 test_delete()
 {
     echo -e "----------------------" $1 " " DELETE " " $2 "------------------------\n" >> output
-    curl -i -X GET 127.0.0.1:80$2 >> output
-    curl -i -X DELETE 127.0.0.1:80$2 >> output
-	curl -i -X DELETE 127.0.0.1:80$2 >> output
-    curl -i -X GET 127.0.0.1:80$2 >> output
+    curl -i -X GET $NGINX_IP:$NGINX_PORT$2 >> output
+    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
+    curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 >> output
+    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
+	curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 >> output
+    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
+    curl -i -X GET $NGINX_IP:$NGINX_PORT$2 >> output
 }
 
+test_syntax()
+{
+    echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> output
+    python send_request.py $1 $NGINX_IP $NGINX_PORT >> output
+}
 
 docker build -t nginx_serv ./$IMAGE_NAME #create image
 echo "" > output; #clear output
@@ -172,6 +186,20 @@ rm -f ./srcs/html/new.html
 
 rm -rf srcs/dir_to_delete
 
+#test_syntax syntax_ressources/wrong_uri
+#test_syntax syntax_ressources/line_feed
+#test_syntax syntax_ressources/line_feed2
+#test_syntax syntax_ressources/multiple_space
+#test_syntax syntax_ressources/space_and_tab
+#test_syntax syntax_ressources/tab
+
+#test_post $NAME_CONFIG /php/1.php
+#test_post $NAME_CONFIG /php/2.php
+#test_post $NAME_CONFIG /php/exemple.php
+#test_post $NAME_CONFIG /php/info.php
+#test_method $NAME_CONFIG POST /php/php.php "-d arg1=O -d arg2=K -d arg3=!"
+#test_method $NAME_CONFIG POST /php/php.php "-d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST"
+test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
 
 docker stop $CONTAINER_NAME
 
@@ -199,6 +227,8 @@ test "secret.conf" "/" "--header \"Host: secret\""
 docker stop $CONTAINER_NAME
 C
 #permission reset
+
+#permission
 chmod 755 srcs/private #because it s a directory
 chmod 644 srcs/secret/mdp.html
 chmod 644 srcs/spoiler/mdp.html

@@ -8,23 +8,22 @@ def client(txt, argv) :
 	try :
 		sock.connect((argv[0], int(argv[1]))) #destinataire de la com
 		sock.send(txt) #envoie du message
-		txt2 = sock.recv(100000)
+		txt2 = sock.recv(1000000)
 		sock.close() #arrete la socket
 		return txt2
 	except :
-		print("no")
+		print "Server error"
 		sock.close() #arrete la socket
 		return ""
 
 def main(argv) :
 	fd = open(argv[0], "r") # ouvre le fichier en parametre
+	if fd == -1 :
+		print("ERROR : fd")
+
 	txt1 = fd.read() # l'affiche
 	txt2 = client(txt1, argv[1:])
-	#print("/////////////////////////////////////////////////////////////////")
-	#print(txt1)
-	print("--------------------------RESPONSE--------------------------------------")
 	print(txt2)
-	print("---------------------------END OF RESPONSE------------------------------")
 
 if len(sys.argv) < 4 :
 	print("ERROR : need an argument")
