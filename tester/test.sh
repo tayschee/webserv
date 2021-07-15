@@ -1,10 +1,12 @@
 #!/bin/bash
 
-NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" which doesnt exist
+NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" $NGINX_TMP"4" which doesnt exist
 WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
 TMP=tmp #give filename which doesn t exist
 OUTPUT=output #output file it content will be delete
 SAVE=save
+NG_DELETE_DIR=delete_dir1
+WS_DELETE_DIR=delete_dir2
 
 NGINX_IP=127.0.0.1
 NGINX_PORT=80
@@ -93,17 +95,18 @@ test_put()
 
 test_delete()
 {
-    cp -r srcs$2 $SAVE
-    echo -e "----------------------" $1 " " DELETE " " $2 "------------------------\n" >> output
-    curl -i -X GET $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"1"
-    curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
-	curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"3"
-    curl -i -X GET $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"4"
-    mv $SAVE srcs$2
-    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
-    curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
-	curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
-    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"4"
+    NG_PATH=$NG_DELETE_DIR$2
+    WS_PATH=$WS_DELETE_DIR$2
+
+    curl -i -X GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"1"
+    curl -i -X DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"2"
+	curl -i -X DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"3"
+    curl -i -X GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"4"
+
+    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"1"
+    curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"2"
+	curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"3"
+    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"4"
 
 
     diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
@@ -136,9 +139,7 @@ test_delete()
     rm -f $WEBSERV_TMP"3" 
     rm -f $WEBSERV_TMP"4"
 
-    rm -f $TMP 
-
-    rm -rf srcs$2
+    rm -f $TMP
 }
 
 test_syntax()
@@ -243,8 +244,9 @@ test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
 test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
 #PUT
 
-cp -r srcs/dir_to_copy srcs/dir_to_delete
-#test_delete $NAME_CONFIG "/dir_to_delete/cat_symbolic.html"
+cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
+cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
+test_delete $NAME_CONFIG "/cat_symbolic.html"
 #test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
 
 #test_delete $NAME_CONFIG "/dir_to_delete/cat.html"
@@ -259,7 +261,8 @@ rm -f ./srcs/html/new.html
 #test_delete $NAME_CONFIG "/private/"
 #test_delete $NAME_CONFIG "/secret/to_delete.html" #dont do it
 
-rm -rf srcs/dir_to_delete
+rm -rf  srcs/$NG_DELETE_DIR
+rm -rf  srcs/$WS_DELETE_DIR
 
 #test_syntax syntax_ressources/wrong_uri
 #test_syntax syntax_ressources/line_feed

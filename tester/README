@@ -1,0 +1,5 @@
+le testeur ne test pas :
+OPTIONS parce que nginx n'est pas fiable sur la methode
+PUT avec des fichiers existants il faut faire une autre fonctions ne pas utiliser celle deja existante elle detruit les fichiers
+TRACE je sais pas comment ca marche
+CONNECT pas implemente
