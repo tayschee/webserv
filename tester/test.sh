@@ -32,12 +32,13 @@ NG_MULTIPLE_CONF=$(pwd)/nginx_config/multiple_config/
 #test "name_of_config" "METHOD" "path_to_test" "to add param"
 test ()
 {
-    test_method $1 GET $2 $3 "$4"
-    test_head $1 $2 $3 "$4"
+    test_method $1 GET $2 "$3"
+    test_head $1 $2 "$3"
 }
 
 test_method ()
 {
+    echo ICI: $4
     diff <(curl -i -X $2 $4 $NGINX_IP:$NGINX_PORT$3) <(curl -i -X $2 $4 $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
@@ -149,6 +150,7 @@ test_syntax()
         echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
     fi
+    rm -f $TMP
 }
 
 docker build -t nginx_serv ./$IMAGE_NAME #create image
@@ -163,7 +165,6 @@ chmod 000 srcs/spoiler/mdp.html
 
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
-
 << C
 docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -214,7 +215,6 @@ test $NAME_CONFIG "/secret/secret.html"
 test $NAME_CONFIG "/html/3.html"
 
 docker stop $CONTAINER_NAME
-C
 
 #MULTIPLE LOCATION TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
@@ -222,7 +222,6 @@ sleep 5
 
 NAME_CONFIG=multiple_location.conf
 
-<< C2
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
 test $NAME_CONFIG "/jpeg/"
@@ -234,42 +233,40 @@ test $NAME_CONFIG "/error/"
 test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
-C2
 
+<< C3
 test_put $NAME_CONFIG "/new.html" "-d \"<p>impossible</p>\"" #dont work
 test_put $NAME_CONFIG "/private/impossible.html" "-d \"impossible2\"" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
 test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
 test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
 test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
-#PUT
+C3
 
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
-test_delete $NAME_CONFIG "/cat_symbolic.html"
+#test_delete $NAME_CONFIG "/cat_symbolic.html"
 #test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
 
-#test_delete $NAME_CONFIG "/dir_to_delete/cat.html"
-#test_delete $NAME_CONFIG "/dir_to_delete/1.html"
-#test_delete $NAME_CONFIG "/dir_to_delete/php/"
-#test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/"
-#test_delete $NAME_CONFIG "/dir_to_delete/empty_dir/unexist" #unexist
-#test_delete $NAME_CONFIG "/dir_to_delete/"
+test_delete $NAME_CONFIG "/cat.html"
+test_delete $NAME_CONFIG "/1.html"
+test_delete $NAME_CONFIG "/php/"
+test_delete $NAME_CONFIG "/empty_dir/"
+test_delete $NAME_CONFIG "/empty_dir/unexist" #unexist
+test_delete $NAME_CONFIG "/"
 
-#test_delete $NAME_CONFIG "/html/new.html" #dont work
-rm -f ./srcs/html/new.html
-#test_delete $NAME_CONFIG "/private/"
+test_delete $NAME_CONFIG "/private/"
 #test_delete $NAME_CONFIG "/secret/to_delete.html" #dont do it
 
 rm -rf  srcs/$NG_DELETE_DIR
 rm -rf  srcs/$WS_DELETE_DIR
 
-#test_syntax syntax_ressources/wrong_uri
-#test_syntax syntax_ressources/line_feed
-#test_syntax syntax_ressources/line_feed2
-#test_syntax syntax_ressources/multiple_space
-#test_syntax syntax_ressources/space_and_tab
-#test_syntax syntax_ressources/tab
+test_syntax syntax_ressources/wrong_uri
+test_syntax syntax_ressources/line_feed
+test_syntax syntax_ressources/line_feed2
+test_syntax syntax_ressources/multiple_space
+test_syntax syntax_ressources/space_and_tab
+test_syntax syntax_ressources/tab
 
 #test_post $NAME_CONFIG /php/1.php
 #test_post $NAME_CONFIG /php/2.php
@@ -281,7 +278,6 @@ rm -rf  srcs/$WS_DELETE_DIR
 
 docker stop $CONTAINER_NAME
 
-<< C
 #PHP ERROR TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -293,6 +289,8 @@ test $NAME_CONFIG "/private/" #403
 test $NAME_CONFIG "/secret/" #401
 test $NAME_CONFIG "/html/cat.html" #405
 
+docker stop $CONTAINER_NAME
+C
 #MULTIPLE SERVER NAME TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_CONF:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -303,7 +301,7 @@ test "jpeg.conf" "/" "--header \"Host: jpeg\""
 test "secret.conf" "/" "--header \"Host: secret\""
 
 docker stop $CONTAINER_NAME
-C
+
 #permission reset
 
 #permission
