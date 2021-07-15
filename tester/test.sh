@@ -1,10 +1,15 @@
 #!/bin/bash
 
+NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" which doesnt exist
+WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
+TMP=tmp #give filename which doesn t exist
+OUTPUT=output #output file it content will be delete
+SAVE=save
+
 NGINX_IP=127.0.0.1
 NGINX_PORT=80
-
-WEBSERV_IP=127.0.0.2
-WEBSERV_PORT=80
+WEBSERV_IP=$NGINX_IP
+WEBSERV_PORT=$NGINX_PORT
 
 IMAGE_NAME=nginx_serv
 CONTAINER_NAME=nginx_container
@@ -25,53 +30,128 @@ NG_MULTIPLE_CONF=$(pwd)/nginx_config/multiple_config/
 #test "name_of_config" "METHOD" "path_to_test" "to add param"
 test ()
 {
-    test_method $1 GET $2 $3 $4
-    test_method $1 HEAD $2 $3 $4
+    test_method $1 GET $2 $3 "$4"
+    test_head $1 $2 $3 "$4"
 }
 
 test_method ()
 {
-    echo $1
-    echo $2
-    echo $3
-    echo $4
-    echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> output
-    curl -i -X $2 $4 127.0.0.1:80$3 >> output
+    diff <(curl -i -X $2 $4 $NGINX_IP:$NGINX_PORT$3) <(curl -i -X $2 $4 $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
+    if [[ $? != 0 ]]; then
+        echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    rm -f $TMP
+}
+
+test_head ()
+{
+    diff <(curl -i -I -X HEAD $3 $NGINX_IP:$NGINX_PORT$2) <(curl -i -I -X HEAD $3 $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
+    if [[ $? != 0 ]]; then
+        echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    rm -f $TMP
 }
 
 #test "name_of_config" "METHOD" "path_to_test" "put param" "get and put param"
 test_put()
 {
-    echo $3
-    echo -e "----------------------" $1 " " PUT " " $2 "------------------------\n" >> output
-    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 >> output
-    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
-    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 >> output
-    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
-    curl -i -X GET $4 $NGINX_IP:$NGINX_PORT$2 >> output
-    rm -f .$2
+    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"1"
+    curl -i -X PUT $3 $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
+    curl -i -X GET $4 $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"3"
+    rm -f ./srcs$2
+    curl -i -X PUT $3 $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
+    curl -i -X PUT $3 $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
+    curl -i -X GET $4 $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
+
+    diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
+    if [[ $? != 0 ]]; then
+        echo -e "----------------------" $1 " " PUT1 " " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    diff $WEBSERV_TMP"2" $NGINX_TMP"2" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " " PUT2 " " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    diff $WEBSERV_TMP"3" $NGINX_TMP"3" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " GET AFTER PUT " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+
+    rm -f $NGINX_TMP"1"
+    rm -f $NGINX_TMP"2"
+    rm -f $NGINX_TMP"3"
+    rm -f $WEBSERV_TMP"1"
+    rm -f $WEBSERV_TMP"2"
+    rm -f $WEBSERV_TMP"3"
+    rm -f $TMP
+    rm -f ./srcs$2
 }
 
 test_delete()
 {
+    cp -r srcs$2 $SAVE
     echo -e "----------------------" $1 " " DELETE " " $2 "------------------------\n" >> output
-    curl -i -X GET $NGINX_IP:$NGINX_PORT$2 >> output
-    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
-    curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 >> output
-    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
-	curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 >> output
-    echo -e "//////////////////////////////////////////////////////////////////\n" >> output
-    curl -i -X GET $NGINX_IP:$NGINX_PORT$2 >> output
+    curl -i -X GET $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"1"
+    curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
+	curl -i -X DELETE $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"3"
+    curl -i -X GET $NGINX_IP:$NGINX_PORT$2) > $NGINX_TMP"4"
+    mv $SAVE srcs$2
+    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
+    curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
+	curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
+    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"4"
+
+
+    diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " GET BEFORE DELETE " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    diff $WEBSERV_TMP"2" $NGINX_TMP"2" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " DELETE 1" $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    diff $WEBSERV_TMP"3" $NGINX_TMP"3" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " DELETE2 " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+    diff $WEBSERV_TMP"4" $NGINX_TMP"4" > $TMP
+    if [[ $? != 0 ]]; then 
+        echo -e "----------------------" $1 " GET AFTER DELETE " $2 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
+
+    rm -f $NGINX_TMP"1"
+    rm -f $NGINX_TMP"2" 
+    rm -f $NGINX_TMP"3" 
+    rm -f $NGINX_TMP"4" 
+    rm -f $WEBSERV_TMP"1"
+    rm -f $WEBSERV_TMP"2" 
+    rm -f $WEBSERV_TMP"3" 
+    rm -f $WEBSERV_TMP"4"
+
+    rm -f $TMP 
+
+    rm -rf srcs$2
 }
 
 test_syntax()
 {
-    echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> output
-    python send_request.py $1 $NGINX_IP $NGINX_PORT >> output
+    diff <(python send_request.py $1 $NGINX_IP $NGINX_PORT) <(python send_request.py $1 $WEBSERV_IP $WEBSERV_PORT) > $TMP
+    if [[ $? != 0 ]]; then
+        echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+    fi
 }
 
 docker build -t nginx_serv ./$IMAGE_NAME #create image
-echo "" > output; #clear output
+echo "" > $OUTPUT; #clear output
 echo ""  > error; #clear error
 
 #change permission for test can't be applied immediatly because they cant be git push else
@@ -79,9 +159,11 @@ chmod 000 srcs/private
 chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
-<< C
+
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
+
+<< C
 docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
 
@@ -107,7 +189,6 @@ test $NAME_CONFIG "/html/3.html"
 
 docker stop $CONTAINER_NAME
 
-
 #REDIRECT TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_REDIRECT_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
@@ -132,15 +213,15 @@ test $NAME_CONFIG "/secret/secret.html"
 test $NAME_CONFIG "/html/3.html"
 
 docker stop $CONTAINER_NAME
-
 C
+
 #MULTIPLE LOCATION TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
 
 NAME_CONFIG=multiple_location.conf
 
-<< GET
+<< C2
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
 test $NAME_CONFIG "/jpeg/"
@@ -152,20 +233,14 @@ test $NAME_CONFIG "/error/"
 test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
-GET
+C2
 
-#<< PUT
-#need other tester cant create and delete 2 times the same file
-#test_put $NAME_CONFIG "/new.html" "-d \"<p>impossible</p>\"" #dont work
-#test_put $NAME_CONFIG "/private/impossible.html" "-d \"impossible2\"" #dont work
-#test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
-#test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
-#test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
-#"/html/new.html" delete in delete_test
-#test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
-
-#test_put $NAME_CONFIG "/" "-d \"<p>work</p>\"" #je connais pas le comportement
-#essayé avec un body tres gros
+test_put $NAME_CONFIG "/new.html" "-d \"<p>impossible</p>\"" #dont work
+test_put $NAME_CONFIG "/private/impossible.html" "-d \"impossible2\"" #dont work
+test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
+test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
+test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
+test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
 #PUT
 
 cp -r srcs/dir_to_copy srcs/dir_to_delete
@@ -199,7 +274,7 @@ rm -rf srcs/dir_to_delete
 #test_post $NAME_CONFIG /php/info.php
 #test_method $NAME_CONFIG POST /php/php.php "-d arg1=O -d arg2=K -d arg3=!"
 #test_method $NAME_CONFIG POST /php/php.php "-d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST"
-test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
+#test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
 
 docker stop $CONTAINER_NAME
 
