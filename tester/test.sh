@@ -4,6 +4,7 @@ NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3"
 WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
 TMP=tmp #give filename which doesn t exist
 OUTPUT=output #output file it content will be delete
+ERROR_OUTPUT=
 SAVE=save
 NG_DELETE_DIR=delete_dir1
 WS_DELETE_DIR=delete_dir2
@@ -165,7 +166,7 @@ chmod 000 srcs/spoiler/mdp.html
 
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
-<< C
+
 docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
 
@@ -234,19 +235,17 @@ test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 
-<< C3
 test_put $NAME_CONFIG "/new.html" "-d \"<p>impossible</p>\"" #dont work
 test_put $NAME_CONFIG "/private/impossible.html" "-d \"impossible2\"" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
 test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
 test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
 test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK</p>\"" #work
-C3
 
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
-#test_delete $NAME_CONFIG "/cat_symbolic.html"
-#test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
+test_delete $NAME_CONFIG "/cat_symbolic.html"
+test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
 
 test_delete $NAME_CONFIG "/cat.html"
 test_delete $NAME_CONFIG "/1.html"
@@ -290,18 +289,19 @@ test $NAME_CONFIG "/secret/" #401
 test $NAME_CONFIG "/html/cat.html" #405
 
 docker stop $CONTAINER_NAME
-C
+
+<< X
 #MULTIPLE SERVER NAME TEST
 docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_CONF:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
 sleep 5
 
-test "default" "/"
-test "gif.conf" "/" "--header \"Host: gif\""
-test "jpeg.conf" "/" "--header \"Host: jpeg\""
-test "secret.conf" "/" "--header \"Host: secret\""
+#test "default" "/"
+#test "gif.conf" "/" "--header Host: gif"
+#test "jpeg.conf" "/" "--header \"Host: jpeg\""
+#test "secret.conf" "/" "--header \"Host: secret\""
 
 docker stop $CONTAINER_NAME
-
+X
 #permission reset
 
 #permission

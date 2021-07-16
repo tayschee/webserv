@@ -1,45 +1,87 @@
 
----------------------- multiple_location.conf   DELETE   /private/ ------------------------
+---------------------- multiple_location.conf  GET AFTER DELETE  /1.html ------------------------
 
-HTTP/1.1 403 Forbidden
-Server: nginx/1.14.2
-Date: Tue, 13 Jul 2021 12:07:28 GMT
-Content-Type: text/html; charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
+3c3
+< Date: Fri, 16 Jul 2021 11:08:06 GMT
+---
+> Date: Fri, 16 Jul 2021 11:08:05 GMT
+---------------------- multiple_location.conf  GET BEFORE DELETE  /php/ ------------------------
 
-HTTP/1.1 405 Not Allowed
-Server: nginx/1.14.2
-Date: Tue, 13 Jul 2021 12:07:28 GMT
-Content-Type: text/html
-Content-Length: 173
-Connection: keep-alive
+9c9
+< <head><title>Index of /delete_dir2/php/</title></head>
+---
+> <head><title>Index of /delete_dir1/php/</title></head>
+11c11
+< <h1>Index of /delete_dir2/php/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/php/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET AFTER DELETE  /php/ ------------------------
 
-<html>
-<head><title>405 Not Allowed</title></head>
-<body bgcolor="white">
-<center><h1>405 Not Allowed</h1></center>
-<hr><center>nginx/1.14.2</center>
-</body>
-</html>
-HTTP/1.1 405 Not Allowed
-Server: nginx/1.14.2
-Date: Tue, 13 Jul 2021 12:07:28 GMT
-Content-Type: text/html
-Content-Length: 173
-Connection: keep-alive
+9c9
+< <head><title>Index of /delete_dir2/php/</title></head>
+---
+> <head><title>Index of /delete_dir1/php/</title></head>
+11c11
+< <h1>Index of /delete_dir2/php/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/php/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET BEFORE DELETE  /empty_dir/ ------------------------
 
-<html>
-<head><title>405 Not Allowed</title></head>
-<body bgcolor="white">
-<center><h1>405 Not Allowed</h1></center>
-<hr><center>nginx/1.14.2</center>
-</body>
-</html>
-HTTP/1.1 403 Forbidden
-Server: nginx/1.14.2
-Date: Tue, 13 Jul 2021 12:07:28 GMT
-Content-Type: text/html; charset=UTF-8
-Transfer-Encoding: chunked
-Connection: keep-alive
+9c9
+< <head><title>Index of /delete_dir2/empty_dir/</title></head>
+---
+> <head><title>Index of /delete_dir1/empty_dir/</title></head>
+11c11
+< <h1>Index of /delete_dir2/empty_dir/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/empty_dir/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET AFTER DELETE  /empty_dir/ ------------------------
 
+9c9
+< <head><title>Index of /delete_dir2/empty_dir/</title></head>
+---
+> <head><title>Index of /delete_dir1/empty_dir/</title></head>
+11c11
+< <h1>Index of /delete_dir2/empty_dir/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/empty_dir/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET BEFORE DELETE  / ------------------------
+
+9c9
+< <head><title>Index of /delete_dir2/</title></head>
+---
+> <head><title>Index of /delete_dir1/</title></head>
+11c11
+< <h1>Index of /delete_dir2/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET AFTER DELETE  / ------------------------
+
+9c9
+< <head><title>Index of /delete_dir2/</title></head>
+---
+> <head><title>Index of /delete_dir1/</title></head>
+11c11
+< <h1>Index of /delete_dir2/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET BEFORE DELETE  /private/ ------------------------
+
+9c9
+< <head><title>Index of /delete_dir2/private/</title></head>
+---
+> <head><title>Index of /delete_dir1/private/</title></head>
+11c11
+< <h1>Index of /delete_dir2/private/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/private/</h1><hr><pre><a href="../">../</a>
+---------------------- multiple_location.conf  GET AFTER DELETE  /private/ ------------------------
+
+9c9
+< <head><title>Index of /delete_dir2/private/</title></head>
+---
+> <head><title>Index of /delete_dir1/private/</title></head>
+11c11
+< <h1>Index of /delete_dir2/private/</h1><hr><pre><a href="../">../</a>
+---
+> <h1>Index of /delete_dir1/private/</h1><hr><pre><a href="../">../</a>
