@@ -1,40 +1,69 @@
 #!/bin/bash
 
-NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" $NGINX_TMP"4" which doesnt exist
-WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
-TMP=tmp #give filename which doesn t exist
-OUTPUT=output #output file it content will be delete
-ERROR_OUTPUT=
-SAVE=save
-NG_DELETE_DIR=delete_dir1
-WS_DELETE_DIR=delete_dir2
+#MOST CHANGE VARIABLE
+OUTPUT=output #stdin output
+ERROR_OUTPUT=/dev/null #stderr output
+
+WEBSERV_DIR=..
+WEBSERV=./$WEBSERV_DIR/webserv
 
 NGINX_IP=127.0.0.1
 NGINX_PORT=80
 WEBSERV_IP=$NGINX_IP
 WEBSERV_PORT=$NGINX_PORT
 
-IMAGE_NAME=nginx_serv
-CONTAINER_NAME=nginx_container
-NG_SRCS_PATH=$(pwd)/srcs
-VM_SRCS_PATH=/srcs
+PATH_TO_DOCKERFILE=./nginx_serv
+
+SRCS_PATH=$(pwd)/srcs
 
 VM_CONFIG_PATH=/etc/nginx/conf.d/default.conf
+
+SLEEP_TIMER=5
+#END MOST CHANGE VARIABLE 
+
+NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" $NGINX_TMP"4" which doesnt exist
+WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
+TMP=tmp #give filename which doesn t exist
+SAVE=save
+NG_DELETE_DIR=delete_dir1
+WS_DELETE_DIR=delete_dir2
+IMAGE_NAME=nginx_serv
+CONTAINER_NAME=nginx_container
+VM_SRCS_PATH=/srcs
 VM_CONFIG_PATH_DIR=/etc/nginx/conf.d/
 
-NG_ERROR_CONF=$(pwd)/nginx_config/error.conf
-NG_INDEX_OFF_CONF=$(pwd)/nginx_config/index_off.conf
-NG_MULTIPLE_LOCATION_CONF=$(pwd)/nginx_config/multiple_location.conf
-NG_REDIRECT_CONF=$(pwd)/nginx_config/redirect.conf
-NG_SAME_ERROR_CONF=$(pwd)/nginx_config/same_error.conf
-NG_PHP_ERROR_CONF=$(pwd)/nginx_config/same_error_php.conf
-NG_MULTIPLE_CONF=$(pwd)/nginx_config/multiple_config/
+NG_DIRECTORY_CONF=$(pwd)/nginx_config
+WS_DIRECTORY_CONF=$(pwd)/webserv_config
+
+ERROR_CONF=error.conf
+INDEX_OFF_CONF=index_off.conf
+MULTIPLE_LOCATION_CONF=multiple_location.conf
+REDIRECT_CONF=redirect.conf
+SAME_ERROR_CONF=same_error.conf
+PHP_ERROR_CONF=same_error_php.conf
+MULTIPLE_CONF=multiple_config
+
+NG_ERROR_CONF=$NG_DIRECTORY_CONF/$ERROR_CONF
+NG_INDEX_OFF_CONF=$NG_DIRECTORY_CONF/$INDEX_OFF_CONF
+NG_MULTIPLE_LOCATION_CONF=$NG_DIRECTORY_CONF/$MULTIPLE_LOCATION_CONF
+NG_REDIRECT_CONF=$NG_DIRECTORY_CONF/$REDIRECT_CONF
+NG_SAME_ERROR_CONF=$NG_DIRECTORY_CONF/$SAME_ERROR_CONF
+NG_PHP_ERROR_CONF=$NG_DIRECTORY_CONF/$PHP_ERROR_CONF
+NG_MULTIPLE_CONF=$NG_DIRECTORY_CONF/$MULTIPLE_CONF
+
+WS_ERROR_CONF=$WS_DIRECTORY_CONF/$ERROR_CONF
+WS_INDEX_OFF_CONF=$WS_DIRECTORY_CONF/$INDEX_OFF_CONF
+WS_MULTIPLE_LOCATION_CONF=$WS_DIRECTORY_CONF/$MULTIPLE_LOCATION_CONF
+WS_REDIRECT_CONF=$WS_DIRECTORY_CONF/$REDIRECT_CONF
+WS_SAME_ERROR_CONF=$WS_DIRECTORY_CONF/$SAME_ERROR_CONF
+WS_PHP_ERROR_CONF=$WS_DIRECTORY_CONF/$PHP_ERROR_CONF
+WS_MULTIPLE_CONF=$WS_DIRECTORY_CONF/$MULTIPLE_CONF
 
 #test "name_of_config" "METHOD" "path_to_test" "to add param"
 test ()
 {
-    test_method $1 GET $2 "$3"
-    test_head $1 $2 "$3"
+    test_method "$1" "GET" "$2" "$3"
+    test_head "$1" "$2" "$3"
 }
 
 test_method ()
@@ -154,9 +183,10 @@ test_syntax()
     rm -f $TMP
 }
 
-docker build -t nginx_serv ./$IMAGE_NAME #create image
+docker build -t nginx_serv $PATH_TO_DOCKERFILE #create image
+make -C $WEBSERV_DIR
 echo "" > $OUTPUT; #clear output
-echo ""  > error; #clear error
+echo ""  > $ERROR_OUTPUT; #clear error
 
 #change permission for test can't be applied immediatly because they cant be git push else
 chmod 000 srcs/private
@@ -167,8 +197,11 @@ chmod 000 srcs/spoiler/mdp.html
 #PERSONAL ERROR PAGE TEST
 #-d for run in background
 
-docker run --rm -ti -d -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_ERROR_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=error.conf 
 
@@ -180,10 +213,13 @@ test $NAME_CONFIG "/secret/secret.html"
 
 
 docker stop $CONTAINER_NAME
-
+kill -2 WEBSERV_PID #sigint webserv
 #AUTOINDEX OFF TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_INDEX_OFF_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_INDEX_OFF_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_INDEX_OFF_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=index_off.conf
 
@@ -191,10 +227,14 @@ test $NAME_CONFIG "/"
 test $NAME_CONFIG "/html/3.html"
 
 docker stop $CONTAINER_NAME
+kill -2 WEBSERV_PID #sigint webserv
 
 #REDIRECT TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_REDIRECT_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_REDIRECT_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_REDIRECT_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=redirect.conf
 
@@ -203,10 +243,14 @@ test $NAME_CONFIG "/html/3.html" "-L"
 
 
 docker stop $CONTAINER_NAME
+kill -2 WEBSERV_PID #sigint webserv
 
 #MULTIPLE ERROR TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_SAME_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_SAME_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_SAME_ERROR_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=same_error.conf
 
@@ -216,10 +260,14 @@ test $NAME_CONFIG "/secret/secret.html"
 test $NAME_CONFIG "/html/3.html"
 
 docker stop $CONTAINER_NAME
+kill -2 WEBSERV_PID #sigint webserv
 
 #MULTIPLE LOCATION TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $NG_MULTIPLE_LOCATION_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=multiple_location.conf
 
@@ -276,10 +324,14 @@ test_syntax syntax_ressources/tab
 #test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
 
 docker stop $CONTAINER_NAME
+kill -2 WEBSERV_PID #sigint webserv
 
 #PHP ERROR TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_LOCATION_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_MULTIPLE_LOCATION_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 NAME_CONFIG=same_error_php.conf
 
@@ -289,11 +341,15 @@ test $NAME_CONFIG "/secret/" #401
 test $NAME_CONFIG "/html/cat.html" #405
 
 docker stop $CONTAINER_NAME
-
+kill -2 WEBSERV_PID #sigint webserv
+C
 << X
 #MULTIPLE SERVER NAME TEST
-docker run -d --rm -ti -v $NG_SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_CONF:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-sleep 5
+docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_MULTIPLE_CONF:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+$WEBSERV $WS_MULTIPLE_CONF
+
+WEBSERV_PID=$!
+sleep $SLEEP_TIMER
 
 #test "default" "/"
 #test "gif.conf" "/" "--header Host: gif"
@@ -301,6 +357,7 @@ sleep 5
 #test "secret.conf" "/" "--header \"Host: secret\""
 
 docker stop $CONTAINER_NAME
+kill -2 WEBSERV_PID #sigint webserv
 X
 #permission reset
 
