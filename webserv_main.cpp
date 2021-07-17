@@ -28,26 +28,46 @@ static int check_argument(int c, char **v)
 	return i;
 }
 
+/*int start(cluster &cl)
+{
+	int ret = 0;
+	try
+	{
+		cl.start();
+	}
+	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
+	{
+		std::cerr << "execve failed\n";
+		ret = 1;
+	}
+	catch(std::exception &e)
+	{
+		std::cerr << "something failed\n";
+		ret = 1;
+	}
+	return ret;
+}*/
+
 int main(int c, char **v)
 {
+	int ret = 0;
 	int i = check_argument(c, v);
-	bool debug;
 
 	if (i < 0) //bad arguments
 		return 1;
 
-	debug = i; //define debug mode or not
-
-	try
-	{
-		cluster cl(v[i], debug);
+//	try
+//	{
+		cluster cl(v[i + 1], i);
 		cl.init_listen();
+		ret = cl.start();
 		cl.start();
-	}
+/*	}
 	catch(std::exception &e)
 	{
-		std::cerr << "MUST CHANGE THIS PART\n";
+		std::cerr << "initialisation failed\n";
+		ret = 1;
 	}
-
-	return 0;
+*/
+	return ret;
 }
