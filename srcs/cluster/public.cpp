@@ -41,12 +41,14 @@ int 	cluster::start() // cluster manage the list of socket
 				{
 					std::cout << "Receive message from " << cli.get_fd() << std::endl;
 				}
-				
+				std::cout << "here1\n";
 				if ((ret = receive(cli, it->get_fd(), it)) == 0)
 					return 0;
+				std::cout << "here2\n";
 			}
 			if (ret > 0 && cli.is_read() > 0)
 			{
+				std::cout << "here3\n";
 				if (send_response(cli) == -1)
 				{
 					if (debug_mode)
@@ -56,9 +58,14 @@ int 	cluster::start() // cluster manage the list of socket
 			}
 			else if (ret > 0 && cli.is_time())
 			{
+				std::cout << "here4\n";
 				if (debug_mode)
 					std::cout << "time_out :";
 				close_client(it);
+			}
+			else
+			{
+				std::cout << "here5\n";
 			}
 		}
 
