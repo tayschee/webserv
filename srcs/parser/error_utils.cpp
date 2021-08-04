@@ -74,10 +74,10 @@ bool parser::validate()
 		std::cerr << "Error: " << filename << ": No 'location /' block.\n";
 		return false;
 	}
-	else if (it->second.conf.find(PARSER_ROOT) == it->second.conf.end() ||
-			 it->second.conf.find(PARSER_INDEX) == it->second.conf.end())
+	else if (it->second.conf.find(PARSER_ROOT) == it->second.conf.end() &&
+			_blocks[server].conf.find(PARSER_ROOT) == it->second.conf.end())
 	{
-		std::cerr << "Error: " << filename << ": No root or index in the 'location /' block.\n";
+		std::cerr << "Error: " << filename << ": No root in the 'location /' block neither in the server block.\n";
 		return false;
 	}
 	return true;
