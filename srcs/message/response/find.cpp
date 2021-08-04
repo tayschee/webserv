@@ -41,9 +41,14 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 		return subtype;
 	try
 	{
-		parser::entries block = pars.get_block(PARSER_TYPES, "mime").conf;
+		parser::entries block = pars.get_mime().conf;
+
 		if (block.find(subtype) != block.end())
+		{
 			type = block.find(subtype)->second[0];
+		}
+		else
+			type = "";
 	}
 	catch(const std::exception& e)
 	{
@@ -67,11 +72,11 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	std::string path;
 
 	std::string alias;
-	if (entries.find(PARSER_ALIAS) == entries.end())
-		path = entries.find(PARSER_ROOT)->second[0] + partial_path;
+	if (entries.find("alias") == entries.end())
+		path = entries.find("root")->second[0] + partial_path;
 	else
 	{
-		alias = entries.find(PARSER_ALIAS)->second[0];
+		alias = entries.find("alias")->second[0];
 		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
 	}
 
@@ -108,7 +113,7 @@ std::string response::find_index(const parser::entries &entries, const std::list
 	{
 		if (entries.find("index") == entries.end())
 			return "";
-		std::vector<std::string> index(entries.find(PARSER_INDEX)->second);
+		std::vector<std::string> index(entries.find("index")->second);
 		std::vector<std::string>::iterator it_i(index.begin());
 		std::vector<std::string>::iterator end_i(index.end());
 		end_f = files.end();
@@ -131,41 +136,50 @@ std::string response::find_index(const parser::entries &entries, const std::list
 	return "";
 }
 
-const parser	&response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
+std::string response::find_charset(const request &req) const
 {
-	size_t i;
-	parser::address_conf::const_iterator end(pars_list->end());
-	parser::address_conf::const_iterator it(pars_list->begin());
-	const std::string host(req.get_header().find(HOST)->second);
-	parser::address_conf::const_iterator default_parser;
+	header_type::const_iterator it_tag;
+	header_type head(req.get_header());
+	if ((it_tag = head.find(ACCEPT_CHARSET)) == head.end())
+		return "";
 
-	std::cout << "hi\n";
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+
+	if (it == end)
+		return "";
+	else
+		return it->second;
+}
+
+/*find if there is equivalent file for a specific language if there is, add content-language header field to header*/
+std::string response::find_language(const std::string &complete_path, const request &req)
+{
+	header_type::const_iterator it_tag;
+
+	if ((it_tag = req.get_header().find(ACCEPT_LANGUAGE)) == header.end())
+		return complete_path;
+
+	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
+	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
+	struct stat file_stat; //information about file
+
 	while (it != end)
 	{
-		const parser::entries &map_server(it->get_block(PARSER_SERVER).conf);
-		const std::vector<std::string> server_name_vec(map_server.find(PARSER_SERVER_NAME)->second);
-
-		if (map_server.find("listen")->second.size() == 2)
-			default_parser = it;
-
-		i = 0;
-		while (i < server_name_vec.size())
+		std::string new_path(complete_path + "." + it->second);
+		if (stat(new_path.c_str(), &file_stat) < 0)
 		{
-			std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
-			if (host == server_name_vec[i])
-			{
-
-				std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
-				<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
-
-				return *it;
-			}
-			++i;
+			if (!(errno == ENOENT)) //file doesnt exist or new_path is empty chain
+				return ""; //error do something else
+		}
+		else
+		{
+			add_content_language(it->second);
+			return new_path;
 		}
 		++it;
 	}
-	std::cout << default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
-	<< default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
-
-	return *default_parser;
+	return complete_path;
 }

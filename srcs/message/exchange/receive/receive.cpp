@@ -1,5 +1,8 @@
 #include "message/exchange.hpp"
 
+#include <iostream>
+#include <stdio.h>
+
 typedef message::receive receive;
 
 /* receive parent class of other receive class,
@@ -9,9 +12,7 @@ it used to receive header and body through is internal class and it variable whi
 //receive_mangement constructor destructor
 
 receive::receive(size_t fd, size_t buf_size) : exchange(fd), data(new header(buf_size)), buf_size(buf_size)
-{
-	write(1, "voila\n", 6);
-}
+{}
 
 receive::receive(const receive &x) : 
 exchange(x), data(x.clone()), buf_size(x.buf_size){}
@@ -48,24 +49,22 @@ int receive::operator()()
 
 int		receive::check()
 {
-	int ret(0);
+	int ret(dynamic_cast<body *>(data) == NULL ? NOTHING_END : HEADER_END);
 
 	while (data->check() == 1)
 	{
-		if (dynamic_cast<body *>(data) == NULL) //if true this is header
+		if (ret == NOTHING_END) //if true this is header
 		{
 			receive::body	*new_data = data->next_step();
-
 			delete data;
 			data = new_data;
 			ret = HEADER_END;
 		}
 		else
 		{
-			return ret + BODY_END;
+			return BODY_END;
 		}
 	}
-	//std::cout << "XXXXXX : "<< data->get_buffer();
 	return ret;
 }
 
@@ -83,8 +82,12 @@ void				receive::clear()
 
 std::string			receive::get_buffer()
 {
-
 	return data->get_buffer();
+}
+
+int			receive::get_size()
+{
+	return data->get_size();
 }
 
 std::string			receive::get_header_buffer()

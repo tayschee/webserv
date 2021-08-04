@@ -27,7 +27,7 @@ class request : public message
 			private :
 				int 			status;
 				std::string 	method;
-			
+
 			public :
 				virtual const char	*what() const throw();
 				const std::string	&get_method() const;
@@ -64,17 +64,19 @@ class request : public message
 		const std::string	&get_method() const;
 		const std::string	&get_uri() const;
 		const std::string	&get_version() const;
+		const std::string	get_secret() const;
 		const std::string	get_content_type() const;
 		const std::string	get_auth_type() const;
 		const std::string	get_user() const;
 		const std::string	get_content_length() const;
 		const std::string	get_host() const;
 		const std::string	get_query() const;
+		const std::string	get_tf() const;
 
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 
-		response		get_response(const std::vector<parser::address_conf>::const_iterator pars) const; //to have response object
+		response		get_response(const parser& pars) const; //to have response object
 		std::string		get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const; //to have complete request of the form of std::string
 
 	public :
@@ -89,8 +91,7 @@ class request : public message
 		~request();
 
 		//int				receive(const int socket, receive_management &recv_data);
-		int				validity() const;
-		const std::vector<parser>::const_iterator find_parser(const std::vector<parser> parser_vec) const;
+		int				validity(const parser &pars) const;
 };
 
 #endif

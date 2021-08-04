@@ -11,11 +11,11 @@
 class cluster
 {
     public:
-        typedef std::list<client>::iterator iterator;
+        typedef std::list<client*>::iterator iterator;
 
     private: /*private function*/
 		std::vector<parser::address_conf> vec_parser;
-        std::list<client>       list_client; // list all clients
+		std::list<client*>       list_client; // list all clients
 		bool					debug_mode; // 1 activate
 
         cluster();
@@ -25,7 +25,7 @@ class cluster
         void	                close_client(iterator &it); // close a client
         void	                set_list_fd(fd_set &readfds, fd_set &writefds, int &max); // initialize all sockets
         int                     wait_activity(fd_set &readfds, fd_set &writefds); // wait a activity as read or write
-        int 	                receive(client &cl, const int &fd, iterator &it); // call receive
+        int 	                receive(client &cl); // call receive
         int		                send_response(client &cl); // send to response
 
     public: /*public function*/

@@ -188,7 +188,6 @@ size_t		ft_strlen(const char *str)
 std::string get_extension(const std::string& str)
 {
 	std::string::size_type pos = str.find_last_of('.');
-
 	return pos == str.npos ? "" : str.substr(pos);
 }
 

@@ -6,7 +6,7 @@ int		cluster::init_listen() // start sockets
 {
 	for(iterator it = list_client.begin(); it != list_client.end(); ++it)
 	{
-		if(listen(it->get_fd(), 500))
+		if(listen((*it)->get_fd(), SOMAXCONN))
 		{
 			std::cerr << "Failed to listen. Error: " << strerror(errno) << std::endl;
 			return 0;
@@ -14,13 +14,13 @@ int		cluster::init_listen() // start sockets
 		else
 		{
 			if (debug_mode)
-				std::cout << "Connection etablished with " << it->get_fd() << std::endl; //change to put ip + port will be better
+				std::cout << "Connection etablished with " << (*it)->get_fd() << std::endl; //change to put ip + port will be better
 		}
 	}
 	return (1);
 }
 
-int 	cluster::start() // cluster manage the list of socket
+int 	cluster::start() // cluster manage the list of socketc
 {
 	is_alive = 1;
 	fd_set readfds, writefds;
@@ -30,35 +30,30 @@ int 	cluster::start() // cluster manage the list of socket
 		//reset timer
 		if (!wait_activity(readfds, writefds))
 			return 0;
-		for(iterator it = list_client.begin(); it != list_client.end(); it++)
+	
+		iterator end = list_client.end();
+		for(iterator it = list_client.begin(); it != end; ++it)
 		{
-			//check_timer
 			int ret = 0;
-			client &cli = *it;
-			if (!cli.is_read() && FD_ISSET(it->get_fd(), &readfds)) // is there a modification on the current list_client ?
+			client &cli = *(*it);
+			
+			if (!cli.is_read() && FD_ISSET(cli.get_fd(), &readfds)) // is there a modification on the current list_client ?
 			{
-				if (debug_mode)
-				{
-					std::cout << "Receive message from " << cli.get_fd() << std::endl;
-				}
+				// if (debug_mode)
+				// 	std::cout << "Receive message from " << cli.get_fd() << std::endl;
 				
-				if ((ret = receive(cli, it->get_fd(), it)) == 0)
+				if ((ret = receive(cli)) == 0)
 					return 0;
-			}
-			if (ret > 0 && cli.is_read() > 0)
-			{
-				if (send_response(cli) == -1)
+				else if (ret == -1)
 				{
 					if (debug_mode)
-						std::cout << "server error : ";
+						std::cout << "Client quit : ";
 					close_client(it);
 				}
-			}
-			else if (ret > 0 && cli.is_time())
+		}
+			else if (cli.is_read() && FD_ISSET(cli.get_fd(), &writefds))
 			{
-				if (debug_mode)
-					std::cout << "time_out :";
-				close_client(it);
+				cli.sent(vec_parser);
 			}
 		}
 

@@ -1,6 +1,8 @@
 #include "message/exchange.hpp"
 //#include "message/request.hpp"
 
+#include <iostream>
+
 /*this file contain function inside message::receive::header, it is use with receive::receive(...)
 and serve to read particulary header, when it done this class must be change to an other internal_class child to read_body */
 
@@ -26,19 +28,27 @@ receive::header &receive::header::operator=(const header &x)
 /*read header and when end is reached return 1 to change internal_receive struct and read body */
 int		receive::header::receive(const int socket)
 {
+	errno = 0;
+
 	char		*buffer = new char[buf_size + 1];
 	ssize_t		i; //this just a long return type of read
-
+	if (buffer == NULL)
+		std::cout << strerror(errno) << std::endl;
 	if ((i = read(socket, buffer, buf_size)) <= 0)
 	{
+		msg.clear();
 		delete[] buffer;
 		if (i == 0)
 			return -1;
 		else
+		{
+			std::cout << strerror(errno) << std::endl;
 			return 500; //replace by an exception
+		}
 	}
 	buffer[i] = 0;
 	msg += buffer;
+	memset(buffer, 0, buf_size + 1);
 	delete[] buffer;
 
 	return 0;

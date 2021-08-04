@@ -15,7 +15,7 @@ class cgi
         void			        clear(char **env);
         std::string             exec(char **env, const request &req, const parser &pars, const std::string &path);
         char                    **init_env(const request &req, const parser &pars, const std::string &path);
-        void                    son(long fdin, long fdout, const char *script_name, char **env);
+        void                    son(long fdin, long fdout, FILE* file_in, FILE* file_out, int save_in, int save_out, const char *script_name, char **env);
         void			        father(long fdout, std::string &new_body);
 
 

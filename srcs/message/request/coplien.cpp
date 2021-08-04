@@ -22,7 +22,6 @@ request::request() : message() {}
 request::request(const std::string &const_request_str) : message(), first_line()
 {
 	std::string request_str(const_request_str);
-	
 	parse_body(request_str); //fill body and body part of request_str is erased
 	parse_header(request_str); //fill header + fill first_line
 }

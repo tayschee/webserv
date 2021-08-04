@@ -4,6 +4,13 @@
 # include "message/message.hpp"
 # include <queue>
 
+#include <iostream>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
+#define MIN_BUFFER 131072
+
 class message;
 /*parent class of receive and send, it does nothing just here to allow polymorphism*/
 class	message::exchange
@@ -48,24 +55,27 @@ class message::receive : public exchange
 				header(const header &x);
 				header &operator=(const header &x);
 
+				int		get_size()
+				{
+					return msg.size();
+				}
+
 				virtual ~header();
 		};
 
 		class body : public header
 		{
 			protected :
-				//size_t		buf_size;
-				//std::string	msg; //to store message to form of string during parsing
 				size_t			pos;
 
 			public :
 				virtual int			receive(const int socket) = 0;
 				virtual int			check() = 0;
-				virtual std::string	get_buffer() = 0;
-				virtual std::string	get_header_buffer() = 0;
 				virtual body		*clone() const = 0;
 
 			public :
+				std::string	get_header_buffer();
+				virtual std::string	get_buffer() = 0;
 				header		*previous_step(const size_t buf_size) const;
 
 			public :
@@ -78,17 +88,11 @@ class message::receive : public exchange
 
 		class cl_body : public body
 		{
-			private :
-				//size_t		buf_size;
-				//std::string	msg; //to store message to form of string during parsing
-				//size_t			pos;
-
 			public :
 				int			receive(const int socket);
-				std::string	get_buffer();
-				std::string	get_header_buffer();
 				int			check();
 				cl_body		*clone() const;
+				std::string get_buffer();
 
 			public :
 				cl_body(const std::string &msg = "", const size_t buf_size = 0, size_t body_begin = 0);
@@ -100,20 +104,16 @@ class message::receive : public exchange
 
 		class tf_body : public body
 		{
-			public :
+			public :	
 				bool			msg_begin;
-				//size_t		buf_size; //store the size of body or rest of size
-				//std::string	msg; //to store body during parsing
-				//size_t		pos; //position of next buf_size
 	
 			private :
 				int					check_end(const size_t i, const size_t CRLF_size);
 				size_t				erase_tf_signature(const size_t i, const size_t CRLF_size, size_t pos);
+				std::string         get_buffer();
 
 			public :
 				int					receive(const int socket);
-				std::string			get_buffer();
-				std::string			get_header_buffer();
 				int					check();
 				tf_body				*clone() const;
 
@@ -126,7 +126,7 @@ class message::receive : public exchange
 		};
 
 	public :
-		enum {NOTHING_END, HEADER_END, BODY_END, MESSAGE_END};
+		enum {NOTHING_END, HEADER_END, BODY_END = 3};
 		enum {HEADER_MASK = 1, BODY_MASK = 2};
 	private :
 		//int				fd;
@@ -144,7 +144,9 @@ class message::receive : public exchange
 		std::string		get_header_buffer();
 		std::string		get_buffer();
 		void			prepare_next();
-		int	operator()(void);
+		int	operator()();
+
+		int		get_size();
 
 	public :
 		receive(size_t fd = -1, size_t read_size = 10);
@@ -153,50 +155,5 @@ class message::receive : public exchange
 
 		~receive();
 };
-
-/*class message::send : public message::exchange
-{
-	private:
-		class internal
-		{
-
-			private :
-				int			status;
-				size_t		buf_size;
-				std::string msg; //to store header to form of string during parsing / other utility for child class
-
-			public :
-				int	get_status() const;
-				size_t get_buf_size() const;
-				const std::string &get_msg() const;
-
-			public :
-				internal(int status = 1, size_t buf_size = 0, const std::string &msg = "");
-				internal(const message &msg, size_t buf_size);
-				internal(const internal &x);
-				internal &operator=(const internal &x);
-
-				virtual ~internal();
-		};
-
-	private :
-		//int fd
-		std::queue<internal>	queue;
-
-	private: 
-		static int find_status_value(const message &msg);
-
-	public :
-		int		operator()();
-		void	push(const message &msg, const size_t buf_size);
-
-	public :
-		send(const std::string &msg = "", const int status = 1, const size_t buf_size = 0, const int fd = -1);
-		send(const message &msg, const size_t buf_size = 0, const int fd = -1);
-		send(const send &x);
-		send &operator=(const send &x);
-
-		~send();
-};*/
 
 #endif

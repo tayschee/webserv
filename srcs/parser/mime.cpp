@@ -41,7 +41,6 @@ void parser::parse_mime(const std::string& filename)
 		if (line.find('{') != line.npos ||
 			line.find('}') != line.npos)
 			continue; // Lines delimitting a block are ignored (to simplify how the file is written)
-
 		parse_line_mime(filename, line, line_no);
 	}
 

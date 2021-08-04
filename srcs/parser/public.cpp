@@ -30,7 +30,9 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 	for (dirent *entry = readdir(dir); entry; entry = readdir(dir))
 	{
 		if (entry->d_type == DT_REG && std::string(entry->d_name) == "mime")
+		{
 			parse_mime(path + "/" + entry->d_name);
+		}
 		else if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
 			parser new_object(parser(path + "/" + entry->d_name));
@@ -123,6 +125,11 @@ const parser::block &parser::get_block(const std::string &block_name, const std:
 
 	args.push_back(block_arg);
 	return get_block(block_name, args);
+}
+
+const parser::block &parser::get_mime()
+{
+	return mime;
 }
 
 const char *parser::BlockNotFound::what() const throw()

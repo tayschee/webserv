@@ -26,11 +26,14 @@
 # define BLOCK_LOCATION "location"
 # define BLOCK_ERROR "location_error"
 # define BLOCK_CGI "cgi"
-# define AUTH_BASIC_USER_FILE "auth_basic_user_file"
-# define AUTH_BASIC "auth_basic"
+# define BLOCK_ROOT "root"
 
 /*parser variable*/
 # define ACCEPT "accept"
+# define AUTH_BASIC_USER_FILE "auth_basic_user_file"
+# define AUTH_BASIC "auth_basic"
+# define BODY_SIZE "body_size_max"
+# define AUTO_INDEX "autoindex"
 
 /*define header field*/
 # define ALLOW "Allow"

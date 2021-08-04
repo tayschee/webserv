@@ -1,5 +1,7 @@
 #include "message/exchange.hpp"
 
+#include <iostream>
+
 /*cl_body struct, use to read body with Content-Length header, this struct is manipulated
 by receive once header is read */
 
@@ -41,6 +43,7 @@ int receive::cl_body::receive(const int socket)
 
 	if ((i = read(socket, buffer, this->buf_size)) <= 0)
 	{
+		msg.clear();
 		delete[] buffer;
 		if (i == 0)
 			return -1;
@@ -49,31 +52,10 @@ int receive::cl_body::receive(const int socket)
 	}
 	buffer[i] = 0;
 	this->msg += buffer;
+	memset(buffer, 0, buf_size + 1);
 	delete[] buffer;
 	buf_size -= i;
 	return 0;
-}
-
-std::string 						receive::cl_body::get_buffer()
-{
-	size_t del_pos = msg.size() < pos ? msg.size() : pos;
-	std::string buffer(msg.substr(0, del_pos));
-	
-	pos -= del_pos;
-	msg.erase(0, del_pos);
-	return buffer;
-}
-
-std::string 						receive::cl_body::get_header_buffer()
-{
-	size_t pos(header_is_end(msg));
-	std::string header(msg.substr(0, pos));
-
-	pos = pos + ft_strlen(SEPARATOR);
-	msg.erase(0, pos);
-	this->pos -= pos;
-
-	return header;
 }
 
 //check if object have reached end of read body and return 1 if it's true
@@ -92,4 +74,14 @@ receive::cl_body	*receive::cl_body::clone() const
 
 	clone_obj = new cl_body(*this);
 	return clone_obj;
+}
+
+std::string                         receive::cl_body::get_buffer()
+{
+    size_t del_pos = msg.size() < pos ? msg.size() : pos;
+    std::string buffer(msg.substr(0, del_pos));
+    
+    pos -= del_pos;
+    msg.erase(0, del_pos);
+    return buffer;
 }

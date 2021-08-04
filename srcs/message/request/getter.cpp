@@ -31,6 +31,13 @@ const std::string		&request::get_version() const
 	return first_line.version;
 }
 
+const std::string	request::get_secret() const
+{
+	if (header.find("X-Secret-Header-For-Test") == header.end())
+		return "";
+	return header.find("X-Secret-Header-For-Test")->second;
+}
+
 const std::string	request::get_content_type() const
 {
 	if (header.find(CONTENT_TYPE) == header.end())
@@ -66,6 +73,13 @@ const std::string	request::get_host() const
 	return header.find(HOST)->second;
 }
 
+const std::string	request::get_tf() const
+{
+	if (header.find("Accept-Encoding") == header.end())
+		return "";
+	return header.find("Accept-Encoding")->second;
+}
+
 /*to have request information in the form of std::string*/
 std::string		request::get(const std::string &hf_sep, const std::string &eol) const
 {
@@ -86,7 +100,7 @@ std::string		request::get(const std::string &hf_sep, const std::string &eol) con
 }
 
 /*to have response to this request (you must send it)*/
-response		request::get_response(const std::vector<parser::address_conf>::const_iterator pars) const
+response		request::get_response(const parser& pars) const
 {
 	response	resp(*this, pars);
 

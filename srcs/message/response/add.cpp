@@ -56,9 +56,65 @@ void			response::add_retry_after(size_t sec)
 
 void			response::add_content_type(const std::string &type) //pas tester
 {
+	// (void)file;
+	 //(void)req;
 	header.erase(CONTENT_TYPE);
 	header.insert(value_type(CONTENT_TYPE, type));
+
+
+	// std::string extension;
+	// size_t		pos = file.find_first_of(".");
+	// request::header_type head = req.get_header();
+	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+
+	// if (pos != file.npos)
+	// {
+ 	// 	extension = file.substr(pos + 1);
+	// 	media_type_array::value_type	media_type(find_media_type(extension));
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+	// else
+	// {
+	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
 }
+
+/*void			response::add_content_type(const std::string &type) //pas tester
+{
+	// std::string extension;
+	// size_t		pos = file.find_first_of(".");
+	// request::header_type head = req.get_header();
+	// request::header_type::const_iterator it(head.find(ACCEPT_CHARSET));
+
+	// if (pos != file.npos)
+	// {
+ 	// 	extension = file.substr(pos + 1);
+	// 	media_type_array::value_type	media_type(find_media_type(extension));
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+	// else
+	// {
+	// 	media_type_array::value_type	media_type(DEFAULT_SUBTYPE, DEFAULT_TYPE);
+
+	// 	if (it != head.end())
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first + ", " + it->second));
+	// 	else
+	// 		header.insert(value_type(CONTENT_TYPE, media_type.second + media_type.first));
+	// }
+}*/
 
 /*void				response::add_transfert_encoding(const std::string &file)
 {
@@ -90,17 +146,17 @@ void				response::add_www_autentificate()
 
 int			response::add_body(const std::string &path)
 {
-	char buf[4096 + 1] = {0};
+	char buf[4096] = {0};
 	int fd;
 	int res;
-
 	if ((fd = open(path.c_str(), O_RDONLY)) < 0)
 		return 403;
-	while ((res = read(fd, buf, 4096)) > 0)
+	while ((res = read(fd, buf, 4095)) > 0)
 	{
 		body.insert(body.end(), buf, buf + res);
-		memset(buf, 0, 4097);
+		memset(buf, 0, 4096);
 	}
 	close(fd);
+
 	return 0;
 }
