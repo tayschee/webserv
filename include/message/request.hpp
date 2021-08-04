@@ -3,8 +3,7 @@
 
 # include "parser.hpp"
 # include "message/message.hpp"
-# include "message/exchange_management.hpp"
-# include "message/response.hpp"
+# include "message/exchange.hpp"
 
 class parser;
 class response;
@@ -16,10 +15,29 @@ class request : public message
 		{
 			std::string	method;
 			std::string uri;
-			//add query_string after ?
+			std::string query_string;
 			std::string version;
 
 			void	clear();
+		};
+
+	public :
+		class exception : public std::exception
+		{
+			private :
+				int 			status;
+				std::string 	method;
+			
+			public :
+				virtual const char	*what() const throw();
+				const std::string	&get_method() const;
+				int					get_status() const;
+
+			public :
+				exception(int status = 500, const std::string &method = "");
+				exception(const exception &x);
+				exception &operator=(const exception &x);
+				virtual ~exception() throw();
 		};
 
 	public :
@@ -46,6 +64,15 @@ class request : public message
 		const std::string	&get_method() const;
 		const std::string	&get_uri() const;
 		const std::string	&get_version() const;
+		const std::string	get_secret() const;
+		const std::string	get_content_type() const;
+		const std::string	get_auth_type() const;
+		const std::string	get_user() const;
+		const std::string	get_content_length() const;
+		const std::string	get_host() const;
+		const std::string	get_query() const;
+		const std::string	get_tf() const;
+
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
 
@@ -57,13 +84,14 @@ class request : public message
 
 	public :
 		request();
-		request(const char *request_char); //take in parameter the char * of receive or read to parse him
+		request(const exception &except);
+		request(const std::string &const_request_str); //take in parameter the char * of receive or read to parse him
 		//request(const request &x);
 		request operator=(const request &x);
 		~request();
 
-		int				receive(const int socket, receive_management &recv_data);
-		int				validity() const;
+		//int				receive(const int socket, receive_management &recv_data);
+		int				validity(const parser &pars) const;
 };
 
 #endif

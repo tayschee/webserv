@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <iostream>
 
 bool	is_horizontal_space(const int c) //verify if c is space or tab
 {
@@ -48,7 +49,49 @@ std::string clean_string(std::string &str)
 	return str;
 }
 
-std::vector<std::string> split(const std::string &str, const std::string &delimiters)
+std::string string_without(std::string str, const std::string &elem_to_erase)
+{
+	size_t i(0);
+	size_t j;
+
+	while (i < str.size())
+	{
+		j = 0;
+		while (j < elem_to_erase.size())
+		{
+			if (str[i] == elem_to_erase[j])
+			{
+				str.erase(i, 1);
+				break;
+			}
+			++j;
+		}
+		++i;
+	}
+	return str;
+}
+
+std::string replace(std::string str, const std::string &elem_to_replace, const std::string &replacing_elem)
+{
+	size_t i(0);
+
+	while((i = str.find(elem_to_replace)) != str.npos)
+	{
+		str.replace(i, elem_to_replace.size(), replacing_elem);
+	}
+	return str;
+}
+
+size_t						skip(const std::string &str, const std::string char_to_ignore)
+{
+	size_t i(0);
+
+	while (char_to_ignore.find(str[i]) != char_to_ignore.npos)
+		++i;
+	return i;
+}
+
+std::vector<std::string>	split(const std::string &str, const std::string &delimiters)
 {
 	std::vector<std::string> result;
 
@@ -60,9 +103,12 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 	}
 	return result;
 }
+
 std::string ft_itoa(int nb)
 {
 	std::string str;
+	if (nb == 0)
+		return "0";
 	long n = nb;
 	bool sign = n < 0;
 
@@ -73,6 +119,58 @@ std::string ft_itoa(int nb)
 		n /= 10;
 	}
 	return (sign ? "-" : "") + str;
+}
+
+template <>
+float ft_atoi(const std::string &str)
+{
+	size_t	i(0);
+	float	nb(0);
+
+	if (str.size() != 0)
+	{
+		if (str[0] == '-')
+		{
+			nb *= -1; //NO XD
+			++i;
+		}
+		else if (str[0] == '+')
+			++i;
+		while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+		{
+			nb = 10 * nb + str[i] - '0';
+			++i;
+		}
+		if (i < str.size() && str[i] == '.')
+		{
+			float multiplier(0.1);
+
+			++i;
+			while (i < str.size() && str[i] >= '0' && str[i] <= '9')
+			{
+				nb += (str[i] - '0') * multiplier;
+				multiplier *= 0.1;
+				++i;
+			}
+		}
+	}
+	return nb;
+}
+
+std::string         ft_itoa_base(long nb, const std::string &base)
+{
+    std::string ret;
+    if (nb == 0)
+        return "0";
+    else if (nb < 0)
+    {
+        nb *= -1;
+        ret = "-";
+    }
+    if (nb / base.size() > 0)
+        ret += ft_itoa_base(nb / base.size(), base);
+    ret += base[nb % base.size()];
+    return ret;
 }
 
 size_t		ft_strlen(const char *str)
@@ -87,14 +185,13 @@ size_t		ft_strlen(const char *str)
 	return i;
 }
 
-/*std::string get_extension(const std::string& str)
+std::string get_extension(const std::string& str)
 {
-	std::string::size_type pos = str.find('.');
-
+	std::string::size_type pos = str.find_last_of('.');
 	return pos == str.npos ? "" : str.substr(pos);
-}*/
+}
 
-//this function van be put in utils.hpp, it gives list of files inside directory
+//It gives list of files + symbolic links inside directory
 std::list<std::string>	files_in_dir(const std::string &path)
 {
 	DIR *directory = opendir(path.c_str());
@@ -112,4 +209,59 @@ std::list<std::string>	files_in_dir(const std::string &path)
 	}
 	closedir(directory);
 	return files;
+}
+
+static std::string getBase(int base)
+{
+	if (base < 2 || base > 36)
+		throw std::invalid_argument("Base should be in the range [2;36]");
+
+	std::string b;
+
+	for (int i = 0; i < base; i++)
+	{
+		if (i < 10)
+			b.push_back(i + '0');
+		else
+			b.push_back(i + 'a');
+	}
+	return b;
+}
+
+static char ft_tolower(char c)
+{
+	if ('A' <= c && c <= 'Z')
+		return c + 32;
+	return c;
+}
+
+long int ft_strtol(const char *str, char **endptr, int base)
+{
+	while (9 <= *str && *str <= 13)
+		str++;
+	if (endptr)
+		*endptr = (char *)str;
+	std::string base_str = getBase(base);
+
+	if (!*str && !(base_str.find(ft_tolower(*str)) || *str == '-' || *str == '+'))
+		return 0;
+
+	long int result = 0;
+	int sign = (*str == '-' ? -1 : 1);
+	if (*str == '-' || *str == '+')
+		str++;
+	if (endptr)
+		*endptr = (char *)str;
+	while (base_str.find(ft_tolower(*str)) != base_str.npos)
+	{
+		result = (result * base) + (ft_tolower(*str) - base_str[0]);
+		str++;
+		if (endptr)
+			(*endptr)++;
+		if (result < 0)
+			throw std::out_of_range("argument is too big");
+	}
+	if (*str && endptr)
+		*endptr = (char *)str;
+	return result * sign;
 }

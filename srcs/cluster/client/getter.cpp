@@ -1,23 +1,23 @@
 #include "client.hpp"
 
-bool        client::is_empty() const // check if requete is empty
-{
-	return req.get_method().empty(); // if method is void / close client
-}
-
 bool        client::is_listen() const // Check if listening socket
 {
     return listen;
 }
 
-bool        client::is_read() const // Check if the time is finished
+int         client::is_read() const // Check if the time is finished
 {
-    return read;
+    return my_read;
+}
+
+bool        client::is_reset() const // Check if reset
+{
+    return reset;
 }
 
 bool        client::is_time() const // Check if the time is finished
 {
-    if (is_listen())
+    if (is_listen() || my_read)
         return 0;
     struct timeval now;
     gettimeofday(&now, NULL);
@@ -29,4 +29,9 @@ bool        client::is_time() const // Check if the time is finished
 int         client::get_fd() const
 {
     return fd;
+}
+
+int         client::get_nb_pars() const
+{
+    return nb_pars;
 }

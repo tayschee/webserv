@@ -1,0 +1,45 @@
+
+---------------------- multiple_location.conf   DELETE   /private/ ------------------------
+
+HTTP/1.1 403 Forbidden
+Server: nginx/1.14.2
+Date: Tue, 13 Jul 2021 12:07:28 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+HTTP/1.1 405 Not Allowed
+Server: nginx/1.14.2
+Date: Tue, 13 Jul 2021 12:07:28 GMT
+Content-Type: text/html
+Content-Length: 173
+Connection: keep-alive
+
+<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+<hr><center>nginx/1.14.2</center>
+</body>
+</html>
+HTTP/1.1 405 Not Allowed
+Server: nginx/1.14.2
+Date: Tue, 13 Jul 2021 12:07:28 GMT
+Content-Type: text/html
+Content-Length: 173
+Connection: keep-alive
+
+<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+<hr><center>nginx/1.14.2</center>
+</body>
+</html>
+HTTP/1.1 403 Forbidden
+Server: nginx/1.14.2
+Date: Tue, 13 Jul 2021 12:07:28 GMT
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+

@@ -15,30 +15,36 @@ class client
         int                             fd;
         struct timeval                  time;
         bool                            listen; // is socket for listening or a new client
-        bool                            read;   // finished to read or not 
-        parser                          pars;
-        message::receive_management     rcm;
-        request                         req;
+        int                             my_read;   // finished to read or not 
+        int					            nb_pars;
+        message::receive    			rcv;
+        int                             fdin;
+        FILE                            *file;
+        size_t                          size_body;
+        bool                            reset;
 
-        void                            reset_time(); // Set the time at the current time
 
         client();
 
     public: /*public function*/
-        client(const int pfd, const bool _listen, const parser &_pars);
+		bool			is_close;
+        client(const int pfd, const bool _listen, int _nb_pars);
         client(int _fd, bool _listen, const client &other);
 
         client(const client& other);
         client& operator=(const client& other);
         ~client();
 
+        void                            reset_time(); // Set the time at the current time
         int                             get_fd() const;
+        int                             get_nb_pars() const;
         void                            receive(); // manage receive
-        ssize_t                         sent(); // send response
-        bool                            is_empty() const;
+        long                            sent(const std::vector<parser::address_conf> &vec_parser); // send response
         bool                            is_listen() const; // Check if listening socket
         bool                            is_time() const; // Check if the time is finished
-        bool                            is_read() const; // Check if read
+        int                             is_read() const; // Check if read
+        bool                            is_reset() const; // Check if read
+		void							reset_rcv(size_t buf_size);
 };
 
 #endif

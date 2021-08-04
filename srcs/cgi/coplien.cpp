@@ -1,34 +1,25 @@
 #include "cgi.hpp"
 
-cgi::cgi(const request &req, const parser &pars, std::string &body)
+cgi::cgi(const request &req, const parser &pars, std::string &body, const std::string &path)
 {
-	body = exec(init_env(req, pars), pars);
 
-		if (body[0] == '5')
-			return;
+	body = exec(init_env(req, pars, path), req, pars, path);
 
-		//std::string cmp("cgi");
-		//std::string resp_str;
-		//const_iterator	it(header.begin());
-		//const_iterator	end(header.end());
-		int i = 0;
-		std::string tmp;
-		while (body[i] != '<')
-				i++;
-	/*	header["Content-Length"] =  ft_itoa(body.size() - i);
-		header["Content-Type"] =  "text/html";
+	if (body[0] == '5')
+		return;
+	if (body.find(SEPARATOR) != body.npos)
+		body.erase(0, body.find(SEPARATOR) + 4);
+}
 
-		std::vector<std::string> tab;
-		std::vector<std::string> tab2;
-		
-		tab = split(tmp.c_str(), "\n\t");
-		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end() && it != --tab.end(); ++it)
-		{
-			tab2 = split(*it, ":");
-			header[tab2[0]] = tab2[1];
-		}*/
+cgi::cgi(const cgi& other)
+{
+	(void)other;
+}
 
-		body = body.c_str() + i;
+cgi		&cgi::operator=(const cgi& other)
+{
+	(void)other;
+	return *this;
 }
 
 cgi::~cgi(){}

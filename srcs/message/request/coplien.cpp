@@ -19,12 +19,16 @@ request::request() : message() {}
 
 //request::request(const request &x) : message(x) {}
 
-request::request(const char *request_char) : message(), first_line()
+request::request(const std::string &const_request_str) : message(), first_line()
 {
-	std::string request_str(request_char);
-	 
+	std::string request_str(const_request_str);
 	parse_body(request_str); //fill body and body part of request_str is erased
 	parse_header(request_str); //fill header + fill first_line
+}
+
+request::request(const exception &except) : message(), first_line()
+{
+	first_line.method = except.get_method();
 }
 
 request request::operator=(const request &x)
