@@ -1,5 +1,8 @@
 #!/bin/bash
-
+GREEN='\e[38;5;2'
+ORANGE='\e[38;5;208'
+RED='\e[38;5;196'
+WHITE='\e[39'
 #MOST CHANGE VARIABLE
 OUTPUT=output #stdin output
 ERROR_OUTPUT=/dev/stderr #stderr output
@@ -12,6 +15,7 @@ NGINX_PORT=80
 WEBSERV_IP=127.0.0.1
 WEBSERV_PORT=80
 
+NGINX_IMAGE=nginx_serv
 PATH_TO_DOCKERFILE=./nginx_serv
 
 SRCS_PATH=$(pwd)/srcs
@@ -66,55 +70,63 @@ launch_server()
         echo Nginx run
     else
         echo Nginx failed
+        exit 1
     fi
-    $WEBSERV $WS_DIRECTORY_CONF/$1 &
+    #$WEBSERV $WS_DIRECTORY_CONF/$1 &
 
-    WEBSERV_PID=$!
+    #WEBSERV_PID=$!
+    NAME_CONFIG=$1
     sleep $SLEEP_TIMER
 }
 
 launch_multi_server()
 {
-    docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/$1/*:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME >> /dev/null
+    docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/$1:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME >> /dev/null
     if [[ $! != 0 ]]; then
         echo Nginx run
     else
         echo Nginx failed
+        exit 1
     fi
-    $WEBSERV $WS_DIRECTORY_CONF/$1 &
+    #$WEBSERV $WS_DIRECTORY_CONF/$1 &
 
-    WEBSERV_PID=$!
+    #WEBSERV_PID=$!
     sleep $SLEEP_TIMER
 }
 
 stop_server()
 {
     docker stop $CONTAINER_NAME
-    kill -2 $WEBSERV_PID #sigint webserv
+    #kill -2 $WEBSERV_PID #sigint webserv
 }
 
 test ()
 {
-    test_method "$1" "GET" "$2" "$3"
-    test_head "$1" "$2" "$3"
+    test_method $1 GET ${@:2}
+    test_head $@
 }
 
 test_method ()
 {
-    diff <(curl -i -X $2 "$4" $NGINX_IP:$NGINX_PORT$3) <(curl -i -X $2 "$4" $WEBSERV_IP:$WEBSERV_PORT$3) > /dev/stdout #> $TMP
-    if [[ $? != 0 ]]; then
-        echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
-        cat $TMP >> $OUTPUT
-    fi
-    rm -f $TMP
+    curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3 >> output2
+
+    #diff <(curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3) <(curl -sSiX $2 ${@:4} $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
+    #if [[ $? != 0 ]]; then
+    #    echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
+    #    cat $TMP >> $OUTPUT
+    #fi
+    #rm -f $TMP
 }
 
 test_head ()
 {
-    diff <(curl -i -I -X HEAD "$3" $NGINX_IP:$NGINX_PORT$2) <(curl -i -I -X HEAD "$3" $WEBSERV_IP:$WEBSERV_PORT$2) > /dev/stdout #> $TMP
+    diff <(curl -sSiIX HEAD ${@:3} $NGINX_IP:$NGINX_PORT$2) <(curl -sSiIX HEAD ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
-        echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
+        /bin/echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        /bin/echo -e $1 " " HEAD " " $2 -e ": NOT OK"
+    else
+        /bin/echo -e $1 " " HEAD " " $2 ": OK"
     fi
     rm -f $TMP
 }
@@ -215,8 +227,16 @@ test_syntax()
     rm -f $TMP
 }
 
-docker build -t nginx_serv $PATH_TO_DOCKERFILE #create image
-make -C $WEBSERV_DIR
+docker images | grep $NGINX_IMAGE > /dev/null
+if [[ $? != 0 ]]; then
+    docker build -t $NGINX_IMAGE $PATH_TO_DOCKERFILE #create image
+fi
+
+ls $WEBSERV_DIR | grep webserv > /dev/null
+if [[ $? != 0 ]]; then
+    make -C $WEBSERV_DIR
+fi
+
 echo "" > $OUTPUT; #clear output
 echo ""  > $ERROR_OUTPUT; #clear error
 
@@ -234,27 +254,19 @@ chmod 000 srcs/spoiler/mdp.html
 
 #WEBSERV_PID=$!
 #sleep $SLEEP_TIMER
-<< C
+<< C2
 launch_server $ERROR_CONF
-
-NAME_CONFIG=error.conf 
 
 #-L follow redirect -i http header in output -I only header
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/inexistant_file"
-test $NAME_CONFIG "/"
 test $NAME_CONFIG "/secret/secret.html"
 
 
 stop_server
+
 #AUTOINDEX OFF TEST
-docker run -d --rm -ti -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_INDEX_OFF_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-$WEBSERV $WS_INDEX_OFF_CONF
-
-WEBSERV_PID=$!
-sleep $SLEEP_TIMER
-
-NAME_CONFIG=index_off.conf
+launch_server $INDEX_OFF_CONF
 
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/html/3.html"
@@ -264,11 +276,8 @@ stop_server
 #REDIRECT TEST
 launch_server $REDIRECT_CONF
 
-NAME_CONFIG=redirect.conf
-
 test $NAME_CONFIG "/" "-L"
 test $NAME_CONFIG "/html/3.html" "-L"
-
 
 stop_server
 
@@ -301,7 +310,7 @@ test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 
-
+<< HARD
 test_put $NAME_CONFIG "/new.html" "-d '<p>impossible a tester c'est ok</p>'" #dont work
 test_put $NAME_CONFIG "/private/impossible.html" "-d impossible2" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
@@ -333,7 +342,7 @@ test_syntax syntax_ressources/line_feed2
 test_syntax syntax_ressources/multiple_space
 test_syntax syntax_ressources/space_and_tab
 test_syntax syntax_ressources/tab
-
+HARD
 #test_post $NAME_CONFIG /php/1.php
 #test_post $NAME_CONFIG /php/2.php
 #test_post $NAME_CONFIG /php/exemple.php
@@ -343,6 +352,7 @@ test_syntax syntax_ressources/tab
 #test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
 
 stop_server
+C2
 
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF
@@ -355,17 +365,17 @@ test $NAME_CONFIG "/secret/" #401
 test $NAME_CONFIG "/html/cat.html" #405
 
 stop_server
-C
+
 
 #MULTIPLE SERVER NAME TEST
-launch_multi_server $MULTIPLE_CONF
+#launch_multi_server $MULTIPLE_CONF
 
-test "default" "/"
-#test "gif.conf" "/" "--header 'Host: gif'"
-#test "jpeg.conf" "/" "--header 'Host: jpeg'"
-#test "secret.conf" "/" "--header 'Host: secret'"
+#test "default" "/"
+#test "gif.conf" "/" "-H 'Host: gif'"
+#test "jpeg.conf" "/" "-H 'Host: jpeg'"
+#test "secret.conf" "/" "-H \"Host: secret\""
 
-stop_server
+#stop_server
 
 #permission reset
 
