@@ -101,13 +101,13 @@ stop_server()
 
 test ()
 {
-    test_method $1 GET ${@:2}
-    #test_head $@
+    test_method $1 GET "${@:2}"
+    test_head $@
 }
 
 test_method ()
 {
-    diff <(curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3) <(curl -sSiX $2 ${@:4} $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
+    diff <(curl -sSiX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3) <(curl -sSiX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -120,7 +120,7 @@ test_method ()
 
 test_head ()
 {
-    diff <(curl -sSiIX HEAD ${@:3} $NGINX_IP:$NGINX_PORT$2) <(curl -sSiIX HEAD ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
+    diff <(curl -sSiIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSiIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -134,12 +134,12 @@ test_head ()
 #test "name_of_config" "METHOD" "path_to_test" "put param" "get and put param"
 test_put()
 {
-    curl -sSiIX PUT ${@:3} $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"1"
-    curl -sSiIX PUT ${@:3} $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
+    curl -sSiIX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"1"
+    curl -sSiIX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
     curl -sSiIX GET $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"3"
     rm -f ./srcs$2
-    curl -sSiIX PUT ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
-    curl -sSiIX PUT ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
+    curl -sSiIX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
+    curl -sSiIX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
     curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
 
     diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
@@ -270,7 +270,7 @@ chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
 
-
+<< C
 launch_server $ERROR_CONF
 
 #-L follow redirect -i http header in output -I only header
@@ -328,7 +328,7 @@ test $NAME_CONFIG "/unexist.html"
 
 
 test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
-test_put $NAME_CONFIG "/private/impossible.html" -d "<p>little</p>" #dont work
+test_put $NAME_CONFIG "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" -d "<p>secret</p>" #must do test
 test_put $NAME_CONFIG "/no_path/new.html" -d "<p>error</p>" #dont work
 test_put $NAME_CONFIG "/html/new.html" -d "<p>YES</p>" #work
@@ -383,18 +383,17 @@ test $NAME_CONFIG "/html/cat.html" #405
 
 stop_server
 
-<< NO_USE
+C
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
 
-#test "default" "/"
-#test "gif.conf" "/" "-H 'Host: gif'"
-#test "jpeg.conf" "/" "-H 'Host: jpeg'"
-test "secret.conf" "/" -H "\"host: secret\""
+test "default" "/"
+test "gif.conf" "/" -H "Host: gif"
+test "jpeg.conf" "/" -H "Host: jpeg"
+test "secret.conf" "/" -H "host: secret"
 
 stop_server
 
-NO_USE
 
 #permission reset
 
