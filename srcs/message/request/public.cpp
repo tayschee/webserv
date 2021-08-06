@@ -24,10 +24,6 @@ int		 request::validity() const
 		return 505;
 	if (first_line.uri.size() < 1 || first_line.uri[0] != '/')
 	{
-		std::cout << "method : " << first_line.method << "\n";
-		std::cout << "version : " << first_line.version << "\n";
-		std::cout << "uri : " << first_line.uri << "\n";
-		std::cout << "aki\n";
 		return 400;
 	}
 
@@ -36,12 +32,6 @@ int		 request::validity() const
 
 	if (range_host.first == end || ++range_host.first != range_host.second)
 	{
-		--range_host.first;
-		std::cout << range_host.first->second << "\n";
-		++range_host.first;
-		std::cout << range_host.first->second << "\n";
-		std::cout << range_host.second->second << "\n";
-		std::cout << "aki1\n";
 		return 400;
 	}
 	

@@ -131,15 +131,14 @@ std::string response::find_index(const parser::entries &entries, const std::list
 	return "";
 }
 
-const parser	&response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
+const parser::address_conf::const_iterator	response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
 {
 	size_t i;
 	parser::address_conf::const_iterator end(pars_list->end());
 	parser::address_conf::const_iterator it(pars_list->begin());
 	const std::string host(req.get_header().find(HOST)->second);
-	parser::address_conf::const_iterator default_parser;
+	parser::address_conf::const_iterator default_parser = pars_list->end();
 
-	std::cout << "hi\n";
 	while (it != end)
 	{
 		const parser::entries &map_server(it->get_block(PARSER_SERVER).conf);
@@ -158,7 +157,7 @@ const parser	&response::find_parser(const std::vector<parser::address_conf>::con
 				std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
 				<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
 
-				return *it;
+				return it;
 			}
 			++i;
 		}
@@ -166,6 +165,8 @@ const parser	&response::find_parser(const std::vector<parser::address_conf>::con
 	}
 	std::cout << default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
 	<< default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
-
-	return *default_parser;
+	
+	if (pars_list->end() == default_parser)
+		return it;
+	return default_parser;
 }
