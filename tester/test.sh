@@ -262,7 +262,7 @@ if [[ $? != 0 ]]; then
 fi
 
 echo "" > $OUTPUT; #clear output
-echo ""  > $ERROR_OUTPUT; #clear error
+#echo ""  > $ERROR_OUTPUT; #clear error
 
 #change permission for test can't be applied immediatly because they cant be git push else
 chmod 000 srcs/private
