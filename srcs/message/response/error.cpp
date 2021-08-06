@@ -64,6 +64,7 @@ int response::error_response(int status, const request &req, const parser &pars)
 	std::map<int, std::string>::const_iterator end(block.end());
 
 	it = block.find(status);
+	std::cout << "status2 : " << status << "\n";
 	if (it == end)
 	{
 		default_error(status, req);
@@ -83,6 +84,7 @@ int response::error_response(int status, const request &req, const parser &pars)
 
 int response::error_response(int status, const request &req)
 {
+	std::cout << "status1 : " << status << "\n";
 	default_error(status, req);
 	status_header();
 	error_special_case(req); //delete things which are note in specific method

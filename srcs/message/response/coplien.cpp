@@ -8,7 +8,7 @@ response::response(const request &req, const std::vector<parser::address_conf>::
 {
 	first_line.status = 400;
 	const parser &pars = find_parser(pars_list, req);
-	if ((first_line.status = req.validity() != 0))
+	if ((first_line.status = req.validity()) != 200)
 	{
 		main_header();
 		first_line.status = error_response(first_line.status, req);

@@ -1,87 +1,19 @@
 
----------------------- multiple_location.conf  GET AFTER DELETE  /1.html ------------------------
+---------------------- multiple_location.conf  GET AFTER DELETE  /cat.html ------------------------
 
 3c3
-< Date: Fri, 16 Jul 2021 11:08:06 GMT
+< Date: Fri, 06 Aug 2021 10:20:09 GMT
 ---
-> Date: Fri, 16 Jul 2021 11:08:05 GMT
----------------------- multiple_location.conf  GET BEFORE DELETE  /php/ ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/php/</title></head>
----
-> <head><title>Index of /delete_dir1/php/</title></head>
-11c11
-< <h1>Index of /delete_dir2/php/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/php/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET AFTER DELETE  /php/ ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/php/</title></head>
----
-> <head><title>Index of /delete_dir1/php/</title></head>
-11c11
-< <h1>Index of /delete_dir2/php/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/php/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET BEFORE DELETE  /empty_dir/ ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/empty_dir/</title></head>
----
-> <head><title>Index of /delete_dir1/empty_dir/</title></head>
-11c11
-< <h1>Index of /delete_dir2/empty_dir/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/empty_dir/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET AFTER DELETE  /empty_dir/ ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/empty_dir/</title></head>
----
-> <head><title>Index of /delete_dir1/empty_dir/</title></head>
-11c11
-< <h1>Index of /delete_dir2/empty_dir/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/empty_dir/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET BEFORE DELETE  / ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/</title></head>
----
-> <head><title>Index of /delete_dir1/</title></head>
-11c11
-< <h1>Index of /delete_dir2/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET AFTER DELETE  / ------------------------
-
-9c9
-< <head><title>Index of /delete_dir2/</title></head>
----
-> <head><title>Index of /delete_dir1/</title></head>
-11c11
-< <h1>Index of /delete_dir2/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/</h1><hr><pre><a href="../">../</a>
+> Date: Fri, 06 Aug 2021 10:20:08 GMT
 ---------------------- multiple_location.conf  GET BEFORE DELETE  /private/ ------------------------
 
-9c9
-< <head><title>Index of /delete_dir2/private/</title></head>
+3c3
+< Date: Fri, 06 Aug 2021 10:20:10 GMT
 ---
-> <head><title>Index of /delete_dir1/private/</title></head>
-11c11
-< <h1>Index of /delete_dir2/private/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/private/</h1><hr><pre><a href="../">../</a>
----------------------- multiple_location.conf  GET AFTER DELETE  /private/ ------------------------
+> Date: Fri, 06 Aug 2021 10:20:09 GMT
+---------------------- multiple_location.conf  DELETE 1 /private/ ------------------------
 
-9c9
-< <head><title>Index of /delete_dir2/private/</title></head>
+3c3
+< Date: Fri, 06 Aug 2021 10:20:10 GMT
 ---
-> <head><title>Index of /delete_dir1/private/</title></head>
-11c11
-< <h1>Index of /delete_dir2/private/</h1><hr><pre><a href="../">../</a>
----
-> <h1>Index of /delete_dir1/private/</h1><hr><pre><a href="../">../</a>
+> Date: Fri, 06 Aug 2021 10:20:09 GMT

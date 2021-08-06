@@ -5,7 +5,6 @@ RED='\e[38;5;196'
 WHITE='\e[39'
 #MOST CHANGE VARIABLE
 OUTPUT=output #stdin output
-ERROR_OUTPUT=/dev/stderr #stderr output
 
 WEBSERV_DIR=..
 WEBSERV=./$WEBSERV_DIR/webserv
@@ -67,9 +66,9 @@ launch_server()
 {
     docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/$1:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME >> /dev/null
     if [[ $! != 0 ]]; then
-        echo Nginx run
+        echo -e "\nNginx run $1\n"
     else
-        echo Nginx failed
+        echo -e "Nginx failed\n"
         exit 1
     fi
     #$WEBSERV $WS_DIRECTORY_CONF/$1 &
@@ -83,9 +82,9 @@ launch_multi_server()
 {
     docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/$1:$VM_CONFIG_PATH_DIR -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME >> /dev/null
     if [[ $! != 0 ]]; then
-        echo Nginx run
+        echo -e "\nNginx run\n"
     else
-        echo Nginx failed
+        echo -e "Nginx failed\n"
         exit 1
     fi
     #$WEBSERV $WS_DIRECTORY_CONF/$1 &
@@ -103,30 +102,31 @@ stop_server()
 test ()
 {
     test_method $1 GET ${@:2}
-    test_head $@
+    #test_head $@
 }
 
 test_method ()
 {
-    curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3 >> output2
-
-    #diff <(curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3) <(curl -sSiX $2 ${@:4} $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
-    #if [[ $? != 0 ]]; then
-    #    echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
-    #    cat $TMP >> $OUTPUT
-    #fi
-    #rm -f $TMP
+    diff <(curl -sSiX $2 ${@:4} $NGINX_IP:$NGINX_PORT$3) <(curl -sSiX $2 ${@:4} $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP
+    if [[ $? != 0 ]]; then
+        echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
+        cat $TMP >> $OUTPUT
+        echo -e $1 " " $2 " " $3 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " $2 " " $3 ": OK"
+    fi
+    rm -f $TMP
 }
 
 test_head ()
 {
     diff <(curl -sSiIX HEAD ${@:3} $NGINX_IP:$NGINX_PORT$2) <(curl -sSiIX HEAD ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
-        /bin/echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
+        echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
-        /bin/echo -e $1 " " HEAD " " $2 -e ": NOT OK"
+        echo -e $1 " " HEAD " " $2 ": CHECK " $OUTPUT
     else
-        /bin/echo -e $1 " " HEAD " " $2 ": OK"
+        echo -e $1 " " HEAD " " $2 ": OK"
     fi
     rm -f $TMP
 }
@@ -134,28 +134,37 @@ test_head ()
 #test "name_of_config" "METHOD" "path_to_test" "put param" "get and put param"
 test_put()
 {
-    curl -i -X PUT "$3" $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"1"
-    curl -i -X PUT "$3" $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
-    curl -i -X GET "$4" $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"3"
+    curl -sSiIX PUT ${@:3} $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"1"
+    curl -sSiIX PUT ${@:3} $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"2"
+    curl -sSiIX GET $NGINX_IP:$NGINX_PORT$2 > $NGINX_TMP"3"
     rm -f ./srcs$2
-    curl -i -X PUT "$3" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
-    curl -i -X PUT "$3" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
-    curl -i -X GET "$4" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
+    curl -sSiIX PUT ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"1"
+    curl -sSiIX PUT ${@:3} $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"2"
+    curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP"3"
 
     diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " PUT1 " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " PUT1 " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " PUT1 " " $2 ": OK"
     fi
     diff $WEBSERV_TMP"2" $NGINX_TMP"2" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " " PUT2 " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " PUT2 " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " PUT2 " " $2 ": OK"
     fi
     diff $WEBSERV_TMP"3" $NGINX_TMP"3" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET AFTER PUT " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo $1 " " GET AFTER PUT " " $2 ": CHECK " $OUTPUT
+    else
+        echo $1 " " GET AFTER PUT " " $2 ": OK"
     fi
 
     rm -f $NGINX_TMP"1"
@@ -173,36 +182,48 @@ test_delete()
     NG_PATH=$NG_DELETE_DIR$2
     WS_PATH=$WS_DELETE_DIR$2
 
-    curl -i -X GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"1"
-    curl -i -X DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"2"
-	curl -i -X DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"3"
-    curl -i -X GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"4"
+    curl -sSiIX GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"1"
+    curl -sSiIX DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"2"
+	curl -sSiIX DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"3"
+    curl -sSiIX GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP"4"
 
-    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"1"
-    curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"2"
-	curl -i -X DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"3"
-    curl -i -X GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"4"
+    curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"1"
+    curl -sSiIX DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"2"
+	curl -sSiIX DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"3"
+    curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP"4"
 
 
     diff $WEBSERV_TMP"1" $NGINX_TMP"1" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET BEFORE DELETE " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " GET BEFORE DELETE " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " GET BEFORE DELETE " " $2 ": OK"
     fi
     diff $WEBSERV_TMP"2" $NGINX_TMP"2" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " DELETE 1" $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " DELETE1 " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " DELETE1 " " $2 ": OK"
     fi
     diff $WEBSERV_TMP"3" $NGINX_TMP"3" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " DELETE2 " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " DELETE2 " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " DELETE2 " " $2 ": OK"
     fi
     diff $WEBSERV_TMP"4" $NGINX_TMP"4" > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET AFTER DELETE " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " GET AFTER DELETE " " $2 ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " GET AFTER DELETE " " $2 ": OK"
     fi
 
     rm -f $NGINX_TMP"1"
@@ -223,6 +244,9 @@ test_syntax()
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
+        echo -e $1 " " SYNTAX_TEST " " ": CHECK " $OUTPUT
+    else
+        echo -e $1 " " SYNTAX_TEST " " $2 ": OK"
     fi
     rm -f $TMP
 }
@@ -246,15 +270,7 @@ chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
 
-#PERSONAL ERROR PAGE TEST
-#-d for run in background
 
-#docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_ERROR_CONF:$VM_CONFIG_PATH -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
-#$WEBSERV $WS_ERROR_CONF
-
-#WEBSERV_PID=$!
-#sleep $SLEEP_TIMER
-<< C2
 launch_server $ERROR_CONF
 
 #-L follow redirect -i http header in output -I only header
@@ -310,16 +326,17 @@ test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 
-<< HARD
-test_put $NAME_CONFIG "/new.html" "-d '<p>impossible a tester c'est ok</p>'" #dont work
-test_put $NAME_CONFIG "/private/impossible.html" "-d impossible2" #dont work
-test_put $NAME_CONFIG "/secret/to_delete.html" "-d \"<p>secret</p>\"" #must do test
-test_put $NAME_CONFIG "/no_path/new.html" "-d \"<p>error</p>\"" #dont work
-test_put $NAME_CONFIG "/html/new.html" "-d \"<p>NO</p>\"" #work
-test_put $NAME_CONFIG "/put_and_delete/page.html" "-d \"<p>OK alllez s'il te plait</p>\"" #work
+
+test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
+test_put $NAME_CONFIG "/private/impossible.html" -d "<p>little</p>" #dont work
+test_put $NAME_CONFIG "/secret/to_delete.html" -d "<p>secret</p>" #must do test
+test_put $NAME_CONFIG "/no_path/new.html" -d "<p>error</p>" #dont work
+test_put $NAME_CONFIG "/html/new.html" -d "<p>YES</p>" #work
+test_put $NAME_CONFIG "/put_and_delete/page.html" -d "<p>OK</p>" #work
 
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
+
 test_delete $NAME_CONFIG "/cat_symbolic.html"
 test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
 
@@ -342,17 +359,17 @@ test_syntax syntax_ressources/line_feed2
 test_syntax syntax_ressources/multiple_space
 test_syntax syntax_ressources/space_and_tab
 test_syntax syntax_ressources/tab
-HARD
-#test_post $NAME_CONFIG /php/1.php
-#test_post $NAME_CONFIG /php/2.php
-#test_post $NAME_CONFIG /php/exemple.php
-#test_post $NAME_CONFIG /php/info.php
-#test_method $NAME_CONFIG POST /php/php.php "-d arg1=O -d arg2=K -d arg3=!"
-#test_method $NAME_CONFIG POST /php/php.php "-d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST"
-#test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
+
+test_method $NAME_CONFIG POST /php/1.php
+test_method $NAME_CONFIG POST /php/2.php
+test_method $NAME_CONFIG POST /php/exemple.php
+test_method $NAME_CONFIG /php/info.php
+test_method $NAME_CONFIG POST /php/php.php "-d arg1=O -d arg2=K -d arg3=!"
+test_method $NAME_CONFIG POST /php/php.php "-d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST"
+test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
 
 stop_server
-C2
+
 
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF
@@ -366,16 +383,18 @@ test $NAME_CONFIG "/html/cat.html" #405
 
 stop_server
 
-
+<< NO_USE
 #MULTIPLE SERVER NAME TEST
-#launch_multi_server $MULTIPLE_CONF
+launch_multi_server $MULTIPLE_CONF
 
 #test "default" "/"
 #test "gif.conf" "/" "-H 'Host: gif'"
 #test "jpeg.conf" "/" "-H 'Host: jpeg'"
-#test "secret.conf" "/" "-H \"Host: secret\""
+test "secret.conf" "/" -H "\"host: secret\""
 
-#stop_server
+stop_server
+
+NO_USE
 
 #permission reset
 

@@ -23,18 +23,32 @@ int		 request::validity() const
 	if (first_line.version != HTTP_VERSION)
 		return 505;
 	if (first_line.uri.size() < 1 || first_line.uri[0] != '/')
+	{
+		std::cout << "method : " << first_line.method << "\n";
+		std::cout << "version : " << first_line.version << "\n";
+		std::cout << "uri : " << first_line.uri << "\n";
+		std::cout << "aki\n";
 		return 400;
+	}
 
 	header_type::const_iterator end(header.end());
 	std::pair<header_type::const_iterator, header_type::const_iterator> range_host(header.equal_range(HOST));
 
-	if (range_host.first == end || end != range_host.second)
+	if (range_host.first == end || ++range_host.first != range_host.second)
+	{
+		--range_host.first;
+		std::cout << range_host.first->second << "\n";
+		++range_host.first;
+		std::cout << range_host.first->second << "\n";
+		std::cout << range_host.second->second << "\n";
+		std::cout << "aki1\n";
 		return 400;
+	}
 	
 	//if (ft_atoi<size_t>(pars.get_block(PARSER_SERVER).conf.find(BUFFER_SIZE)->second[0]) < body.size())
 	//	return 413;
 	//maybe check tf
-	return 0;
+	return 200;
 }
 
 /*const std::vector<parser>::const_iterator request::find_parser(const std::vector<parser> &parser_vec) const
