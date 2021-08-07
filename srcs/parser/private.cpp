@@ -131,6 +131,8 @@ void parser::add_property(const blocks::key_type &block_id, const std::string &n
 		for (i = 0; i < splitted.size() - 1; i++)
 			_blocks[block_id].errors[ft_atoi<int>(splitted[i].c_str())] = splitted[splitted.size() - 1];
 	}
+	else if (name == PARSER_ROOT && block_id.first == PARSER_LOCATION && block_id.second[0] != "/")
+		_blocks[block_id].conf[name][0] += splitted[0];
 	else
 		_blocks[block_id].conf[name] = splitted;
 }
