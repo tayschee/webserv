@@ -1,1 +1,3 @@
-echo "\e[031mHello World\e[00m"
+?=0
+
+echo $?
