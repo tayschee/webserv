@@ -1,15 +1,15 @@
 #include "message/response.hpp"
 
 /*after fail open() or fail stat pass to this function to determinate server error*/
-int		response::error_file(int errnum) const
+int response::error_file(int errnum) const
 {
 	/* maybe add this function to get* but to associate errno value to an error */
 
 	//no authorisation || too much symbolic link (loop symlink) || file was directory
 	if (errnum == EACCES || errnum == ELOOP || errnum == EISDIR)
-		return 403; //Forbidden
+		return 403;									//Forbidden
 	else if (errnum == ENOENT || errnum == ENOTDIR) //file doesnt exist || a element of path is not a directory (except last)
-		return 404; //Not Found
+		return 404;									//Not Found
 	else
 		return 500; //server error ?
 }
@@ -46,48 +46,48 @@ void	response::default_error(int error_status, const request &req)
 		body.clear();
 }
 
-int response::error_msg(const std::string &path, const request &req, const parser &pars)
+int response::redirect_to_error(const std::string &path, const request &req, const parser &pars)
 {
-	int status;
+	int status = 5;
+	(void)req;
 
-	status = method_is_get(path, req, pars);
-	std::cout << "status : " << status << "\n";
-	if (first_line.status == 404 && status == 404)
-	{
-		std::cout << "nive\n";
-		default_error(status, req);
-		return 200;
-	}
-	else if (status > 299)
-		return status;
-	else
-		return 200;
+	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
+	//status = req.get_method(path, req, pars);
+
+	return status;
 }
 
-int	response::error_response(int status, const request &req, const parser &pars)
+int response::error_response(int status, const request &req, const parser &pars)
 {
-	int status_error(status);
 	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
 	std::map<int, std::string>::iterator it;
 	std::map<int, std::string>::const_iterator end(block.end());
 
-	while (status > 299)
+	it = block.find(status);
+	std::cout << "status2 : " << status << "\n";
+	if (it == end)
 	{
-		status_error = status;
-		std::cout << "HERE !!!!!\n";
-		it = block.find(status);
-		if (it == end)
+		default_error(status, req);
+	}
+	else
+	{
+		if (redirect_to_error(it->second, req, pars) == 404)
 		{
 			default_error(status, req);
-			break;
-		}
-		else
-		{
-			status = error_msg(it->second, req, pars);
 		}
 	}
 	status_header();
 	error_special_case(req); //delete things which are note in specific method
 
-	return status_error;
+	return status;
+}
+
+int response::error_response(int status, const request &req)
+{
+	std::cout << "status1 : " << status << "\n";
+	default_error(status, req);
+	status_header();
+	error_special_case(req); //delete things which are note in specific method
+
+	return status;
 }

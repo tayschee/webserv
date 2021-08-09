@@ -1,4 +1,5 @@
 #include "message/response.hpp"
+#include "message/request.hpp"
 
 /*this file regroup get function, get dont refer to the method but function to get a value through an other*/
 
@@ -7,7 +8,7 @@ response::status_array::value_type::second_type //std::string
 response::find_status_string() const
 {
 	status_array::const_iterator it(existing_status.find(first_line.status));
-	
+
 	if (it == existing_status.end())
 		return UNKNOW_STATUS;
 	else
@@ -135,50 +136,42 @@ std::string response::find_index(const parser::entries &entries, const std::list
 	return "";
 }
 
-std::string response::find_charset(const request &req) const
+const parser::address_conf::const_iterator	response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
 {
-	header_type::const_iterator it_tag;
-	header_type head(req.get_header());
-	if ((it_tag = head.find(ACCEPT_CHARSET)) == head.end())
-		return "";
-
-	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
-	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
-	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
-
-	if (it == end)
-		return "";
-	else
-		return it->second;
-}
-
-/*find if there is equivalent file for a specific language if there is, add content-language header field to header*/
-std::string response::find_language(const std::string &complete_path, const request &req)
-{
-	header_type::const_iterator it_tag;
-
-	if ((it_tag = req.get_header().find(ACCEPT_LANGUAGE)) == header.end())
-		return complete_path;
-
-	std::multimap<int, std::string> map(tag_priority(it_tag->second)); //a type could be interesting
-	std::multimap<int, std::string>::const_reverse_iterator it(map.rbegin()); //a type could be interesting
-	std::multimap<int, std::string>::const_reverse_iterator end(map.rend());
-	struct stat file_stat; //information about file
+	size_t i;
+	parser::address_conf::const_iterator end(pars_list->end());
+	parser::address_conf::const_iterator it(pars_list->begin());
+	const std::string host(req.get_header().find(HOST)->second);
+	parser::address_conf::const_iterator default_parser = pars_list->end();
 
 	while (it != end)
 	{
-		std::string new_path(complete_path + "." + it->second);
-		if (stat(new_path.c_str(), &file_stat) < 0)
+		const parser::entries &map_server(it->get_block(PARSER_SERVER).conf);
+		const std::vector<std::string> server_name_vec(map_server.find(PARSER_SERVER_NAME)->second);
+
+		if (map_server.find("listen")->second.size() == 2)
+			default_parser = it;
+
+		i = 0;
+		while (i < server_name_vec.size())
 		{
-			if (!(errno == ENOENT)) //file doesnt exist or new_path is empty chain
-				return ""; //error do something else
-		}
-		else
-		{
-			add_content_language(it->second);
-			return new_path;
+			std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
+			if (host == server_name_vec[i])
+			{
+
+				std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
+				<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
+
+				return it;
+			}
+			++i;
 		}
 		++it;
 	}
-	return complete_path;
+	std::cout << default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
+	<< default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
+	
+	if (pars_list->end() == default_parser)
+		return it;
+	return default_parser;
 }

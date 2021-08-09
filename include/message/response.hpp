@@ -9,7 +9,7 @@ class request;
 # include "message/exchange.hpp"
 # include "server.hpp"
 # include <dirent.h>
-# include <sys/stat.h> 
+# include <sys/stat.h>
 # include "cgi.hpp"
 # include "utils.hpp" //files_in_dir
 
@@ -57,16 +57,16 @@ class response : public message
 		void			main_header(const std::vector<std::string> &allow_method);
 		void			main_header();
 		std::string		header_first_line() const;
-		std::multimap<int, std::string>	tag_priority(std::string tag) const;
 		int				is_open(const struct stat &file) const;
-		bool			is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
+		bool			is_cgi(const std::string &type, const parser &pars) const;
 		bool			is_authorize(const request &req, const parser &pars) const;
 		void			status_header();
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
-		int					del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
-		int					check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
-		std::string			index(const std::string &path, std::string root, std::string add) const;
-		std::string			ft_itoa_base(long nb, std::string &base); //WARNING !!!!!!
+		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
+		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
+		std::string		index(const std::string &path, std::string root, std::string add) const;
+		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
+		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
 
 
 	private : //find_* functions, they return a value with a key without map
@@ -78,8 +78,7 @@ class response : public message
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index = 1) const;
 		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
-		std::string 							find_charset(const request &req) const;
-		std::string								find_language(const std::string &complete_path, const request &req);
+		const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
 
 	private : //method_is_* function, apply one of method
 		int										method_is_head(const std::string &uri, const request &req, const parser &pars); //HEAD
@@ -121,9 +120,8 @@ class response : public message
 
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;
-
-		void									get_code(const parser &pars);
-		bool									is_redirect(parser::entries &block, const parser &pars);
+	
+		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 		int										sent(int fd, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
@@ -132,12 +130,13 @@ class response : public message
 		int										error_file(int errnum) const; //can maybe be change by find_* function
 		void									default_error(int error_status, const request &req);
 		int										error_response(int status, const request &req, const parser &pars);
-		int										error_msg(const std::string &path, const request &req, const parser &pars);
+		int										error_response(int status, const request &req);
+		int										redirect_to_error(const std::string &path, const request &req, const parser &pars);
 		void									error_special_case(const request &req);
 
 	public :
 		response();
-		response(const request &req, const parser &pars);
+		response(const request &req, const std::vector<parser::address_conf>::const_iterator &pars_list);
 		response(const request::exception except, const parser &pars);
 		~response();
 };

@@ -78,7 +78,7 @@ long client::sent(const std::vector<parser::address_conf> &vec_parser) // send r
 	if (i == vec_pars.size())
 		i = j;
 	
-	response rep(req, vec_pars[i]);
+	response rep(req, vec_parser.begin());
 	my_read = rep.sent(fd);
 	size_body = 0;
 	reset = true;

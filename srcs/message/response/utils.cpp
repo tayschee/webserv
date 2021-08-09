@@ -2,7 +2,7 @@
 
 /*Convert header_type to a syntax adapt for http do same thing than (std::string std::string::operator=(const header_type &)),
 that doesn't exist for now, but it can be implement*/
-std::string		response::header_to_string() const
+std::string response::header_to_string() const
 {
 	const_iterator it(header.begin());
 	const_iterator end(header.end());
@@ -20,95 +20,56 @@ std::string		response::header_to_string() const
 }
 
 /*add inside response:header all field which are in all method and in all condition*/
-void			response::main_header(const std::vector<std::string> &allow_method)
+void response::main_header(const std::vector<std::string> &allow_method)
 {
 	add_allow(allow_method); // allow_field add in header
-	add_date(); //date field add in header
-	add_server(); //server field add in header
+	add_date();				 //date field add in header
+	add_server();			 //server field add in header
 }
 
 /*add inside response:header all field which are in all method and in all condition without allow use for error constructor*/
-void			response::main_header()
+void response::main_header()
 {
-	add_date(); //date field add in header
+	add_date();	  //date field add in header
 	add_server(); //server field add in header
 }
 
-/*create first line of response header */ 
-std::string		response::header_first_line() const
+/*create first line of response header */
+std::string response::header_first_line() const
 {
-	std::string		str_first_line;
+	std::string str_first_line;
 
 	str_first_line = first_line.version + " " + ft_itoa(first_line.status) + " " + first_line.version + CRLF;
 
 	return str_first_line;
 }
 
-/*parse value of accept* header-field*/
-std::multimap<int, std::string>	response::tag_priority(std::string tag) const
-{
-	const char tag_sep[] = ",";
-	const char value_sep[] = ";q=";
-	tag = string_without(tag, " \t"); //delete one of those elem in string
-	std::vector<std::string> split_tag(split(tag, tag_sep));
-	std::vector<std::string>::const_iterator it(split_tag.begin());
-	std::vector<std::string>::const_iterator end(split_tag.end());
-	std::multimap<int, std::string>			 map;
-
-	while (it < end)
-	{
-		size_t pos;
-		const std::string key_tag(*it);
-
-		if ((pos = key_tag.find(value_sep)) != key_tag.npos)
-		{
-			map.insert(std::map<int, std::string>::value_type
-			(ft_atoi<float>(key_tag.substr(pos + strlen(value_sep))) * 100, key_tag.substr(0, pos)));
-		}
-		else
-		{
-			map.insert(std::map<int, std::string>::value_type(1 * 100, key_tag));
-		}
-		++it;
-	}
-	return map;
-}
-
 // Check authorizations
-bool	response::is_authorize(const request &req, const parser &pars) const
+bool response::is_authorize(const request &req, const parser &pars) const
 {
 	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-	if (path.find(AUTH_BASIC_USER_FILE) != path.end())
+	if (path.find(AUTH_BASIC) != path.end())
 	{
-		if (req.get_user().empty())
+		message::header_type gh = req.get_header();
+		if (gh.find(AUTHORIZATION) == gh.end())
 			return false;
 		std::vector<std::string> tab;
-		std::string Authorization(req.get_user());
+		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
 		char buf[4096];
-		int fd = 0;
-		std::string file = path.find(AUTH_BASIC_USER_FILE)->second[0].c_str();
-		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
-			return 500;
-		int ret = 0;
-		if ((ret = read(fd, buf, 4095)) < 0)
-			return 403;
-		if (!ret)
-			return false;
+		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
+		int ret = read(fd, buf, 499);
 		buf[ret] = '\0';
-		tab = split(buf, "\t\r\n");
-		memset(buf, 0, 4096);
+		tab = split(buf, WHITE_SPACE); //VERIFY
 		close(fd);
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-		{
 			if (Authorization == *it)
 				return true;
-		}
 		return false;
 	}
 	return true;
 }
 
-void		response::status_header()
+void response::status_header()
 {
 	if (first_line.status == 401)
 		add_www_autentificate();
@@ -254,7 +215,7 @@ std::string		response::index(const std::string &path, std::string root, std::str
 }
 
 // Manage codes
-void	response::get_code(const parser &pars)
+/*void	response::get_code(const parser &pars)
 {
 	(void)pars;
 	struct stat file_stat; //information about file
@@ -281,10 +242,10 @@ void	response::get_code(const parser &pars)
 	header.insert(value_type(CONTENT_LENGTH,  ft_itoa(body.size())));
 	header.insert(value_type(CONTENT_TYPE,  "text/html"));
 	close(fd);
-}
+}*/
 
 // Manage redirections
-bool		response::is_redirect(parser::entries &block, const parser &pars)
+/*bool		response::is_redirect(parser::entries &block, const parser &pars)
 {
 	std::string redirect;
 
@@ -311,22 +272,51 @@ bool		response::is_redirect(parser::entries &block, const parser &pars)
 		return 1;
 	}
 	return 0;
+}*/
+
+// Manage redirections
+int response::is_redirect(const parser::entries &block, const parser &pars, const request &req)
+{
+	(void)req;
+	parser::entries::const_iterator return_line(block.find(PARSER_RETURN));
+	std::string redirect;
+	int status;
+
+	(void)pars;
+	if (return_line == block.end())
+		return 0;
+
+	std::vector<std::string>::const_iterator return_arg = block.find(PARSER_RETURN)->second.begin();
+
+	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //CHANGE
+	status = ft_atoi<int>(*return_arg);
+	header.insert(value_type(LOCATION, *++return_arg));
+
+	return status;
 }
 
-std::string			response::ft_itoa_base(long nb, std::string &base)
+int response::generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method)
 {
-	std::string ret;
-	
-	if (nb == 0)
-		return "0";
-	else if (nb < 0)
-	{
-		nb *= -1;
-		ret = "-";
-	}
-	if (nb / base.size() > 0)
-		ret += ft_itoa_base(nb / base.size(), base);
-	ret += base[nb % base.size()];
+	int status;
 
-	return ret;
+	if (path_info.find(BODY_SIZE) != path_info.end() && req.get_body().size() > ft_atoi<unsigned long>(path_info.find("body_size_max")->second[0]))
+	{
+		status = 413;
+	}
+	else if (!(status = is_redirect(path_info, pars, req))) //do function with all condition
+	{
+		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way
+		status = (this->*method)(req.get_uri(), req, pars);
+	}
+	else
+	{
+		std::cout << "not here\n";
+	}
+	if (status > 299)
+	{
+		std::cout << "here\n";
+		status = error_response(status, req, pars);
+		std::cout << "status : " << status << "\n";
+	}
+	return status;
 }

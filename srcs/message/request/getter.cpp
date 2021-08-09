@@ -100,7 +100,7 @@ std::string		request::get(const std::string &hf_sep, const std::string &eol) con
 }
 
 /*to have response to this request (you must send it)*/
-response		request::get_response(const parser &pars) const
+response		request::get_response(const std::vector<parser::address_conf>::const_iterator pars) const
 {
 	response	resp(*this, pars);
 

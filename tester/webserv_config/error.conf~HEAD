@@ -1,0 +1,32 @@
+server {
+        host		127.0.0.2
+        listen			80 default_server
+
+        root ../srcs/
+        autoindex off
+
+        accept GET POST PUT OPTIONS DELETE
+
+        error_page 404 /no_exist; # GET /nimporte quoi
+        error_page 403 /error/; # GET /private/
+        error_page 405 /error/405.jpeg; # UNEXISTANT_METHOD /
+        #401 avec still it default page (GET /secret)
+
+        location / {
+                index jpeg/baby_yoda.jpeg
+        }
+
+        location /error/ {
+                index /error/403.gif
+        }
+
+        location /secret/ {
+                auth_basic "Restrict access"
+                auth_basic_user_file /srcs/secret/.htaccess
+                index secret.html
+        }
+
+        cgi .php {
+                script_name		/usr/bin/php-cgi
+        }
+}
