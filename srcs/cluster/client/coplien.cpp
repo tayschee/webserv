@@ -32,6 +32,7 @@ client &client::operator=(const client& other) // assignation
 
 	return *this;
 }
+
 client::~client()
 {
 	fclose(file);

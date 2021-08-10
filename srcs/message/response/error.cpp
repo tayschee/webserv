@@ -29,7 +29,7 @@ void	response::default_error(int error_status, const request &req)
 {
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
-	std::string new_str(ft_itoa(error_status) + " " + find_status_string());
+	std::string new_str(ft_itoa(error_status) + " " + find_status_string(error_status));
 	size_t size_new_str(new_str.size());
 	body = DEFAULT_ERROR_FILE;
 
@@ -67,10 +67,13 @@ int response::error_response(int status, const request &req, const parser &pars)
 	std::cout << "status2 : " << status << "\n";
 	if (it == end)
 	{
+		std::cout << "status : " << status << "\n";
 		default_error(status, req);
+		std::cout << "body : " << body << "\n";
 	}
 	else
 	{
+		std::cout << "stop here\n";
 		if (redirect_to_error(it->second, req, pars) == 404)
 		{
 			default_error(status, req);

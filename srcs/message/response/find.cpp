@@ -5,15 +5,15 @@
 
 /*return string associated to a status*/
 response::status_array::value_type::second_type //std::string
-response::find_status_string() const
+response::find_status_string(const int status) const
 {
-	status_array::const_iterator it(existing_status.find(first_line.status));
+	status_array::const_iterator it(existing_status.find(status));
 
 	if (it == existing_status.end())
 		return UNKNOW_STATUS;
 	else
 	{
-		return existing_status.find(first_line.status)->second;
+		return existing_status.find(status)->second;
 	}
 }
 

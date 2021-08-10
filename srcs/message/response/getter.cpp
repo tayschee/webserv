@@ -51,5 +51,6 @@ int		response::sent(int fd, const std::string &hf_sep, const std::string &eol)
 	resp_str += eol;
 	resp_str += body;
     write(fd, resp_str.c_str(), resp_str.size());
+	std::cout << "abc\n";
 	return 0;
 }

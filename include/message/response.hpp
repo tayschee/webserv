@@ -72,7 +72,7 @@ class response : public message
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
 		method_array::mapped_type				find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
-		status_array::value_type::second_type	find_status_string() const; //KEY : status, VALUE: message
+		status_array::value_type::second_type	find_status_string(const int status) const; //KEY : status, VALUE: message
 		//std::string								find_path(const parser::block &block, const std::string &partial_path,  const request &req) const;
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
