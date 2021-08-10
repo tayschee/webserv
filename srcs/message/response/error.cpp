@@ -48,12 +48,13 @@ void	response::default_error(int error_status, const request &req)
 
 int response::redirect_to_error(const std::string &path, const request &req, const parser &pars)
 {
-	int status = 5;
-	(void)req;
+	int status;
+	method_function method = req.get_method() == HEAD ? &response::method_is_head : &response::method_is_get;
 
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
-	//status = req.get_method(path, req, pars);
+	status = (this->*method)(path, req, pars); //change for if there is redirect
 
+	std::cout << "nickel\n";
 	return status;
 }
 
