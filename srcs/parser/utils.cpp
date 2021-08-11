@@ -61,3 +61,10 @@ std::string parser::remove_comments(const std::string &line)
 
 	return pos == line.npos ? line : line.substr(0, pos);
 }
+
+std::string parser::chk_prefix(const std::string &str, char pref)
+{
+	if (str[0] == pref)
+		return str;
+	return pref + str;
+}

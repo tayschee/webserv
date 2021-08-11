@@ -95,6 +95,7 @@ bool parser::check_prop_index(const std::string &block_id, const std::vector<std
 {
 	std::vector<std::string> expected;
 	expected.push_back(PARSER_LOCATION);
+	expected.push_back(PARSER_SERVER);
 
 	if (!basic_chk_block(PARSER_INDEX, block_id, expected, line_no))
 		return false;
@@ -188,7 +189,7 @@ bool parser::check_prop_accept(const std::string &block_id, const std::vector<st
 				break;
 			else if (method_it + 1 == method_end)
 			{
-				std::cerr << "Error: " << filename << ": Unknow method " << *args_it << " at line " << line_no << std::endl;
+				std::cerr << "Error: " << filename << ": Unknown method " << *args_it << " at line " << line_no << std::endl;
 				return false;
 			}
 			++method_it;
