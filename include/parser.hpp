@@ -105,6 +105,8 @@ private:
 	void parse_line(std::string line, int line_no, blocks::key_type &block_id);
 	static void parse_mime(const std::string &path); // get the block with get_mime()
 	static void parse_line_mime(const std::string &filename, const std::string &line, int line_no);
+	static std::string chk_prefix(const std::string &str, char pref);
+
 	//std::string
 
 	bool basic_chk_block(const std::string &name, const std::string &actual, const std::vector<std::string> &expected, int line_no) const;
