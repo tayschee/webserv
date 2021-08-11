@@ -59,8 +59,8 @@ class response : public message
 		std::string		header_first_line() const;
 		int				is_open(const struct stat &file) const;
 		bool			is_cgi(const std::string &type, const parser &pars) const;
-		bool			is_authorize(const request &req, const parser &pars) const;
-		void			status_header();
+		bool			is_authorize(const std::string &path_str, const request &req, const parser &pars) const;
+		void			status_header(int status);
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
 		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
 		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;

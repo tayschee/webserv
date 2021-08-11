@@ -54,7 +54,7 @@ int response::redirect_to_error(const std::string &path, const request &req, con
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
 	status = (this->*method)(path, req, pars); //change for if there is redirect
 
-	std::cout << "nickel\n";
+	std::cout << "status redir : " << status << "\n";
 	return status;
 }
 
@@ -77,11 +77,16 @@ int response::error_response(int status, const request &req, const parser &pars)
 		std::cout << "stop here\n";
 		if (redirect_to_error(it->second, req, pars) == 404)
 		{
+			std::cout << "failed\n";
 			default_error(status, req);
 		}
 	}
-	status_header();
+	status_header(status);
 	error_special_case(req); //delete things which are note in specific method
+	//std::cout << "header : " << get_header() << "\n";
+	//std::cout << "body : " << get_body() << "\n";
+	//std::cout << "test : " << header.find(CONTENT_LENGTH)->second << "\n"; 
+	//std::cout << "test : " << header.find(WWW_AUTHENTICATE)->second << "\n"; 
 
 	return status;
 }
@@ -90,7 +95,7 @@ int response::error_response(int status, const request &req)
 {
 	std::cout << "status1 : " << status << "\n";
 	default_error(status, req);
-	status_header();
+	status_header(status);
 	error_special_case(req); //delete things which are note in specific method
 
 	return status;

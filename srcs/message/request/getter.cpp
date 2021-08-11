@@ -56,7 +56,10 @@ const std::string	request::get_user() const
 {
 	if (header.find(AUTHORIZATION) == header.end())
 		return "";
-	return header.find(AUTHORIZATION)->second;
+	std::vector<std::string> vec = split(header.find(AUTHORIZATION)->second.substr(), WHITE_SPACE);
+	if (vec.size() >= 2)
+		return vec[1]; //VERIFY CANT BE STAY LIKE THIS
+	return vec[0];
 }
 
 const std::string	request::get_content_length() const
