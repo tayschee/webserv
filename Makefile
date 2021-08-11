@@ -43,6 +43,11 @@ CXX = clang++
 INCLUDE = -I ./include
 CPPFLAGS = $(INCLUDE) -std=c++98 -Wall -Wextra -Werror 
 
+#DEBU =
+#ifdef DEBU
+#CPPFLAGS += -fsanitize=address -g3 
+#endif
+
 
 all : $(EXEC)
 

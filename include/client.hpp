@@ -16,8 +16,8 @@ class client
         struct timeval                  time;
         bool                            listen; // is socket for listening or a new client
         int                             my_read;   // finished to read or not 
-        int					            nb_pars;
-        message::receive    			rcv;
+        int                             nb_pars;
+        message::receive                rcv;
         int                             fdin;
         FILE                            *file;
         size_t                          size_body;

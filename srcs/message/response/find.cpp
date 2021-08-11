@@ -168,10 +168,10 @@ const parser::address_conf::const_iterator	response::find_parser(const std::vect
 		}
 		++it;
 	}
-	std::cout << default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
-	<< default_parser->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
 	
 	if (pars_list->end() == default_parser)
+	{
 		return it;
+	}
 	return default_parser;
 }
