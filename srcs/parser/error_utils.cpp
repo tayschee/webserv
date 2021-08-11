@@ -75,7 +75,7 @@ bool parser::validate()
 		return false;
 	}
 	else if (it->second.conf.find(PARSER_ROOT) == it->second.conf.end() &&
-			_blocks[server].conf.find(PARSER_ROOT) == it->second.conf.end())
+			_blocks[server].conf.find(PARSER_ROOT) == _blocks[server].conf.end())
 	{
 		std::cerr << "Error: " << filename << ": No root in the 'location /' block neither in the server block.\n";
 		return false;
