@@ -157,11 +157,11 @@ const parser::address_conf::const_iterator	response::find_parser(const std::vect
 		while (i < server_name_vec.size())
 		{
 			std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
-			if ((std::stoi(port) == 80 && host == server_name_vec[i]) || host == server_name_vec[i] + ":" + port)
+			if ((std::atoi(port.c_str()) == 80 && host == server_name_vec[i]) || host == (server_name_vec[i] + ":" + port))
 			{
 
-				std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
-				<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
+				//std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
+				//<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
 				std::cout << server_name_vec[i] << "\n";
 				return it;
 			}
