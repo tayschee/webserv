@@ -138,11 +138,12 @@ std::string response::find_index(const parser::entries &entries, const std::list
 
 const parser::address_conf::const_iterator	response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
 {
-	size_t i;
-	parser::address_conf::const_iterator end(pars_list->end());
-	parser::address_conf::const_iterator it(pars_list->begin());
-	const std::string host(req.get_header().find(HOST)->second);
-	parser::address_conf::const_iterator default_parser = pars_list->end();
+	size_t									i;
+	parser::address_conf::const_iterator	end(pars_list->end());
+	parser::address_conf::const_iterator	it(pars_list->begin());
+	const std::string						host(req.get_header().find(HOST)->second);
+	parser::address_conf::const_iterator	default_parser = pars_list->end();
+	std::string 							ip(it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0]);
 
 	while (it != end)
 	{
@@ -156,7 +157,7 @@ const parser::address_conf::const_iterator	response::find_parser(const std::vect
 		while (i < server_name_vec.size())
 		{
 			std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
-			if (host == server_name_vec[i])
+			if ((std::stoi(ip) == 80 && host == server_name_vec[i]) || host + ":" + ip == server_name_vec[i])
 			{
 
 				std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
