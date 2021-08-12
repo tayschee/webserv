@@ -58,7 +58,7 @@ int main(int c, char **v)
 
 //	try
 //	{
-		cluster cl(v[i + 1], i);
+	cluster cl(v[i + 1], i);
 		cl.init_listen();
 		ret = cl.start();
 		cl.start();

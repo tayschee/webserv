@@ -45,38 +45,52 @@ std::string response::header_first_line() const
 }
 
 // Check authorizations
-bool response::is_authorize(const request &req, const parser &pars) const
+bool	response::is_authorize(const std::string &uri, const request &req, const parser &pars) const
 {
-	parser::entries path(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-	if (path.find(AUTH_BASIC) != path.end())
+	parser::entries path(pars.get_block(BLOCK_LOCATION, uri).conf);
+	if (path.find(AUTH_BASIC_USER_FILE) != path.end())
 	{
-		message::header_type gh = req.get_header();
-		if (gh.find(AUTHORIZATION) == gh.end())
+		if (req.get_user().empty())
 			return false;
 		std::vector<std::string> tab;
-		std::string Authorization(req.get_header().find(AUTHORIZATION)->second);
+		std::string Authorization(req.get_user());
 		char buf[4096];
-		int fd = open(path.find(AUTH_BASIC_USER_FILE)->second[0].c_str(), O_RDONLY);
-		int ret = read(fd, buf, 499);
+		int fd = 0;
+		std::string file = path.find(AUTH_BASIC_USER_FILE)->second[0].c_str();
+		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
+			return 500;
+		int ret = 0;
+		if ((ret = read(fd, buf, 4095)) < 0)
+			return 403;
+		if (!ret)
+			return false;
 		buf[ret] = '\0';
-		tab = split(buf, WHITE_SPACE); //VERIFY
+		tab = split(buf, "\t\r\n");
+		memset(buf, 0, 4096);
 		close(fd);
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+		{
+			std::cout << "it " << *it << "\n";
+			std::cout << "auth " << Authorization << "\n";
 			if (Authorization == *it)
 				return true;
+		}
 		return false;
 	}
 	return true;
 }
 
-void response::status_header()
+void response::status_header(int status)
 {
-	if (first_line.status == 401)
+	if (status == 401)
+	{
+		std::cout << "ww_autentificate\n";
 		add_www_autentificate();
-	if (first_line.status == 503)
+	}
+	if (status == 503)
 		add_retry_after(200);
-	if (first_line.status > 299 && first_line.status < 400)
-		add_retry_after(1);
+	//if (first_line.status > 299 && first_line.status < 400)
+	//	add_retry_after(1);
 }
 
 int			response::is_open(const struct stat &file) const
@@ -164,7 +178,7 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 		return 404;
 	if (int ret = is_open(file_stat))
 		return ret;
-	if (!is_authorize(req, pars))
+	if (!is_authorize(path, req, pars))
 		return 401;
 	return (0);
 }

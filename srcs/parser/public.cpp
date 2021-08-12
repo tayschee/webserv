@@ -35,7 +35,7 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 		}
 		else if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
-			parser new_object(parser(path + "/" + entry->d_name));
+			parser new_object(path + "/" + entry->d_name);
 			insert_parse_folder(res, new_object);
 		}
 	}
@@ -75,8 +75,6 @@ void parser::chk_def_server(const std::vector<address_conf> &pars)
 					throw std::runtime_error("There is more than one default_server for " + host_port);
 			}
 		}
-		if (!default_server)
-			throw std::runtime_error("There should be at least one default_server for " + host_port);
 	}
 }
 

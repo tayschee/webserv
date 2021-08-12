@@ -41,10 +41,10 @@ parser::block &parser::block::operator=(const parser::block &x)
 
 	if (name == PARSER_SERVER)
 	{
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
+		this->conf.insert(std::make_pair(PARSER_ACCEPT, request::existing_method));
+		this->conf.insert(std::make_pair(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::make_pair(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::make_pair(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
 	}
 	return *this;
 }
@@ -58,8 +58,14 @@ void parser::block::create_block(const std::string name, const std::vector<std::
 	{
 		if (this->name == PARSER_LOCATION)
 		{
-			this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT,
-																				serv_block.conf.find(PARSER_ACCEPT)->second));
+			parser::entries::const_iterator found = serv_block.conf.find(PARSER_ROOT);
+			if (found != serv_block.conf.end())
+				this->conf.insert(std::make_pair(PARSER_ROOT, found->second));
+			found = serv_block.conf.find(PARSER_INDEX);
+			if (found != serv_block.conf.end())
+				this->conf.insert(std::make_pair(PARSER_INDEX, found->second));
+			this->conf.insert(std::make_pair(PARSER_ACCEPT, serv_block.conf.find(PARSER_ACCEPT)->second));
+			this->conf.insert(std::make_pair(PARSER_AUTOINDEX, serv_block.conf.find(PARSER_AUTOINDEX)->second));
 		}
 	}
 }
@@ -72,10 +78,10 @@ parser::block::block(const std::string &name, const std::vector<std::string> &ar
 	this->args = args;
 	if (name == PARSER_SERVER)
 	{
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_ACCEPT, request::existing_method));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
-		this->conf.insert(std::pair<std::string, std::vector<std::string> >(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
+		this->conf.insert(std::make_pair(PARSER_ACCEPT, request::existing_method));
+		this->conf.insert(std::make_pair(PARSER_KEEP_ALIVE, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::make_pair(PARSER_BODY_SIZE_MAX, std::vector<std::string>(1, "60")));
+		this->conf.insert(std::make_pair(PARSER_AUTOINDEX, std::vector<std::string>(1, "off")));
 	}
 }
 

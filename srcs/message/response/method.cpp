@@ -10,15 +10,15 @@ int		response::method_is_head(const std::string &uri, const request &req, const 
 
 int		response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
+	std::cout << "it s ok\n";
 	struct stat file_stat; //information about file
-	if (!is_authorize(req, pars))
-		return 401;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	//403 interdiction
+	if (!is_authorize(uri, req, pars))
+		return 401;
 	int ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-	
 	std::string type = find_media_type(get_extension(path), pars);	
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
 	{
@@ -117,7 +117,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
-	if (!is_authorize(req, pars))
+	if (!is_authorize(uri, req, pars))
 		return 401;
 	/*verify if content exist*/
 	if (lstat(path.c_str(), &file_stat) < 0)
@@ -169,7 +169,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 int		response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block("location", uri), uri, req);
-	if (!is_authorize(req, pars))
+	if (!is_authorize(uri, req, pars))
 		return 401;
 	// if (!is_cgi(get_extension(path), pars, req.get_method()))
 	// 	return 404;
