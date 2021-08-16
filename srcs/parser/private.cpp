@@ -120,10 +120,6 @@ void parser::add_property(const blocks::key_type &block_id, const std::string &n
 			names[splitted[0]] = entry;
 	}
 
-	blocks::key_type id_loc = std::make_pair(PARSER_LOCATION, std::vector<std::string>(1, "/"));
-	if (name == PARSER_ROOT && block_id == id_loc)
-		_blocks[std::make_pair(PARSER_SERVER, std::vector<std::string>())].conf[PARSER_ROOT] = splitted;
-
 	if (name == PARSER_ERROR_PAGE) //this block change
 	{
 		size_t i(0);
@@ -131,8 +127,7 @@ void parser::add_property(const blocks::key_type &block_id, const std::string &n
 		for (i = 0; i < splitted.size() - 1; i++)
 			_blocks[block_id].errors[ft_atoi<int>(splitted[i].c_str())] = splitted[splitted.size() - 1];
 	}
-	else if (name == PARSER_ROOT && block_id.first == PARSER_LOCATION
-			&& block_id.second[0] != "/" && _blocks[block_id].conf[name].size())
+	else if (name == PARSER_ROOT && _blocks[block_id].conf[name].size())
 	{
 		if (splitted[0][0] != '/')
 			_blocks[block_id].conf[name][0] += '/';
