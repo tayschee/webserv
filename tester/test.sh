@@ -4,6 +4,7 @@ source func.sh
 echo "" > $OUTPUT; #clear output
 #echo ""  > $ERROR_OUTPUT; #clear error
 
+trap stop_prog SIGINT
 setup_server
 
 #change permission for test can't be applied immediatly because they cant be git push else
@@ -11,18 +12,21 @@ chmod 000 srcs/private
 chmod 000 srcs/secret/mdp.html
 chmod 000 srcs/spoiler/mdp.html
 
-
-<< C
 launch_server $ERROR_CONF
+
+generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
+generate_x_tmpfile TMP 9 $DIR_TMP1/ #generate 9 file with random name in DIR_TMP1/
 
 #-L follow redirect -i http header in output -I only header
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/inexistant_file"
+test $NAME_CONFIG "/secret/"
 test $NAME_CONFIG "/secret/secret.html"
-
+test $NAME_CONFIG "/private/private.html"
+test $NAME_CONFIG "/private/"
 
 stop_server
-
+<< C
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
 
@@ -68,13 +72,12 @@ test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 
-
 test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
 test_put $NAME_CONFIG "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" -d "<p>secret</p>" #must do test
 test_put $NAME_CONFIG "/no_path/new.html" -d "<p>error</p>" #dont work
 test_put $NAME_CONFIG "/html/new.html" -d "<p>YES</p>" #work
-test_put $NAME_CONFIG "/put_and_delete/page.html" -d "<p>OK</p>" #work
+test_put $NAME_CONFIG "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
 
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
@@ -95,6 +98,7 @@ test_delete $NAME_CONFIG "/private/"
 rm -rf  srcs/$NG_DELETE_DIR
 rm -rf  srcs/$WS_DELETE_DIR
 
+
 test_syntax syntax_ressources/wrong_uri
 test_syntax syntax_ressources/line_feed
 test_syntax syntax_ressources/line_feed2
@@ -106,9 +110,9 @@ test_method $NAME_CONFIG POST /php/1.php
 test_method $NAME_CONFIG POST /php/2.php
 test_method $NAME_CONFIG POST /php/exemple.php
 test_method $NAME_CONFIG /php/info.php
-test_method $NAME_CONFIG POST /php/php.php "-d arg1=O -d arg2=K -d arg3=!"
-test_method $NAME_CONFIG POST /php/php.php "-d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST"
-test_method $NAME_CONFIG GET /php/php.php "-G -d arg1=GET -d arg2=query -d arg3=STRING"
+test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
+test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
+test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
 
 stop_server
 
@@ -125,17 +129,17 @@ test $NAME_CONFIG "/html/cat.html" #405
 
 stop_server
 
-C
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
 
 test "default" "/"
 test "gif.conf" "/" -H "Host: gif"
 test "jpeg.conf" "/" -H "Host: jpeg"
-test "secret.conf" "/" -H "host: secret"
+test "secret.conf" "/" -H "Host: secret"
 
 stop_server
-
+C
+delete_x_tmpdir DIR_TMP 1
 
 #permission reset
 

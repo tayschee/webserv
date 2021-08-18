@@ -28,7 +28,7 @@ static int check_argument(int c, char **v)
 	return i;
 }
 
-/*int start(cluster &cl)
+static int start(cluster &cl)
 {
 	int ret = 0;
 	try
@@ -42,11 +42,12 @@ static int check_argument(int c, char **v)
 	}
 	catch(std::exception &e)
 	{
+		std::cout << e.what() << "\n";
 		std::cerr << "something failed\n";
 		ret = 1;
 	}
 	return ret;
-}*/
+}
 
 int main(int c, char **v)
 {
@@ -56,18 +57,18 @@ int main(int c, char **v)
 	if (i < 0) //bad arguments
 		return 1;
 
-//	try
-//	{
-	cluster cl(v[i + 1], i);
+	try
+	{
+		cluster cl(v[i + 1], i);
 		cl.init_listen();
-		ret = cl.start();
-		cl.start();
-/*	}
+		ret = start(cl);
+	}
 	catch(std::exception &e)
 	{
+		std::cout << e.what() << "\n";
 		std::cerr << "initialisation failed\n";
 		ret = 1;
 	}
-*/
+
 	return ret;
 }

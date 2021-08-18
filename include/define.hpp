@@ -13,13 +13,13 @@
 # define STR_TO_REPLACE "XXX"
 # define DEFAULT_ERROR_FILE_EXT ".html" /*to use a funtion simply*/
 
-# define DEFAULT_ERROR_FILE	"<html>\n"\
-							"<head><title>"STR_TO_REPLACE"</title></head>\n"\
-							"<body>\n"\
-							"<center><h1>"STR_TO_REPLACE"</h1></center>\n"\
-							"<hr><center>"WEBSERV"</center>\n"\
-							"</body>\n"\
-							"</html>"
+# define DEFAULT_ERROR_FILE	"<html>\n" \
+							"<head><title>"STR_TO_REPLACE"</title></head>\n" \
+							"<body bgcolor=\"white\">\n" \
+							"<center><h1>"STR_TO_REPLACE"</h1></center>\n" \
+							"<hr><center>"WEBSERV"</center>\n" \
+							"</body>\n" \
+							"</html>\n"
 
 /*parser block*/
 # define BLOCK_SERVER "server"

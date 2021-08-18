@@ -1,0 +1,37 @@
+host		127.0.0.1
+listen			8080
+root			./tester/srcs
+server_name		2
+
+accept POST GET TRACE
+
+keep_alive 54
+
+error_page 404 402 401 /bonjour
+location / {
+	accept POST GET TRACE
+	root ./tester/srcs
+	index index.html
+}
+
+location /spoiler/ {
+	
+	accept POST GET TRACE
+	root ./tester/srcs
+	index index.html
+}
+
+location /bonjour {
+	index test.html
+}
+
+location /test/t1/ {
+
+location /test/ {
+}
+error_page 402 403 404 407 501 /403.html
+#error_page 407 /error/403.html
+
+cgi .php {
+	script_name		./tester/php-cgi
+}

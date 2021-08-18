@@ -46,7 +46,7 @@ void			response::add_last_modified(time_t time)
 /*add field Last_Modified to response::header, those function may change to replace "webserv" by server_name*/
 void			response::add_server()
 {
-	header.insert(std::pair<std::string, std::string>(PARSER_SERVER, WEBSERV));
+	header.insert(std::pair<std::string, std::string>(SERVER, WEBSERV));
 }
 
 void			response::add_retry_after(size_t sec)

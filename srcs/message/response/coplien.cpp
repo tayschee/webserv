@@ -7,9 +7,9 @@ response::response() : message()
 
 response::response(const request &req, const std::vector<parser::address_conf>::const_iterator &pars_list) : message()
 {
+	std::cout << "ok\n";
 	first_line.status = 400;
 	const parser::address_conf::const_iterator pars_it = find_parser(pars_list, req);
-	std::cout << "ok\n";
 	std::cout << &pars_it << "\n";
 	std::cout << &pars_list << "\n";
 	if (pars_it == pars_list->end() || (first_line.status = req.validity()) != 200)

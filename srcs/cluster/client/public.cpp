@@ -67,14 +67,14 @@ long client::sent(const std::vector<parser::address_conf> &vec_parser) // send r
 	size_t i = 0;
 	size_t j = 0;
 	std::vector<parser> vec_pars = vec_parser[nb_pars];
-	for (std::vector<parser>::iterator it2 = vec_pars.begin(); it2 != vec_pars.end(); ++it2)
+	/*for (std::vector<parser>::iterator it2 = vec_pars.begin(); it2 != vec_pars.end(); ++it2)
 	{
 		if (it2->get_block("server").conf.find("server_name")->second[0] == "default")
 			j = i;
 		if (it2->get_block("server").conf.find("server_name")->second[0] == req.get_host().substr(0, req.get_host().find(":")))
 			break;
 		i++;
-	}
+	}*/
 	if (i == vec_pars.size())
 		i = j;
 	

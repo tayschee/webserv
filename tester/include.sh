@@ -1,13 +1,13 @@
 #MOST CHANGE VARIABLE
-OUTPUT=output #stdin output
+OUTPUT=output #file to compare
 
 WEBSERV_DIR=..
-WEBSERV=./$WEBSERV_DIR/webserv
+WEBSERV=$WEBSERV_DIR/webserv
 
 NGINX_IP=127.0.0.1
 NGINX_PORT=80
 WEBSERV_IP=127.0.0.1
-WEBSERV_PORT=80
+WEBSERV_PORT=8080
 
 NGINX_IMAGE=nginx_serv
 PATH_TO_DOCKERFILE=./nginx_serv
@@ -17,18 +17,18 @@ SRCS_PATH=$(pwd)/srcs
 SLEEP_TIMER=5
 #END MOST CHANGE VARIABLE 
 
-NGINX_TMP=nginx_tmpfile #give filename $NGINX_TMP"1" $NGINX_TMP"2" $NGINX_TMP"3" $NGINX_TMP"4" which doesnt exist
-WEBSERV_TMP=webserv_tmpfile #same than NGINX_TMP
-TMP=tmp #give filename which doesn t exist
-SAVE=save
 NG_DELETE_DIR=delete_dir1
 WS_DELETE_DIR=delete_dir2
+
+#VM_CONFIG
 IMAGE_NAME=nginx_serv
 CONTAINER_NAME=nginx_container
 VM_SRCS_PATH=/srcs
 VM_CONFIG_PATH_DIR=/etc/nginx/conf.d/
-VM_CONFIG_PATH=$(VM_CONFIG_PATH_DIR)default.conf
+VM_CONFIG_PATH=${VM_CONFIG_PATH_DIR}default.conf
 
+
+#FILE CONFIG
 NG_DIRECTORY_CONF=$(pwd)/nginx_config
 WS_DIRECTORY_CONF=$(pwd)/webserv_config
 

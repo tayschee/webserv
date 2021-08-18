@@ -4,7 +4,7 @@ int		response::method_is_head(const std::string &uri, const request &req, const 
 {
 	int ret = method_is_get(uri, req, pars);
 	body.clear();
-	add_content_length(0);
+	//add_content_length(0);
 	return ret; //value of OK response
 }
 

@@ -9,7 +9,7 @@ RUN apt install -y nginx-full \
 
 # php config
 RUN apt install -y php-fpm \
-&& service php7.3-fpm start 
+&& service php7.4-fpm start 
 
 RUN touch /etc/nginx/conf.d/default.conf
 
@@ -19,6 +19,6 @@ VOLUME ["/srcs"]
 #nginx config
 VOLUME ["/etc/nginx/conf.d"]
 
-CMD service php7.3-fpm restart \
+CMD service php7.4-fpm restart \
 && service nginx restart \
 && bash

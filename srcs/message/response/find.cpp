@@ -148,21 +148,25 @@ const parser::address_conf::const_iterator	response::find_parser(const std::vect
 	while (it != end)
 	{
 		const parser::entries &map_server(it->get_block(PARSER_SERVER).conf);
-		const std::vector<std::string> server_name_vec(map_server.find(PARSER_SERVER_NAME)->second);
-
 		if (map_server.find("listen")->second.size() == 2)
 			default_parser = it;
+		const std::map<std::string, std::vector<std::string> >::const_iterator it_server_name(map_server.find(PARSER_SERVER_NAME));
 
+		if (it_server_name == map_server.end())
+			return default_parser;
+
+		const std::vector<std::string> server_name_vec(map_server.find(PARSER_SERVER_NAME)->second);
 		i = 0;
 		while (i < server_name_vec.size())
 		{
-			std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
+			std::cout << "hi\n";
+			//std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
 			if ((std::atoi(port.c_str()) == 80 && host == server_name_vec[i]) || host == (server_name_vec[i] + ":" + port))
 			{
 
 				//std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
 				//<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
-				std::cout << server_name_vec[i] << "\n";
+				//std::cout << server_name_vec[i] << "\n";
 				return it;
 			}
 			++i;
