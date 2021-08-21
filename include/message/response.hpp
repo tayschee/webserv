@@ -128,7 +128,7 @@ class response : public message
 
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function
-		void									default_error(int error_status, const request &req);
+		void									default_error(int error_status, const request &req, const parser &pars);
 		int										error_response(int status, const request &req, const parser &pars);
 		int										error_response(int status, const request &req);
 		int										redirect_to_error(const std::string &path, const request &req, const parser &pars);

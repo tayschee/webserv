@@ -25,7 +25,7 @@ void	response::error_special_case(const request &req)
 	}
 }
 
-void	response::default_error(int error_status, const request &req)
+void	response::default_error(int error_status, const request &req, const parser &pars)
 {
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
@@ -39,7 +39,7 @@ void	response::default_error(int error_status, const request &req)
 		pos += size_new_str;
 	}
 	add_content_length(body.size());
-	add_content_type(DEFAULT_ERROR_FILE_EXT);
+	add_content_type(find_media_type(DEFAULT_ERROR_FILE_EXT, pars));
 
 	/*do something else if there is particular thing for all method*/
 	if (req.get_method() == HEAD)
@@ -69,7 +69,7 @@ int response::error_response(int status, const request &req, const parser &pars)
 	if (it == end)
 	{
 		std::cout << "status : " << status << "\n";
-		default_error(status, req);
+		default_error(status, req, pars);
 		std::cout << "body : " << body << "\n";
 	}
 	else
@@ -78,7 +78,7 @@ int response::error_response(int status, const request &req, const parser &pars)
 		if (redirect_to_error(it->second, req, pars) == 404)
 		{
 			std::cout << "failed\n";
-			default_error(status, req);
+			default_error(status, req, pars);
 		}
 	}
 	status_header(status);
@@ -94,7 +94,7 @@ int response::error_response(int status, const request &req, const parser &pars)
 int response::error_response(int status, const request &req)
 {
 	std::cout << "status1 : " << status << "\n";
-	default_error(status, req);
+	//default_error(status, req);
 	status_header(status);
 	error_special_case(req); //delete things which are note in specific method
 

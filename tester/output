@@ -2,8 +2,8 @@
 ---------------------- error.conf   GET   / ------------------------
 
 2,4c2
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:48 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:24 GMT
 < Content-Type: image/jpeg
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
@@ -14,14 +14,14 @@
 < Accept-Ranges: bytes
 ---
 > Content-Type: image/jpeg
-> Date: Wed, 18 Aug 2021 12:26:48 UTC
+> Date: Sat, 21 Aug 2021 09:38:24 UTC
 > Last-Modified: Wed, 07 Jul 2021 11:47:32 UTC
 > Server: webserv
 ---------------------- error.conf   HEAD   / ------------------------
 
 2,4c2
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:26 GMT
 < Content-Type: image/jpeg
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
@@ -32,29 +32,29 @@
 < Accept-Ranges: bytes
 ---
 > Content-Type: image/jpeg
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+> Date: Sat, 21 Aug 2021 09:38:26 UTC
 > Last-Modified: Wed, 07 Jul 2021 11:47:32 UTC
 > Server: webserv
 ---------------------- error.conf   GET   /inexistant_file ------------------------
 
-2,6c2,6
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 169
-< Connection: keep-alive
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:26 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,6c5,6
+< Content-Length: 153
+< Connection: keep-alive
+---
+> Date: Sat, 21 Aug 2021 09:38:26 UTC
 > Server: webserv
 1,7c1,7
 < <html>
 < <head><title>404 Not Found</title></head>
-< <body bgcolor="white">
+< <body>
 < <center><h1>404 Not Found</h1></center>
-< <hr><center>nginx/1.14.2</center>
+< <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
 ---
@@ -67,40 +67,40 @@
 > </html>
 ---------------------- error.conf   HEAD   /inexistant_file ------------------------
 
-2,6c2,6
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 169
-< Connection: keep-alive
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:26 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
-> Server: webserv
----------------------- error.conf   GET   /secret/ wihtout access ------------------------
-
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
+5,6c5,6
+< Content-Length: 153
 < Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+---
+> Date: Sat, 21 Aug 2021 09:38:26 UTC
+> Server: webserv
+---------------------- error.conf   GET   /secret/ ------------------------
+
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:26 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:26 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 1,7c1,7
 < <html>
 < <head><title>401 Authorization Required</title></head>
-< <body bgcolor="white">
+< <body>
 < <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.14.2</center>
+< <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
 ---
@@ -111,44 +111,142 @@
 > <hr><center>webserv</center>
 > </body>
 > </html>
----------------------- error.conf   HEAD   /secret/ wihtout access ------------------------
+---------------------- error.conf   HEAD   /secret/ ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:26 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:26 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
----------------------- error.conf   GET   /secret/ with good access ------------------------
+---------------------- error.conf   GET   /secret/ ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
+1,3c1,3
+< HTTP/1.1 401 Unauthorized
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> HTTP/1.1 200 OK
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 91
+5,7c5,7
+< Content-Length: 179
 < Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Last-Modified: Wed, 07 Jul 2021 12:27:52 UTC
+> Server: webserv
+1,7c1,4
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <p>Si vous avez entrer un mot de passe
+>         note = 100;
+>     sinon
+>         note = 0;</p>
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+1,3c1,3
+< HTTP/1.1 401 Unauthorized
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> HTTP/1.1 200 OK
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 91
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Last-Modified: Wed, 07 Jul 2021 12:27:52 UTC
+> Server: webserv
+---------------------- error.conf   GET   /secret/ ------------------------
+
+1,3c1,3
+< HTTP/1.1 401 Unauthorized
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> HTTP/1.1 200 OK
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 91
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Last-Modified: Wed, 07 Jul 2021 12:27:52 UTC
+> Server: webserv
+1,7c1,4
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <p>Si vous avez entrer un mot de passe
+>         note = 100;
+>     sinon
+>         note = 0;</p>
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+1,3c1,3
+< HTTP/1.1 401 Unauthorized
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> HTTP/1.1 200 OK
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 91
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Last-Modified: Wed, 07 Jul 2021 12:27:52 UTC
+> Server: webserv
+---------------------- error.conf   GET   /secret/ ------------------------
+
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 1,7c1,7
 < <html>
 < <head><title>401 Authorization Required</title></head>
-< <body bgcolor="white">
+< <body>
 < <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.14.2</center>
+< <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
 ---
@@ -159,44 +257,44 @@
 > <hr><center>webserv</center>
 > </body>
 > </html>
----------------------- error.conf   HEAD   /secret/ with good access ------------------------
+---------------------- error.conf   HEAD   /secret/ ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
----------------------- error.conf   GET   /secret/ with bad access ------------------------
+---------------------- error.conf   GET   /secret/ ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 1,7c1,7
 < <html>
 < <head><title>401 Authorization Required</title></head>
-< <body bgcolor="white">
+< <body>
 < <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.14.2</center>
+< <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
 ---
@@ -207,44 +305,92 @@
 > <hr><center>webserv</center>
 > </body>
 > </html>
----------------------- error.conf   HEAD   /secret/ with bad access ------------------------
+---------------------- error.conf   HEAD   /secret/ ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Server: webserv
+> WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
+---------------------- error.conf   GET   /secret/ ------------------------
+
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 163
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
+> Server: webserv
+> WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body bgcolor="white">
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
+---
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 163
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 ---------------------- error.conf   GET   /secret/secret.html ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 1,7c1,7
 < <html>
 < <head><title>401 Authorization Required</title></head>
-< <body bgcolor="white">
+< <body>
 < <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.14.2</center>
+< <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
 ---
@@ -257,26 +403,26 @@
 > </html>
 ---------------------- error.conf   HEAD   /secret/secret.html ------------------------
 
-2,7c2,7
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
-< Content-Type: text/html
-< Content-Length: 195
-< Connection: keep-alive
-< WWW-Authenticate: Basic realm="Restrict access"
+2,3c2,3
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 ---
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 163
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+5,7c5,7
+< Content-Length: 179
+< Connection: keep-alive
+< WWW-Authenticate: Basic realm="Restrict"
+---
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 > WWW-Authenticate: Basic realm="Accès au site de webserv", charset="UTF-8"
 ---------------------- error.conf   GET   /private/private.html ------------------------
 
 1,7c1,6
 < HTTP/1.1 403 Forbidden
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:50 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 < Content-Type: image/gif
 < Content-Length: 103034
 < Connection: keep-alive
@@ -285,16 +431,16 @@
 > HTTP/1.1 404 Not Found
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:50 UTC
+> Content-Type: text/html
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
-Binary files /dev/fd/63 and /dev/fd/62 differ
+Binary files 5e6c6a9b5280e44e7f57272e3988f52d/521602064bea2c67f75b1a116db914b9 and 5e6c6a9b5280e44e7f57272e3988f52d/c1513ce9d9243e9e357f76e5452831cf differ
 ---------------------- error.conf   HEAD   /private/private.html ------------------------
 
 1,7c1,6
 < HTTP/1.1 403 Forbidden
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:51 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 < Content-Type: image/gif
 < Content-Length: 103034
 < Connection: keep-alive
@@ -303,15 +449,15 @@ Binary files /dev/fd/63 and /dev/fd/62 differ
 > HTTP/1.1 404 Not Found
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:51 UTC
+> Content-Type: text/html
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
 ---------------------- error.conf   GET   /private/ ------------------------
 
 1,7c1,6
 < HTTP/1.1 403 Forbidden
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:51 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 < Content-Type: image/gif
 < Content-Length: 103034
 < Connection: keep-alive
@@ -320,16 +466,16 @@ Binary files /dev/fd/63 and /dev/fd/62 differ
 > HTTP/1.1 404 Not Found
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:51 UTC
+> Content-Type: text/html
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv
-Binary files /dev/fd/63 and /dev/fd/62 differ
+Binary files 5e6c6a9b5280e44e7f57272e3988f52d/521602064bea2c67f75b1a116db914b9 and 5e6c6a9b5280e44e7f57272e3988f52d/c1513ce9d9243e9e357f76e5452831cf differ
 ---------------------- error.conf   HEAD   /private/ ------------------------
 
 1,7c1,6
 < HTTP/1.1 403 Forbidden
-< Server: nginx/1.14.2
-< Date: Wed, 18 Aug 2021 12:26:51 GMT
+< Server: nginx/1.18.0
+< Date: Sat, 21 Aug 2021 09:38:27 GMT
 < Content-Type: image/gif
 < Content-Length: 103034
 < Connection: keep-alive
@@ -338,6 +484,6 @@ Binary files /dev/fd/63 and /dev/fd/62 differ
 > HTTP/1.1 404 Not Found
 > Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
 > Content-Length: 157
-> Content-Type: .html
-> Date: Wed, 18 Aug 2021 12:26:51 UTC
+> Content-Type: text/html
+> Date: Sat, 21 Aug 2021 09:38:27 UTC
 > Server: webserv

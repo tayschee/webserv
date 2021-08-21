@@ -74,35 +74,41 @@ test ()
 #test_method "name of config" "METHOD" "uri" ...(other options)
 test_method ()
 {
-    declare TMP1=$TMP1
-	declare TMP2=$TMP2
 	declare HEADER_DIFF
 	declare BODY_DIFF
+	declare HEADER_DIFF_FILE=$TMP5
+	declare BODY_DIFF_FILE=$TMP6
 
-    diff -a <(curl -sSIX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3) <(curl -sSIX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP1
-	declare HEADER_DIFF=$?
-	diff <(curl -sSX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3) <(curl -sSX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3) > $TMP2
+	curl -sSIX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3 > $TMP1
+	curl -sSIX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3 > $TMP2
+	curl -sSX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3 > $TMP3
+	curl -sSX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3 > $TMP4
+    diff -a $TMP1 $TMP2 > $TMP5
+	HEADER_DIFF=$?
+	diff $TMP3 $TMP4 > $TMP6
 	BODY_DIFF=$?
-    if [[ HEADER_DIFF ]] | [[ BODY_DIFF ]]; then
+	echo $BODY_DIFF
+	echo $HEADER_DIFF
+    if [[ $HEADER_DIFF ]] || [[ $BODY_DIFF ]]; then
         echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
         echo -e $1 " " $2 " " $3 ": CHECK " $OUTPUT
     else
         echo -e $1 " " $2 " " $3 ": OK"
     fi
 	if [[ HEADER_DIFF != 0 ]]; then
-        cat $TMP1 >> $OUTPUT
+        cat $TMP5 >> $OUTPUT
 	fi
 	if [[ BODY_DIFF != 0 ]]; then
-        cat $TMP2 >> $OUTPUT
+        cat $TMP6 >> $OUTPUT
     fi
-    clear_x_tmpfile TMP 2
+    clear_x_tmpfile TMP 6
 }
 
 #test "name of config" "uri" ...(other options)
 test_head ()
 {
     declare TMP=$TMP1
-    diff -a <(curl -sSiIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSiIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
+    diff -a <(curl -sSIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT

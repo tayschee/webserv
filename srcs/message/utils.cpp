@@ -11,7 +11,7 @@ std::string		message::time_string(time_t time_sec) const
 	struct tm	*time_tm; //date inside tm
 	char		char_date[str_size] = {0}; //char_date will contain value of return before to be convert into a string
 
-	time_tm = localtime(&time_sec); //set time_t
+	time_tm = gmtime(&time_sec); //set time_t
 
 	/*	this function fill char_date with the information of date and with information of second string
 		%a for day of week abreviated
