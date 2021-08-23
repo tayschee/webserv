@@ -13,6 +13,7 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 	std::cout << "it s ok\n";
 	struct stat file_stat; //information about file
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
+	std::cout << "path is : " << path << "\n";
 	//403 interdiction
 	if (!is_authorize(uri, req, pars))
 		return 401;

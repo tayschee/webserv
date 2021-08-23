@@ -15,7 +15,7 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 9 $DIR_TMP1/ #generate 9 file with random name in DIR_TMP1/
 
-
+<< C
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
@@ -24,16 +24,13 @@ test $NAME_CONFIG "/inexistant_file"
 test $NAME_CONFIG "/secret/"
 test $NAME_CONFIG "/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
 test $NAME_CONFIG "/secret/" -H "Authorization: Basic gegfgrsrwwrrw"
-test $NAME_CONFIG "/secret/" -H "WWW-authentificate: Basic failed"
-test $NAME_CONFIG "/secret/" -H "WWW-authentificate: YWRtaW46YWRtaW4="
-test $NAME_CONFIG "/secret/" -H "WWW-authentificate: yoops YWRtaW46YWRtaW4="
+test $NAME_CONFIG "/secret/" -H "Authorization: NOT_BASIC failed"
+test $NAME_CONFIG "/secret/" -H "Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4="
 test $NAME_CONFIG "/secret/secret.html"
 test $NAME_CONFIG "/private/private.html"
 test $NAME_CONFIG "/private/"
 
 stop_server
-
-<< ABC
 
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
@@ -42,7 +39,7 @@ test $NAME_CONFIG "/"
 test $NAME_CONFIG "/html/3.html"
 
 stop_server
-
+C
 
 #REDIRECT TEST
 launch_server $REDIRECT_CONF
@@ -51,7 +48,8 @@ test $NAME_CONFIG "/" "-L"
 test $NAME_CONFIG "/html/3.html" "-L"
 
 stop_server
-ABC
+
+
 << C
 #MULTIPLE ERROR TEST
 launch_server $SAME_ERROR_CONF

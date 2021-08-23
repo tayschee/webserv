@@ -54,6 +54,7 @@ int 	cluster::start() // cluster manage the list of socketc
 			else if (cli.is_read() && FD_ISSET(cli.get_fd(), &writefds))
 			{
 				cli.sent(vec_parser);
+				std::cout << "bon\n";
 				
 			}
 		}

@@ -36,7 +36,8 @@ response::response(const request &req, const std::vector<parser::address_conf>::
 	}
 	first_line.status_string = find_status_string(first_line.status);
 	first_line.version = req.get_version();
-	std::cout << "body : " << body << "\n";
+	std::cout << "seems ok\n";
+	//std::cout << "body : " << body << "\n";
 }
 
 /*response::response(const request::exception except, const parser &pars) : message(), first_line()

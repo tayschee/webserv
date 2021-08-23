@@ -78,8 +78,11 @@ long client::sent(const std::vector<parser::address_conf> &vec_parser) // send r
 	if (i == vec_pars.size())
 		i = j;
 	
+	std::cout << "oulaoup\n";
 	response rep(req, vec_parser.begin());
+	std::cout << "jusqu'ici\n";
 	my_read = rep.sent(fd);
+	std::cout << "oki ?\n";
 	size_body = 0;
 	reset = true;
 	// reset_time();

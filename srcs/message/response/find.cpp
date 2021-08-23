@@ -84,6 +84,8 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 
 	if (stat(path.c_str(), &file_stat) < 0)
 	{
+		perror("test : ");
+		std::cout << "\n\n\n\n\n";
 		//do something
 	}
 	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
@@ -95,10 +97,12 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		if (*(--path.end()) != '/')
 			path.push_back('/');
 		std::string ret = path + find_index(entries, files);
+		std::cout << "ret : " << ret << "\n\n\n\n\n";
 		return (ret);
 	}
 	else
 	{
+		std::cout << "ret : dir\n\n\n\n";
 		return path;
 		//return find_language(path, files_in_dir(path), req);
 	}
