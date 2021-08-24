@@ -84,7 +84,7 @@ void response::status_header(int status)
 {
 	if (status == 401)
 	{
-		std::cout << "ww_autentificate\n";
+		std::cout << "www_autentificate\n";
 		add_www_autentificate();
 	}
 	if (status == 503)
