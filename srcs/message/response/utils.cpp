@@ -45,39 +45,42 @@ std::string response::header_first_line() const
 }
 
 // Check authorizations
-bool	response::is_authorize(const std::string &uri, const request &req, const parser &pars) const
+int	response::is_authorize(const std::string &uri, const request &req, const parser &pars) const
 {
 	parser::entries path(pars.get_block(BLOCK_LOCATION, uri).conf);
 	if (path.find(AUTH_BASIC_USER_FILE) != path.end())
 	{
-		if (req.get_user().empty())
-			return false;
 		std::vector<std::string> tab;
-		std::string Authorization(req.get_user());
+		std::string				user, user2;
+		struct stat file_stat; //information about file
 		char buf[4096];
 		int fd = 0;
+
 		std::string file = path.find(AUTH_BASIC_USER_FILE)->second[0].c_str();
-		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
+		if (lstat(file.c_str(), &file_stat) < 0)
 			return 500;
+		std::string Authorization(req.get_user());
+		if (Authorization.empty())
+			return 401;
+		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
+			return 403;
 		int ret = 0;
 		if ((ret = read(fd, buf, 4095)) < 0)
 			return 403;
 		if (!ret)
-			return false;
+			return 0;
 		buf[ret] = '\0';
 		tab = split(buf, "\t\r\n");
 		memset(buf, 0, 4096);
 		close(fd);
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
 		{
-			std::cout << "it " << *it << "\n";
-			std::cout << "auth " << Authorization << "\n";
-			if (Authorization == *it)
-				return true;
+			if (*it == Authorization)
+				return 0;
 		}
-		return false;
+		return 401;
 	}
-	return true;
+	return 0;
 }
 
 void response::status_header(int status)
@@ -172,14 +175,16 @@ int		response::del_content(std::string path, const request &req, const parser &p
 // Check the path
 int		response::check_path(const std::string &path, struct stat &file_stat, const request &req, const parser &pars) const
 {
+	(void)req;
+	(void)pars;
 	if (path.empty())
 		return 404;
 	if (lstat(path.c_str(), &file_stat) < 0)
 		return 404;
 	if (int ret = is_open(file_stat))
 		return ret;
-	if (!is_authorize(path, req, pars))
-		return 401;
+	// if (!is_authorize(path, req, pars))
+	// 	return 401;
 	return (0);
 }
 
