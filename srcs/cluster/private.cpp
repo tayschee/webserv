@@ -6,6 +6,7 @@ void sighandler(const int signal) // catch the signals
 {
 	if (signal)
 		is_alive = 0;
+	std::cout << "SIGNAL : " << signal << "\n";
 }
 
 void	cluster::close_client(iterator &it) // close a client
@@ -54,6 +55,7 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 		errno = 0;
 		set_list_fd(readfds, writefds, max);
 		signal(SIGINT, sighandler);
+		signal(SIGPIPE, SIG_IGN);
 		if (!is_alive)
 			return 0;
 		time_select.tv_sec = 20;

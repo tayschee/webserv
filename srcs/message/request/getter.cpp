@@ -58,7 +58,11 @@ const std::string	request::get_user() const
 		return "";
 	std::vector<std::string> vec = split(header.find(AUTHORIZATION)->second.substr(), WHITE_SPACE);
 	if (vec.size() >= 2)
-		return vec[1]; //VERIFY CANT BE STAY LIKE THIS
+	{
+		std::cout << "le mot de passe est " << vec[1] << "\n";
+		return vec[1]; //VERIFY CANT STAY LIKE THIS
+	}
+	std::cout << "INVALID : " << vec[1] << "\n";
 	return vec[0];
 }
 
