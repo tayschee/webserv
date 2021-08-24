@@ -90,7 +90,7 @@ test_method ()
 	echo $BODY_DIFF
 	echo $HEADER_DIFF
     if [[ $HEADER_DIFF ]] || [[ $BODY_DIFF ]]; then
-        echo -e "----------------------" $1 " " $2 " " $3 "------------------------\n" >> $OUTPUT
+        echo -e "----------------------" $1 " " $2 " " $3 " " "${@:4}" "------------------------\n" >> $OUTPUT
         echo -e $1 " " $2 " " $3 ": CHECK " $OUTPUT
     else
         echo -e $1 " " $2 " " $3 ": OK"

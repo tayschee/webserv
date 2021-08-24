@@ -1,157 +1,84 @@
 
----------------------- redirect.conf   GET   / ------------------------
+---------------------- error.conf   GET   /bad_secret/   -H Authorization: Basic YWRtaW46YWRtaW4= ------------------------
 
-2,3c2,3
+1,7c1,6
+< HTTP/1.1 403 Forbidden
 < Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:27 GMT
----
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 173
-5,7c5,7
-< Content-Length: 169
-< Location: http://127.0.0.1/gif/
+< Date: Tue, 24 Aug 2021 15:50:36 GMT
+< Content-Type: image/gif
+< Content-Length: 103034
 < Connection: keep-alive
+< ETag: "60e5a25c-1927a"
 ---
-> Date: Tue, 24 Aug 2021 13:30:27 UTC
-> Location: /gif/
+> HTTP/1.1 500 Unknow
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 135
+> Content-Type: text/html
+> Date: Tue, 24 Aug 2021 15:50:36 UTC
 > Server: webserv
-10,11c10,11
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:27 GMT
----
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 173
-13,15c13,15
-< Content-Length: 169
-< Location: http://127.0.0.1/html/
-< Connection: keep-alive
----
-> Date: Tue, 24 Aug 2021 13:30:27 UTC
-> Location: /html/
-> Server: webserv
-17,20c17,18
-< HTTP/1.1 302 Moved Temporarily
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:27 GMT
-< Content-Type: image/jpeg
----
-> HTTP/1.1 302 Found
-> Allow: GET, HEAD, POST, OPTIONS
-22,24c20,24
-< Location: http://127.0.0.1/jpeg/
-< Connection: keep-alive
-< ETag: "6113a9d9-232b"
----
-> Content-Type: image/jpeg
-> Date: Tue, 24 Aug 2021 13:30:27 UTC
-> Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC
-> Location: /jpeg/
-> Server: webserv
-27,28c27,28
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:27 GMT
----
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 157
-30,32c30,32
-< Content-Length: 153
-< Location: http://127.0.0.1/dest/
-< Connection: keep-alive
----
-> Date: Tue, 24 Aug 2021 13:30:27 UTC
-> Location: /dest/
-> Server: webserv
-35,37c35
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:27 GMT
-< Content-Type: image/png
----
-> Allow: GET, HEAD, POST, OPTIONS
-39,42c37,40
-< Last-Modified: Wed, 07 Jul 2021 13:45:50 GMT
-< Connection: keep-alive
-< ETag: "60e5b00e-174ab7"
-< Accept-Ranges: bytes
----
-> Content-Type: image/png
-> Date: Tue, 24 Aug 2021 13:30:27 UTC
-> Last-Modified: Wed, 07 Jul 2021 13:45:50 UTC
-> Server: webserv
----------------------- redirect.conf   HEAD   / ------------------------
+Binary files 40f4ed40a9c77ae57d73522a4ff5b671/e6cbd9509c4934edbabf187a83b8e7fb and 40f4ed40a9c77ae57d73522a4ff5b671/f7110633bf94b5e5d320c30304f4ccb6 differ
+---------------------- error.conf   HEAD   /bad_secret/ ------------------------
 
-2,3c2,3
+1,7c1,6
+< HTTP/1.1 403 Forbidden
 < Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:28 GMT
----
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 173
-5,7c5,7
-< Content-Length: 169
-< Location: http://127.0.0.1/gif/
+< Date: Tue, 24 Aug 2021 15:50:36 GMT
+< Content-Type: image/gif
+< Content-Length: 103034
 < Connection: keep-alive
+< ETag: "60e5a25c-1927a"
 ---
-> Date: Tue, 24 Aug 2021 13:30:28 UTC
-> Location: /gif/
+> HTTP/1.1 500 Unknow
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 135
+> Content-Type: text/html
+> Date: Tue, 24 Aug 2021 15:50:36 UTC
 > Server: webserv
-10,11c10,11
+---------------------- error.conf   GET   /bad_secret2/   -H Authorization: Basic YWRtaW46YWRtaW4= ------------------------
+
+1,3c1,3
+< HTTP/1.1 500 Internal Server Error
 < Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:28 GMT
+< Date: Tue, 24 Aug 2021 15:50:36 GMT
 ---
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 173
-13,15c13,15
-< Content-Length: 169
-< Location: http://127.0.0.1/html/
-< Connection: keep-alive
+> HTTP/1.1 403 Forbidden
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 141
+5,6c5,6
+< Content-Length: 177
+< Connection: close
 ---
-> Date: Tue, 24 Aug 2021 13:30:28 UTC
-> Location: /html/
+> Date: Tue, 24 Aug 2021 15:50:36 UTC
 > Server: webserv
-17,20c17,18
-< HTTP/1.1 302 Moved Temporarily
+1,7c1,7
+< <html>
+< <head><title>500 Internal Server Error</title></head>
+< <body>
+< <center><h1>500 Internal Server Error</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>403 Forbidden</title></head>
+> <body>
+> <center><h1>403 Forbidden</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /bad_secret2/ ------------------------
+
+1,3c1,3
+< HTTP/1.1 500 Internal Server Error
 < Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:28 GMT
-< Content-Type: image/jpeg
+< Date: Tue, 24 Aug 2021 15:50:36 GMT
 ---
-> HTTP/1.1 302 Found
-> Allow: GET, HEAD, POST, OPTIONS
-22,24c20,24
-< Location: http://127.0.0.1/jpeg/
-< Connection: keep-alive
-< ETag: "6113a9d9-232b"
+> HTTP/1.1 403 Forbidden
+> Allow: GET, HEAD, POST, PUT, OPTIONS, DELETE
+> Content-Length: 141
+5,6c5,6
+< Content-Length: 177
+< Connection: close
 ---
-> Content-Type: image/jpeg
-> Date: Tue, 24 Aug 2021 13:30:28 UTC
-> Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC
-> Location: /jpeg/
-> Server: webserv
-27,28c27,28
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:28 GMT
----
-> Allow: GET, HEAD, POST, OPTIONS
-> Content-Length: 157
-30,32c30,32
-< Content-Length: 153
-< Location: http://127.0.0.1/dest/
-< Connection: keep-alive
----
-> Date: Tue, 24 Aug 2021 13:30:28 UTC
-> Location: /dest/
-> Server: webserv
-35,37c35
-< Server: nginx/1.18.0
-< Date: Tue, 24 Aug 2021 13:30:28 GMT
-< Content-Type: image/png
----
-> Allow: GET, HEAD, POST, OPTIONS
-39,42c37,40
-< Last-Modified: Wed, 07 Jul 2021 13:45:50 GMT
-< Connection: keep-alive
-< ETag: "60e5b00e-174ab7"
-< Accept-Ranges: bytes
----
-> Content-Type: image/png
-> Date: Tue, 24 Aug 2021 13:30:28 UTC
-> Last-Modified: Wed, 07 Jul 2021 13:45:50 UTC
+> Date: Tue, 24 Aug 2021 15:50:36 UTC
 > Server: webserv
