@@ -75,6 +75,7 @@ launch_server $MULTIPLE_LOCATION_CONF
 
 NAME_CONFIG=multiple_location.conf
 
+test $NAME_CONFIG "/"
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
 test $NAME_CONFIG "/jpeg/"

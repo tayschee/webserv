@@ -32,7 +32,12 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 			if (bc.find(AUTO_INDEX) != bc.end())
 			{
 				if (bc.find(AUTO_INDEX)->second[0] != "on")
-					return 404;
+				{
+					if (pars.get_block(BLOCK_LOCATION, uri).args[1] != uri)
+						return 403;
+					else
+						return 404;
+				}
 			}
 			else
 				return 404;

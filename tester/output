@@ -1,125 +1,117 @@
 
+---------------------- multiple_location.conf   GET   /   ------------------------
+
+Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
+							      >	Server: webserv								
+---------------------- multiple_location.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
+							      >	Server: webserv								
 ---------------------- multiple_location.conf   GET   /gif/   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
 Content-Type: image/gif							      <
 Last-Modified: Wed, 07 Jul 2021 11:28:58 GMT							      |	Content-Type: image/gif								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
 ETag: "60e58ffa-23cf4"							      |	Last-Modified: Wed, 07 Jul 2021 11:28:58 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   HEAD   /gif/ ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
 Content-Type: image/gif							      <
 Last-Modified: Wed, 07 Jul 2021 11:28:58 GMT							      |	Content-Type: image/gif								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
 ETag: "60e58ffa-23cf4"							      |	Last-Modified: Wed, 07 Jul 2021 11:28:58 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   GET   /html/   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
 Content-Type: text/html							      <
 Last-Modified: Wed, 07 Jul 2021 12:00:57 GMT							      |	Content-Type: text/html								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
 ETag: "60e59779-24"							      |	Last-Modified: Wed, 07 Jul 2021 12:00:57 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   HEAD   /html/ ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:13 GMT							      <
 Content-Type: text/html							      <
 Last-Modified: Wed, 07 Jul 2021 12:00:57 GMT							      |	Content-Type: text/html								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:13 UTC								
 ETag: "60e59779-24"							      |	Last-Modified: Wed, 07 Jul 2021 12:00:57 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   GET   /jpeg/   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
 Content-Type: image/jpeg							      <
 Last-Modified: Wed, 07 Jul 2021 11:47:32 GMT							      |	Content-Type: image/jpeg								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 ETag: "60e59454-16271"							      |	Last-Modified: Wed, 07 Jul 2021 11:47:32 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   HEAD   /jpeg/ ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
 Content-Type: image/jpeg							      <
 Last-Modified: Wed, 07 Jul 2021 11:47:32 GMT							      |	Content-Type: image/jpeg								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 ETag: "60e59454-16271"							      |	Last-Modified: Wed, 07 Jul 2021 11:47:32 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   GET   /png/   ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
-1,7c1,3
-< <html>
-< <head><title>502 Bad Gateway</title></head>
-< <body>
-< <center><h1>502 Bad Gateway</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <?php
-> echo $_REQUEST['error'];
-> ?>
-\ No newline at end of file
 ---------------------- multiple_location.conf   HEAD   /png/ ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
 ---------------------- multiple_location.conf   GET   /private/   ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
-1,7c1,3
-< <html>
-< <head><title>502 Bad Gateway</title></head>
-< <body>
-< <center><h1>502 Bad Gateway</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <?php
-> echo $_REQUEST['error'];
-> ?>
-\ No newline at end of file
 ---------------------- multiple_location.conf   HEAD   /private/ ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
 ---------------------- multiple_location.conf   GET   /secret/   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 147								
-Content-Length: 179							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 147								
+Content-Length: 179							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Server: webserv								
 WWW-Authenticate: Basic realm="Restrict access"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
 1,7c1,7
@@ -141,15 +133,15 @@ WWW-Authenticate: Basic realm="Restrict access"							      |	WWW-Authenticate:
 ---------------------- multiple_location.conf   HEAD   /secret/ ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 147								
-Content-Length: 179							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 147								
+Content-Length: 179							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Server: webserv								
 WWW-Authenticate: Basic realm="Restrict access"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
 ---------------------- multiple_location.conf   GET   /spoiler/   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 147								
-Content-Length: 179							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 147								
+Content-Length: 179							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Server: webserv								
 WWW-Authenticate: Basic realm="SPOILER ALERT !!!"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
 1,7c1,7
@@ -171,122 +163,80 @@ WWW-Authenticate: Basic realm="SPOILER ALERT !!!"							      |	WWW-Authenticat
 ---------------------- multiple_location.conf   HEAD   /spoiler/ ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 147								
-Content-Length: 179							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 147								
+Content-Length: 179							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Server: webserv								
 WWW-Authenticate: Basic realm="SPOILER ALERT !!!"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
 ---------------------- multiple_location.conf   GET   /error/   ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 33								
+Content-Type: text/html; charset=UTF-8							      |	Content-Type: application/octet-stream								
+Transfer-Encoding: chunked							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
 							      >	Server: webserv								
-1,7c1,3
-< <html>
-< <head><title>502 Bad Gateway</title></head>
-< <body>
-< <center><h1>502 Bad Gateway</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
+0a1,3
 > <?php
 > echo $_REQUEST['error'];
 > ?>
 \ No newline at end of file
 ---------------------- multiple_location.conf   HEAD   /error/ ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 33								
+Content-Type: text/html; charset=UTF-8							      |	Content-Type: application/octet-stream								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
 							      >	Server: webserv								
 ---------------------- multiple_location.conf   GET   /php/   ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 200 OK								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 100								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 100								
+Content-Type: text/html; charset=UTF-8							      |	Content-Type: application/octet-stream								
+Transfer-Encoding: chunked							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 Connection: keep-alive							      |	Last-Modified: Wed, 07 Jul 2021 12:07:55 UTC								
 							      >	Server: webserv								
-1,7c1,8
-< <html>
-< <head><title>502 Bad Gateway</title></head>
-< <body>
-< <center><h1>502 Bad Gateway</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
->  <head>
->   <title>Test PHP</title>
->  </head>
->  <body>
->  <p>Bonjour le monde</p>
->  </body>
-> </html>
 ---------------------- multiple_location.conf   HEAD   /php/ ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 200 OK								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      |	Content-Length: 100								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 07 Jul 2021 12:07:55 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      |	Content-Length: 100								
+Content-Type: text/html; charset=UTF-8							      |	Content-Type: application/octet-stream								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:07:55 UTC								
 							      >	Server: webserv								
 ---------------------- multiple_location.conf   GET   /html/3.html   ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST								
-Date: Wed, 25 Aug 2021 10:57:23 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
 Content-Type: text/html							      <
 Last-Modified: Wed, 07 Jul 2021 12:03:14 GMT							      |	Content-Type: text/html								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:23 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 ETag: "60e59802-22"							      |	Last-Modified: Wed, 07 Jul 2021 12:03:14 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   HEAD   /html/3.html ------------------------
 
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST								
-Date: Wed, 25 Aug 2021 10:57:24 GMT							      <
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
 Content-Type: text/html							      <
 Last-Modified: Wed, 07 Jul 2021 12:03:14 GMT							      |	Content-Type: text/html								
-Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 10:57:24 UTC								
+Connection: keep-alive							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
 ETag: "60e59802-22"							      |	Last-Modified: Wed, 07 Jul 2021 12:03:14 UTC								
 Accept-Ranges: bytes							      |	Server: webserv								
 ---------------------- multiple_location.conf   GET   /unexist.html   ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:24 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:24 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
-1,7c1,3
-< <html>
-< <head><title>502 Bad Gateway</title></head>
-< <body>
-< <center><h1>502 Bad Gateway</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <?php
-> echo $_REQUEST['error'];
-> ?>
-\ No newline at end of file
 ---------------------- multiple_location.conf   HEAD   /unexist.html ------------------------
 
-HTTP/1.1 502 Bad Gateway							      |	HTTP/1.1 404 Not Found								
 Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 25 Aug 2021 10:57:24 GMT							      |	Content-Length: 33								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Date: Wed, 25 Aug 2021 10:57:24 UTC								
-Connection: keep-alive							      |	Last-Modified: Wed, 11 Aug 2021 10:43:37 UTC								
+Date: Wed, 25 Aug 2021 14:26:14 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "60e5a3c7-13e3"							      |	Date: Wed, 25 Aug 2021 14:26:14 UTC								
+							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
 							      >	Server: webserv								
