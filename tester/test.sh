@@ -15,27 +15,26 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 9 $DIR_TMP1/ #generate 9 file with random name in DIR_TMP1/
 
-
+<< C
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
-#test $NAME_CONFIG "/"
-#test $NAME_CONFIG "/inexistant_file"
-#test $NAME_CONFIG "/secret/"
-#test $NAME_CONFIG "/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
-#test $NAME_CONFIG "/secret/" -H "Authorization: Basic gegfgrsrwwrrw"
-#test $NAME_CONFIG "/secret/" -H "Authorization: NOT_BASIC YWRtaW46YWRtaW4="
-#test $NAME_CONFIG "/secret/" -H "Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4="
-#test $NAME_CONFIG "/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4= YTREYE"
+test $NAME_CONFIG "/"
+test $NAME_CONFIG "/inexistant_file"
+test $NAME_CONFIG "/secret/"
+test $NAME_CONFIG "/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
+test $NAME_CONFIG "/secret/" -H "Authorization: Basic gegfgrsrwwrrw"
+test $NAME_CONFIG "/secret/" -H "Authorization: NOT_BASIC YWRtaW46YWRtaW4="
+test $NAME_CONFIG "/secret/" -H "Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4="
+test $NAME_CONFIG "/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4= YTREYE"
 test $NAME_CONFIG "/bad_secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
 test $NAME_CONFIG "/bad_secret2/" -H "Authorization: Basic YWRtaW46YWRtaW4="
-#test $NAME_CONFIG "/secret/secret.html"
-#test $NAME_CONFIG "/private/private.html"
-#test $NAME_CONFIG "/private/"
+test $NAME_CONFIG "/secret/secret.html"
+test $NAME_CONFIG "/private/private.html"
+test $NAME_CONFIG "/private/"
 
 stop_server
 
-<< C
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
 
@@ -52,6 +51,7 @@ test $NAME_CONFIG "/html/"
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/jpeg/"
 test $NAME_CONFIG "/error/"
+test $NAME_CONFIG "/dest/"
 test $NAME_CONFIG "/" "-L"
 test $NAME_CONFIG "/html/3.html" "-L"
 
@@ -69,7 +69,7 @@ test $NAME_CONFIG "/html/3.html"
 
 
 stop_server
-
+C
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
@@ -87,6 +87,7 @@ test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 
+<< C
 test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
 test_put $NAME_CONFIG "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
 test_put $NAME_CONFIG "/secret/to_delete.html" -d "<p>secret</p>" #must do test
@@ -128,9 +129,9 @@ test_method $NAME_CONFIG /php/info.php
 test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
 test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
 test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
-
+C
 stop_server
-
+<< C
 
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF

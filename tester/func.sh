@@ -83,7 +83,7 @@ test_method ()
 	curl -sSIX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3 > $TMP2
 	curl -sSX $2 "${@:4}" $NGINX_IP:$NGINX_PORT$3 > $TMP3
 	curl -sSX $2 "${@:4}" $WEBSERV_IP:$WEBSERV_PORT$3 > $TMP4
-    diff -a $TMP1 $TMP2 > $TMP5
+    diff -y --suppress-common-lines -a $TMP1 $TMP2 > $TMP5
 	HEADER_DIFF=$?
 	diff $TMP3 $TMP4 > $TMP6
 	BODY_DIFF=$?
@@ -108,7 +108,7 @@ test_method ()
 test_head ()
 {
     declare TMP=$TMP1
-    diff -a <(curl -sSIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
+    diff -y --suppress-common-lines -a <(curl -sSIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -139,7 +139,7 @@ test_put()
     curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_TMP3
     rm -f ./srcs$2 >/dev/null #ignore if there is no permission
 
-    diff -a $NGINX_TMP1 $WEBSERV_TMP1 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP1 $WEBSERV_TMP1 > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " PUT1 " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -147,7 +147,7 @@ test_put()
     else
         echo -e $1 " " PUT1 " " $2 ": OK"
     fi
-    diff -a $NGINX_TMP2 $WEBSERV_TMP2 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP2 $WEBSERV_TMP2 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " " PUT2 " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -155,7 +155,7 @@ test_put()
     else
         echo -e $1 " " PUT2 " " $2 ": OK"
     fi
-    diff -a $NGINX_TMP3 $WEBSERV_TMP3 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP3 $WEBSERV_TMP3 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET AFTER PUT " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -194,7 +194,7 @@ test_delete()
     curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP4
 
 
-    diff -a $NGINX_TMP1 $WEBSERV_TMP1 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP1 $WEBSERV_TMP1 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET BEFORE DELETE " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -202,7 +202,7 @@ test_delete()
     else
         echo -e $1 " " GET BEFORE DELETE " " $2 ": OK"
     fi
-    diff -a $NGINX_TMP2 $WEBSERV_TMP2 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP2 $WEBSERV_TMP2 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " DELETE 1" $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -210,7 +210,7 @@ test_delete()
     else
         echo -e $1 " " DELETE1 " " $2 ": OK"
     fi
-    diff -a $NGINX_TMP3 $WEBSERV_TMP3 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP3 $WEBSERV_TMP3 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " DELETE2 " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -218,7 +218,7 @@ test_delete()
     else
         echo -e $1 " " DELETE2 " " $2 ": OK"
     fi
-    diff -a $NGINX_TMP4 $WEBSERV_TMP4 > $TMP
+    diff -y --suppress-common-lines -a $NGINX_TMP4 $WEBSERV_TMP4 > $TMP
     if [[ $? != 0 ]]; then 
         echo -e "----------------------" $1 " GET AFTER DELETE " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT
@@ -235,7 +235,7 @@ test_syntax()
 {
     declare TMP=$TMP1
 
-    diff -a <(python send_request.py $1 $NGINX_IP $NGINX_PORT) <(python send_request.py $1 $WEBSERV_IP $WEBSERV_PORT) > $TMP
+    diff -y --suppress-common-lines -a <(python send_request.py $1 $NGINX_IP $NGINX_PORT) <(python send_request.py $1 $WEBSERV_IP $WEBSERV_PORT) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT

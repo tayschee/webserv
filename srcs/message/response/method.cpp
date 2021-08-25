@@ -21,8 +21,10 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 	ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-	std::string type = find_media_type(get_extension(path), pars);	
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
+	std::cout << "path is : " << path << "\n";
+	std::string type = find_media_type(get_extension(path), pars);
+	std::cout << "all fine\n";
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR/* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
 		try
 		{
@@ -41,8 +43,9 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 
 			return 404;
 		}
-		
+		std::cout << "all fine2\n";
 		std::string add = (path.substr(pars.get_block(BLOCK_LOCATION, uri).conf.find(BLOCK_ROOT)->second[0].size()));
+		std::cout << "all fine3\n";
 		body = index(path, uri, add);
 		add_content_type("text/html");
 	}
