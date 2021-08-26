@@ -28,12 +28,14 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 	{
 		try
 		{
-			parser::entries bc(pars.get_block(BLOCK_LOCATION, uri).conf);
+			parser::block block(pars.get_block(BLOCK_LOCATION, uri));
+			parser::entries bc(block.conf);
+
 			if (bc.find(AUTO_INDEX) != bc.end())
 			{
 				if (bc.find(AUTO_INDEX)->second[0] != "on")
 				{
-					if (pars.get_block(BLOCK_LOCATION, uri).args[1] != uri)
+					if (block.args[1] != uri)
 						return 403;
 					else
 						return 404;
