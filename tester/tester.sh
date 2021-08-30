@@ -18,7 +18,7 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 22 $DIR_TMP1/ #generate 9 file with random name in DIR_TMP1/
 
-<< C
+
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
@@ -37,7 +37,7 @@ test $NAME_CONFIG "/private/private.html"
 test $NAME_CONFIG "/private/"
 
 stop_server
-
+<< C
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
 
@@ -72,7 +72,7 @@ test $NAME_CONFIG "/html/3.html"
 
 
 stop_server
-C
+
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
@@ -93,13 +93,12 @@ test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
 C
 
-test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
+#test_put $NAME_CONFIG "/new.html" -d "<p>little</p>"
 #test_put $NAME_CONFIG "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
 #test_put $NAME_CONFIG "/secret/to_delete.html" -d "<p>secret</p>" #must do test
 #test_put $NAME_CONFIG "/no_path/new.html" -d "<p>error</p>" #dont work
 #test_put $NAME_CONFIG "/html/new.html" -d "<p>YES</p>" #work
 #test_put $NAME_CONFIG "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
-
 << C
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
@@ -135,10 +134,10 @@ test_method $NAME_CONFIG /php/info.php
 test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
 test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
 test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
-C
-stop_server
-<< C
 
+stop_server
+C
+<< C
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF
 

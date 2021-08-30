@@ -1,29 +1,27 @@
 
-----------------------  multiple_location.conf GET_BEFORE_PUT_1 -d <p>little</p>  ------------------------
+----------------------  error.conf GET /  ------------------------
 
-----------------------  multiple_location.conf PUT_1 -d <p>little</p>  ------------------------
+----------------------  error.conf GET /inexistant_file  ------------------------
 
-1,7d0
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body bgcolor="white">
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.14.2</center>
-< </body>
-< </html>
-----------------------  multiple_location.conf GET_AFTER_PUT_1 -d <p>little</p>  ------------------------
+----------------------  error.conf GET /secret/  ------------------------
 
-Binary files 80c93fec9e46a1e5a3ba4ed0dda8a143/2a36d3e496080cd6b996af2d03acc020 and 80c93fec9e46a1e5a3ba4ed0dda8a143/d9aac1672e5383e8c16fe401d94e98db differ
-----------------------  multiple_location.conf PUT_2 -d <p>little</p>  ------------------------
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
-1,7d0
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body bgcolor="white">
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.14.2</center>
-< </body>
-< </html>
-----------------------  multiple_location.conf GET_AFTER_PUT_2 -d <p>little</p>  ------------------------
+----------------------  error.conf GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
 
-Binary files 80c93fec9e46a1e5a3ba4ed0dda8a143/cffdaa2e2a4f03602e24d961c54daa89 and 80c93fec9e46a1e5a3ba4ed0dda8a143/fb6246095e13cc7ad170bfadbde7a31e differ
+----------------------  error.conf GET /secret/ -H Authorization: NOT_BASIC YWRtaW46YWRtaW4=  ------------------------
+
+----------------------  error.conf GET /secret/ -H Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4=  ------------------------
+
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
+
+----------------------  error.conf GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+----------------------  error.conf GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+----------------------  error.conf GET /secret/secret.html  ------------------------
+
+----------------------  error.conf GET /private/private.html  ------------------------
+
+----------------------  error.conf GET /private/  ------------------------
+
