@@ -14,7 +14,8 @@ PATH_TO_DOCKERFILE=./nginx_serv
 
 SRCS_PATH=$(pwd)/srcs
 
-SEND_REQUEST_PY=tester/send_request.py
+SEND_REQUEST_PY=tester_utils/send_request.py
+SPLIT_RESPONSE_PY=tester_utils/split_response.py
 
 SLEEP_TIMER=5
 #END MOST CHANGE VARIABLE 

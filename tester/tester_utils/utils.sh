@@ -2,22 +2,17 @@ get_response()
 {
 	declare HEADER=TMP"$1"
 	declare BODY=TMP"$(expr "$1" + 1)"
-	declare EVERYTHING=TMP"$(expr "$1" + 2)"
+	declare RESPONSE=TMP"$(expr "$1" + 2)"
 	declare IP="$2"
 	declare PORT="$3"
 
-	echo 1 $1
-	echo 2 $2
-	echo 3 $3
-	echo 4 $4
-	echo 5 $5
-	echo 6 $6
-	echo 7 $7
-	echo 8 $8
-	curl -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!EVERYTHING}
-	cat ${!EVERYTHING} | grep -A-1 "\r\n\r\n" > ${!BODY}
-	cat ${!EVERYTHING} | grep -B-1 "\r\n\r\n" > ${!HEADER}
-	# echo "" > ${!EVERYTHING}
+	echo $SPLIT_RESPONSE_PY
+	curl -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
+	python $SPLIT_RESPONSE_PY ${!RESPONSE} ${!HEADER} ${!BODY}
+	#if [[$? == 1]]; then
+	#	exit 1
+	#fi
+	echo "" > ${!RESPONSE}
 }
 
 print_diff()
