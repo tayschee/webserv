@@ -6,7 +6,11 @@ get_response()
 	declare IP="$2"
 	declare PORT="$3"
 
+
 	echo $SPLIT_RESPONSE_PY
+	echo "4 $4"
+	echo "5 $5"
+	echo "6 ${@:6}"
 	curl -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
 	python $SPLIT_RESPONSE_PY ${!RESPONSE} ${!HEADER} ${!BODY}
 	#if [[$? == 1]]; then

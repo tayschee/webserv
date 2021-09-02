@@ -33,52 +33,38 @@ test_head ()
 #test "name_of_config" "path_to_test" ...(put param)
 test_put()
 {
-	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" #"${@:2}"
+	declare GET_OPTIONS=$(expr "$2" + 1)
+	declare PUT_OPTIONS=$(expr "$2" - 2)
 
-	#get_response "3" "$NGINX_IP" "$NGINX_PORT" "PUT" "${@:2}"
-    #curl -sSIX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_HEAD1
-	#curl -sSX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_BODY1
+	#TEST FIRST PUT
+	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "3" "$NGINX_IP" "$NGINX_PORT" "PUT" "${@:3:$PUT_OPTIONS}"
 
-	get_response "3" "$NGINX_IP" "$NGINX_PORT" "PUT" "${@:4:$2}"
-    #curl -sSIX GET $NGINX_IP:$NGINX_PORT$2 > $NGINX_HEAD3
-	#curl -sSIX GET $NGINX_IP:$NGINX_PORT$2 > $NGINX_BODY3
+	#TEST SECOND PUT
+	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "7" "$NGINX_IP" "$NGINX_PORT" "PUT"  "${@:3:$PUT_OPTIONS}"
+	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 
-	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" #${@:2}
-    #curl -sSIX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_HEAD2
-	#curl -sSX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_BODY2
+    rm -f ./srcs$PUT_OPTIONS > /dev/null #ignore if there is no permission
 
-	get_response "7" "$NGINX_IP" "$NGINX_PORT" "PUT"  "${@:4:$2}"
-    #curl -sSIX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_HEAD2
-	#curl -sSX PUT "${@:3}" $NGINX_IP:$NGINX_PORT$2 > $NGINX_BODY2
 
-	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" #"${@:2}"
+	#TEST FIRST PUT
+	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "PUT"  "${@:3:$PUT_OPTIONS}"
 
-    rm -f ./srcs$2 > /dev/null #ignore if there is no permission
+	#TEST SECOND PUT
+	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "PUT"  "${@:3:$PUT_OPTIONS}"
+	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 
-	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" #"${@:2}"
+	rm -f ./srcs$PUT_OPTIONS >/dev/null #ignore if there is no permission
 
-	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "PUT"  "${@:4:$2}"
-    #curl -sSIX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_HEAD1
-	#curl -sSX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_BODY1
 
-	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" #${@:2}	
-	#curl -sSIX GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_HEAD3
-	#curl -sSIX GET $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_BODY3
-
-	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "PUT"  "${@:4:$2}"
-	#curl -sSIX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_HEAD2
-	#curl -sSX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_BODY2
-
-	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" #${@:2}
-	#curl -sSIX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_HEAD2
-	#curl -sSX PUT "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2 > $WEBSERV_BODY2
-	rm -f ./srcs$2 >/dev/null #ignore if there is no permission
-
-	print_diff 1 11 21 $1 GET_BEFORE_PUT_1 "${@:4:$2}"
-	print_diff 3 13 21 $1 PUT_1 "${@:4}"
-	print_diff 5 15 21 $1 GET_AFTER_PUT_1 "${@:4:$2}"
-	print_diff 7 17 21 $1 PUT_2 "${@:4}"
-	print_diff 9 19 21 $1 GET_AFTER_PUT_2 "${@:4:$2}"
+	print_diff 1 11 21 $1 GET_BEFORE_PUT_1 "$3" "${@:$GET_OPTIONS}"
+	print_diff 3 13 21 $1 PUT_1 "${@:3:$PUT_OPTIONS}"
+	print_diff 5 15 21 $1 GET_AFTER_PUT_1 "$3" "${@:$GET_OPTIONS}"
+	print_diff 7 17 21 $1 PUT_2 "${@:3:$PUT_OPTIONS}"
+	print_diff 9 19 21 $1 GET_AFTER_PUT_2 "$3" "${@:$GET_OPTIONS}"
 
     clear_x_tmpfile TMP 22
 }
@@ -86,41 +72,43 @@ test_put()
 #test "name_of_config" "path_to_test"
 test_delete()
 {
-	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "/$NG_PATH" ${@:4} 
-    #curl -sSiIX GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP1
+	declare GET_OPTIONS=$(expr "$2" + 1)
+	declare DELETE_OPTIONS=$(expr "$2" - 2)
 
-	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "/$NG_PATH" ${@:3} 
-	#curl -sSiIX DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP2
+	echo GET OPTIONS : $GET_OPTIONS
+	echo VERIF "${@:3:$DELETE_OPTIONS}"
+	echo VERIF2 "${@:$GET_OPTIONS}"
+	#TEST FIRST DELETE
+	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:3:$DELETE_OPTIONS}"
 
-	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "/$NG_PATH" ${@:3}
-	#curl -sSiIX DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP3
+	#TEST SECOND DELETE
+	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
+	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 
-	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "/$NG_PATH" ${@:3}
-    #curl -sSiIX GET $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP4
-
-	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "/$NG_PATH" ${@:3}
-	#curl -sSiIX DELETE $NGINX_IP:$NGINX_PORT/$NG_PATH > $NGINX_TMP3
-
-
-	get_response "11" "$NGINX_IP" "$NGINX_PORT" "GET" "/$WS_PATH" ${@:3}
-    #curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP1
-	get_response "13" "$NGINX_IP" "$NGINX_PORT" "DELETE" "/$WS_PATH" ${@:3}
-    #curl -sSiIX DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH >$WEBSERV_TMP2
-	get_response "15" "$NGINX_IP" "$NGINX_PORT" "GET" "/$WS_PATH" ${@:3}
-	#curl -sSiIX DELETE $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP3
-	get_response "17" "$NGINX_IP" "$NGINX_PORT" "DELETE" "/$WS_PATH" ${@:3}
-    #curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP4
-	get_response "19" "$NGINX_IP" "$NGINX_PORT" "GET" "/$WS_PATH" ${@:3}
-    #curl -sSiIX GET $WEBSERV_IP:$WEBSERV_PORT/$WS_PATH > $WEBSERV_TMP4
+    rm -f ./srcs$DELETE_OPTIONS > /dev/null #ignore if there is no permission
 
 
-	print_diff 1 11 21 $1 GET_BEFORE_DELETE_1 "${@:3}"
-	print_diff 3 13 21 $1 PUT_1 "${@:3}"
-	print_diff 5 15 21 $1 GET_AFTER_PUT_1 "${@:3}"
-	print_diff 7 17 21 $1 PUT_2 "${@:3}"
-	print_diff 9 19 21 $1 GET_AFTER_PUT_2 "${@:3}"
+	#TEST FIRST DELETE
+	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
 
-	clear_x_tmpfile TMP 9
+	#TEST SECOND DELETE
+	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
+	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+
+	rm -f ./srcs$DELETE_OPTIONS >/dev/null #ignore if there is no permission
+
+
+	print_diff 1 11 21 $1 GET_BEFORE_DELETE_1 "$3" "${@:$GET_OPTIONS}"
+	print_diff 3 13 21 $1 DELETE_1 "${@:3:$DELETE_OPTIONS}"
+	print_diff 5 15 21 $1 GET_AFTER_DELETE_1 "$3" "${@:$GET_OPTIONS}"
+	print_diff 7 17 21 $1 DELETE_2 "${@:3:$DELETE_OPTIONS}"
+	print_diff 9 19 21 $1 GET_AFTER_DELETE_2 "$3" "${@:$GET_OPTIONS}"
+
+    clear_x_tmpfile TMP 22
 }
 
 #test_syntax file 
