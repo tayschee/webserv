@@ -104,18 +104,30 @@ C
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
 
-#test_delete $NAME_CONFIG "/cat_symbolic.html"
+test_delete $NAME_CONFIG 3 "/dir_to_delete/html/"
+test_delete $NAME_CONFIG 3 "/dir_to_delete/php/"
+
+chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
+chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
+test_delete $NAME_CONFIG 3 "/dir_to_delete/private/" #that dont work delete private later
+
+test_delete $NAME_CONFIG 3 "/dir_to_delete/secret/"
+test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: NOT_BASIC YWRtaW46YWRtaW4="
+test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic 000"
+test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4= 1234"
+test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic 1234 YWRtaW46YWRtaW4="
+test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
+
+test_delete $NAME_CONFIG 3 "/dir_to_delete/unexist/"
+test_delete $NAME_CONFIG 3 "/dir_to_delete/1.html"
+
+test_delete $NAME_CONFIG 3 "/"
+test_delete $NAME_CONFIG 3 "/php/"
+test_delete $NAME_CONFIG 3 "/empty_dir/"
+test_delete $NAME_CONFIG 3 "/empty_dir/unexist" #unexist
+
+test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
 #test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
-
-test_delete $NAME_CONFIG 3 "/cat.html"
-#test_delete $NAME_CONFIG "/1.html"
-#test_delete $NAME_CONFIG "/php/"
-#test_delete $NAME_CONFIG "/empty_dir/"
-#test_delete $NAME_CONFIG "/empty_dir/unexist" #unexist
-#test_delete $NAME_CONFIG "/"
-
-#test_delete $NAME_CONFIG "/private/"
-#test_delete $NAME_CONFIG "/secret/to_delete.html" #dont do it
 
 rm -rf  srcs/$NG_DELETE_DIR
 rm -rf  srcs/$WS_DELETE_DIR

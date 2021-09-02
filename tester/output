@@ -1,32 +1,226 @@
 
-----------------------  multiple_location.conf GET_BEFORE_PUT_1 -d <p>little</p>  ------------------------
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/html/  ------------------------
 
-Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 01 Sep 2021 16:18:40 GMT							      <
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:01 GMT							      <
 Content-Type: image/png							      <
 Connection: keep-alive							      |	Content-Type: image/png								
-ETag: "60e5a3c7-13e3"					      |	Date: Wed, 01 Sep 2021 16:18:41 UTC								
-							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:01 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
 							      >	Server: webserv
-----------------------  multiple_location.conf PUT_1 -d <p>little</p>  ------------------------
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/html/  ------------------------
 
-----------------------  multiple_location.conf GET_AFTER_PUT_1 -d <p>little</p>  ------------------------
-
-Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 01 Sep 2021 16:18:41 GMT							      <
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:01 GMT							      <
 Content-Type: image/png							      <
 Connection: keep-alive							      |	Content-Type: image/png								
-ETag: "60e5a3c7-13e3"					      |	Date: Wed, 01 Sep 2021 16:18:41 UTC								
-							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:01 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
 							      >	Server: webserv
-----------------------  multiple_location.conf PUT_2 -d <p>little</p>  ------------------------
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/html/  ------------------------
 
-----------------------  multiple_location.conf GET_AFTER_PUT_2 -d <p>little</p>  ------------------------
-
-Server: nginx/1.18.0							      |	Allow: GET, HEAD, PUT, POST, DELETE								
-Date: Wed, 01 Sep 2021 16:18:41 GMT							      <
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:01 GMT							      <
 Content-Type: image/png							      <
 Connection: keep-alive							      |	Content-Type: image/png								
-ETag: "60e5a3c7-13e3"					      |	Date: Wed, 01 Sep 2021 16:18:41 UTC								
-							      >	Last-Modified: Wed, 07 Jul 2021 12:53:27 UTC								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:01 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/html/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:01 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:01 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/html/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:01 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:01 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:02 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:02 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:02 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:02 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:02 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/private/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/private/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/private/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:02 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/private/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/private/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:03 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:03 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:04 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:04 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:04 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:04 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
+							      >	Server: webserv
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/php/  ------------------------
+
+Server: nginx/1.14.2							      |	Allow: GET, HEAD, POST, DELETE								
+Date: Thu, 02 Sep 2021 15:37:04 GMT							      <
+Content-Type: image/png							      <
+Connection: keep-alive							      |	Content-Type: image/png								
+ETag: "6130d8c0-13e3"					      |	Date: Thu, 02 Sep 2021 15:37:04 UTC								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
 							      >	Server: webserv
