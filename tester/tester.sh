@@ -100,7 +100,8 @@ test_put $NAME_CONFIG 5 "/secret/to_delete.html" -d "<p>secret</p>" #must do tes
 test_put $NAME_CONFIG 5 "/no_path/new.html" -d "<p>error</p>" #dont work
 test_put $NAME_CONFIG 5 "/html/new.html" -d "<p>YES</p>" #work
 test_put $NAME_CONFIG 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
-C
+
+#DELETE TEST
 cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
 cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
 
@@ -109,7 +110,11 @@ test_delete $NAME_CONFIG 3 "/dir_to_delete/php/"
 
 chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
 chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
-test_delete $NAME_CONFIG 3 "/dir_to_delete/private/" #that dont work delete private later
+test_delete $NAME_CONFIG 3 "/dir_to_delete/private/"
+chmod 755 srcs/$NG_DELETE_DIR/dir_to_delete/private/
+chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
+rm -rf srcs/$NG_DELETE_DIR/dir_to_delete/private/
+rm -rf srcs/$WS_DELETE_DIR/dir_to_delete/private/
 
 test_delete $NAME_CONFIG 3 "/dir_to_delete/secret/"
 test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: NOT_BASIC YWRtaW46YWRtaW4="
@@ -131,7 +136,17 @@ test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
 
 rm -rf  srcs/$NG_DELETE_DIR
 rm -rf  srcs/$WS_DELETE_DIR
-<< C
+
+cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
+cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
+
+chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
+chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
+test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
+chmod 755 srcs/$NG_DELETE_DIR/dir_to_delete/private/
+chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
+
+C
 
 test_syntax syntax_ressources/wrong_uri
 test_syntax syntax_ressources/line_feed
@@ -140,14 +155,14 @@ test_syntax syntax_ressources/multiple_space
 test_syntax syntax_ressources/space_and_tab
 test_syntax syntax_ressources/tab
 
-test_method $NAME_CONFIG POST /php/1.php
-test_method $NAME_CONFIG POST /php/2.php
-test_method $NAME_CONFIG POST /php/exemple.php
-test_method $NAME_CONFIG /php/info.php
-test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
-test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
-test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
-C
+#test_method $NAME_CONFIG POST /php/1.php
+#test_method $NAME_CONFIG POST /php/2.php
+#test_method $NAME_CONFIG POST /php/exemple.php
+#test_method $NAME_CONFIG /php/info.php
+#test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
+#test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
+#test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
+
 stop_server
 
 << C

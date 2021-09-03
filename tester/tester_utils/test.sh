@@ -2,7 +2,7 @@
 test ()
 {
     test_method "$1" "GET" "${@:2}"
-    #test_head "$@"
+    test_head "$@"
 }
 
 #test_method "name of config" "METHOD" "uri" ...(other options)
@@ -79,25 +79,25 @@ test_delete()
 	echo VERIF "${@:3:$DELETE_OPTIONS}"
 	echo VERIF2 "${@:$GET_OPTIONS}"
 	#TEST FIRST DELETE
-	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
-	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:3:$DELETE_OPTIONS}"
+	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
+	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${3}1" "${@:4:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
-	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
-	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
-	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
+	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${3}1" "${@:4:$DELETE_OPTIONS}"
+	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
 
     rm -f ./srcs$DELETE_OPTIONS > /dev/null #ignore if there is no permission
 
 
 	#TEST FIRST DELETE
-	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
-	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
+	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
+	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${3}2" "${@:4:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
-	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
-	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE"  "${@:3:$DELETE_OPTIONS}"
-	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
+	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
+	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${3}2" "${@:4:$DELETE_OPTIONS}"
+	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
 
 	rm -f ./srcs$DELETE_OPTIONS >/dev/null #ignore if there is no permission
 
@@ -114,15 +114,23 @@ test_delete()
 #test_syntax file 
 test_syntax()
 {
-    declare TMP=$TMP1
+    declare NG_REP=$TMP1
+	declare NG_HEAD=$TMP2
+	declare NG_BODY=$TMP3
 
-    diff -y --suppress-common-lines -a <(python $SEND_REQUEST_PY $1 $NGINX_IP $NGINX_PORT) <(python $SEND_REQUEST_PY $1 $WEBSERV_IP $WEBSERV_PORT) > $TMP
-    if [[ $? != 0 ]]; then
-        echo -e "----------------------" $1 " " SYNTAX_TEST  " " "----------------------------\n" >> $OUTPUT
-        cat $TMP >> $OUTPUT
-        echo -e $1 " " SYNTAX_TEST " : CHECK " $OUTPUT
-    else
-        echo -e $1 " " SYNTAX_TEST  " : OK"
-    fi
-    clear_x_tmpfile TMP 1
+	declare WS_REP=$TMP4
+	declare WS_HEAD=$TMP5
+	declare WS_BODY=$TMP6
+
+
+	python $SEND_REQUEST_PY $1 $NGINX_IP $NGINX_PORT > $NG_REP
+	python $SPLIT_RESPONSE_PY $NG_REP $NG_HEAD $NG_BODY
+
+	echo "DONE !!!!!!!!!"
+	python $SEND_REQUEST_PY $1 $WEBSERV_IP $WEBSERV_PORT > $WS_REP
+	python $SPLIT_RESPONSE_PY $WS_REP  $WS_BODY$WS_HEAD
+
+	print_diff 2 5 7 "$@"
+
+	clear_x_tmpfile TMP 8
 }

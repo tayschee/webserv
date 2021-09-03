@@ -36,6 +36,15 @@ launch_server()
     WEBSERV_PID=$!
     NAME_CONFIG=$1
     sleep $SLEEP_TIMER
+
+	pgrep -x $WEBSERV_PID
+
+	#check if webserv quit
+	#if [[ $? != 0]]; then
+	#	echo -e "Webserv failed"
+	#	exit 1
+	#fi
+
 }
 
 #launch_multi_server "config_dir for nginx"

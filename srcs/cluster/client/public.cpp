@@ -11,9 +11,11 @@ void client::receive() // call recieve
 		my_read = -1;
 		msg.clear();
 		msg = "";
+		std::cout << "HOLLA2 !!!!!\n\n\n\n\n";
 	}
 	else
 	{
+		std::cout << "HOLLA !!!!!\n\n\n\n\n";
 		i = rcv.check();
 		if (i & rcv.BODY_MASK)
 		{
@@ -26,6 +28,7 @@ void client::receive() // call recieve
 			rcv.prepare_next();
 
 			my_read = 1;
+			std::cout << "all is receive !!!!!!\n\n\n\n\n";
 		}
 		else if (i & rcv.HEADER_MASK)
 		{
@@ -36,6 +39,7 @@ void client::receive() // call recieve
 			msg.clear();
 			msg = "";
 			my_read = 0;
+			std::cout << "problem !!!!!\n\n\n\n\n";
 		}
 	}
 	reset = true;
