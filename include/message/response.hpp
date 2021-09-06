@@ -67,6 +67,7 @@ class response : public message
 		std::string		index(const std::string &path, std::string root, std::string add) const;
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
+		std::string		header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const;
 
 
 	private : //find_* functions, they return a value with a key without map

@@ -1,83 +1,825 @@
 
-----------------------  syntax_ressources/wrong_uri  ------------------------
+----------------------  error.conf GET /  ------------------------
 
-HTTP/1.1 400 Bad Request							      <
-Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:03:54 GMT							      <
-Content-Type: text/html							      <
-Content-Length: 157							      <
-Connection: close					      <
-1,9d0
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+---------------------- error.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /inexistant_file  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+Connection: keep-alive					      |	Allow: GET, HEAD, POST, OPTIONS
+1,7c1,7
 < <html>
-< <head><title>400 Bad Request</title></head>
+< <head><title>404 Not Found</title></head>
 < <body>
-< <center><h1>400 Bad Request</h1></center>
+< <center><h1>404 Not Found</h1></center>
 < <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
-< 
-< 
-----------------------  syntax_ressources/line_feed  ------------------------
+---
+> <html>
+> <head><title>404 Not Found</title></head>
+> <body>
+> <center><h1>404 Not Found</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /inexistant_file ------------------------
 
-HTTP/1.1 403 Forbidden							      |
-Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:04:55 GMT							      <
-Content-Type: image/png							      <
-Content-Length: 5091							      <
-Connection: keep-alive							      <
-ETag: "6130d8c0-13e3"					      <
-Binary files 61eae7d84fa79650a1b7ef1ead8edea0/e40c702c1ae9df8f3aad36980d961423 and 61eae7d84fa79650a1b7ef1ead8edea0/e170bb107b423cb9fcf419ada185d87a differ
-----------------------  syntax_ressources/line_feed2  ------------------------
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+----------------------  error.conf GET /secret/  ------------------------
 
-HTTP/1.1 400 Bad Request							      |
-Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:04:55 GMT							      <
-Content-Type: text/html							      <
-Content-Length: 157							      <
-Connection: close					      <
-1,8d0
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"		      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+1,7c1,7
 < <html>
-< <head><title>400 Bad Request</title></head>
+< <head><title>401 Authorization Required</title></head>
 < <body>
-< <center><h1>400 Bad Request</h1></center>
+< <center><h1>401 Authorization Required</h1></center>
 < <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
-< 
-----------------------  syntax_ressources/multiple_space  ------------------------
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /secret/ ------------------------
 
-HTTP/1.1 403 Forbidden							      |
-Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:04:55 GMT							      <
-Content-Type: image/png							      <
-Content-Length: 5091							      <
-Connection: keep-alive							      <
-ETag: "6130d8c0-13e3"					      <
-Binary files 61eae7d84fa79650a1b7ef1ead8edea0/e40c702c1ae9df8f3aad36980d961423 and 61eae7d84fa79650a1b7ef1ead8edea0/e170bb107b423cb9fcf419ada185d87a differ
-----------------------  syntax_ressources/space_and_tab  ------------------------
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
-HTTP/1.1 400 Bad Request							      |
-Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:04:55 GMT							      <
-Content-Type: text/html							      <
-Content-Length: 157							      <
-Connection: close					      <
-1,8d0
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c1-5b"							      <
+Accept-Ranges: bytes					      <
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c1-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"		      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+1,7c1,7
 < <html>
-< <head><title>400 Bad Request</title></head>
+< <head><title>401 Authorization Required</title></head>
 < <body>
-< <center><h1>400 Bad Request</h1></center>
+< <center><h1>401 Authorization Required</h1></center>
 < <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
-< 
-----------------------  syntax_ressources/tab  ------------------------
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /secret/ ------------------------
 
-HTTP/1.1 403 Forbidden							      |
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  error.conf GET /secret/ -H Authorization: NOT_BASIC YWRtaW46YWRtaW4=  ------------------------
+
+HTTP/1.1 401 Unauthorized							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 91								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:29 GMT								
+WWW-Authenticate: Basic realm="Restrict"		      |	Allow: GET, HEAD, POST, OPTIONS
+1,7c1,4
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <p>Si vous avez entrer un mot de passe
+>         note = 100;
+>     sinon
+>         note = 0;</p>
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+HTTP/1.1 401 Unauthorized							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 91								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:29 GMT								
+WWW-Authenticate: Basic realm="Restrict"							      |	Allow: GET, HEAD, POST, OPTIONS								
+----------------------  error.conf GET /secret/ -H Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"		      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c1-5b"							      <
+Accept-Ranges: bytes					      <
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c1-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 500 Unknow								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 135								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c0-1927a"					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- error.conf   HEAD   /bad_secret/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 500 Unknow								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 135								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      <
+----------------------  error.conf GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: text/html							      |	Allow: GET, HEAD, POST, OPTIONS
+Content-Length: 177							      <
+Connection: close					      <
+1,7d0
+< <html>
+< <head><title>500 Internal Server Error</title></head>
+< <body>
+< <center><h1>500 Internal Server Error</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---------------------- error.conf   HEAD   /bad_secret2/ ------------------------
+
+HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: text/html							      |	Allow: GET, HEAD, POST, OPTIONS								
+Content-Length: 177							      <
+Connection: close							      <
+----------------------  error.conf GET /secret/secret.html  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"		      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- error.conf   HEAD   /secret/secret.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+WWW-Authenticate: Basic realm="Restrict"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  error.conf GET /private/private.html  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c0-1927a"					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- error.conf   HEAD   /private/private.html ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      <
+----------------------  error.conf GET /private/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c0-1927a"					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- error.conf   HEAD   /private/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      <
+----------------------  index_off.conf GET /  ------------------------
+
+HTTP/1.1 200 OK							      |
 Server: nginx/1.18.0							      <
-Date: Fri, 03 Sep 2021 13:04:55 GMT							      <
-Content-Type: image/png							      <
-Content-Length: 5091							      <
+Date: Mon, 06 Sep 2021 10:41:57 GMT							      <
+Content-Type: image/jpeg							      <
+Content-Length: 90737							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
 Connection: keep-alive							      <
-ETag: "6130d8c0-13e3"					      <
-Binary files 61eae7d84fa79650a1b7ef1ead8edea0/e40c702c1ae9df8f3aad36980d961423 and 61eae7d84fa79650a1b7ef1ead8edea0/e170bb107b423cb9fcf419ada185d87a differ
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- index_off.conf   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:41:58 GMT							      <
+Content-Type: image/jpeg							      <
+Content-Length: 90737							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+							      <
+----------------------  index_off.conf GET /html/3.html  ------------------------
+
+HTTP/1.1 200 OK							      |
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:41:58 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 34							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes					      <
+1d0
+< <p>L'exemple de page numero 3</p>
+---------------------- index_off.conf   HEAD   /html/3.html ------------------------
+
+HTTP/1.1 200 OK							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:41:58 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 34							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes							      <
+							      <
+----------------------  redirect.conf GET /  ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/jpeg							      |	Content-Type: text/html								
+Content-Length: 90737							      |	Content-Length: 157								
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Allow: GET, HEAD, POST, OPTIONS								
+Connection: keep-alive							      |	Location: /gif/
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/jpeg							      |	Content-Type: text/html								
+Content-Length: 90737							      |	Content-Length: 157								
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Allow: GET, HEAD, POST, OPTIONS								
+Connection: keep-alive							      |	Location: /gif/								
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /html/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 302 Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 9003								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /jpeg/
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /html/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 302 Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 9003								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /jpeg/								
+----------------------  redirect.conf GET /gif/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 157								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"					      |	Location: /html/
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /gif/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 157								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      |	Location: /html/								
+----------------------  redirect.conf GET /jpeg/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 303 See Other								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"					      |	Location: /dest/
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /jpeg/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 303 See Other								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 141								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      |	Location: /dest/								
+----------------------  redirect.conf GET /error/  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 9003								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS
+ETag: "6130d8c0-1927a"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 9003								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-1927a"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /dest/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 1526455								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST, OPTIONS
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /dest/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 1526455								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST, OPTIONS								
+----------------------  redirect.conf GET / -L  ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/jpeg							      |	Content-Type: text/html								
+Content-Length: 90737							      |	Content-Length: 157								
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Allow: GET, HEAD, POST, OPTIONS								
+Connection: keep-alive							      |	Location: /gif/
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 301 Moved Permanently								
+Server: nginx/1.18.0							      |	Server: webserv								
+Date: Mon, 06 Sep 2021 10:42:25 GMT							      |	Date: Mon, 06 Sep 2021 10:42:26 GMT								
+							      >	Content-Type: text/html								
+							      >	Content-Length: 157								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /gif/								
+							      >									
+							      >	HTTP/1.1 301 Moved Permanently								
+							      >	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:26 GMT								
+							      >	Content-Type: text/html								
+							      >	Content-Length: 157								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /html/								
+							      >									
+							      >	HTTP/1.1 302 Found								
+							      >	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:26 GMT								
+Content-Length: 90737							      |	Content-Length: 9003								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /jpeg/								
+							      >									
+							      >	HTTP/1.1 303 See Other								
+							      >	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:26 GMT								
+							      >	Content-Type: text/html								
+							      >	Content-Length: 141								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /dest/								
+							      >									
+							      >	HTTP/1.1 200 OK								
+							      >	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:26 GMT								
+							      >	Content-Type: image/png								
+							      >	Content-Length: 1526455								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /html/3.html -L  ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 302 Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: text/html							      |	Content-Type: image/jpeg								
+Content-Length: 34							      |	Content-Length: 9003								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-22"							      |	Location: /jpeg/
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- redirect.conf   HEAD   /html/3.html ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 302 Found								
+Server: nginx/1.18.0							      |	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:34 GMT								
+							      >	Content-Type: image/jpeg								
+							      >	Content-Length: 9003								
+							      >	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /jpeg/								
+							      >									
+							      >	HTTP/1.1 303 See Other								
+							      >	Server: webserv								
+Content-Length: 34							      |	Content-Length: 141								
+							      >	Allow: GET, HEAD, POST, OPTIONS								
+							      >	Location: /dest/								
+							      >									
+							      >	HTTP/1.1 200 OK								
+							      >	Server: webserv								
+							      >	Date: Mon, 06 Sep 2021 10:42:34 GMT								
+							      >	Content-Type: image/png								
+							      >	Content-Length: 1526455								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST, OPTIONS								
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  same_error.conf GET /  ------------------------
+
+HTTP/1.1 200 OK							      |
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: image/jpeg							      <
+Content-Length: 90737							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- same_error.conf   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: image/jpeg							      <
+Content-Length: 90737							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+							      <
+----------------------  same_error.conf GET /ffgsdgsfgsg  ------------------------
+
+HTTP/1.1 404 Not Found							      |
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 153							      <
+Connection: keep-alive					      <
+1,7d0
+< <html>
+< <head><title>404 Not Found</title></head>
+< <body>
+< <center><h1>404 Not Found</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---------------------- same_error.conf   HEAD   /ffgsdgsfgsg ------------------------
+
+HTTP/1.1 404 Not Found							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 153							      <
+Connection: keep-alive							      <
+							      <
+----------------------  same_error.conf GET /secret/secret.html  ------------------------
+
+HTTP/1.1 401 Unauthorized							      |
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 179							      <
+Connection: keep-alive							      <
+WWW-Authenticate: Basic realm="Restrict"		      <
+1,7d0
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---------------------- same_error.conf   HEAD   /secret/secret.html ------------------------
+
+HTTP/1.1 401 Unauthorized							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 179							      <
+Connection: keep-alive							      <
+WWW-Authenticate: Basic realm="Restrict"							      <
+							      <
+----------------------  same_error.conf GET /html/3.html  ------------------------
+
+HTTP/1.1 200 OK							      |
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 34							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes					      <
+1d0
+< <p>L'exemple de page numero 3</p>
+---------------------- same_error.conf   HEAD   /html/3.html ------------------------
+
+HTTP/1.1 200 OK							      <
+Server: nginx/1.18.0							      <
+Date: Mon, 06 Sep 2021 10:42:40 GMT							      <
+Content-Type: text/html							      <
+Content-Length: 34							      <
+Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
+Connection: keep-alive							      <
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes							      <
+							      <
+----------------------  multiple_location.conf GET /  ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 403 Forbidden								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/jpeg							      |	Content-Type: image/png								
+Content-Length: 90737							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      |	HTTP/1.1 403 Forbidden								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/jpeg							      |	Content-Type: image/png								
+Content-Length: 90737							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+ETag: "6130d8c0-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /gif/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 103034							      |	Content-Length: 146676								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /gif/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 103034							      |	Content-Length: 146676								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /html/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 36								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /html/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 36								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /jpeg/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 90737								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /jpeg/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/jpeg								
+Content-Length: 103034							      |	Content-Length: 90737								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /png/  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /png/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /private/  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: image/png								
+Content-Length: 103034							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /secret/  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+WWW-Authenticate: Basic realm="Restrict"		      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body>
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.18.0</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+---------------------- multiple_location.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+WWW-Authenticate: Basic realm="Restrict"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  multiple_location.conf GET /spoiler/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 401 Unauthorized								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+ETag: "6130d8c0-1927a"					      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /spoiler/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 401 Unauthorized								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: text/html								
+Content-Length: 103034							      |	Content-Length: 147								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+ETag: "6130d8c0-1927a"							      |	WWW-Authenticate: Basic realm="Accès au site de webserv", ch								
+----------------------  multiple_location.conf GET /error/  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: application/octet-stream								
+Content-Length: 103034							      |	Content-Length: 33								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST
+ETag: "6130d8c0-1927a"							      <
+Accept-Ranges: bytes					      <
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: application/octet-stream								
+Content-Length: 103034							      |	Content-Length: 33								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+ETag: "6130d8c0-1927a"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /php/  ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: application/octet-stream								
+Content-Length: 103034							      |	Content-Length: 100								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"					      |	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /php/ ------------------------
+
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 200 OK								
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: image/gif							      |	Content-Type: application/octet-stream								
+Content-Length: 103034							      |	Content-Length: 100								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+ETag: "6130d8c0-1927a"							      |	Allow: GET, HEAD, POST								
+----------------------  multiple_location.conf GET /html/3.html  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes					      <
+---------------------- multiple_location.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Connection: keep-alive							      |	Allow: GET, HEAD, POST								
+ETag: "6130d8c0-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /unexist.html  ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: text/html							      |	Content-Type: image/png								
+Content-Length: 153							      |	Content-Length: 5091								
+Connection: keep-alive					      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+							      >	Allow: GET, HEAD, POST
+Binary files 1a797d6c5aaedc5bb6a0cda2830e3a28/5120c371943da40fc30cbd8fe9d226b3 and 1a797d6c5aaedc5bb6a0cda2830e3a28/f6c2947efbf2a16d825ccb73f64ceb45 differ
+---------------------- multiple_location.conf   HEAD   /unexist.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Type: text/html							      |	Content-Type: image/png								
+Content-Length: 153							      |	Content-Length: 5091								
+Connection: keep-alive							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT								
+							      >	Allow: GET, HEAD, POST								

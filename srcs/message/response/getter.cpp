@@ -21,16 +21,34 @@ const std::string				&response::get_version() const
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
+	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, LAST_MODIFIED, CONNECTION};
+	std::vector<std::string> vec(list, &list[6]);
+
 	std::string resp_str;
 	const_iterator	it(header.begin());
 	const_iterator	end(header.end());
 	resp_str = first_line.version + " " + ft_itoa(first_line.status) + " " + first_line.status_string + eol;
+	resp_str += header_in_order(hf_sep, eol, vec);
+	size_t i;
+
+	std::cout << "resp_str 1: " << resp_str << "\n";
 	while (it != end)
 	{
-		resp_str += it->first + hf_sep + it->second + eol;
+		std::cout << "salut\n";
+		i = 0;
+		while (i < vec.size())
+		{
+			if (it->first == vec[i])
+				break;
+			++i;
+		}
+		if (i == vec.size())
+			resp_str += it->first + hf_sep + it->second + eol;
 		++it;
 	}
-
+	resp_str += eol;
+	resp_str += body;
+	std::cout << "resp_str 2: " << resp_str << "\n";
 	return resp_str;
 }
 
@@ -39,21 +57,8 @@ int		response::sent(int fd, const std::string &hf_sep, const std::string &eol)
 	std::string resp_str;
 
 	std::cout << "test\n";
-	const_iterator	it(header.begin());
-	const_iterator	end(header.end());
 	std::cout << "test2\n";
-	resp_str = first_line.version + " " + ft_itoa(first_line.status) + " " + first_line.status_string + eol;
-	//std::cout << resp_str << std::endl;
-	std::cout << "test3\n";
-	while (it != end)
-	{
-		resp_str += it->first + hf_sep + it->second + eol;
-		++it;
-	}
-	std::cout << "test4\n";
-	resp_str += eol;
-	resp_str += body;
-	std::cout << "test5.1\n";
+	resp_str = get(hf_sep, eol);
     write(fd, resp_str.c_str(), resp_str.size());
 	std::cout << "test5.2\n";
 	std::cout << "abc\n";

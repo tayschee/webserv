@@ -339,3 +339,22 @@ int response::generate_response(const parser::entries &path_info, const parser &
 	}
 	return status;
 }
+
+std::string			response::header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const
+{
+	const_iterator	it;
+	const_iterator	end(header.end());
+	std::string resp_str;
+	size_t i = 0;
+
+	while (i < list.size())
+	{
+		it = header.find(list[i]);
+		if (it != end)
+		{
+			resp_str += it->first + hf_sep + it->second + eol;
+		}
+		++i;
+	}
+	return resp_str;
+}

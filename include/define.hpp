@@ -40,6 +40,7 @@
 # define ACCEPT_CHARSET "Accept-Charset"
 # define ACCEPT_LANGUAGE "Accept-Language"
 # define AUTHORIZATION "Authorization"
+# define CONNECTION "Connection"
 # define CONTENT_LENGTH "Content-Length"
 # define CONTENT_LOCATION "Content-Location"
 # define REFERER "Referer"

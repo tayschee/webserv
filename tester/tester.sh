@@ -18,7 +18,7 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 22 $DIR_TMP1/ #generate 9 file with random name in $DIR_TMP1/
 
-<< C
+
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
@@ -38,7 +38,7 @@ test $NAME_CONFIG "/private/"
 
 stop_server
 C
-<< C
+
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
 
@@ -79,7 +79,7 @@ launch_server $MULTIPLE_LOCATION_CONF
 
 NAME_CONFIG=multiple_location.conf
 
-<< C
+
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
@@ -92,7 +92,7 @@ test $NAME_CONFIG "/error/"
 test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
-
+<< C
 
 test_put $NAME_CONFIG 5 "/new.html" -d "<p>little</p>" -l
 test_put $NAME_CONFIG 5 "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
@@ -148,12 +148,12 @@ chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
 
 C
 
-test_syntax syntax_ressources/wrong_uri
-test_syntax syntax_ressources/line_feed
-test_syntax syntax_ressources/line_feed2
-test_syntax syntax_ressources/multiple_space
-test_syntax syntax_ressources/space_and_tab
-test_syntax syntax_ressources/tab
+#test_syntax syntax_ressources/wrong_uri
+#test_syntax syntax_ressources/line_feed
+#test_syntax syntax_ressources/line_feed2
+#test_syntax syntax_ressources/multiple_space
+#test_syntax syntax_ressources/space_and_tab
+#test_syntax syntax_ressources/tab
 
 #test_method $NAME_CONFIG POST /php/1.php
 #test_method $NAME_CONFIG POST /php/2.php

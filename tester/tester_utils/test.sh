@@ -132,5 +132,7 @@ test_syntax()
 
 	print_diff 2 5 7 "$@"
 
+	sleep 20
+
 	clear_x_tmpfile TMP 8
 }
