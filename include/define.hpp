@@ -85,7 +85,7 @@
 
 # define STATUS_300 "Multiple Choices"
 # define STATUS_301 "Moved Permanently"
-# define STATUS_302 "Found"
+# define STATUS_302 "Moved Temporarily"
 # define STATUS_303 "See Other"
 # define STATUS_304 "Not Modified"
 # define STATUS_305 "Use Proxy"

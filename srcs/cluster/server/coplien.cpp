@@ -45,10 +45,10 @@ port(ft_atoi<int>(_pars.get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->secon
 	socket_host = socket(AF_INET, SOCK_STREAM, 0);
 	int opt = true;
 	if (setsockopt(socket_host, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0) // Enable reuse of address, fixes the error "address is already in use"
-		std::cerr << "failed to set socket options. Error: " << strerror(errno) << std::endl;
+		throw std::string(std::string("failed to set socket options. Error: ") + strerror(errno) + "\n");
 
 	if (bind(socket_host, (struct sockaddr *)&address, sizeof(address)))
-		std::cerr << "failed to bind on port " << port << ". Error: " << strerror(errno) << std::endl;
+		throw std::string("failed to bind on port " + _ip + ":" + ft_itoa(port) + ". Error: " + strerror(errno) + "\n");
 }
 
 server::~server(){} // destructor

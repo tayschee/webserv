@@ -139,7 +139,11 @@ void				response::add_content_language(const std::string &language)
 
 void				response::add_www_autentificate()
 {
-	header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\"")); //must change charset
+	iterator it(header.find(AUTH_BASIC));
+	std::string txt("Basic realm=");
+
+	txt += it->second[1];
+	header.insert(value_type(WWW_AUTHENTICATE, txt)); //must change charset
 }
 
 /* this time, this is not a field it's the body of response which be add */

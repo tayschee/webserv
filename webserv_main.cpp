@@ -37,12 +37,12 @@ static int start(cluster &cl)
 	}
 	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
 	{
-		std::cerr << "execve failed\n";
+		std::cerr << e;
 		ret = 1;
 	}
 	catch(std::exception &e)
 	{
-		std::cout << e.what() << "\n";
+		std::cout << e.what();
 		std::cerr << "something failed\n";
 		ret = 1;
 	}
@@ -69,6 +69,10 @@ int main(int c, char **v)
 		std::cerr << "initialisation failed\n";
 		ret = 1;
 	}
-
+	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
+	{
+		std::cerr << e;
+		ret = 1;
+	}
 	return ret;
 }
