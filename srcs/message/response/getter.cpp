@@ -21,8 +21,8 @@ const std::string				&response::get_version() const
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
-	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, LAST_MODIFIED, CONNECTION};
-	std::vector<std::string> vec(list, &list[6]);
+	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, LAST_MODIFIED, LOCATION, CONNECTION, WWW_AUTHENTICATE};
+	std::vector<std::string> vec(list, &list[8]);
 
 	std::string resp_str;
 	const_iterator	it(header.begin());

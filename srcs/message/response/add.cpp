@@ -137,13 +137,35 @@ void				response::add_content_language(const std::string &language)
 	header.insert(std::pair<std::string, std::string>(CONTENT_LANGUAGE, language));
 }
 
-void				response::add_www_autentificate()
+void				response::add_www_autentificate(const parser::entries &entries)
 {
-	iterator it(header.find(AUTH_BASIC));
+	parser::entries::const_iterator it(entries.find(AUTH_BASIC));
+	parser::entries::const_iterator end(entries.end());
 	std::string txt("Basic realm=");
 
-	txt += it->second[1];
+	if (it != end)
+		txt += it->second[1];
+	else
+		txt += "???";
 	header.insert(value_type(WWW_AUTHENTICATE, txt)); //must change charset
+}
+
+void				response::add_connection(int status)
+{
+	const size_t size(3);
+	int		list[3] = {300, 400, 500};
+
+	size_t i(0);
+	while (i < size)
+	{
+		if (status == list[i])
+		{
+			header.insert(value_type(CONNECTION, "close"));
+			return ;
+		}
+		++i;
+	}
+	header.insert(value_type(CONNECTION, "keep-alive"));
 }
 
 /* this time, this is not a field it's the body of response which be add */

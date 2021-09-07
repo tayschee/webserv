@@ -85,11 +85,11 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 
 void response::status_header(int status)
 {
-	if (status == 401)
+	/*if (status == 401)
 	{
 		std::cout << "www_autentificate\n";
 		add_www_autentificate();
-	}
+	}*/
 	if (status == 503)
 		add_retry_after(200);
 	//if (first_line.status > 299 && first_line.status < 400)
@@ -357,4 +357,15 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 		++i;
 	}
 	return resp_str;
+}
+
+int				response::connection_state() const
+{
+	const_iterator it = header.find(CONNECTION);
+	const_iterator end = header.end();
+
+	if (it == end || it->second == "keep_alive")
+		return 1;
+	else
+		return 0;
 }

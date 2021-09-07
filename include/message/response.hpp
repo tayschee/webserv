@@ -68,6 +68,7 @@ class response : public message
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
 		std::string		header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const;
+		int				connection_state() const;
 
 
 	private : //find_* functions, they return a value with a key without map
@@ -102,8 +103,9 @@ class response : public message
 		void				add_content_type(const std::string &file); //Content-type without precise charset
 		void				add_content_language(const std::string &language); //Content-Language
 		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
-		void				add_www_autentificate(); //WWW-Authentificate
+		void				add_www_autentificate(const parser::entries &entries); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
+		void				add_connection(int status);
 
 		int					add_body(const std::string &path);
 
