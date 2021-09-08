@@ -11,7 +11,7 @@ setup_server()
 		fi
 	fi
 
-	ls $WEBSERV_DIR | grep webserv > /dev/null
+	ls $WEBSERV > /dev/null
 	if [[ $? != 0 ]]; then
     	make -C $WEBSERV_DIR
 		if [[ $? != 0 ]]; then
@@ -31,6 +31,7 @@ launch_server()
         echo -e "Nginx failed\n"
         exit 1
     fi
+
     $WEBSERV $WS_DIRECTORY_CONF/$1 &
 
     WEBSERV_PID=$!
@@ -40,10 +41,13 @@ launch_server()
 	pgrep -x $WEBSERV_PID
 
 	#check if webserv quit
-	#if [[ $? != 0]]; then
-	#	echo -e "Webserv failed"
-	#	exit 1
-	#fi
+	if [[ $! != 0 ]]; then
+        echo -e "\nWebserv run $1\n"
+    else
+        echo -e "Webserv failed\n"
+		docker stop $CONTAINER_NAME
+        exit 1
+    fi
 
 }
 
@@ -54,13 +58,23 @@ launch_multi_server()
     if [[ $! != 0 ]]; then
         echo -e "\nNginx run\n"
     else
-        echo -e "Nginx failed\n"
+        echo -e "\nNginx failed\n"
         exit 1
     fi
-    #$WEBSERV $WS_DIRECTORY_CONF/$1 &
 
-    #WEBSERV_PID=$!
+    $WEBSERV $WS_DIRECTORY_CONF/$1 &
+	WEBSERV_PID=$!
     sleep $SLEEP_TIMER
+
+	pgrep -x $WEBSERV_PID
+
+	if [[ $! != 0 ]]; then
+        echo -e "\nWebserv run $1\n"
+    else
+        echo -e "\nWebserv failed\n"
+		docker stop $CONTAINER_NAME
+        exit 1
+    fi
 }
 
 #use to stop nginx and webserv
@@ -72,13 +86,8 @@ stop_server()
 
 stop_prog()
 {
-	if (( ! -z $CONTAINER_NAME && docker ps  | grep $CONTAINER_NAME > dev/null )); then
-		docker stop $CONTAINER_NAME
-	fi
-	#if [[ (! -z $WEBSERV_PID) && ps | grep $WEBSERV_PID > dev/null ]]
-#	{
-#		kill -2 $WEBSERV_PID
-#	}
+	docker stop $CONTAINER_NAME > /dev/null 2> /dev/null
+	kill -2 $WEBSERV_PID > /dev/null 2> /dev/null
 
 	delete_x_tmpdir DIR_TMP 1
 	rm -rf  srcs/$NG_DELETE_DIR

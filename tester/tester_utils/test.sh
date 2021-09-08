@@ -66,40 +66,42 @@ test_put()
 	print_diff 7 17 21 $1 PUT_2 "${@:3:$PUT_OPTIONS}"
 	print_diff 9 19 21 $1 GET_AFTER_PUT_2 "$3" "${@:$GET_OPTIONS}"
 
-    clear_x_tmpfile TMP 22
+	clear_x_tmpfile TMP 22
 }
 
 #test "name_of_config" "path_to_test"
 test_delete()
 {
 	declare GET_OPTIONS=$(expr "$2" + 1)
-	declare DELETE_OPTIONS=$(expr "$2" - 2)
+	declare DELETE_OPTIONS=$(expr "$2" - 5)
 
-	echo GET OPTIONS : $GET_OPTIONS
-	echo VERIF "${@:3:$DELETE_OPTIONS}"
-	echo VERIF2 "${@:$GET_OPTIONS}"
+	cp -r "$3" "$5"
+	chmod "$4" "$5"
 	#TEST FIRST DELETE
-	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
-	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${3}1" "${@:4:$DELETE_OPTIONS}"
+	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
+	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
-	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
-	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${3}1" "${@:4:$DELETE_OPTIONS}"
-	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "${3}1" "${@:$GET_OPTIONS}"
+	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
+	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:4:$DELETE_OPTIONS}"
+	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 
-    rm -f ./srcs$DELETE_OPTIONS > /dev/null #ignore if there is no permission
+	chmod 777 "$5"
+    rm -rf $5 > /dev/null #ignore if there is no permission
 
-
+	cp -r "$3" "$5"
+	chmod "$4" "$5"
 	#TEST FIRST DELETE
-	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
-	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${3}2" "${@:4:$DELETE_OPTIONS}"
+	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
+	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
-	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
-	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${3}2" "${@:4:$DELETE_OPTIONS}"
-	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "${3}2" "${@:$GET_OPTIONS}"
+	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
+	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:4:$DELETE_OPTIONS}"
+	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 
-	rm -f ./srcs$DELETE_OPTIONS >/dev/null #ignore if there is no permission
+	chmod 777 "$5"
+    rm -rf $5 > /dev/null #ignore if there is no permission
 
 
 	print_diff 1 11 21 $1 GET_BEFORE_DELETE_1 "$3" "${@:$GET_OPTIONS}"

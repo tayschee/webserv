@@ -7,9 +7,9 @@ source tester_utils/utils.sh
 echo "" > $OUTPUT; #clear output
 #echo ""  > $ERROR_OUTPUT; #clear error
 
-trap stop_prog SIGINT
-setup_server
 
+setup_server
+trap stop_prog SIGINT
 #change permission for test can't be applied immediatly because they cant be git push else
 chmod 000 srcs/private
 chmod 000 srcs/secret/mdp.html
@@ -18,7 +18,7 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 22 $DIR_TMP1/ #generate 9 file with random name in $DIR_TMP1/
 
-
+<<TEST
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
@@ -37,6 +37,8 @@ test $NAME_CONFIG "/private/private.html"
 test $NAME_CONFIG "/private/"
 
 stop_server
+
+
 C
 
 #AUTOINDEX OFF TEST
@@ -74,12 +76,13 @@ test $NAME_CONFIG "/html/3.html"
 
 stop_server
 C
+TEST
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
 NAME_CONFIG=multiple_location.conf
 
-
+<< C
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
@@ -100,13 +103,13 @@ test_put $NAME_CONFIG 5 "/secret/to_delete.html" -d "<p>secret</p>" #must do tes
 test_put $NAME_CONFIG 5 "/no_path/new.html" -d "<p>error</p>" #dont work
 test_put $NAME_CONFIG 5 "/html/new.html" -d "<p>YES</p>" #work
 test_put $NAME_CONFIG 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
+C
 
 #DELETE TEST
-cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
-cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
 
-test_delete $NAME_CONFIG 3 "/dir_to_delete/html/"
-test_delete $NAME_CONFIG 3 "/dir_to_delete/php/"
+test_delete $NAME_CONFIG 6 srcs/dir_to_copy 755 "srcs/dir_to_delete/html/" "/dir_to_delete/html/"
+<< C
+test_delete $NAME_CONFIG 7 srcs/dir_to_copy 755 "/dir_to_delete/php/" ""
 
 chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
 chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
@@ -146,8 +149,6 @@ test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
 chmod 755 srcs/$NG_DELETE_DIR/dir_to_delete/private/
 chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
 
-C
-
 #test_syntax syntax_ressources/wrong_uri
 #test_syntax syntax_ressources/line_feed
 #test_syntax syntax_ressources/line_feed2
@@ -162,7 +163,7 @@ C
 #test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
 #test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
 #test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
-
+C
 stop_server
 
 << C
@@ -188,6 +189,7 @@ test "secret.conf" "/" -H "Host: secret"
 
 stop_server
 C
+TEST
 delete_x_tmpdir DIR_TMP 1
 
 #permission reset
