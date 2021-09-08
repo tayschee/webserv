@@ -38,7 +38,6 @@ test $NAME_CONFIG "/private/"
 
 stop_server
 
-
 C
 
 #AUTOINDEX OFF TEST
@@ -107,7 +106,7 @@ C
 
 #DELETE TEST
 
-test_delete $NAME_CONFIG 6 srcs/dir_to_copy 755 "srcs/dir_to_delete/html/" "/dir_to_delete/html/"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
 << C
 test_delete $NAME_CONFIG 7 srcs/dir_to_copy 755 "/dir_to_delete/php/" ""
 

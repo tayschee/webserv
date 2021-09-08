@@ -77,13 +77,14 @@ test_delete()
 
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
+	echo ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII: $(ls $5)
 	#TEST FIRST DELETE
 	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
 	get_response "5" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
-	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:4:$DELETE_OPTIONS}"
+	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 
 	chmod 777 "$5"
@@ -91,24 +92,25 @@ test_delete()
 
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
+	echo ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII: $(ls $5)
 	#TEST FIRST DELETE
 	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 
 	#TEST SECOND DELETE
 	get_response "15" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
-	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:4:$DELETE_OPTIONS}"
+	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 
 	chmod 777 "$5"
     rm -rf $5 > /dev/null #ignore if there is no permission
 
 
-	print_diff 1 11 21 $1 GET_BEFORE_DELETE_1 "$3" "${@:$GET_OPTIONS}"
-	print_diff 3 13 21 $1 DELETE_1 "${@:3:$DELETE_OPTIONS}"
-	print_diff 5 15 21 $1 GET_AFTER_DELETE_1 "$3" "${@:$GET_OPTIONS}"
-	print_diff 7 17 21 $1 DELETE_2 "${@:3:$DELETE_OPTIONS}"
-	print_diff 9 19 21 $1 GET_AFTER_DELETE_2 "$3" "${@:$GET_OPTIONS}"
+	print_diff 1 11 21 $1 GET_BEFORE_DELETE_1 "$6" "${@:$GET_OPTIONS}"
+	print_diff 3 13 21 $1 DELETE_1  "${@:6:$DELETE_OPTIONS}"
+	print_diff 5 15 21 $1 GET_AFTER_DELETE_1 "$6" "${@:$GET_OPTIONS}"
+	print_diff 7 17 21 $1 DELETE_2  "${@:6:$DELETE_OPTIONS}"
+	print_diff 9 19 21 $1 GET_AFTER_DELETE_2 "$6" "${@:$GET_OPTIONS}"
 
     clear_x_tmpfile TMP 22
 }
