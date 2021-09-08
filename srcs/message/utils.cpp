@@ -21,7 +21,7 @@ std::string		message::time_string(time_t time_sec) const
 		%T for hour:minute:second
 		%Z for time zone
 	*/
-	strftime(char_date, str_size, "%a, %d %b %Y %T GMT", time_tm);
+	strftime(char_date, str_size, "%a, %d %b %Y %T %Z", time_tm);
 
 	return (std::string(char_date));
 }

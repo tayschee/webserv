@@ -131,7 +131,7 @@ void parser::add_property(const blocks::key_type &block_id, const std::string &n
 	{
 		if (splitted[0][0] != '/')
 			_blocks[block_id].conf[name][0] += '/';
-		_blocks[block_id].conf[name][0] += splitted[0];
+		_blocks[block_id].conf[name][0] = splitted[0];
 	}
 	else
 		_blocks[block_id].conf[name] = splitted;

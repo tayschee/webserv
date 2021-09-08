@@ -1,66 +1,86 @@
 #include "message/response.hpp"
 
-int		response::method_is_head(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_head(const std::string &uri, const request &req, const parser &pars)
 {
 	int ret = method_is_get(uri, req, pars);
 	body.clear();
-	return ret;
+	return ret; //value of OK response
 }
 
-int		response::method_is_get(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
-	std::cout << "it s ok\n";
 	struct stat file_stat; //information about file
+	std::cout << "URI = " << req.get_uri() << std::endl;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
-	std::cout << "path is : " << path << "\n";
-	//403 interdiction
+	std::cout << "PATH dans get = " << path << std::endl;
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
 	ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-	std::cout << "path is : " << path << "\n";
+	std::cout << "check path end" << std::endl;
 	std::string type = find_media_type(get_extension(path), pars);
-	std::cout << "all fine\n";
-	if ((file_stat.st_mode & S_IFMT) == S_IFDIR/* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
+	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
 		try
 		{
-			parser::block block(pars.get_block(BLOCK_LOCATION, uri));
+			parser::block block(pars.get_block(BLOCK_LOCATION, req.get_uri()));
 			parser::entries bc(block.conf);
 
 			if (bc.find(AUTO_INDEX) != bc.end())
 			{
 				if (bc.find(AUTO_INDEX)->second[0] != "on")
 				{
-					if (block.args[1] != uri)
+					std::string url;
+					for (std::vector<std::string>::iterator it = block.args.begin(); it != block.args.end(); ++it)
+						url += *it;
+				std::cout << "URL = " << url << std::endl;
+				std::cout << "GET URI = " << req.get_uri() << std::endl;
+				std::cout << "URI = " << uri << std::endl;
+					
+					if (req.get_uri().size() > 0 && *--req.get_uri().end() == '/')
 						return 403;
 					else
 						return 404;
+					// if (url == req.get_uri())
+					// 	return 403;
+					// url += '/';
+					// if (url == req.get_uri())
+					// 	return 403;
 				}
 			}
 			else
 				return 404;
 		}
-		catch(const std::exception& e)
+		catch (const std::exception &e)
 		{
 			std::cout << "execption" << std::endl;
 
 			return 404;
 		}
-		std::cout << "all fine2\n";
 		std::string add = (path.substr(pars.get_block(BLOCK_LOCATION, uri).conf.find(BLOCK_ROOT)->second[0].size()));
-		std::cout << "all fine3\n";
 		body = index(path, uri, add);
 		add_content_type("text/html");
+	}
+	else if (is_cgi(get_extension(path), pars, req.get_method()))
+	{
+		std::cout << "method = post 2 = " << path << std::endl;
+		first_line.status = 42;
+		method_function method = existing_method.find(POST)->second;
+		return (this->*method)(path, req, pars); //change for if there is redirect
+
+		// status = (this->*method)(path, req, pars); //change for if there is redirect
 	}
 	else
 	{
 		if ((ret = add_body(path)) != 0)
-			return ret;		
+			return ret;
 		else if (type.empty())
+		{
+			std::cout << "j'ajoute add_cypntente type = " << type << std::endl;
 			add_content_type("application/octet-stream");
+		}
 		else
 			add_content_type(type);
 	}
@@ -68,20 +88,9 @@ int		response::method_is_get(const std::string &uri, const request &req, const p
 	add_content_length(body.size());
 
 	return 200;
-		// if (is_cgi(get_extension(path), pars, g))
-		// 	add_content_type("text/plain");
-	// else if (is_cgi(get_extension(path), pars))
-	// {
-	// 	cgi(req, pars, body, path);
-	// 	if (body[0] == '5')
-	// 		return ft_atoi<int>(body);
-	// 	if (!req.get_tf().empty())
-	// 		header.insert(value_type(std::string("Transfer-Encoding"), req.get_tf()));
-	// 	add_content_type("text/html; charset=utf-8");
-	// }
 }
 
-int		response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
 	int ret = del_content(path, req, pars, 0);
@@ -93,7 +102,7 @@ int		response::method_is_delete(const std::string &uri, const request &req, cons
 	return 204;
 }
 
-int		response::method_is_options(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_options(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
 	struct stat file_stat; //information about file
@@ -121,10 +130,10 @@ int		response::method_is_options(const std::string &uri, const request &req, con
 	return 200; //value of OK response
 }
 
-int		response::method_is_put(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_put(const std::string &uri, const request &req, const parser &pars)
 {
-	int		fd;
-	int		response_value = 204;
+	int fd;
+	int response_value = 204;
 
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
@@ -136,8 +145,8 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 	{
 		if ((fd = open(path.c_str(), O_WRONLY)) < 0)
 		{
-			response_value = 201; //CREATE
-			if ((fd = open(path.c_str(), O_WRONLY | O_CREAT, 0666 )) < 0) //content doesn't exist so create it
+			response_value = 201;										 //CREATE
+			if ((fd = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
 			{
 				close(fd);
 				return 403;
@@ -154,7 +163,7 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 	}
 	else
 	{
-		if (int ret = is_open(file_stat))
+		if (is_acces(file_stat))
 			return ret;
 		errno = 0;
 		if ((fd = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
@@ -178,28 +187,30 @@ int		response::method_is_put(const std::string &uri, const request &req, const p
 	return response_value;
 }
 
-int		response::method_is_post(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block("location", uri), uri, req);
+	std::cout << "JE SUIS DANS POST" << first_line.status << std::endl;
+	std::cout << "uri" << uri << std::endl;
+	std::string path;
+
+	if (first_line.status == 42)
+		path = uri;
+	else
+		path = find_path(pars.get_block("location", uri), uri, req);
+	std::cout << "PATH = " << path << std::endl;
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
-	// if (!is_cgi(get_extension(path), pars, req.get_method()))
-	// 	return 404;
-	// struct stat file_stat; //information about file
-	// int ret = check_path(path, file_stat, req, pars);
-	// if (ret != 0)
- 	// 	return ret;
-	// if ((file_stat.st_mode & S_IFMT) == S_IFDIR || (file_stat.st_mode & S_IFMT) == S_IFLNK)
-	//   	return 404;
-	
+
+	std::cout << "AUTHORISER" << std::endl;
 	if (is_cgi(get_extension(path), pars, req.get_method()))
 	{
+		std::cout << "encore is cgi" << std::endl;
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
 	}
-	add_content_type("text/html; charset=utf-8");
+	add_content_type("text/html; charset=UTF-8");
 	add_content_length(body.size());
 	//add_content_type("application/octet-stream");
 	//header.insert(value_type(std::string(TRANSFERT_ENCODING), std::string("chunked")));
@@ -207,7 +218,7 @@ int		response::method_is_post(const std::string &uri, const request &req, const 
 	return 200;
 }
 
-int		response::method_is_trace(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_trace(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
@@ -227,7 +238,7 @@ int		response::method_is_trace(const std::string &uri, const request &req, const
 	return 200;
 }
 
-int			response::method_is_unknow(const std::string &uri, const request &req, const parser &pars)
+int response::method_is_unknow(const std::string &uri, const request &req, const parser &pars)
 {
 	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;

@@ -22,6 +22,7 @@ std::string response::header_to_string() const
 /*add inside response:header all field which are in all method and in all condition*/
 void response::main_header(const std::vector<std::string> &allow_method)
 {
+	
 	add_allow(allow_method); // allow_field add in header
 	add_date();				 // date field add in header
 	add_server();			 // server field add in header
@@ -55,18 +56,38 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 		struct stat file_stat; //information about file
 		char buf[4096];
 		int fd = 0;
+		errno = 0;
+		std::string Authorization(req.get_user());
 
+		if (Authorization.empty() || Authorization == "Og==")
+			return 401;
 		std::string file = path.find(AUTH_BASIC_USER_FILE)->second[0].c_str();
 		if (lstat(file.c_str(), &file_stat) < 0)
-			return 500;
-		std::string Authorization(req.get_user());
-		if (Authorization.empty())
-			return 401;
+				return 403;
+
+		std::cout << "FILE = " << file << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
+		std::cout << "====================================" << std::endl;
 		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
-			return 403;
+			return 500;
 		int ret = 0;
 		if ((ret = read(fd, buf, 4095)) < 0)
-			return 403;
+			return 500;
 		if (!ret)
 			return 0;
 		buf[ret] = '\0';
@@ -83,20 +104,20 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 	return 0;
 }
 
-void response::status_header(int status)
+void			response::status_header(int status, const std::string &path, const parser &pars)
 {
-	/*if (status == 401)
+	if (status == 401)
 	{
 		std::cout << "www_autentificate\n";
-		add_www_autentificate();
-	}*/
+		add_www_autentificate(pars, path);
+	}
 	if (status == 503)
 		add_retry_after(200);
 	//if (first_line.status > 299 && first_line.status < 400)
 	//	add_retry_after(1);
 }
 
-int			response::is_open(const struct stat &file) const
+bool			response::is_acces(const struct stat &file) const
 {
 	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
 	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 
@@ -177,27 +198,39 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 {
 	(void)req;
 	(void)pars;
-	if (path.empty())
-		return 404;
+	errno = 0;
+
 	if (lstat(path.c_str(), &file_stat) < 0)
-		return 404;
-	if (int ret = is_open(file_stat))
-		return ret;
-	// if (!is_authorize(path, req, pars))
-	// 	return 401;
+	{
+		if (errno == ENOENT)
+			return 404;
+		if (errno == EACCES)
+			return 403;
+	}
+	 if (is_acces(file_stat))
+	 	return 403;
 	return (0);
 }
 
 // Check if the type is a CGI
 bool		response::is_cgi(const std::string &type, const parser &pars, const std::string &method) const
 {
+	std::cout << "je suis dans cgi" << std::endl;
+	std::cout << "type = " << type << std::endl;
+	std::cout << "method = " << method << std::endl;
+	std::cout << "je suis dans cgi" << std::endl;
 	try
 	{
+	std::cout << "11111111111111111111111111" << std::endl;
 		parser::entries bc(pars.get_block("cgi", type).conf);
+	std::cout << "2222222222222222222" << std::endl;
 		std::vector<std::string> tab = bc.find("accept")->second;
+	std::cout << "33333333333333333" << std::endl;
 
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
 		{
+	std::cout << "*it = " << *it << std::endl;
+
 			if (*it == method)
 				return true;	
 		}
@@ -205,6 +238,8 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 	}
 	catch(const std::exception& e)
 	{
+		std::cout << "je retourne une exeption" << std::endl;
+
 		return false;
 	}
 	return true;
@@ -215,6 +250,7 @@ std::string		response::index(const std::string &path, std::string root, std::str
 {
 	DIR *dir = opendir(path.c_str());
 	struct dirent *dp;
+
 	std::string index =\
 	"<html>\n\
 	<head><title>Index of " + root + "</title></head>\n\
@@ -224,7 +260,16 @@ std::string		response::index(const std::string &path, std::string root, std::str
 		while ((dp = readdir(dir)) != NULL)
 		{
 			if (dp->d_name != std::string(".") && dp->d_name != std::string(".."))
-				index += "<a href=\"" + add + std::string(dp->d_name) + "\">" + std::string(dp->d_name) + "/" + "</a>\n";
+			{
+				struct stat file_stat;
+				stat( (path + dp->d_name).c_str(), &file_stat);
+				index += "<a href=\"" + add + std::string(dp->d_name);
+				if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
+					index += "/\">" + std::string(dp->d_name) + "/";
+				else
+					index += "\">" + std::string(dp->d_name);
+				index += "</a>\n";
+			}
 		}
         closedir(dir);
 	index +=\
@@ -309,7 +354,28 @@ int response::is_redirect(const parser::entries &block, const parser &pars, cons
 
 	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //CHANGE
 	status = ft_atoi<int>(*return_arg);
-	header.insert(value_type(LOCATION, *++return_arg));
+	std::string host = req.get_host();
+	
+	if (host.find("http") == host.npos)
+		host = "http://" + host;
+
+	size_t i = -1;
+	int v = 0;
+	while (++i < host.size())
+	{
+		if (host[i] == ':')
+		{
+			if (++v == 2)
+			{
+				host = host.substr(0, i);	
+				break;
+			}
+		}
+	}
+
+	std::cout << "MY HOST = " << host << std::endl;
+
+	header.insert(value_type(LOCATION, host += *++return_arg));
 
 	return status;
 }
@@ -357,15 +423,4 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 		++i;
 	}
 	return resp_str;
-}
-
-int				response::connection_state() const
-{
-	const_iterator it = header.find(CONNECTION);
-	const_iterator end = header.end();
-
-	if (it == end || it->second == "keep_alive")
-		return 1;
-	else
-		return 0;
 }

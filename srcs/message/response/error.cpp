@@ -49,12 +49,23 @@ void	response::default_error(int error_status, const request &req, const parser 
 int response::redirect_to_error(const std::string &path, const request &req, const parser &pars)
 {
 	int status;
-	method_function method = req.get_method() == HEAD ? &response::method_is_head : &response::method_is_get;
+	method_function method;
 
+	std::cout << "PATH DANS REDIRECT_TO_ERROR = " << path << std::endl;
+	if (is_cgi(get_extension(path), pars, req.get_method()))
+	{
+	std::cout << "method = post" << std::endl;
+
+			method = existing_method.find(POST)->second;
+	}
+	else
+		method = req.get_method() == HEAD ? &response::method_is_head : &response::method_is_get;
+
+	std::cout << "METHOD FINI" << "\n";
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
 	status = (this->*method)(path, req, pars); //change for if there is redirect
 
-	std::cout << "status redir : " << status << "\n";
+
 	return status;
 }
 
@@ -81,8 +92,11 @@ int response::error_response(int status, const request &req, const parser &pars)
 			default_error(status, req, pars);
 		}
 	}
-	status_header(status);
+	std::cout << "==========================" << std::endl;
+	status_header(status, req.get_uri(), pars);
+	std::cout << "==========================2" << std::endl;
 	error_special_case(req); //delete things which are note in specific method
+	std::cout << "==========================3" << std::endl;
 	//std::cout << "header : " << get_header() << "\n";
 	//std::cout << "body : " << get_body() << "\n";
 	//std::cout << "test : " << header.find(CONTENT_LENGTH)->second << "\n"; 
@@ -95,7 +109,7 @@ int response::error_response(int status, const request &req)
 {
 	std::cout << "status1 : " << status << "\n";
 	//default_error(status, req);
-	status_header(status);
+	//status_header(status, req.get_uri(), path);
 	error_special_case(req); //delete things which are note in specific method
 
 	return status;

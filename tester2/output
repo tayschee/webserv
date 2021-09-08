@@ -1,0 +1,16 @@
+
+----------------------  default GET /  ------------------------
+
+							      >
+---------------------- default   HEAD   / ------------------------
+
+HTTP/1.1 200 OK							      <
+Server: nginx/1.18.0							      <
+Date: Wed, 08 Sep 2021 16:20:59 GMT							      <
+Content-Type: image/gif							      <
+Content-Length: 169619							      <
+Last-Modified: Mon, 06 Sep 2021 13:49:32 GMT							      <
+Connection: keep-alive							      <
+ETag: "61361c6c-29693"							      <
+Accept-Ranges: bytes							      <
+							      <

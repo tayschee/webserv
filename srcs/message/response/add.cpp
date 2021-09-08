@@ -37,6 +37,26 @@ void			response::add_content_length(const off_t &bytes_size) //off_t == long lon
 	header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
 }
 
+void				response::add_www_autentificate(const parser &pars, const std::string &path)
+{
+	try
+	{
+		parser::block bloc = pars.get_block(BLOCK_LOCATION, path);
+		if (bloc.conf.find(AUTH_BASIC) != bloc.conf.end())
+		{
+		std::cout << "path = " << path << std::endl;
+			std::string txt("Basic realm=");
+			txt += pars.get_block(BLOCK_LOCATION, path).conf.find(AUTH_BASIC)->second[0];
+			header.insert(value_type(WWW_AUTHENTICATE, txt)); //must change charset
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << "AUTH_BASIC NO FOUND" << std::endl;
+		// std::cerr << e.what() << '\n';
+	}	
+}
+
 /*add field Last_Modified to response::header*/
 void			response::add_last_modified(time_t time)
 {
@@ -135,37 +155,6 @@ void			response::add_content_type(const std::string &type) //pas tester
 void				response::add_content_language(const std::string &language)
 {
 	header.insert(std::pair<std::string, std::string>(CONTENT_LANGUAGE, language));
-}
-
-void				response::add_www_autentificate(const parser::entries &entries)
-{
-	parser::entries::const_iterator it(entries.find(AUTH_BASIC));
-	parser::entries::const_iterator end(entries.end());
-	std::string txt("Basic realm=");
-
-	if (it != end)
-		txt += it->second[1];
-	else
-		txt += "???";
-	header.insert(value_type(WWW_AUTHENTICATE, txt)); //must change charset
-}
-
-void				response::add_connection(int status)
-{
-	const size_t size(3);
-	int		list[3] = {300, 400, 500};
-
-	size_t i(0);
-	while (i < size)
-	{
-		if (status == list[i])
-		{
-			header.insert(value_type(CONNECTION, "close"));
-			return ;
-		}
-		++i;
-	}
-	header.insert(value_type(CONNECTION, "keep-alive"));
 }
 
 /* this time, this is not a field it's the body of response which be add */

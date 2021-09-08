@@ -1,456 +1,336 @@
 
+----------------------  error.conf GET /  ------------------------
+
+							      >
+---------------------- error.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /inexistant_file  ------------------------
+
+---------------------- error.conf   HEAD   /inexistant_file ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /secret/  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: NOT_BASIC YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /bad_secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /bad_secret2/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 177							      |	Content-Length: 165								
+----------------------  error.conf GET /secret/secret.html  ------------------------
+
+---------------------- error.conf   HEAD   /secret/secret.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /private/private.html  ------------------------
+
+---------------------- error.conf   HEAD   /private/private.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /private/  ------------------------
+
+---------------------- error.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  index_off.conf GET /  ------------------------
+
+---------------------- index_off.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  index_off.conf GET /html/3.html  ------------------------
+
+---------------------- index_off.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /  ------------------------
+
+---------------------- redirect.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /html/  ------------------------
+
+---------------------- redirect.conf   HEAD   /html/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-232b"							      <
+----------------------  redirect.conf GET /gif/  ------------------------
+
+---------------------- redirect.conf   HEAD   /gif/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /jpeg/  ------------------------
+
+---------------------- redirect.conf   HEAD   /jpeg/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  redirect.conf GET /error/  ------------------------
+
+---------------------- redirect.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-232b"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /dest/  ------------------------
+
+---------------------- redirect.conf   HEAD   /dest/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-174ab7"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET / -L  ------------------------
+
+---------------------- redirect.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /html/3.html -L  ------------------------
+
+---------------------- redirect.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-232b"							      <
+----------------------  same_error.conf GET /  ------------------------
+
+---------------------- same_error.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-13e3"							      <
+----------------------  same_error.conf GET /ffgsdgsfgsg  ------------------------
+
+---------------------- same_error.conf   HEAD   /ffgsdgsfgsg ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-13e3"							      <
+----------------------  same_error.conf GET /secret/secret.html  ------------------------
+
+---------------------- same_error.conf   HEAD   /secret/secret.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  same_error.conf GET /html/3.html  ------------------------
+
+---------------------- same_error.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /  ------------------------
+
+---------------------- multiple_location.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /gif/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /gif/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-23cf4"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /html/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /html/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-24"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /jpeg/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /jpeg/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /png/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /png/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /private/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /secret/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+WWW-Authenticate: Basic realm="Restrict access"							      |	WWW-Authenticate: Basic realm="Restrict"								
+----------------------  multiple_location.conf GET /spoiler/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /spoiler/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+WWW-Authenticate: Basic realm="SPOILER ALERT !!!"							      |	WWW-Authenticate: Basic realm="SPOILER"								
+----------------------  multiple_location.conf GET /error/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  multiple_location.conf GET /php/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /php/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  multiple_location.conf GET /html/3.html  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /unexist.html  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /unexist.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /new.html -l  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:46 GMT							      |	Date: Tue, 07 Sep 2021 14:06:47 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/4d5a075a9c4775b74c6f038856801cd8 and a261c6164bea830a956f06bc6352b27a/d4638c295379675144de6f61253af95f differ
+1d0
+< 
 ----------------------  multiple_location.conf PUT_1 /new.html -d <p>little</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:46 GMT							      |	Date: Tue, 07 Sep 2021 14:06:47 GMT								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
+1d0
+< 
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /new.html -l  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:46 GMT							      |	Date: Tue, 07 Sep 2021 14:06:47 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/d395161d47749868c6d98ff0e548a2df and a261c6164bea830a956f06bc6352b27a/bc1543f403004fab247eafc0657e784c differ
+1d0
+< 
 ----------------------  multiple_location.conf PUT_2 /new.html -d <p>little</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:46 GMT							      |	Date: Tue, 07 Sep 2021 14:06:47 GMT								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /new.html -l  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:46 GMT							      |	Date: Tue, 07 Sep 2021 14:06:47 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/c15602461398c003913e518ef87942cc and a261c6164bea830a956f06bc6352b27a/a642dcaf8e886c498452875f5057adcc differ
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /private/impossible.html  ------------------------
 
-HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/4d5a075a9c4775b74c6f038856801cd8 and a261c6164bea830a956f06bc6352b27a/d4638c295379675144de6f61253af95f differ
 ----------------------  multiple_location.conf PUT_1 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /private/impossible.html  ------------------------
 
-HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/d395161d47749868c6d98ff0e548a2df and a261c6164bea830a956f06bc6352b27a/bc1543f403004fab247eafc0657e784c differ
 ----------------------  multiple_location.conf PUT_2 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /private/impossible.html  ------------------------
 
-HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/c15602461398c003913e518ef87942cc and a261c6164bea830a956f06bc6352b27a/a642dcaf8e886c498452875f5057adcc differ
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /secret/to_delete.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 179							      |	Content-Length: 147								
-WWW-Authenticate: Basic realm="Restrict access"		      |	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>401 Authorization Required</title></head>
-< <body>
-< <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>401 Unauthorized</title></head>
-> <body>
-> <center><h1>401 Unauthorized</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf PUT_1 /secret/to_delete.html -d <p>secret</p>  ------------------------
 
-HTTP/1.1 401 Unauthorized							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 179							      |	Content-Length: 159								
-WWW-Authenticate: Basic realm="Restrict access"		      |	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>401 Authorization Required</title></head>
-< <body>
-< <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /secret/to_delete.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 179							      |	Content-Length: 147								
-WWW-Authenticate: Basic realm="Restrict access"		      |	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>401 Authorization Required</title></head>
-< <body>
-< <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>401 Unauthorized</title></head>
-> <body>
-> <center><h1>401 Unauthorized</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf PUT_2 /secret/to_delete.html -d <p>secret</p>  ------------------------
 
-HTTP/1.1 401 Unauthorized							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 179							      |	Content-Length: 159								
-WWW-Authenticate: Basic realm="Restrict access"		      |	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>401 Authorization Required</title></head>
-< <body>
-< <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /secret/to_delete.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 179							      |	Content-Length: 147								
-WWW-Authenticate: Basic realm="Restrict access"		      |	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>401 Authorization Required</title></head>
-< <body>
-< <center><h1>401 Authorization Required</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>401 Unauthorized</title></head>
-> <body>
-> <center><h1>401 Unauthorized</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /no_path/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/4d5a075a9c4775b74c6f038856801cd8 and a261c6164bea830a956f06bc6352b27a/d4638c295379675144de6f61253af95f differ
 ----------------------  multiple_location.conf PUT_1 /no_path/new.html -d <p>error</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /no_path/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/d395161d47749868c6d98ff0e548a2df and a261c6164bea830a956f06bc6352b27a/bc1543f403004fab247eafc0657e784c differ
 ----------------------  multiple_location.conf PUT_2 /no_path/new.html -d <p>error</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /no_path/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/c15602461398c003913e518ef87942cc and a261c6164bea830a956f06bc6352b27a/a642dcaf8e886c498452875f5057adcc differ
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /html/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:49 GMT							      |	Date: Tue, 07 Sep 2021 14:06:50 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/4d5a075a9c4775b74c6f038856801cd8 and a261c6164bea830a956f06bc6352b27a/d4638c295379675144de6f61253af95f differ
 ----------------------  multiple_location.conf PUT_1 /html/new.html -d <p>YES</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:49 GMT							      |	Date: Tue, 07 Sep 2021 14:06:50 GMT								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /html/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:49 GMT							      |	Date: Tue, 07 Sep 2021 14:06:50 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/d395161d47749868c6d98ff0e548a2df and a261c6164bea830a956f06bc6352b27a/bc1543f403004fab247eafc0657e784c differ
 ----------------------  multiple_location.conf PUT_2 /html/new.html -d <p>YES</p>  ------------------------
 
-HTTP/1.1 405 Not Allowed							      |	HTTP/1.1 405 Method Not Allowed								
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:49 GMT							      |	Date: Tue, 07 Sep 2021 14:06:50 GMT								
-Content-Length: 157							      |	Content-Length: 159								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST
-1,7c1,7
-< <html>
-< <head><title>405 Not Allowed</title></head>
-< <body>
-< <center><h1>405 Not Allowed</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>405 Method Not Allowed</title></head>
-> <body>
-> <center><h1>405 Method Not Allowed</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /html/new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Date: Tue, 07 Sep 2021 14:06:49 GMT							      |	Date: Tue, 07 Sep 2021 14:06:50 GMT								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST
-Binary files a261c6164bea830a956f06bc6352b27a/c15602461398c003913e518ef87942cc and a261c6164bea830a956f06bc6352b27a/a642dcaf8e886c498452875f5057adcc differ
 ----------------------  multiple_location.conf GET_BEFORE_PUT_1 /put_and_delete/page.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST, PUT
-Binary files a261c6164bea830a956f06bc6352b27a/4d5a075a9c4775b74c6f038856801cd8 and a261c6164bea830a956f06bc6352b27a/d4638c295379675144de6f61253af95f differ
 ----------------------  multiple_location.conf PUT_1 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
 
-HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 177							      |	Content-Length: 141								
-Connection: close					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, PUT
-1,7c1,7
-< <html>
-< <head><title>500 Internal Server Error</title></head>
-< <body>
-< <center><h1>500 Internal Server Error</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>403 Forbidden</title></head>
-> <body>
-> <center><h1>403 Forbidden</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_1 /put_and_delete/page.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST, PUT
-Binary files a261c6164bea830a956f06bc6352b27a/d395161d47749868c6d98ff0e548a2df and a261c6164bea830a956f06bc6352b27a/bc1543f403004fab247eafc0657e784c differ
 ----------------------  multiple_location.conf PUT_2 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
 
-HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
-Server: nginx/1.18.0							      |	Server: webserv								
-Content-Length: 177							      |	Content-Length: 141								
-Connection: close					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, PUT
-1,7c1,7
-< <html>
-< <head><title>500 Internal Server Error</title></head>
-< <body>
-< <center><h1>500 Internal Server Error</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
----
-> <html>
-> <head><title>403 Forbidden</title></head>
-> <body>
-> <center><h1>403 Forbidden</h1></center>
-> <hr><center>webserv</center>
-> </body>
-> </html>
 ----------------------  multiple_location.conf GET_AFTER_PUT_2 /put_and_delete/page.html  ------------------------
 
+----------------------  same_error_php.conf GET /fdgfs  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /fdgfs ------------------------
+
 Server: nginx/1.18.0							      |	Server: webserv								
-Content-Type: image/png							      |	Content-Type: text/html								
-Content-Length: 5091							      |	Content-Length: 141								
-ETag: "6130d8c0-13e3"					      |	Allow: GET, HEAD, POST, PUT
-Binary files a261c6164bea830a956f06bc6352b27a/c15602461398c003913e518ef87942cc and a261c6164bea830a956f06bc6352b27a/a642dcaf8e886c498452875f5057adcc differ
+----------------------  same_error_php.conf GET /private/  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  same_error_php.conf GET /secret/  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  same_error_php.conf GET /html/cat.html  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /html/cat.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "6138e39f-24"							      <
+Accept-Ranges: bytes							      <

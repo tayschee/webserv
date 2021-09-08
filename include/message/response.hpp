@@ -57,10 +57,10 @@ class response : public message
 		void			main_header(const std::vector<std::string> &allow_method);
 		void			main_header();
 		std::string		header_first_line() const;
-		int				is_open(const struct stat &file) const;
+		bool			is_acces(const struct stat &file) const;
 		bool			is_cgi(const std::string &type, const parser &pars) const;
 		int				is_authorize(const std::string &path_str, const request &req, const parser &pars) const;
-		void			status_header(int status);
+		void			status_header(int status, const std::string &path, const parser &pars);
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
 		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
 		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
@@ -68,7 +68,6 @@ class response : public message
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
 		std::string		header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const;
-		int				connection_state() const;
 
 
 	private : //find_* functions, they return a value with a key without map
@@ -79,8 +78,11 @@ class response : public message
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index = 1) const;
-		std::string								find_index(const parser::entries &entries, const std::list<std::string> &files) const;
-		const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
+	
+		std::string								find_index(const parser::entries &entries, const std::string &path) const;
+		const parser::address_conf::const_iterator	find_parser(const parser::address_conf &pars_list, const request &req) const;
+		
+		// const parser::address_conf::const_iterator	find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const;
 
 	private : //method_is_* function, apply one of method
 		int										method_is_head(const std::string &uri, const request &req, const parser &pars); //HEAD
@@ -103,10 +105,8 @@ class response : public message
 		void				add_content_type(const std::string &file); //Content-type without precise charset
 		void				add_content_language(const std::string &language); //Content-Language
 		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
-		void				add_www_autentificate(const parser::entries &entries); //WWW-Authentificate
+		void				add_www_autentificate(const parser &pars, const std::string &path); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
-		void				add_connection(int status);
-
 		int					add_body(const std::string &path);
 
 
@@ -139,7 +139,7 @@ class response : public message
 
 	public :
 		response();
-		response(const request &req, const std::vector<parser::address_conf>::const_iterator &pars_list);
+		response(const request &req, const parser::address_conf &pars_list);
 		response(const request::exception except, const parser &pars);
 		~response();
 };

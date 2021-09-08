@@ -11,11 +11,9 @@ void client::receive() // call recieve
 		my_read = -1;
 		msg.clear();
 		msg = "";
-		std::cout << "HOLLA2 !!!!!\n\n\n\n\n";
 	}
 	else
 	{
-		std::cout << "HOLLA !!!!!\n\n\n\n\n";
 		i = rcv.check();
 		if (i & rcv.BODY_MASK)
 		{
@@ -28,7 +26,6 @@ void client::receive() // call recieve
 			rcv.prepare_next();
 
 			my_read = 1;
-			std::cout << "all is receive !!!!!!\n\n\n\n\n";
 		}
 		else if (i & rcv.HEADER_MASK)
 		{
@@ -39,7 +36,6 @@ void client::receive() // call recieve
 			msg.clear();
 			msg = "";
 			my_read = 0;
-			std::cout << "problem !!!!!\n\n\n\n\n";
 		}
 	}
 	reset = true;
@@ -68,22 +64,9 @@ long client::sent(const std::vector<parser::address_conf> &vec_parser) // send r
 	msg.clear();
 	msg = "";
 
-	size_t i = 0;
-	size_t j = 0;
-	std::vector<parser> vec_pars = vec_parser[nb_pars];
-	/*for (std::vector<parser>::iterator it2 = vec_pars.begin(); it2 != vec_pars.end(); ++it2)
-	{
-		if (it2->get_block("server").conf.find("server_name")->second[0] == "default")
-			j = i;
-		if (it2->get_block("server").conf.find("server_name")->second[0] == req.get_host().substr(0, req.get_host().find(":")))
-			break;
-		i++;
-	}*/
-	if (i == vec_pars.size())
-		i = j;
-	
 	std::cout << "oulaoup\n";
-	response rep(req, vec_parser.begin());
+	response rep(req, vec_parser[nb_pars]);
+
 	std::cout << "jusqu'ici\n";
 	my_read = rep.sent(fd);
 	std::cout << "oki ?\n";
