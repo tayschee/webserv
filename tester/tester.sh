@@ -117,16 +117,16 @@ C
 
 #DELETE TEST
 
-#test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
-#test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
-#test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
-#test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
-# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/gif/"
-# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
+test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/gif/"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/"
 
-# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/php/1.php"
-# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/gif/"
-# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/php/1.php"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/gif/"
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/"
 
 #test_syntax syntax_ressources/wrong_uri
 #test_syntax syntax_ressources/line_feed

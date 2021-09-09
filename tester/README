@@ -3,5 +3,8 @@ OPTIONS parce que nginx n'est pas fiable sur la methode
 PUT avec des fichiers existants il faut faire une autre fonctions ne pas utiliser celle deja existante elle detruit les fichiers
 TRACE je sais pas comment ca marche
 CONNECT pas implemente
+PATCH je sais pas comment ca marche
 
 You must add manually gif 127.0.0.1:80 secret 127.0.0.1:80 and jpeg 127.0.0.1:80 in /etc/host
+To launch test run : bash tester.sh
+This tester just highlight difference between nginx and a webserv but some difference can be explain because nginx didnt respect perfectly rfc7230 to 7235
