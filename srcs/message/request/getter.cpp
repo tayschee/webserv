@@ -57,9 +57,10 @@ const std::string	request::get_user() const
 	if (header.find(AUTHORIZATION) == header.end())
 		return "";
 	std::vector<std::string> vec = split(header.find(AUTHORIZATION)->second.substr(), WHITE_SPACE);
-	if (vec.size() >= 2)
+	if (vec.size() >= 2 && vec[0] == "Basic")
 	{
 		std::cout << "le mot de passe est " << vec[1] << "\n";
+		std::cout << "vec[0] = " << vec[0] << std::endl;
 		return vec[1]; //VERIFY CANT STAY LIKE THIS
 	}
 	std::cout << "INVALID : " << vec[1] << "\n";
@@ -106,10 +107,10 @@ std::string		request::get(const std::string &hf_sep, const std::string &eol) con
 	return req_str;
 }
 
-/*to have response to this request (you must send it)*/
-response		request::get_response(const std::vector<parser::address_conf>::const_iterator pars) const
-{
-	response	resp(*this, pars);
+// /*to have response to this request (you must send it)*/
+// response		request::get_response(const std::vector<parser::address_conf>::const_iterator pars) const
+// {
+// 	response	resp(*this, pars);
 
-	return resp;
-}
+// 	return resp;
+// }

@@ -4,7 +4,6 @@
 # include "parser.hpp"
 # include "message/message.hpp"
 # include "message/exchange.hpp"
-# include <vector>
 
 class parser;
 class response;
@@ -82,7 +81,6 @@ class request : public message
 
 	public :
 		void			clear();
-		int				check_path(const std::string &path) const;
 
 	public :
 		request();

@@ -314,6 +314,7 @@ bool parser::check_prop_autoindex(const std::string &block_id, const std::vector
 {
 	std::vector<std::string> expected;
 	expected.push_back(PARSER_LOCATION);
+	expected.push_back(PARSER_SERVER);
 
 	if (!basic_chk_block(PARSER_AUTOINDEX, block_id, expected, line_no))
 		return false;

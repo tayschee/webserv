@@ -19,6 +19,8 @@ generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 22 $DIR_TMP1/ #generate 9 file with random name in $DIR_TMP1/
 
 <<TEST
+# <<C
+
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
 
 #-L follow redirect -i http header in output -I only header
@@ -39,6 +41,8 @@ test $NAME_CONFIG "/private/"
 stop_server
 
 C
+
+# <<C
 
 #AUTOINDEX OFF TEST
 launch_server $INDEX_OFF_CONF
@@ -62,6 +66,10 @@ test $NAME_CONFIG "/html/3.html" "-L"
 
 stop_server
 
+# C
+
+# <<C
+
 #MULTIPLE ERROR TEST
 launch_server $SAME_ERROR_CONF
 
@@ -74,7 +82,8 @@ test $NAME_CONFIG "/html/3.html"
 
 
 stop_server
-C
+
+# C
 TEST
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
@@ -94,7 +103,6 @@ test $NAME_CONFIG "/error/"
 test $NAME_CONFIG "/php/"
 test $NAME_CONFIG "/html/3.html"
 test $NAME_CONFIG "/unexist.html"
-<< C
 
 test_put $NAME_CONFIG 5 "/new.html" -d "<p>little</p>" -l
 test_put $NAME_CONFIG 5 "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
@@ -102,51 +110,23 @@ test_put $NAME_CONFIG 5 "/secret/to_delete.html" -d "<p>secret</p>" #must do tes
 test_put $NAME_CONFIG 5 "/no_path/new.html" -d "<p>error</p>" #dont work
 test_put $NAME_CONFIG 5 "/html/new.html" -d "<p>YES</p>" #work
 test_put $NAME_CONFIG 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
+
+stop_server
+
 C
 
 #DELETE TEST
 
 test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
-<< C
-test_delete $NAME_CONFIG 7 srcs/dir_to_copy 755 "/dir_to_delete/php/" ""
+test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
+test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+#test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/gif/"
+# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/"
 
-chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
-chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
-test_delete $NAME_CONFIG 3 "/dir_to_delete/private/"
-chmod 755 srcs/$NG_DELETE_DIR/dir_to_delete/private/
-chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
-rm -rf srcs/$NG_DELETE_DIR/dir_to_delete/private/
-rm -rf srcs/$WS_DELETE_DIR/dir_to_delete/private/
-
-test_delete $NAME_CONFIG 3 "/dir_to_delete/secret/"
-test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: NOT_BASIC YWRtaW46YWRtaW4="
-test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic 000"
-test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4= 1234"
-test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic 1234 YWRtaW46YWRtaW4="
-test_delete $NAME_CONFIG 5 "/dir_to_delete/secret/" -H "Authorization: Basic YWRtaW46YWRtaW4="
-
-test_delete $NAME_CONFIG 3 "/dir_to_delete/unexist/"
-test_delete $NAME_CONFIG 3 "/dir_to_delete/1.html"
-
-test_delete $NAME_CONFIG 3 "/"
-test_delete $NAME_CONFIG 3 "/php/"
-test_delete $NAME_CONFIG 3 "/empty_dir/"
-test_delete $NAME_CONFIG 3 "/empty_dir/unexist" #unexist
-
-test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
-#test_method $NAME_CONFIG GET "/dir_to_delete/cat.html" #test if symbolic link or file which are delete
-
-rm -rf  srcs/$NG_DELETE_DIR
-rm -rf  srcs/$WS_DELETE_DIR
-
-cp -r srcs/dir_to_copy srcs/$NG_DELETE_DIR
-cp -r srcs/dir_to_copy srcs/$WS_DELETE_DIR
-
-chmod 000 srcs/$NG_DELETE_DIR/dir_to_delete/private/
-chmod 000 srcs/$WS_DELETE_DIR/dir_to_delete/private/
-test_delete  $NAME_CONFIG 3 "/dir_to_delete/"
-chmod 755 srcs/$NG_DELETE_DIR/dir_to_delete/private/
-chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
+# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/php/1.php"
+# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/gif/"
+# test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_delete/"
 
 #test_syntax syntax_ressources/wrong_uri
 #test_syntax syntax_ressources/line_feed
@@ -162,7 +142,7 @@ chmod 755 srcs/$WS_DELETE_DIR/dir_to_delete/private/
 #test_method $NAME_CONFIG POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
 #test_method $NAME_CONFIG POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
 #test_method $NAME_CONFIG GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
-C
+
 stop_server
 
 << C
@@ -178,6 +158,10 @@ test $NAME_CONFIG "/html/cat.html" #405
 
 stop_server
 
+# C
+
+<< C
+
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
 
@@ -187,8 +171,11 @@ test "jpeg.conf" "/" -H "Host: jpeg"
 test "secret.conf" "/" -H "Host: secret"
 
 stop_server
+
 C
-TEST
+
+# TEST
+
 delete_x_tmpdir DIR_TMP 1
 
 #permission reset

@@ -22,12 +22,7 @@ int		 request::validity() const
 {
 	if (first_line.version != HTTP_VERSION)
 		return 505;
-	if (first_line.uri.size() < 1 || first_line.uri[0] != '/') //WARNING
-	{
-		return 400;
-	}
-
-	if (this->check_path(first_line.uri))
+	if (first_line.uri.size() < 1 || first_line.uri[0] != '/')
 	{
 		return 400;
 	}

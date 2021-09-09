@@ -2,21 +2,22 @@
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.14.2							      |	Server: webserv								
-Date: Wed, 08 Sep 2021 13:58:17 GMT							      |	Date: Wed, 08 Sep 2021 13:58:18 GMT								
-Last-Modified: Wed, 08 Sep 2021 13:58:17 GMT							      |	Last-Modified: Wed, 08 Sep 2021 13:58:18 GMT								
-ETag: "6138c179-22"							      |	Allow: GET, HEAD, POST, DELETE
+Date: Thu, 09 Sep 2021 15:32:58 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Last-Modified: Thu, 09 Sep 2021 15:32:58 GMT							      |	Last-Modified: Thu, 09 Sep 2021 15:32:59 UTC
+Connection: keep-alive							      <
+ETag: "613a292a-22"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.14.2							      |	Server: webserv								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, DELETE
+Date: Thu, 09 Sep 2021 15:32:58 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC
+Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.14.2							      |	Server: webserv								
-Content-Length: 169							      |	Content-Length: 141								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, DELETE
+Date: Thu, 09 Sep 2021 15:32:58 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
 1,7c1,7
 < <html>
 < <head><title>404 Not Found</title></head>
@@ -36,9 +37,9 @@ Connection: keep-alive					      |	Connection: keep-alive
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.14.2							      |	Server: webserv								
-Content-Length: 169							      |	Content-Length: 141								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, DELETE
+Date: Thu, 09 Sep 2021 15:32:58 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
 1,7c1,7
 < <html>
 < <head><title>404 Not Found</title></head>
@@ -58,9 +59,203 @@ Connection: keep-alive					      |	Connection: keep-alive
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.14.2							      |	Server: webserv								
-Content-Length: 169							      |	Content-Length: 141								
-Connection: keep-alive					      |	Connection: keep-alive								
-							      >	Allow: GET, HEAD, POST, DELETE
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
+1,7c1,7
+< <html>
+< <head><title>404 Not Found</title></head>
+< <body bgcolor="white">
+< <center><h1>404 Not Found</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>404 Not Found</title></head>
+> <body>
+> <center><h1>404 Not Found</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 195							      |	Content-Length: 147								
+Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
+WWW-Authenticate: Basic realm="Restrict access"		      <
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body bgcolor="white">
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 195							      |	Content-Length: 147								
+Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
+WWW-Authenticate: Basic realm="Restrict access"		      <
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body bgcolor="white">
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:32:59 UTC								
+Content-Length: 195							      |	Content-Length: 147								
+Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
+WWW-Authenticate: Basic realm="Restrict access"		      <
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body bgcolor="white">
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Content-Length: 195							      |	Content-Length: 147								
+Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
+WWW-Authenticate: Basic realm="Restrict access"		      <
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body bgcolor="white">
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:32:59 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Content-Length: 195							      |	Content-Length: 147								
+Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
+WWW-Authenticate: Basic realm="Restrict access"		      <
+1,7c1,7
+< <html>
+< <head><title>401 Authorization Required</title></head>
+< <body bgcolor="white">
+< <center><h1>401 Authorization Required</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>401 Unauthorized</title></head>
+> <body>
+> <center><h1>401 Unauthorized</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:33:00 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Last-Modified: Thu, 09 Sep 2021 15:33:00 GMT							      |	Last-Modified: Thu, 09 Sep 2021 15:33:00 UTC
+Connection: keep-alive							      <
+ETag: "613a292c-5b"							      <
+Accept-Ranges: bytes					      <
+----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:33:00 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC
+Connection: keep-alive					      <
+----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:33:00 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
+1,7c1,7
+< <html>
+< <head><title>404 Not Found</title></head>
+< <body bgcolor="white">
+< <center><h1>404 Not Found</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>404 Not Found</title></head>
+> <body>
+> <center><h1>404 Not Found</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:33:00 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
+1,7c1,7
+< <html>
+< <head><title>404 Not Found</title></head>
+< <body bgcolor="white">
+< <center><h1>404 Not Found</h1></center>
+< <hr><center>nginx/1.14.2</center>
+< </body>
+< </html>
+---
+> <html>
+> <head><title>404 Not Found</title></head>
+> <body>
+> <center><h1>404 Not Found</h1></center>
+> <hr><center>webserv</center>
+> </body>
+> </html>
+----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Server: nginx/1.14.2							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 15:33:00 GMT							      |	Date: Thu, 09 Sep 2021 15:33:00 UTC								
+Content-Length: 169							      |	Content-Length: 141
+Connection: keep-alive					      <
 1,7c1,7
 < <html>
 < <head><title>404 Not Found</title></head>

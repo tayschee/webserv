@@ -21,8 +21,8 @@ const std::string				&response::get_version() const
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
-	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, LAST_MODIFIED, LOCATION, CONNECTION, WWW_AUTHENTICATE};
-	std::vector<std::string> vec(list, &list[8]);
+	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, LAST_MODIFIED, LOCATION, CONNECTION, "keep-alive"};
+	std::vector<std::string> vec(list, &list[6]);
 
 	std::string resp_str;
 	const_iterator	it(header.begin());
@@ -46,9 +46,9 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 			resp_str += it->first + hf_sep + it->second + eol;
 		++it;
 	}
+	std::cout << "resp_str 2: " << resp_str << "\n";
 	resp_str += eol;
 	resp_str += body;
-	std::cout << "resp_str 2: " << resp_str << "\n";
 	return resp_str;
 }
 
