@@ -84,7 +84,7 @@ test $NAME_CONFIG "/html/3.html"
 stop_server
 
 # C
-TEST
+
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
@@ -117,9 +117,9 @@ C
 
 #DELETE TEST
 
-test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
-test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
-test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+#test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
+#test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
+#test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
 #test_delete $NAME_CONFIG 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
 # test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/gif/"
 # test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/"
@@ -161,7 +161,7 @@ stop_server
 # C
 
 << C
-
+TEST
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
 
@@ -172,7 +172,7 @@ test "secret.conf" "/" -H "Host: secret"
 
 stop_server
 
-C
+
 
 # TEST
 
