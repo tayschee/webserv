@@ -3,25 +3,25 @@
 char            **cgi::init_env(const request &req, const parser &pars, const std::string &path)
 {
     std::map<std::string, std::string> env_tmp;
-	std::string root = pars.get_block("server").conf.find("root")->second[0];
-	env_tmp["HTTP_X_SECRET_HEADER_FOR_TEST"] = req.get_secret();
-	env_tmp["AUTH_TYPE"] = req.get_auth_type();
-	env_tmp["CONTENT_LENGTH"] = req.get_content_length();
-	env_tmp["CONTENT_TYPE"] = req.get_content_type();
-	env_tmp["GATEWAY_INTERFACE"] = GATEWAY_INTERFACE;
-	env_tmp["PATH_INFO"] = req.get_uri();
-	env_tmp["PATH_TRANSLATED"] = path;
-	env_tmp["QUERY_STRING"] = req.get_query();
-	env_tmp["REMOTE_ADDR"] = req.get_host();
-	env_tmp["REMOTE_IDENT"] = req.get_user();
-	env_tmp["REMOTE_USER"] = req.get_user(); // user id
-	env_tmp["REQUEST_METHOD"] = req.get_method();
-	env_tmp["REQUEST_URI"] = req.get_uri();
-	env_tmp["SCRIPT_NAME"] = pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0];
-	env_tmp["SEVER_NAME"] = pars.get_block("server").name;
-	env_tmp["SERVER_PORT"] = pars.get_block("server").conf.find("listen")->second[0];
-	env_tmp["SERVER_PROTOCOL"] = HTTP_VERSION;
-	env_tmp["SERVER_SOFTWARE"] = WEBSERV;
+	std::string root = pars.get_block(BLOCK_SERVER).conf.find(BLOCK_ROOT)->second[0];
+	env_tmp[DEF_HTTP_X_SECRET_HEADER_FOR_TEST] = req.get_secret();
+	env_tmp[DEF_AUTH_TYPE] = req.get_auth_type();
+	env_tmp[DEF_CONTENT_LENGTH] = req.get_content_length();
+	env_tmp[DEF_CONTENT_TYPE] = req.get_content_type();
+	env_tmp[DEF_GATEWAY_INTERFACE] = GATEWAY_INTERFACE;
+	env_tmp[DEF_PATH_INFO] = req.get_uri();
+	env_tmp[DEF_PATH_TRANSLATED] = path;
+	env_tmp[DEF_QUERY_STRING] = req.get_query();
+	env_tmp[DEF_REMOTE_ADDR] = req.get_host();
+	env_tmp[DEF_REMOTE_IDENT] = req.get_user();
+	env_tmp[DEF_REMOTE_USER] = req.get_user(); // user id
+	env_tmp[DEF_REQUEST_METHOD] = req.get_method();
+	env_tmp[DEF_REQUEST_URI] = req.get_uri();
+	env_tmp[DEF_SCRIPT_NAME] = pars.get_block(BLOCK_CGI, get_extension(path)).conf.find(SCRIPT_NAME)->second[0];
+	env_tmp[DEF_SEVER_NAME] = pars.get_block(BLOCK_SERVER).name;
+	env_tmp[DEF_SERVER_PORT] = pars.get_block(BLOCK_SERVER).conf.find(LISTEN)->second[0];
+	env_tmp[DEF_SERVER_PROTOCOL] = HTTP_VERSION;
+	env_tmp[DEF_SERVER_SOFTWARE] = WEBSERV;
 
 	char	**env = new char*[env_tmp.size() + 1];
 	int	j = 0;
@@ -126,7 +126,7 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 	}
 	else if (pid == 0)
 	{
-		son(fdin, fdout, file_in, file_out, save_in, save_out, pars.get_block("cgi", get_extension(path)).conf.find("script_name")->second[0].c_str(), env);
+		son(fdin, fdout, file_in, file_out, save_in, save_out, pars.get_block(BLOCK_CGI, get_extension(path)).conf.find(SCRIPT_NAME)->second[0].c_str(), env);
 	}
 	else
 	{

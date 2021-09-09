@@ -28,12 +28,42 @@
 # define BLOCK_CGI "cgi"
 # define BLOCK_ROOT "root"
 
+
+
+# define DEF_SCRIPT_NAME "SCRIPT_NAME"
+# define DEF_SEVER_NAME "SEVER_NAME"
+# define DEF_SERVER_PROTOCOL "SERVER_PROTOCOL"
+# define DEF_SERVER_PORT "SERVER_PORT"
+# define DEF_SERVER_SOFTWARE "SERVER_SOFTWARE"
+# define DEF_REQUEST_URI "REQUEST_URI"
+# define DEF_REQUEST_METHOD "REQUEST_METHOD"
+# define DEF_REMOTE_USER "REMOTE_USER"
+# define DEF_REMOTE_IDENT "REMOTE_IDENT"
+# define DEF_REMOTE_ADDR "REMOTE_ADDR"
+# define DEF_PATH_TRANSLATED "PATH_TRANSLATED"
+# define DEF_PATH_INFO "PATH_INFO"
+# define DEF_GATEWAY_INTERFACE "GATEWAY_INTERFACE"
+# define DEF_CONTENT_TYPE "CONTENT_TYPE"
+# define DEF_CONTENT_LENGTH "CONTENT_LENGTH"
+# define DEF_AUTH_TYPE "AUTH_TYPE"
+# define DEF_HTTP_X_SECRET_HEADER_FOR_TEST "HTTP_X_SECRET_HEADER_FOR_TEST"
+
+# define CLOSE "close"
+# define KEEP_ALIVE "keep-alive"
+
+
 /*parser variable*/
+# define SCRIPT_NAME "script_name"
+# define SCRIPT_NAME "script_name"
+# define LISTEN "listen"
 # define ACCEPT "accept"
 # define AUTH_BASIC_USER_FILE "auth_basic_user_file"
 # define AUTH_BASIC "auth_basic"
 # define BODY_SIZE "body_size_max"
 # define AUTO_INDEX "autoindex"
+# define DEFAULT_SERVER "default_server"
+# define SERVER_NAME "server_name"
+# define ALIAS "alias"
 
 /*define header field*/
 # define ALLOW "Allow"
@@ -56,9 +86,12 @@
 # define TRANSFERT_ENCODING "Transfer-Encoding"
 # define CONTENT_LANGUAGE "Content-Language"
 # define WWW_AUTHENTICATE "WWW-Authenticate"
+# define HTTP_X_SECRET_HEADER_FOR_TEST "X-Secret-Header-For-Test"
+# define ACCEPT_ENCODING "Accept-Encoding"
+
 
 /*define header field for CGI*/
-# define QUERY_STRING "QUERY_STRING"
+# define DEF_QUERY_STRING "QUERY_STRING"
 
 /*define methods*/
 # define GET "GET"
@@ -129,6 +162,17 @@
 # define VIDEO		"video/"
 
 # define DEFAULT_TYPE "text/"
+
+
+# define TEXT_HTML "text/html"
+# define APP_OCT_STREAM "application/octet-stream"
+# define CHARSET_UTF8 "charset=UTF-8"
+# define MESSAGE_HTTP "message/http"
+
+
+
+
+
 
 /*define subtype*/
 

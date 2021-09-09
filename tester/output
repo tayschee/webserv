@@ -1,68 +1,365 @@
 
+----------------------  error.conf GET /  ------------------------
+
+							      >
+---------------------- error.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /inexistant_file  ------------------------
+
+---------------------- error.conf   HEAD   /inexistant_file ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /secret/  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: NOT_BASIC YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Date: Thu, 09 Sep 2021 18:28:35 GMT							      |	Date: Thu, 09 Sep 2021 18:28:36 GMT								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
+
+---------------------- error.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error.conf GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /bad_secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+---------------------- error.conf   HEAD   /bad_secret2/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 177							      |	Content-Length: 165								
+----------------------  error.conf GET /secret/secret.html  ------------------------
+
+---------------------- error.conf   HEAD   /secret/secret.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+----------------------  error.conf GET /private/private.html  ------------------------
+
+---------------------- error.conf   HEAD   /private/private.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  error.conf GET /private/  ------------------------
+
+---------------------- error.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  index_off.conf GET /  ------------------------
+
+---------------------- index_off.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  index_off.conf GET /html/3.html  ------------------------
+
+---------------------- index_off.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /  ------------------------
+
+---------------------- redirect.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /html/  ------------------------
+
+---------------------- redirect.conf   HEAD   /html/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-232b"							      <
+----------------------  redirect.conf GET /gif/  ------------------------
+
+---------------------- redirect.conf   HEAD   /gif/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /jpeg/  ------------------------
+
+---------------------- redirect.conf   HEAD   /jpeg/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  redirect.conf GET /error/  ------------------------
+
+---------------------- redirect.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-232b"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET /dest/  ------------------------
+
+---------------------- redirect.conf   HEAD   /dest/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-174ab7"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect.conf GET / -L  ------------------------
+
+---------------------- redirect.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 169							      |	Content-Length: 157								
+----------------------  redirect.conf GET /html/3.html -L  ------------------------
+
+---------------------- redirect.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-232b"							      <
+----------------------  same_error.conf GET /  ------------------------
+
+---------------------- same_error.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-13e3"							      <
+----------------------  same_error.conf GET /ffgsdgsfgsg  ------------------------
+
+---------------------- same_error.conf   HEAD   /ffgsdgsfgsg ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-13e3"							      <
+----------------------  same_error.conf GET /secret/secret.html  ------------------------
+
+---------------------- same_error.conf   HEAD   /secret/secret.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  same_error.conf GET /html/3.html  ------------------------
+
+---------------------- same_error.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /  ------------------------
+
+---------------------- multiple_location.conf   HEAD   / ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /gif/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /gif/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-23cf4"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /html/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /html/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-24"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /jpeg/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /jpeg/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /png/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /png/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /private/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET /secret/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+WWW-Authenticate: Basic realm="Restrict access"							      |	WWW-Authenticate: Basic realm="Restrict"								
+----------------------  multiple_location.conf GET /spoiler/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /spoiler/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 179							      |	Content-Length: 147								
+WWW-Authenticate: Basic realm="SPOILER ALERT !!!"							      |	WWW-Authenticate: Basic realm="SPOILER"								
+----------------------  multiple_location.conf GET /error/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /error/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  multiple_location.conf GET /php/  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /php/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  multiple_location.conf GET /html/3.html  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /html/3.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location.conf GET /unexist.html  ------------------------
+
+---------------------- multiple_location.conf   HEAD   /unexist.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+Content-Length: 153							      |	Content-Length: 141								
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /new.html -l  ------------------------
+
+1d0
+< 
+----------------------  multiple_location.conf PUT_1 /new.html -d <p>little</p>  ------------------------
+
+1d0
+< 
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /new.html -l  ------------------------
+
+1d0
+< 
+----------------------  multiple_location.conf PUT_2 /new.html -d <p>little</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /new.html -l  ------------------------
+
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /private/impossible.html  ------------------------
+
+----------------------  multiple_location.conf PUT_1 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /private/impossible.html  ------------------------
+
+----------------------  multiple_location.conf PUT_2 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /private/impossible.html  ------------------------
+
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /secret/to_delete.html  ------------------------
+
+----------------------  multiple_location.conf PUT_1 /secret/to_delete.html -d <p>secret</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /secret/to_delete.html  ------------------------
+
+----------------------  multiple_location.conf PUT_2 /secret/to_delete.html -d <p>secret</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /secret/to_delete.html  ------------------------
+
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /no_path/new.html  ------------------------
+
+----------------------  multiple_location.conf PUT_1 /no_path/new.html -d <p>error</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /no_path/new.html  ------------------------
+
+----------------------  multiple_location.conf PUT_2 /no_path/new.html -d <p>error</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /no_path/new.html  ------------------------
+
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /html/new.html  ------------------------
+
+----------------------  multiple_location.conf PUT_1 /html/new.html -d <p>YES</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /html/new.html  ------------------------
+
+----------------------  multiple_location.conf PUT_2 /html/new.html -d <p>YES</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /html/new.html  ------------------------
+
+----------------------  multiple_location.conf GET_BEFORE_PUT_1 /put_and_delete/page.html  ------------------------
+
+----------------------  multiple_location.conf PUT_1 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_1 /put_and_delete/page.html  ------------------------
+
+----------------------  multiple_location.conf PUT_2 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
+
+----------------------  multiple_location.conf GET_AFTER_PUT_2 /put_and_delete/page.html  ------------------------
+
+----------------------  same_error_php.conf GET /fdgfs  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /fdgfs ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  same_error_php.conf GET /private/  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /private/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  same_error_php.conf GET /secret/  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /secret/ ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+----------------------  same_error_php.conf GET /html/cat.html  ------------------------
+
+---------------------- same_error_php.conf   HEAD   /html/cat.html ------------------------
+
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-24"							      <
+Accept-Ranges: bytes							      <
 ----------------------  default GET /  ------------------------
 
-HTTP/1.1 200 OK							      |	HTTP/1.1 400 Bad Request								
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:44:46 GMT							      |	Date: Thu, 09 Sep 2021 15:44:46 UTC
-Content-Type: image/gif							      <
-Content-Length: 169619							      <
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
-Connection: keep-alive							      <
-ETag: "6130d8c0-29693"							      <
-Accept-Ranges: bytes					      <
-Binary files af6e55f4965a5e705eed4ea45dba28ed/0b66926b1a4137772076327b3f2a0dab and af6e55f4965a5e705eed4ea45dba28ed/7c41556fa017fa5d4b70e2575671e7e6 differ
 ---------------------- default   HEAD   / ------------------------
 
-HTTP/1.1 200 OK							      |	HTTP/1.1 400 Bad Request								
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Content-Type: image/gif							      <
-Content-Length: 169619							      <
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      <
-ETag: "6130d8c0-29693"							      <
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-29693"							      <
 Accept-Ranges: bytes							      <
 ----------------------  gif.conf GET / -H Host: gif  ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC
-Connection: keep-alive							      <
-ETag: "6130d8c0-29693"							      <
-Accept-Ranges: bytes					      <
 ---------------------- gif.conf   HEAD   / ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
-ETag: "6130d8c0-29693"							      <
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-29693"							      <
 Accept-Ranges: bytes							      <
 ----------------------  jpeg.conf GET / -H Host: jpeg  ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC
-Connection: keep-alive							      <
-ETag: "6130d8c0-16271"							      <
-Accept-Ranges: bytes					      <
 ---------------------- jpeg.conf   HEAD   / ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:28 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:28 UTC								
-ETag: "6130d8c0-16271"							      <
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-16271"							      <
 Accept-Ranges: bytes							      <
 ----------------------  secret.conf GET / -H Host: secret  ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:29 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:29 UTC
-Connection: keep-alive							      <
-ETag: "6130d8c1-5b"							      <
-Accept-Ranges: bytes					      <
 ---------------------- secret.conf   HEAD   / ------------------------
 
-Server: nginx/1.14.2							      |	Server: webserv								
-Date: Thu, 09 Sep 2021 15:45:47 GMT							      |	Date: Thu, 09 Sep 2021 15:45:47 UTC								
-Last-Modified: Thu, 02 Sep 2021 13:59:29 GMT							      |	Last-Modified: Thu, 02 Sep 2021 13:59:29 UTC								
-ETag: "6130d8c1-5b"							      <
+Server: nginx/1.18.0							      |	Server: webserv								
+ETag: "613a4cc2-5b"							      <
 Accept-Ranges: bytes							      <

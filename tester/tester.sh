@@ -18,7 +18,7 @@ chmod 000 srcs/spoiler/mdp.html
 generate_x_tmpdir DIR_TMP 1 #generate a directory it name is in $DIR_TMP1
 generate_x_tmpfile TMP 22 $DIR_TMP1/ #generate 9 file with random name in $DIR_TMP1/
 
-<<TEST
+# <<TEST
 # <<C
 
 launch_server $ERROR_CONF #lancer la config sur webserv et nginx le parametre est le nom du dosier dans webserv et le nom du fichier de la config de nginx
@@ -85,12 +85,13 @@ stop_server
 
 # C
 
+# << C
+
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
 NAME_CONFIG=multiple_location.conf
 
-<< C
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/gif/"
 test $NAME_CONFIG "/html/"
@@ -113,7 +114,9 @@ test_put $NAME_CONFIG 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PE
 
 stop_server
 
-C
+# C
+
+<< C
 
 #DELETE TEST
 
@@ -145,7 +148,10 @@ test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_
 
 stop_server
 
-<< C
+C
+
+# << C
+
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF
 
@@ -160,7 +166,8 @@ stop_server
 
 # C
 
-<< C
+# << C
+
 TEST
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
@@ -172,7 +179,7 @@ test "secret.conf" "/" -H "Host: secret"
 
 stop_server
 
-
+# C
 
 # TEST
 

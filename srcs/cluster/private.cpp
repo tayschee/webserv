@@ -6,13 +6,13 @@ void sighandler(const int signal) // catch the signals
 {
 	if (signal)
 		is_alive = 0;
-	std::cout << "SIGNAL : " << signal << "\n";
+	std::cerr << "SIGNAL : " << signal << "\n";
 }
 
 void	cluster::close_client(iterator &it) // close a client
 {
 	if (debug_mode)
-		std::cout << "Client closed : " << (*it)->get_fd() << std::endl;
+		std::cerr << "Client closed : " << (*it)->get_fd() << std::endl;
 	iterator tmp = it;
 	--it;
 	delete(*tmp);
@@ -61,10 +61,7 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 		time_select.tv_sec = 20;
 		time_select.tv_usec = 0;
 		if ((activity = select(max + 1, &readfds, &writefds, NULL, &time_select)) < 0 && errno != EINTR)
-		{
-			std::cout << "ERROR" << std::endl;
 			std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
-		}
 	}
 	return 1;
 }

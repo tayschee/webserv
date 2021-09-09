@@ -72,6 +72,8 @@ class request : public message
 		const std::string	get_host() const;
 		const std::string	get_query() const;
 		const std::string	get_tf() const;
+		const std::string	get_connexion() const;
+		void				set_connexion(const std::string &status);
 
 		//const std::string	&get_body() const;
 		//const header_type	&get_header() const;

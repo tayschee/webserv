@@ -33,9 +33,9 @@ const std::string		&request::get_version() const
 
 const std::string	request::get_secret() const
 {
-	if (header.find("X-Secret-Header-For-Test") == header.end())
+	if (header.find(HTTP_X_SECRET_HEADER_FOR_TEST) == header.end())
 		return "";
-	return header.find("X-Secret-Header-For-Test")->second;
+	return header.find(HTTP_X_SECRET_HEADER_FOR_TEST)->second;
 }
 
 const std::string	request::get_content_type() const
@@ -59,11 +59,8 @@ const std::string	request::get_user() const
 	std::vector<std::string> vec = split(header.find(AUTHORIZATION)->second.substr(), WHITE_SPACE);
 	if (vec.size() >= 2 && vec[0] == "Basic")
 	{
-		std::cout << "le mot de passe est " << vec[1] << "\n";
-		std::cout << "vec[0] = " << vec[0] << std::endl;
 		return vec[1]; //VERIFY CANT STAY LIKE THIS
 	}
-	std::cout << "INVALID : " << vec[1] << "\n";
 	return vec[0];
 }
 
@@ -83,9 +80,22 @@ const std::string	request::get_host() const
 
 const std::string	request::get_tf() const
 {
-	if (header.find("Accept-Encoding") == header.end())
+	if (header.find(ACCEPT_ENCODING) == header.end())
 		return "";
-	return header.find("Accept-Encoding")->second;
+	return header.find(ACCEPT_ENCODING)->second;
+}
+
+const std::string	request::get_connexion() const
+{
+	if (header.find(CONNECTION) == header.end())
+		return "";
+	return header.find(CONNECTION)->second;
+}
+
+void				request::set_connexion(const std::string &status)
+{
+	header.erase(CONNECTION);
+	header.insert(std::pair<std::string, std::string>(CONNECTION, status));
 }
 
 /*to have request information in the form of std::string*/
@@ -106,11 +116,3 @@ std::string		request::get(const std::string &hf_sep, const std::string &eol) con
 
 	return req_str;
 }
-
-// /*to have response to this request (you must send it)*/
-// response		request::get_response(const std::vector<parser::address_conf>::const_iterator pars) const
-// {
-// 	response	resp(*this, pars);
-
-// 	return resp;
-// }

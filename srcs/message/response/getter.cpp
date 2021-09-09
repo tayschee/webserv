@@ -31,10 +31,8 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 	resp_str += header_in_order(hf_sep, eol, vec);
 	size_t i;
 
-	std::cout << "resp_str 1: " << resp_str << "\n";
 	while (it != end)
 	{
-		std::cout << "salut\n";
 		i = 0;
 		while (i < vec.size())
 		{
@@ -46,21 +44,7 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 			resp_str += it->first + hf_sep + it->second + eol;
 		++it;
 	}
-	std::cout << "resp_str 2: " << resp_str << "\n";
 	resp_str += eol;
 	resp_str += body;
 	return resp_str;
-}
-
-int		response::sent(int fd, const std::string &hf_sep, const std::string &eol)
-{
-	std::string resp_str;
-
-	std::cout << "test\n";
-	std::cout << "test2\n";
-	resp_str = get(hf_sep, eol);
-    write(fd, resp_str.c_str(), resp_str.size());
-	std::cout << "test5.2\n";
-	std::cout << "abc\n";
-	return 0;
 }

@@ -10,16 +10,13 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 int response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
 	struct stat file_stat; //information about file
-	std::cout << "URI = " << req.get_uri() << std::endl;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
-	std::cout << "PATH dans get = " << path << std::endl;
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
 	ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
-	std::cout << "check path end" << std::endl;
 	std::string type = find_media_type(get_extension(path), pars);
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
@@ -35,19 +32,10 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 					std::string url;
 					for (std::vector<std::string>::iterator it = block.args.begin(); it != block.args.end(); ++it)
 						url += *it;
-				std::cout << "URL = " << url << std::endl;
-				std::cout << "GET URI = " << req.get_uri() << std::endl;
-				std::cout << "URI = " << uri << std::endl;
-					
 					if (req.get_uri().size() > 0 && *--req.get_uri().end() == '/')
 						return 403;
 					else
 						return 404;
-					// if (url == req.get_uri())
-					// 	return 403;
-					// url += '/';
-					// if (url == req.get_uri())
-					// 	return 403;
 				}
 			}
 			else
@@ -55,17 +43,14 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		}
 		catch (const std::exception &e)
 		{
-			std::cout << "execption" << std::endl;
-
 			return 404;
 		}
 		std::string add = (path.substr(pars.get_block(BLOCK_LOCATION, uri).conf.find(BLOCK_ROOT)->second[0].size()));
 		body = index(path, uri, add);
-		add_content_type("text/html");
+		add_content_type(TEXT_HTML);
 	}
 	else if (is_cgi(get_extension(path), pars, req.get_method()))
 	{
-		std::cout << "method = post 2 = " << path << std::endl;
 		first_line.status = 42;
 		method_function method = existing_method.find(POST)->second;
 		return (this->*method)(path, req, pars); //change for if there is redirect
@@ -78,8 +63,7 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 			return ret;
 		else if (type.empty())
 		{
-			std::cout << "j'ajoute add_cypntente type = " << type << std::endl;
-			add_content_type("application/octet-stream");
+			add_content_type(APP_OCT_STREAM);
 		}
 		else
 			add_content_type(type);
@@ -92,11 +76,8 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	int ret;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
-	if ((ret = is_authorize(uri, req, pars)))
-		return ret;
-	ret = del_content(path, req, pars, 0);
+	int ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
 	ret = del_content(path, req, pars);
@@ -185,38 +166,31 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 		close(fd);
 	}
 	header.insert(value_type(CONTENT_LOCATION, uri));
-	add_content_type("text/html");
+	add_content_type(TEXT_HTML);
 
 	return response_value;
 }
 
 int response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
-	std::cout << "JE SUIS DANS POST" << first_line.status << std::endl;
-	std::cout << "uri" << uri << std::endl;
 	std::string path;
 
 	if (first_line.status == 42)
 		path = uri;
 	else
-		path = find_path(pars.get_block("location", uri), uri, req);
-	std::cout << "PATH = " << path << std::endl;
+		path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
 
-	std::cout << "AUTHORISER" << std::endl;
 	if (is_cgi(get_extension(path), pars, req.get_method()))
 	{
-		std::cout << "encore is cgi" << std::endl;
 		cgi(req, pars, body, path);
 		if (body[0] == '5')
 			return ft_atoi<int>(body);
 	}
-	add_content_type("text/html; charset=UTF-8");
+	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
 	add_content_length(body.size());
-	//add_content_type("application/octet-stream");
-	//header.insert(value_type(std::string(TRANSFERT_ENCODING), std::string("chunked")));
 
 	return 200;
 }
@@ -235,7 +209,7 @@ int response::method_is_trace(const std::string &uri, const request &req, const 
 		header.insert(value_type(it->first, it->second));
 	header.erase(CONTENT_TYPE);
 	header.erase(CONTENT_LENGTH);
-	add_content_type("message/http");
+	add_content_type(MESSAGE_HTTP);
 	add_content_length(body.size());
 
 	return 200;
@@ -243,7 +217,6 @@ int response::method_is_trace(const std::string &uri, const request &req, const 
 
 int response::method_is_unknow(const std::string &uri, const request &req, const parser &pars)
 {
-	std::cout << "JE SUIS DANS METHODE INCONNUS" << std::endl;
 	(void)pars;
 	(void)req;
 	(void)uri;

@@ -19,7 +19,6 @@ exchange(x), data(x.clone()), buf_size(x.buf_size){}
 
 receive::~receive()
 {
-	write(1, "delete\n", 7);
 	clear();
 }
 

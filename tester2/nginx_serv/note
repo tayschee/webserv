@@ -1,1 +1,0 @@
-docker run --rm -ti -v "$(pwd)":/file -p 80:80 nginx_php

@@ -65,24 +65,6 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 		if (lstat(file.c_str(), &file_stat) < 0)
 				return 403;
 
-		std::cout << "FILE = " << file << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
-		std::cout << "====================================" << std::endl;
 		if ((fd = open(file.c_str(), O_RDONLY | O_CREAT, 0666)) < 0)
 			return 500;
 		int ret = 0;
@@ -215,22 +197,18 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 // Check if the type is a CGI
 bool		response::is_cgi(const std::string &type, const parser &pars, const std::string &method) const
 {
-	std::cout << "je suis dans cgi" << std::endl;
-	std::cout << "type = " << type << std::endl;
-	std::cout << "method = " << method << std::endl;
-	std::cout << "je suis dans cgi" << std::endl;
 	try
 	{
-	std::cout << "11111111111111111111111111" << std::endl;
-		parser::entries bc(pars.get_block("cgi", type).conf);
-	std::cout << "2222222222222222222" << std::endl;
-		std::vector<std::string> tab = bc.find("accept")->second;
-	std::cout << "33333333333333333" << std::endl;
+		parser::entries bc(pars.get_block(BLOCK_CGI, type).conf);
+		std::vector<std::string> tab;
+		
+		if (bc.find(ACCEPT) != bc.end())
+			tab = bc.find(ACCEPT)->second;
+		else
+			tab = pars.get_block(BLOCK_SERVER).conf.find(ACCEPT)->second;
 
 		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
 		{
-	std::cout << "*it = " << *it << std::endl;
-
 			if (*it == method)
 				return true;	
 		}
@@ -238,8 +216,6 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "je retourne une exeption" << std::endl;
-
 		return false;
 	}
 	return true;
@@ -278,66 +254,6 @@ std::string		response::index(const std::string &path, std::string root, std::str
 	return index;
 }
 
-// Manage codes
-/*void	response::get_code(const parser &pars)
-{
-	(void)pars;
-	struct stat file_stat; //information about file
-	if (first_line.status == 401)
-		header.insert(value_type(WWW_AUTHENTICATE, "Basic realm=\"Accès au site de webserv\", charset=\"UTF-8\""));
-	if (first_line.status == 503)
-		header.insert(value_type("Retry-after",  "20000"));
-
-	char buff[PATH_MAX];
-	getcwd( buff, PATH_MAX );
-	std::string file_error = std::string(buff) + "/error/" + std::string(ft_itoa(first_line.status)) + ".html";
-	//td::string file_error = getwd() + "/Users/jelarose/Documents/web/error/" + std::string(ft_itoa(first_line.status)) + ".html";
-	if (lstat(file_error.c_str(), &file_stat) < 0)
-	{
-		file_error = std::string(buff) + "/error/404.html";
-		lstat(file_error.c_str(), &file_stat);
-	}
-	int fd = open(file_error.c_str(), O_RDONLY);
-	char buf[file_stat.st_size + 1];
-	int ret = read(fd, buf, file_stat.st_size);
-	buf[ret] = '\0';
-	body = buf;
-	memset(buf, 0, file_stat.st_size + 1);
-	header.insert(value_type(CONTENT_LENGTH,  ft_itoa(body.size())));
-	header.insert(value_type(CONTENT_TYPE,  "text/html"));
-	close(fd);
-}*/
-
-// Manage redirections
-/*bool		response::is_redirect(parser::entries &block, const parser &pars)
-{
-	std::string redirect;
-
-	if (block.find("return") == block.end())
-		return 0;
-	redirect = block.find("return")->second[0];
-
-	if (!redirect.empty())
-	{
-
-		first_line.status = ft_atoi<int>(redirect);
-	//	header.insert(value_type(CONTENT_TYPE, "application/octet-stream"));
-
-		std::string location = block.find("return")->second[1];
-
-		if (first_line.status == 301 || first_line.status == 302 || first_line.status == 303
-		|| first_line.status == 307 || first_line.status == 308)
-		{
-			header.insert(value_type(LOCATION, location));
-			get_code(pars);
-		}
-		else
-			body = location;
-		return 1;
-	}
-	return 0;
-}*/
-
 // Manage redirections
 int response::is_redirect(const parser::entries &block, const parser &pars, const request &req)
 {
@@ -352,7 +268,7 @@ int response::is_redirect(const parser::entries &block, const parser &pars, cons
 
 	std::vector<std::string>::const_iterator return_arg = block.find(PARSER_RETURN)->second.begin();
 
-	header.insert(value_type(CONTENT_TYPE, "application/octet-stream")); //CHANGE
+	header.insert(value_type(CONTENT_TYPE, APP_OCT_STREAM)); //CHANGE
 	status = ft_atoi<int>(*return_arg);
 	std::string host = req.get_host();
 	
@@ -372,9 +288,6 @@ int response::is_redirect(const parser::entries &block, const parser &pars, cons
 			}
 		}
 	}
-
-	std::cout << "MY HOST = " << host << std::endl;
-
 	header.insert(value_type(LOCATION, host += *++return_arg));
 
 	return status;
@@ -393,16 +306,8 @@ int response::generate_response(const parser::entries &path_info, const parser &
 		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way
 		status = (this->*method)(req.get_uri(), req, pars);
 	}
-	else
-	{
-		std::cout << "not here\n";
-	}
 	if (status > 299)
-	{
-		std::cout << "here\n";
 		status = error_response(status, req, pars);
-		std::cout << "status : " << status << "\n";
-	}
 	return status;
 }
 
@@ -423,4 +328,30 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 		++i;
 	}
 	return resp_str;
+}
+
+int		response::sent(int fd, request &req, const std::string &hf_sep, const std::string &eol)
+{
+	std::string resp_str;
+
+	if (req.get_method() == HEAD)
+	{
+		if (header.find(CONTENT_LENGTH) != header.end() && header.find(CONTENT_LENGTH)->second == "0")
+			header.erase(CONTENT_LENGTH);
+		if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+		{
+			header.erase(LAST_MODIFIED);
+		}
+		if (first_line.status >= 500)
+		{
+			header.insert(value_type(CONNECTION, CLOSE));
+			req.set_connexion(CLOSE);
+		}
+		else if (first_line.status >= 200)
+			header.insert(value_type(CONNECTION, req.get_connexion()));
+	}
+
+	resp_str = get(hf_sep, eol);
+    write(fd, resp_str.c_str(), resp_str.size());
+	return 0;
 }
