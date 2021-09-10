@@ -84,7 +84,7 @@ test $NAME_CONFIG "/html/3.html"
 stop_server
 
 # C
-
+TEST
 #MULTIPLE LOCATION TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
@@ -162,6 +162,8 @@ stop_server
 
 << C
 TEST
+
+<< C
 #MULTIPLE SERVER NAME TEST
 launch_multi_server $MULTIPLE_CONF
 
@@ -172,7 +174,7 @@ test "secret.conf" "/" -H "Host: secret"
 
 stop_server
 
-
+C
 
 # TEST
 
