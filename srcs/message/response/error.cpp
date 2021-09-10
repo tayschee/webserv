@@ -51,20 +51,14 @@ int response::redirect_to_error(const std::string &path, const request &req, con
 	int status;
 	method_function method;
 
-	std::cout << "PATH DANS REDIRECT_TO_ERROR = " << path << std::endl;
 	if (is_cgi(get_extension(path), pars, req.get_method()))
-	{
-	std::cout << "method = post" << std::endl;
 
-			method = existing_method.find(POST)->second;
-	}
+		method = existing_method.find(POST)->second;
 	else
 		method = req.get_method() == HEAD ? &response::method_is_head : &response::method_is_get;
 
-	std::cout << "METHOD FINI" << "\n";
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
 	status = (this->*method)(path, req, pars); //change for if there is redirect
-
 
 	return status;
 }
@@ -76,40 +70,19 @@ int response::error_response(int status, const request &req, const parser &pars)
 	std::map<int, std::string>::const_iterator end(block.end());
 
 	it = block.find(status);
-	std::cout << "status2 : " << status << "\n";
 	if (it == end)
-	{
-		std::cout << "status : " << status << "\n";
 		default_error(status, req, pars);
-		std::cout << "body : " << body << "\n";
-	}
 	else
-	{
-		std::cout << "stop here\n";
 		if (redirect_to_error(it->second, req, pars) == 404)
-		{
-			std::cout << "failed\n";
 			default_error(status, req, pars);
-		}
-	}
-	std::cout << "==========================" << std::endl;
 	status_header(status, req.get_uri(), pars);
-	std::cout << "==========================2" << std::endl;
 	error_special_case(req); //delete things which are note in specific method
-	std::cout << "==========================3" << std::endl;
-	//std::cout << "header : " << get_header() << "\n";
-	//std::cout << "body : " << get_body() << "\n";
-	//std::cout << "test : " << header.find(CONTENT_LENGTH)->second << "\n"; 
-	//std::cout << "test : " << header.find(WWW_AUTHENTICATE)->second << "\n"; 
 
 	return status;
 }
 
 int response::error_response(int status, const request &req)
 {
-	std::cout << "status1 : " << status << "\n";
-	//default_error(status, req);
-	//status_header(status, req.get_uri(), path);
 	error_special_case(req); //delete things which are note in specific method
 
 	return status;

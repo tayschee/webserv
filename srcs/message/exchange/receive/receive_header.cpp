@@ -1,7 +1,4 @@
 #include "message/exchange.hpp"
-//#include "message/request.hpp"
-
-#include <iostream>
 
 /*this file contain function inside message::receive::header, it is use with receive::receive(...)
 and serve to read particulary header, when it done this class must be change to an other internal_class child to read_body */
@@ -21,7 +18,6 @@ receive::header &receive::header::operator=(const header &x)
 	
 	return *this;
 }
-
 
 //Main Function
 

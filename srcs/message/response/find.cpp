@@ -55,14 +55,6 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 		type = "";
 	}
 	return type;
-
-	// media_type_array::const_iterator	val(existing_media_type.find(subtype));
-
-	// /*if subtype doesn't exist return default value*/
-	// if (val == existing_media_type.end())
-	// 	return (media_type_array::value_type(DEFAULT_SUBTYPE, DEFAULT_TYPE));
-
-	// return (*val);
 }
 
 std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index) const
@@ -73,15 +65,11 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 
 	std::string alias;
 
-	std::cout << "root block = " << entries.find("root")->second[0] << std::endl;
-	std::cout << "partial_path = " << partial_path << std::endl; 
-	std::cout << "INDEX = " << index << std::endl; 
-
-	if (entries.find("alias") == entries.end())
-		path = entries.find("root")->second[0] + partial_path;
+	if (entries.find(ALIAS) == entries.end())
+		path = entries.find(BLOCK_ROOT)->second[0] + partial_path;
 	else
 	{
-		alias = entries.find("alias")->second[0];
+		alias = entries.find(ALIAS)->second[0];
 		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
 	}
 
@@ -93,7 +81,6 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	if (stat(path.c_str(), &file_stat) < 0)
 	{
 		perror("test : ");
-		std::cout << "\n\n\n\n\n";
 		//do something
 	}
 	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
@@ -101,19 +88,13 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		//determine if this is complete path or if this not for that verify if this is a directory
 		if (is_acces(file_stat))
 			return path;
-		//std::list<std::string> files(files_in_dir(path));
 		if (*(--path.end()) != '/')
 			path.push_back('/');
 		return find_index(entries, path);
-		// std::string ret = path + find_index(entries, files);
-		// std::cout << "ret : " << ret << "\n\n\n\n\n";
-		// return (ret);
 	}
 	else
 	{
-		std::cout << "ret : dir\n\n\n\n";
 		return path;
-		//return find_language(path, files_in_dir(path), req);
 	}
 	return path;
 }
@@ -134,13 +115,8 @@ std::string response::find_index(const parser::entries &entries, const std::stri
 		while (it_i != end_i)
 		{
 			tmp = path + *it_i;
-			std::cout << "index = " << *it_i << std::endl;
-			std::cout << "path_tmp = " << tmp << std::endl;
 			if (stat(tmp.c_str(), &file_stat) >= 0)
-			{
-				std::cout << "return tmp" << std::endl;
 				return tmp;
-			}
 			it_i++;
 		}
 	}
@@ -149,46 +125,11 @@ std::string response::find_index(const parser::entries &entries, const std::stri
 		//std::cerr << e.what() << '\n';
 	}
 
-
-	// std::list<std::string>::const_iterator it_f;
-	// std::list<std::string>::const_iterator end_f;
-	// try
-	// {
-	// 	std::cout << "11111111111111111111111111111" << std::endl;
-	// 	if (entries.find("index") == entries.end())
-	// 		return "";
-	// 	std::cout << "22222222222222222222222222222" << std::endl;
-	// 	std::vector<std::string> index(entries.find("index")->second);
-	// 	std::vector<std::string>::iterator it_i(index.begin());
-	// 	std::vector<std::string>::iterator end_i(index.end());
-	// 	end_f = files.end();
-	// 	while (it_i != end_i)
-	// 	{
-	// 		it_f = files.begin();
-	// 		while (it_f != end_f)
-	// 		{
-	// 	std::cout << "index = " << *it_i << std::endl;
-	// 	std::cout << "file = " << *it_f << std::endl;
-	// 			if (*it_i == *it_f)
-	// 				return *it_i;
-	// 			++it_f;
-	// 		}
-	// 		++it_i;
-	// 	}
-	// }
-	// catch(const std::exception& e)
-	// {
-	// 	std::cout << "333333333333333333333" << std::endl;
-	// 	//std::cerr << e.what() << '\n';
-	// }
-	// 	std::cout << "4444444444444444" << std::endl;
-
 	return path;
 }
 
 const parser::address_conf::const_iterator	response::find_parser(const parser::address_conf &pars_list	, const request &req) const
 {
-	// size_t j = 0;
 	std::string host;
 	parser::address_conf::const_iterator it;
 	parser::address_conf::const_iterator it_default = pars_list.end();
@@ -197,62 +138,15 @@ const parser::address_conf::const_iterator	response::find_parser(const parser::a
 		host = req.get_host();
 		if (host.find(":") != host.size())
 			host = host.substr(0, host.find(":"));
-		if (it->get_block("server").conf.find("listen")->second.size() == 2 && it->get_block("server").conf.find("listen")->second[1] == "default_server")
+		if (it->get_block(BLOCK_SERVER).conf.find(LISTEN)->second.size() == 2 && it->get_block(BLOCK_SERVER).conf.find(LISTEN)->second[1] == DEFAULT_SERVER)
 			it_default = it;
-		if (it->get_block("server").conf.find("server_name") != it->get_block("server").conf.end())
+		if (it->get_block(BLOCK_SERVER).conf.find(SERVER_NAME) != it->get_block(BLOCK_SERVER).conf.end())
 		{
-			if (it->get_block("server").conf.find("server_name")->second[0] == req.get_host().substr(0, req.get_host().find(":")))
+			if (it->get_block(BLOCK_SERVER).conf.find(SERVER_NAME)->second[0] == req.get_host().substr(0, req.get_host().find(":")))
 				break;
 		}
-		// else
-		// 	it_default = it;
 	}
 	if (it == pars_list.end())
 		it = it_default;
 	return it;
 }
-
-// const parser::address_conf::const_iterator	response::find_parser(const std::vector<parser::address_conf>::const_iterator &pars_list, const request &req) const
-// {
-// 	size_t									i;
-// 	parser::address_conf::const_iterator	end(pars_list->end());
-// 	parser::address_conf::const_iterator	it(pars_list->begin());
-// 	const std::string						host(req.get_header().find(HOST)->second);
-// 	parser::address_conf::const_iterator	default_parser = pars_list->end();
-// 	std::string 							port(it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0]);
-
-// 	while (it != end)
-// 	{
-// 		const parser::entries &map_server(it->get_block(PARSER_SERVER).conf);
-// 		if (map_server.find("listen")->second.size() == 2)
-// 			default_parser = it;
-// 		const std::map<std::string, std::vector<std::string> >::const_iterator it_server_name(map_server.find(PARSER_SERVER_NAME));
-
-// 		if (it_server_name == map_server.end())
-// 			return default_parser;
-
-// 		const std::vector<std::string> server_name_vec(map_server.find(PARSER_SERVER_NAME)->second);
-// 		i = 0;
-// 		while (i < server_name_vec.size())
-// 		{
-// 			std::cout << "hi\n";
-// 			//std::cout << "|" << host << "| : |" << server_name_vec[i] << "|\n";
-// 			if ((std::atoi(port.c_str()) == 80 && host == server_name_vec[i]) || host == (server_name_vec[i] + ":" + port))
-// 			{
-
-// 				//std::cout << it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[0] << " " 
-// 				//<< it->get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->second[1] << "\n";
-// 				//std::cout << server_name_vec[i] << "\n";
-// 				return it;
-// 			}
-// 			++i;
-// 		}
-// 		++it;
-// 	}
-	
-// 	if (pars_list->end() == default_parser)
-// 	{
-// 		return it;
-// 	}
-// 	return default_parser;
-// }

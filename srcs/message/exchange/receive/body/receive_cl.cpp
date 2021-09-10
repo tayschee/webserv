@@ -1,7 +1,5 @@
 #include "message/exchange.hpp"
 
-#include <iostream>
-
 /*cl_body struct, use to read body with Content-Length header, this struct is manipulated
 by receive once header is read */
 
@@ -62,9 +60,7 @@ int receive::cl_body::receive(const int socket)
 int receive::cl_body::check()
 {
 	if (buf_size == 0)
-	{
 		return 1;
-	}
 	return 0;
 }
 

@@ -89,7 +89,6 @@ TEST
 launch_server $MULTIPLE_LOCATION_CONF
 
 NAME_CONFIG=multiple_location.conf
-
 << C
 test $NAME_CONFIG "/"
 test $NAME_CONFIG "/gif/"
@@ -114,6 +113,8 @@ test_put $NAME_CONFIG 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PE
 stop_server
 
 C
+
+
 
 #DELETE TEST
 
@@ -146,6 +147,9 @@ test_delete $NAME_CONFIG 6 "srcs/dir_to_copy" 000 "srcs/dir_to_delete" "/dir_to_
 stop_server
 
 << C
+
+# << C
+
 #PHP ERROR TEST
 launch_server $PHP_ERROR_CONF
 
@@ -160,7 +164,8 @@ stop_server
 
 # C
 
-<< C
+# << C
+
 TEST
 
 << C

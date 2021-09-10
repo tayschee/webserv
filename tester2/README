@@ -1,7 +1,0 @@
-le testeur ne test pas :
-OPTIONS parce que nginx n'est pas fiable sur la methode
-PUT avec des fichiers existants il faut faire une autre fonctions ne pas utiliser celle deja existante elle detruit les fichiers
-TRACE je sais pas comment ca marche
-CONNECT pas implemente
-
-You must add manually gif 127.0.0.1:80 secret 127.0.0.1:80 and jpeg 127.0.0.1:80 in /etc/host

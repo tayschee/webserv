@@ -127,7 +127,7 @@ class response : public message
 		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
-		int										sent(int fd, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
+		int										sent(int fd, request &req, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function

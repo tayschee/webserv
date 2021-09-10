@@ -1,7 +1,5 @@
 #include "message/exchange.hpp"
 
-#include <iostream>
-
 typedef  message::receive receive;
 
 //header constructor destructor
@@ -21,13 +19,6 @@ receive::body &receive::body::operator=(const body &x)
 	return *this;
 }
 
-// std::string 						receive::body::get_buffer()
-// {
-// 	std::string buffer(msg.substr(0, pos));
-// 	msg.erase(0, pos);
-// 	return buffer;
-// }
-
 std::string 						receive::body::get_header_buffer()
 {
 	size_t pos(header_is_end(msg));
@@ -42,11 +33,6 @@ std::string 						receive::body::get_header_buffer()
 
 receive::header		*receive::body::previous_step(const size_t buf_size) const
 {
-	//std::cout << "msg : " << msg << "\n";
-	//std::cout << "pos : " << pos << "\n";
-	//receive::header *new_data = new header(buf_size, msg.substr(pos));
 	receive::header *new_data = new header(buf_size, msg);
-	//std::cout << "SIZE MSG = " << msg.size() << std::endl;
-
 	return new_data;
 }

@@ -366,38 +366,6 @@ bool parser::check_prop_serv_name(const std::string &block_id, const std::vector
 
 bool parser::check_prop_body_size_max(const std::string &block_id, const std::vector<std::string> &args, int line_no) const
 {
-	// std::vector<std::string> expected;
-	// expected.push_back(PARSER_SERVER);
-
-	// if (!basic_chk_block(PARSER_BODY_SIZE_MAX, block_id, expected, line_no))
-	// 	return false;
-	// if (!basic_chk_args(PARSER_BODY_SIZE_MAX, args.size(), 1, true, line_no))
-	// 	return false;
-
-	// std::string number = args[0];
-	// char *end;
-	// int nb;
-
-	// try
-	// {
-	// 	nb = ft_strtol(number.c_str(), &end, 10);
-	// }
-	// catch (const std::out_of_range &e)
-	// {
-	// 	std::cerr << "Error: " << filename << ": out of range number. (line: " << line_no << ")\n";
-	// 	return false;
-	// }
-
-	// if (end != (number.c_str() + number.length()))
-	// {
-	// 	std::cerr << "Error: " << filename << ": keep_alive takes only digit in parameter. (line: " << line_no << ")\n";
-	// 	return false;
-	// }
-	// if (nb < 0)
-	// {
-	// 	std::cerr << "Error: " << filename << ": Number must be positive. (line: " << line_no << ")\n";
-	// 	return false;
-	// }
 	(void)block_id;
 	(void)args;
 	(void)line_no;

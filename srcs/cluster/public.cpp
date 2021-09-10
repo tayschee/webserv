@@ -53,8 +53,12 @@ int cluster::start() // cluster manage the list of socketc
 			}
 			else if (cli.is_read() && FD_ISSET(cli.get_fd(), &writefds))
 			{
-				cli.sent(vec_parser);
-				std::cout << "bon\n";
+				if (cli.sent(vec_parser) == -1)
+				{
+					if (debug_mode)
+						std::cout << "Client quit : ";
+					close_client(it);
+				}
 			}
 		}
 
@@ -68,24 +72,3 @@ int cluster::start() // cluster manage the list of socketc
 	}
 	return (0);
 }
-
-//connect to a another server, will be useful to connect to client together
-/*int		cluster::connect_to(std::string address, std::string ip)
-{
-	sockaddr_in	address_in;
-	int sockfd;
-	int res;
-
-	address_in.sin_family = AF_INET; //dont know why
-    address_in.sin_port = htons(sockfd); //dont know why
-
-	//check if he exists
-	sockfd = socket(ip_resolution(address), SOCK_STREAM, AF_INET);
-	
-	res = connect(sockfd, (struct sockaddr *)(&address_in), sizeof(sockaddr_in));
-	if (i < 0)
-	{
-		//error
-	}
-	//list_client.push_back(res, false, );
-}*/

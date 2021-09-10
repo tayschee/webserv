@@ -64,14 +64,14 @@ long client::sent(const std::vector<parser::address_conf> &vec_parser) // send r
 	msg.clear();
 	msg = "";
 
-	std::cout << "oulaoup\n";
+	if (req.get_connexion().empty())
+		req.set_connexion(KEEP_ALIVE);
 	response rep(req, vec_parser[nb_pars]);
-
-	std::cout << "jusqu'ici\n";
-	my_read = rep.sent(fd);
-	std::cout << "oki ?\n";
+	my_read = rep.sent(fd, req);
 	size_body = 0;
 	reset = true;
+	if (req.get_connexion() != KEEP_ALIVE)
+		return -1;
 	// reset_time();
 	return 0;
 }

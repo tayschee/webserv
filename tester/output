@@ -2,20 +2,20 @@
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:19 GMT							      |	Date: Fri, 10 Sep 2021 12:53:20 UTC								
-Last-Modified: Fri, 10 Sep 2021 12:53:19 GMT							      |	Last-Modified: Fri, 10 Sep 2021 12:53:20 UTC
+Date: Fri, 10 Sep 2021 13:00:52 GMT							      |	Date: Fri, 10 Sep 2021 13:00:52 UTC								
+Last-Modified: Fri, 10 Sep 2021 13:00:52 GMT							      |	Last-Modified: Fri, 10 Sep 2021 13:00:52 UTC
 Connection: keep-alive							      <
-ETag: "613b553f-22"							      <
+ETag: "613b5704-22"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:20 UTC
+Date: Fri, 10 Sep 2021 13:00:52 GMT							      |	Date: Fri, 10 Sep 2021 13:00:52 UTC
 Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:20 UTC								
+Date: Fri, 10 Sep 2021 13:00:52 GMT							      |	Date: Fri, 10 Sep 2021 13:00:52 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -37,7 +37,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:20 UTC								
+Date: Fri, 10 Sep 2021 13:00:52 GMT							      |	Date: Fri, 10 Sep 2021 13:00:52 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -59,7 +59,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:20 UTC								
+Date: Fri, 10 Sep 2021 13:00:52 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -81,7 +81,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:21 UTC								
+Date: Fri, 10 Sep 2021 13:00:53 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -104,7 +104,7 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:21 UTC								
+Date: Fri, 10 Sep 2021 13:00:53 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -127,7 +127,7 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:20 GMT							      |	Date: Fri, 10 Sep 2021 12:53:21 UTC								
+Date: Fri, 10 Sep 2021 13:00:53 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -150,7 +150,7 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:21 UTC								
+Date: Fri, 10 Sep 2021 13:00:53 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -173,7 +173,7 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:21 UTC								
+Date: Fri, 10 Sep 2021 13:00:53 GMT							      |	Date: Fri, 10 Sep 2021 13:00:53 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -196,20 +196,20 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:22 UTC								
-Last-Modified: Fri, 10 Sep 2021 12:53:21 GMT							      |	Last-Modified: Fri, 10 Sep 2021 12:53:22 UTC
+Date: Fri, 10 Sep 2021 13:00:54 GMT							      |	Date: Fri, 10 Sep 2021 13:00:54 UTC								
+Last-Modified: Fri, 10 Sep 2021 13:00:54 GMT							      |	Last-Modified: Fri, 10 Sep 2021 13:00:54 UTC
 Connection: keep-alive							      <
-ETag: "613b5541-5b"							      <
+ETag: "613b5706-5b"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:22 UTC
+Date: Fri, 10 Sep 2021 13:00:54 GMT							      |	Date: Fri, 10 Sep 2021 13:00:54 UTC
 Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:22 UTC								
+Date: Fri, 10 Sep 2021 13:00:54 GMT							      |	Date: Fri, 10 Sep 2021 13:00:54 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -231,7 +231,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:21 GMT							      |	Date: Fri, 10 Sep 2021 12:53:22 UTC								
+Date: Fri, 10 Sep 2021 13:00:54 GMT							      |	Date: Fri, 10 Sep 2021 13:00:54 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -253,7 +253,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:22 UTC								
+Date: Fri, 10 Sep 2021 13:00:54 GMT							      |	Date: Fri, 10 Sep 2021 13:00:54 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -275,15 +275,15 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
-Last-Modified: Fri, 10 Sep 2021 12:53:22 GMT							      |	Last-Modified: Fri, 10 Sep 2021 12:53:22 UTC
+Date: Fri, 10 Sep 2021 13:00:55 GMT							      |	Date: Fri, 10 Sep 2021 13:00:55 UTC								
+Last-Modified: Fri, 10 Sep 2021 13:00:55 GMT							      |	Last-Modified: Fri, 10 Sep 2021 13:00:55 UTC
 Connection: keep-alive							      <
-ETag: "613b5542-5b"							      <
+ETag: "613b5707-5b"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
+Date: Fri, 10 Sep 2021 13:00:55 GMT							      |	Date: Fri, 10 Sep 2021 13:00:55 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -306,15 +306,15 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
-Last-Modified: Fri, 10 Sep 2021 12:53:22 GMT							      |	Last-Modified: Fri, 10 Sep 2021 12:53:22 UTC
+Date: Fri, 10 Sep 2021 13:00:55 GMT							      |	Date: Fri, 10 Sep 2021 13:00:55 UTC								
+Last-Modified: Fri, 10 Sep 2021 13:00:55 GMT							      |	Last-Modified: Fri, 10 Sep 2021 13:00:55 UTC
 Connection: keep-alive							      <
-ETag: "613b5542-5b"							      <
+ETag: "613b5707-5b"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
+Date: Fri, 10 Sep 2021 13:00:55 GMT							      |	Date: Fri, 10 Sep 2021 13:00:55 UTC								
 Content-Length: 179							      |	Content-Length: 147								
 Connection: keep-alive							      |	WWW-Authenticate: Basic realm="Restrict"
 WWW-Authenticate: Basic realm="Restrict access"		      <
@@ -337,15 +337,15 @@ WWW-Authenticate: Basic realm="Restrict access"		      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:22 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
-Last-Modified: Fri, 10 Sep 2021 12:53:22 GMT							      |	Last-Modified: Fri, 10 Sep 2021 12:53:22 UTC
+Date: Fri, 10 Sep 2021 13:00:55 GMT							      |	Date: Fri, 10 Sep 2021 13:00:55 UTC								
+Last-Modified: Fri, 10 Sep 2021 13:00:55 GMT							      |	Last-Modified: Fri, 10 Sep 2021 13:00:55 UTC
 Connection: keep-alive							      <
-ETag: "613b5542-5b"							      <
+ETag: "613b5707-5b"							      <
 Accept-Ranges: bytes					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:23 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
+Date: Fri, 10 Sep 2021 13:00:56 GMT							      |	Date: Fri, 10 Sep 2021 13:00:56 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -367,7 +367,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:23 GMT							      |	Date: Fri, 10 Sep 2021 12:53:23 UTC								
+Date: Fri, 10 Sep 2021 13:00:56 GMT							      |	Date: Fri, 10 Sep 2021 13:00:56 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -389,7 +389,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:23 GMT							      |	Date: Fri, 10 Sep 2021 12:53:24 UTC								
+Date: Fri, 10 Sep 2021 13:00:56 GMT							      |	Date: Fri, 10 Sep 2021 13:00:56 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -411,7 +411,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:23 GMT							      |	Date: Fri, 10 Sep 2021 12:53:24 UTC								
+Date: Fri, 10 Sep 2021 13:00:56 GMT							      |	Date: Fri, 10 Sep 2021 13:00:56 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -433,7 +433,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:23 GMT							      |	Date: Fri, 10 Sep 2021 12:53:24 UTC								
+Date: Fri, 10 Sep 2021 13:00:56 GMT							      |	Date: Fri, 10 Sep 2021 13:00:57 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -455,7 +455,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:24 GMT							      |	Date: Fri, 10 Sep 2021 12:53:24 UTC								
+Date: Fri, 10 Sep 2021 13:00:57 GMT							      |	Date: Fri, 10 Sep 2021 13:00:57 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -477,12 +477,12 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:24 GMT							      |	Date: Fri, 10 Sep 2021 12:53:25 UTC
+Date: Fri, 10 Sep 2021 13:00:57 GMT							      |	Date: Fri, 10 Sep 2021 13:00:57 UTC
 Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:24 GMT							      |	Date: Fri, 10 Sep 2021 12:53:25 UTC								
+Date: Fri, 10 Sep 2021 13:00:57 GMT							      |	Date: Fri, 10 Sep 2021 13:00:57 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -504,7 +504,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:24 GMT							      |	Date: Fri, 10 Sep 2021 12:53:25 UTC								
+Date: Fri, 10 Sep 2021 13:00:57 GMT							      |	Date: Fri, 10 Sep 2021 13:00:57 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -526,7 +526,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:24 GMT							      |	Date: Fri, 10 Sep 2021 12:53:25 UTC								
+Date: Fri, 10 Sep 2021 13:00:57 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -549,7 +549,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 404 Not Found							      |	HTTP/1.1 500 Internal Server Error								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:25 GMT							      |	Date: Fri, 10 Sep 2021 12:53:25 UTC								
+Date: Fri, 10 Sep 2021 13:00:58 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 165
 Connection: keep-alive					      <
 1,7c1,7
@@ -572,7 +572,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 404 Not Found							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:25 GMT							      |	Date: Fri, 10 Sep 2021 12:53:26 UTC								
+Date: Fri, 10 Sep 2021 13:00:58 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -595,7 +595,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 404 Not Found							      |	HTTP/1.1 500 Internal Server Error								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:25 GMT							      |	Date: Fri, 10 Sep 2021 12:53:26 UTC								
+Date: Fri, 10 Sep 2021 13:00:58 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 165
 Connection: keep-alive					      <
 1,7c1,7
@@ -618,7 +618,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 404 Not Found							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:25 GMT							      |	Date: Fri, 10 Sep 2021 12:53:26 UTC								
+Date: Fri, 10 Sep 2021 13:00:58 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -641,7 +641,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 404 Not Found							      |	HTTP/1.1 500 Internal Server Error								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:25 GMT							      |	Date: Fri, 10 Sep 2021 12:53:26 UTC								
+Date: Fri, 10 Sep 2021 13:00:58 GMT							      |	Date: Fri, 10 Sep 2021 13:00:58 UTC								
 Content-Length: 153							      |	Content-Length: 165
 Connection: keep-alive					      <
 1,7c1,7
@@ -663,7 +663,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:26 GMT							      |	Date: Fri, 10 Sep 2021 12:53:26 UTC								
+Date: Fri, 10 Sep 2021 13:00:59 GMT							      |	Date: Fri, 10 Sep 2021 13:00:59 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -685,7 +685,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:26 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:00:59 GMT							      |	Date: Fri, 10 Sep 2021 13:00:59 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -707,7 +707,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:26 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:00:59 GMT							      |	Date: Fri, 10 Sep 2021 13:00:59 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -729,7 +729,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf DELETE_2 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:26 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:00:59 GMT							      |	Date: Fri, 10 Sep 2021 13:00:59 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -751,7 +751,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/gif/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:26 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:00:59 GMT							      |	Date: Fri, 10 Sep 2021 13:00:59 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -773,7 +773,7 @@ Connection: keep-alive					      <
 ----------------------  multiple_location.conf GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:27 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:01:00 GMT							      |	Date: Fri, 10 Sep 2021 13:01:00 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -796,7 +796,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:27 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:01:00 GMT							      |	Date: Fri, 10 Sep 2021 13:01:00 UTC								
 Content-Length: 177							      |	Content-Length: 141
 Connection: close					      <
 1,7c1,7
@@ -818,7 +818,7 @@ Connection: close					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:27 GMT							      |	Date: Fri, 10 Sep 2021 12:53:27 UTC								
+Date: Fri, 10 Sep 2021 13:01:00 GMT							      |	Date: Fri, 10 Sep 2021 13:01:00 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
@@ -841,7 +841,7 @@ Connection: keep-alive					      <
 
 HTTP/1.1 500 Internal Server Error							      |	HTTP/1.1 403 Forbidden								
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:27 GMT							      |	Date: Fri, 10 Sep 2021 12:53:28 UTC								
+Date: Fri, 10 Sep 2021 13:01:00 GMT							      |	Date: Fri, 10 Sep 2021 13:01:01 UTC								
 Content-Length: 177							      |	Content-Length: 141
 Connection: close					      <
 1,7c1,7
@@ -863,7 +863,7 @@ Connection: close					      <
 ----------------------  multiple_location.conf GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
 
 Server: nginx/1.18.0							      |	Server: webserv								
-Date: Fri, 10 Sep 2021 12:53:27 GMT							      |	Date: Fri, 10 Sep 2021 12:53:28 UTC								
+Date: Fri, 10 Sep 2021 13:01:00 GMT							      |	Date: Fri, 10 Sep 2021 13:01:01 UTC								
 Content-Length: 153							      |	Content-Length: 141
 Connection: keep-alive					      <
 1,7c1,7
