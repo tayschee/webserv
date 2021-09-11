@@ -11,7 +11,7 @@ get_response()
 	echo "4 $4"
 	echo "5 $5"
 	echo "6 ${@:6}"
-	curl -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
+	curl  -H "Host: $SERVER_NAME" -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
 	python $SPLIT_RESPONSE_PY ${!RESPONSE} ${!HEADER} ${!BODY}
 	#if [[$? == 1]]; then
 	#	exit 1

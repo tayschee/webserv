@@ -14,6 +14,22 @@ std::vector<std::string> parser::split(const std::string &str, const std::string
 	return result;
 }
 
+std::vector<std::string> parser::split2(const std::string &str, const std::string &delimiters)
+{
+	std::vector<std::string> result;
+
+	size_t beg, pos = 0;
+
+	while ((beg = str.find_first_not_of(delimiters, pos)) != std::string::npos)
+	{
+		pos = beg;
+		while ((pos = str.find_first_of(delimiters, pos)) && pos != std::string::npos && (std::count(str.begin(), str.begin() + pos, '\"') % 2) != 0)
+			pos++;
+		result.push_back(str.substr(beg, pos - beg));
+	}
+	return result;
+}
+
 std::vector<parser::address_conf> parser::parse_folder(std::string path)
 {
 	std::vector<address_conf> res;

@@ -61,8 +61,10 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 		return;
 	}
 
-	splitted = split(line);
+	splitted = split2(line);
+
 	name = splitted[0];
+	
 	splitted.erase(splitted.begin());
 	if (block && check_block(name, splitted, line_no))
 	{

@@ -54,7 +54,7 @@ launch_server()
 #launch_multi_server "config_dir for nginx"
 launch_multi_server()
 {
-    CONTAINER_NAME=$(docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/$1:$VM_CONFIG_PATH_DIR -p 80:80 $IMAGE_NAME)
+    CONTAINER_NAME=$(docker run --rm -ti -d -v $SRCS_PATH:$VM_SRCS_PATH -v $NG_DIRECTORY_CONF/:$VM_CONFIG_PATH_DIR -p 80:80 $IMAGE_NAME)
     if [[ $! != 0 ]]; then
         echo -e "\nNginx run\n"
     else
@@ -62,7 +62,9 @@ launch_multi_server()
         exit 1
     fi
 
-    $WEBSERV $WS_DIRECTORY_CONF/$1 &
+	echo webserv = $WEBSERV WS_DIRECTORY_CONF = $WS_DIRECTORY_CONF
+
+    $WEBSERV $WS_DIRECTORY_CONF &
 	WEBSERV_PID=$!
     sleep $SLEEP_TIMER
 
@@ -92,5 +94,9 @@ stop_prog()
 	delete_x_tmpdir DIR_TMP 1
 	rm -rf  srcs/$NG_DELETE_DIR
 	rm -rf  srcs/$WS_DELETE_DIR
+
+	chmod 755 srcs/private #because it s a directory
+	chmod 644 srcs/secret/mdp.html
+	chmod 644 srcs/spoiler/mdp.html
 	exit 1
 }

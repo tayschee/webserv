@@ -19,7 +19,7 @@ test_method ()
 test_head ()
 {
     declare TMP=$TMP1
-    diff -y --suppress-common-lines -a <(curl -sSIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl -sSIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
+    diff -y --suppress-common-lines -a <(curl  -H "Host: $SERVER_NAME" -sSIX HEAD "${@:3}" $NGINX_IP:$NGINX_PORT$2) <(curl  -H "Host: $SERVER_NAME" -sSIX HEAD "${@:3}" $WEBSERV_IP:$WEBSERV_PORT$2) > $TMP
     if [[ $? != 0 ]]; then
         echo -e "----------------------" $1 " " HEAD " " $2 "------------------------\n" >> $OUTPUT
         cat $TMP >> $OUTPUT

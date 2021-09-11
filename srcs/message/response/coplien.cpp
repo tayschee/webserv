@@ -26,9 +26,10 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 			method = existing_method.find(POST)->second; //give function associate with request
 		else
 			method = find_method_function(req.get_method(), allow_method); //give function associate with request
-
+		
 		main_header(); /*add header_field which are present in all method*/
 		first_line.status = generate_response(path_info, pars, req, method);
+
 	}
 	first_line.status_string = find_status_string(first_line.status);
 	first_line.version = req.get_version();

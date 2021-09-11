@@ -2,7 +2,7 @@
 # define DEFINE_HPP
 
 /*Server*/
-# define WEBSERV "webserv"
+# define WEBSERV "server/1.0.0"
 # define HTTP_VERSION "HTTP/1.1"
 # define GATEWAY_INTERFACE "CGI/1.1"
 
@@ -13,13 +13,13 @@
 # define STR_TO_REPLACE "XXX"
 # define DEFAULT_ERROR_FILE_EXT ".html" /*to use a funtion simply*/
 
-# define DEFAULT_ERROR_FILE	"<html>\n" \
-							"<head><title>"STR_TO_REPLACE"</title></head>\n" \
-							"<body>\n" \
-							"<center><h1>"STR_TO_REPLACE"</h1></center>\n" \
-							"<hr><center>"WEBSERV"</center>\n" \
-							"</body>\n" \
-							"</html>\n"
+# define DEFAULT_ERROR_FILE	"<html>\r\n" \
+							"<head><title>"STR_TO_REPLACE"</title></head>\r\n" \
+							"<body>\r\n" \
+							"<center><h1>"STR_TO_REPLACE"</h1></center>\r\n" \
+							"<hr><center>"WEBSERV"</center>\r\n" \
+							"</body>\r\n" \
+							"</html>\r\n"
 
 /*parser block*/
 # define BLOCK_SERVER "server"
@@ -126,6 +126,7 @@
 
 # define STATUS_400 "Bad Request"
 # define STATUS_401 "Unauthorized"
+// # define STATUS_401 "Authorization Required"
 # define STATUS_402 "Payment Required"
 # define STATUS_403 "Forbidden"
 # define STATUS_404 "Not Found"

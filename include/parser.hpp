@@ -163,6 +163,7 @@ public:
 
 	static std::vector<address_conf> parse_folder(std::string path);
 	static std::vector<std::string> split(const std::string &str, const std::string &delimiters = " \t");
+	static std::vector<std::string> split2(const std::string &str, const std::string &delimiters = " \t");
 
 	const block &get_block(const std::string &block_name, const std::vector<std::string> &block_args = std::vector<std::string>()) const;
 	const block &get_block(const std::string &block_name, const std::string &block_arg) const;

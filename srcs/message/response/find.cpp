@@ -73,6 +73,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
 	}
 
+
 	struct stat file_stat;
 
 	size_t pos = path.find("//");
@@ -85,6 +86,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 	}
 	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
+
 		//determine if this is complete path or if this not for that verify if this is a directory
 		if (is_acces(file_stat))
 			return path;
@@ -101,17 +103,19 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 
 std::string response::find_index(const parser::entries &entries, const std::string &path) const
 {
-
 	try
 	{
+		if (entries.find("index") == entries.end())
+			return path;
 		std::vector<std::string> index(entries.find("index")->second);
-
 		std::vector<std::string>::iterator it_i(index.begin());
 		std::vector<std::string>::iterator end_i(index.end());
+
 		if (entries.find("index") == entries.end())
 			return path;
 		std::string tmp;
 		struct stat file_stat;
+
 		while (it_i != end_i)
 		{
 			tmp = path + *it_i;
@@ -122,7 +126,7 @@ std::string response::find_index(const parser::entries &entries, const std::stri
 	}
 	catch(const std::exception& e)
 	{
-		//std::cerr << e.what() << '\n';
+		// std::cerr << e.what() << '\n';
 	}
 
 	return path;

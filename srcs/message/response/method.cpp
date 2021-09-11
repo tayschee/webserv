@@ -76,11 +76,8 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	int ret;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
-	if ((ret = is_authorize(uri, req, pars)))
-		return ret;
-	ret = del_content(path, req, pars, 0);
+	int ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
 	ret = del_content(path, req, pars);

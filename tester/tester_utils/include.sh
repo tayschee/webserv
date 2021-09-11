@@ -35,13 +35,12 @@ VM_CONFIG_PATH=${VM_CONFIG_PATH_DIR}default.conf
 NG_DIRECTORY_CONF=$(pwd)/nginx_config
 WS_DIRECTORY_CONF=$(pwd)/webserv_config
 
-ERROR_CONF=error.conf
-INDEX_OFF_CONF=index_off.conf
-MULTIPLE_LOCATION_CONF=multiple_location.conf
-REDIRECT_CONF=redirect.conf
-SAME_ERROR_CONF=same_error.conf
-PHP_ERROR_CONF=same_error_php.conf
-MULTIPLE_CONF=multiple_config
+ERROR_CONF=error
+INDEX_OFF_CONF=index_off
+MULTIPLE_LOCATION_CONF=multiple_location
+REDIRECT_CONF=redirect
+SAME_ERROR_CONF=same_error
+PHP_ERROR_CONF=same_error_php
 
 NG_ERROR_CONF=$NG_DIRECTORY_CONF/$ERROR_CONF
 NG_INDEX_OFF_CONF=$NG_DIRECTORY_CONF/$INDEX_OFF_CONF
