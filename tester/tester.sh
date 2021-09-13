@@ -85,7 +85,6 @@ test_put $SERVER_NAME 5 "/html/new.html" -d "<p>YES</p>" #work
 test_put $SERVER_NAME 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
 
 #DELETE TEST
-
 test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
 test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
 test_delete $SERVER_NAME 8 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="

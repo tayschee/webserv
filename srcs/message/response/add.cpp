@@ -51,7 +51,6 @@ void				response::add_www_autentificate(const parser &pars, const std::string &p
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "AUTH_BASIC NO FOUND" << std::endl;
 	}	
 }
 

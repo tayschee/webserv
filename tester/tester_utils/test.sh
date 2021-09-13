@@ -77,7 +77,7 @@ test_delete()
 
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
-	echo ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII: $(ls $5)
+
 	#TEST FIRST DELETE
 	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
@@ -92,7 +92,7 @@ test_delete()
 
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
-	echo ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII: $(ls $5)
+
 	#TEST FIRST DELETE
 	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 	get_response "13" "$WEBSERV_IP" "$WEBSERV_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
@@ -130,7 +130,7 @@ test_syntax()
 	python $SEND_REQUEST_PY $1 $NGINX_IP $NGINX_PORT > $NG_REP
 	python $SPLIT_RESPONSE_PY $NG_REP $NG_HEAD $NG_BODY
 
-	echo "DONE !!!!!!!!!"
+
 	python $SEND_REQUEST_PY $1 $WEBSERV_IP $WEBSERV_PORT > $WS_REP
 	python $SPLIT_RESPONSE_PY $WS_REP  $WS_BODY$WS_HEAD
 

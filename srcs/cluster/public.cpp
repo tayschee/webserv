@@ -39,9 +39,6 @@ int cluster::start() // cluster manage the list of socketc
 
 			if (!cli.is_read() && FD_ISSET(cli.get_fd(), &readfds)) // is there a modification on the current list_client ?
 			{
-				// if (debug_mode)
-				// 	std::cout << "Receive message from " << cli.get_fd() << std::endl;
-
 				if ((ret = receive(cli)) == 0)
 					return 0;
 				else if (ret == -1)

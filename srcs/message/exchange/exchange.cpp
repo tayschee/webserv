@@ -9,12 +9,10 @@ typedef message::exchange exchange;
 
 //constructor destructor
 exchange::exchange(int fd) : fd(fd){
-	// std::cout << "JE SUIS DANS LE CONSTRUCTEUR DE EXANGE" << std::endl;
 
 }
 exchange::exchange(const exchange &x) : fd(x.fd){}
 exchange::~exchange(){
-	// std::cout << "JE SUIS DANS LE DESTRUCTEUR DE EXANGE" << std::endl;
 
 }
 

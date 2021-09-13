@@ -7,15 +7,12 @@ get_response()
 	declare PORT="$3"
 
 
-	echo $SPLIT_RESPONSE_PY
-	echo "4 $4"
-	echo "5 $5"
-	echo "6 ${@:6}"
 	curl  -H "Host: $SERVER_NAME" -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
 	python $SPLIT_RESPONSE_PY ${!RESPONSE} ${!HEADER} ${!BODY}
-	#if [[$? == 1]]; then
-	#	exit 1
-	#fi
+	# if [[$? == 1]]; then
+	# 	echo python failed
+	# 	exit 1
+	# fi
 	echo "" > ${!RESPONSE}
 }
 
@@ -32,27 +29,11 @@ print_diff()
 	export HEADER_DIFF_BOOL
 	export BODY_DIFF_BOOL
 
-	echo 11 $1
-	echo 12 $2
-	echo 13 $3
-	echo 14 $4
-	echo 15 $5
-	echo 16 $6
-	echo 17 $7
-	echo 18 $8
+
 	diff -y --suppress-common-lines -a ${!HEADER_NGINX} ${!HEADER_WEBSERV} > ${!HEADER_DIFF}
 	HEADER_DIFF_BOOL=$?
 	diff ${!BODY_NGINX} ${!BODY_WEBSERV} > ${!BODY_DIFF}
 	BODY_DIFF_BOOL=$?
-	echo path body : ${!BODY_DIFF}
-	cat ${!BODY_DIFF}
-	echo path header : ${!HEADER_DIFF}
-	if [[ ${!BODY_DIFF} == ${!HEADER_DIFF} ]]; then
-		echo path equal
-	else
-		echo not equal
-	fi
-	cat ${!HEADER_DIFF}
     if [[ $HEADER_DIFF_BOOL ]] || [[ $BODY_DIFF_BOOL ]]; then
         echo -e "---------------------- " "${@:4}" " ------------------------\n" >> $OUTPUT
         echo -e "${@:4}" ": CHECK " $OUTPUT

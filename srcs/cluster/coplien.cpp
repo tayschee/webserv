@@ -7,8 +7,6 @@ cluster::cluster(const std::string _path, bool debug_mode) : list_client(), debu
 {
     vec_parser = parser::parse_folder(_path);
 
-	std::cout << vec_parser[0][0] << "\n";
-
 	int i = 0;
 	for (std::vector<parser::address_conf>::iterator it = vec_parser.begin(); it != vec_parser.end(); ++it)
 	{

@@ -90,7 +90,6 @@ void			response::status_header(int status, const std::string &path, const parser
 {
 	if (status == 401)
 	{
-		std::cout << "www_autentificate\n";
 		add_www_autentificate(pars, path);
 	}
 	if (status == 503)

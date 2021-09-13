@@ -23,7 +23,6 @@ def main(argv) :
 
 	txt1 = fd.read() # l'affiche
 	txt2 = client(txt1, argv[1:])
-	print(txt2)
 
 if len(sys.argv) < 4 :
 	print("ERROR : need an argument")

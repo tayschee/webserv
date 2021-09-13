@@ -1,429 +1,60 @@
 
 ----------------------  error GET /  ------------------------
 
-							      >
+Server: nginx/1.18.0							      |	Server: server/1.0.0								
+Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT							      |	Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT
+Connection: keep-alive							      <
+ETag: "613f1ddd-16271"							      <
+Accept-Ranges: bytes					      <
 ---------------------- error   HEAD   / ------------------------
 
 Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aec-16271"							      <
+ETag: "613f1ddd-16271"							      <
 Accept-Ranges: bytes							      <
 ----------------------  error GET /inexistant_file  ------------------------
 
+Server: nginx/1.18.0							      |	Server: server/1.0.0								
+Content-Length: 153							      |	Content-Length: 153
+Connection: keep-alive					      <
+5c5
+< <hr><center>nginx/1.18.0</center>
+---
+> <hr><center>server/1.0.0</center>
 ---------------------- error   HEAD   /inexistant_file ------------------------
 
 Server: nginx/1.18.0							      |	Server: server/1.0.0								
 ----------------------  error GET /secret/  ------------------------
 
+Server: nginx/1.18.0							      |	Server: server/1.0.0								
+Date: Mon, 13 Sep 2021 10:49:06 GMT							      |	Date: Mon, 13 Sep 2021 10:49:07 GMT								
+Connection: keep-alive							      <
+5c5
+< <hr><center>nginx/1.18.0</center>
+---
+> <hr><center>server/1.0.0</center>
 ---------------------- error   HEAD   /secret/ ------------------------
 
 Server: nginx/1.18.0							      |	Server: server/1.0.0								
 ----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
+Server: nginx/1.18.0							      |	Server: server/1.0.0								
+Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT							      |	Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT
+Connection: keep-alive							      <
+ETag: "613f1ddd-5b"							      <
+Accept-Ranges: bytes					      <
 ---------------------- error   HEAD   /secret/ ------------------------
 
 Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aec-5b"							      <
+ETag: "613f1ddd-5b"							      <
 Accept-Ranges: bytes							      <
 ----------------------  error GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
 
+Server: nginx/1.18.0							      |	Server: server/1.0.0								
+Connection: keep-alive							      <
+5c5
+< <hr><center>nginx/1.18.0</center>
+---
+> <hr><center>server/1.0.0</center>
 ---------------------- error   HEAD   /secret/ ------------------------
 
 Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/ -H Authorization: NOT_BASIC YWRtaW46YWRtaW4=  ------------------------
-
----------------------- error   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/ -H Authorization: HTDHRTHDGF GTRGHE YTREYE YWRtaW46YWRtaW4=  ------------------------
-
----------------------- error   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
-
----------------------- error   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aec-5b"							      <
-Accept-Ranges: bytes							      <
-----------------------  error GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
----------------------- error   HEAD   /bad_secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
----------------------- error   HEAD   /bad_secret2/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/secret.html  ------------------------
-
----------------------- error   HEAD   /secret/secret.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /private/private.html  ------------------------
-
----------------------- error   HEAD   /private/private.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /private/  ------------------------
-
----------------------- error   HEAD   /private/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  index_off GET /  ------------------------
-
----------------------- index_off   HEAD   / ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  index_off GET /html/3.html  ------------------------
-
----------------------- index_off   HEAD   /html/3.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-22"							      <
-Accept-Ranges: bytes							      <
-----------------------  redirect GET /  ------------------------
-
----------------------- redirect   HEAD   / ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  redirect GET /html/  ------------------------
-
----------------------- redirect   HEAD   /html/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-232b"							      <
-----------------------  redirect GET /gif/  ------------------------
-
----------------------- redirect   HEAD   /gif/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  redirect GET /jpeg/  ------------------------
-
----------------------- redirect   HEAD   /jpeg/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  redirect GET /error/  ------------------------
-
----------------------- redirect   HEAD   /error/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-232b"							      <
-Accept-Ranges: bytes							      <
-----------------------  redirect GET /dest/  ------------------------
-
----------------------- redirect   HEAD   /dest/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-174ab7"							      <
-Accept-Ranges: bytes							      <
-----------------------  redirect GET / -L  ------------------------
-
----------------------- redirect   HEAD   / ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  redirect GET /html/3.html -L  ------------------------
-
----------------------- redirect   HEAD   /html/3.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-232b"							      <
-----------------------  same_error GET /  ------------------------
-
----------------------- same_error   HEAD   / ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-13e3"							      <
-----------------------  same_error GET /ffgsdgsfgsg  ------------------------
-
----------------------- same_error   HEAD   /ffgsdgsfgsg ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-13e3"							      <
-----------------------  same_error GET /secret/secret.html  ------------------------
-
----------------------- same_error   HEAD   /secret/secret.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aec-5b"							      <
-Accept-Ranges: bytes							      <
-----------------------  same_error GET /html/3.html  ------------------------
-
----------------------- same_error   HEAD   /html/3.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-22"							      <
-Accept-Ranges: bytes							      <
-----------------------  multiple_location GET /  ------------------------
-
----------------------- multiple_location   HEAD   / ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /gif/  ------------------------
-
----------------------- multiple_location   HEAD   /gif/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-23cf4"							      <
-Accept-Ranges: bytes							      <
-----------------------  multiple_location GET /html/  ------------------------
-
----------------------- multiple_location   HEAD   /html/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-24"							      <
-Accept-Ranges: bytes							      <
-----------------------  multiple_location GET /jpeg/  ------------------------
-
----------------------- multiple_location   HEAD   /jpeg/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aec-16271"							      <
-Accept-Ranges: bytes							      <
-----------------------  multiple_location GET /png/  ------------------------
-
----------------------- multiple_location   HEAD   /png/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /private/  ------------------------
-
----------------------- multiple_location   HEAD   /private/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /secret/  ------------------------
-
----------------------- multiple_location   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /spoiler/  ------------------------
-
----------------------- multiple_location   HEAD   /spoiler/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /error/  ------------------------
-
----------------------- multiple_location   HEAD   /error/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /php/  ------------------------
-
----------------------- multiple_location   HEAD   /php/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET /html/3.html  ------------------------
-
----------------------- multiple_location   HEAD   /html/3.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-22"							      <
-Accept-Ranges: bytes							      <
-----------------------  multiple_location GET /unexist.html  ------------------------
-
----------------------- multiple_location   HEAD   /unexist.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  multiple_location GET_BEFORE_PUT_1 /new.html -l  ------------------------
-
-1d0
-< 
-----------------------  multiple_location PUT_1 /new.html -d <p>little</p>  ------------------------
-
-1d0
-< 
-----------------------  multiple_location GET_AFTER_PUT_1 /new.html -l  ------------------------
-
-1d0
-< 
-----------------------  multiple_location PUT_2 /new.html -d <p>little</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /new.html -l  ------------------------
-
-----------------------  multiple_location GET_BEFORE_PUT_1 /private/impossible.html  ------------------------
-
-----------------------  multiple_location PUT_1 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_1 /private/impossible.html  ------------------------
-
-----------------------  multiple_location PUT_2 /private/impossible.html -d <p>une phrase un peu plus longue</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /private/impossible.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_PUT_1 /secret/to_delete.html  ------------------------
-
-----------------------  multiple_location PUT_1 /secret/to_delete.html -d <p>secret</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_1 /secret/to_delete.html  ------------------------
-
-----------------------  multiple_location PUT_2 /secret/to_delete.html -d <p>secret</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /secret/to_delete.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_PUT_1 /no_path/new.html  ------------------------
-
-----------------------  multiple_location PUT_1 /no_path/new.html -d <p>error</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_1 /no_path/new.html  ------------------------
-
-----------------------  multiple_location PUT_2 /no_path/new.html -d <p>error</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /no_path/new.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_PUT_1 /html/new.html  ------------------------
-
-----------------------  multiple_location PUT_1 /html/new.html -d <p>YES</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_1 /html/new.html  ------------------------
-
-----------------------  multiple_location PUT_2 /html/new.html -d <p>YES</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /html/new.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_PUT_1 /put_and_delete/page.html  ------------------------
-
-----------------------  multiple_location PUT_1 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_1 /put_and_delete/page.html  ------------------------
-
-----------------------  multiple_location PUT_2 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
-
-----------------------  multiple_location GET_AFTER_PUT_2 /put_and_delete/page.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/html/1.html  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/html/1.html  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/html/1.html  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/html/1.html  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/html/1.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/php/1.php  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/php/1.php  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/php/1.php  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/php/1.php  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/php/1.php  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/gif/  ------------------------
-
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location DELETE_2 /dir_to_delete/  ------------------------
-
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
-
-----------------------  syntax_ressources/wrong_uri  ------------------------
-
-----------------------  syntax_ressources/line_feed  ------------------------
-
-----------------------  syntax_ressources/line_feed2  ------------------------
-
-----------------------  syntax_ressources/multiple_space  ------------------------
-
-----------------------  syntax_ressources/space_and_tab  ------------------------
-
-----------------------  syntax_ressources/tab  ------------------------
-
-----------------------  multiple_location POST /php/1.php  ------------------------
-
-----------------------  multiple_location POST /php/2.php  ------------------------
-
-----------------------  multiple_location POST /php/exemple.php  ------------------------
-
-----------------------  multiple_location /php/info.php  ------------------------
-
-----------------------  multiple_location POST /php/php.php -d arg1=O -d arg2=K -d arg3=!  ------------------------
-
-----------------------  multiple_location POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST  ------------------------
-
-----------------------  multiple_location GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING  ------------------------
-
-----------------------  same_error_php GET /fdgfs  ------------------------
-
----------------------- same_error_php   HEAD   /fdgfs ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  same_error_php GET /private/  ------------------------
-
----------------------- same_error_php   HEAD   /private/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  same_error_php GET /secret/  ------------------------
-
----------------------- same_error_php   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  same_error_php GET /html/cat.html  ------------------------
-
----------------------- same_error_php   HEAD   /html/cat.html ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613c8aeb-24"							      <
-Accept-Ranges: bytes							      <

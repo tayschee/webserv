@@ -62,8 +62,6 @@ launch_multi_server()
         exit 1
     fi
 
-	echo webserv = $WEBSERV WS_DIRECTORY_CONF = $WS_DIRECTORY_CONF
-
     $WEBSERV $WS_DIRECTORY_CONF &
 	WEBSERV_PID=$!
     sleep $SLEEP_TIMER

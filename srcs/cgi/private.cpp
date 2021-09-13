@@ -113,7 +113,6 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 		}
 		lseek(fdin, 0, SEEK_SET);
 	}
-	std::cout << "start cgi" << std::endl;
 
 	pid = fork();
 	if (pid == -1)

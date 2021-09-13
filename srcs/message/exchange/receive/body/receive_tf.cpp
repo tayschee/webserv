@@ -9,12 +9,10 @@ typedef message::receive receive;
 
 //constructor destructor
 receive::tf_body::tf_body(const std::string &msg, const size_t pos) : body(msg, 10, pos), msg_begin(true){
-	// std::cout << "JE SUIS DANS LE CONSTRUCTEUR DE TF BODY" << std::endl;
 
 }
 receive::tf_body::tf_body(const tf_body &x) : body(x), msg_begin(x.msg_begin) {}
 receive::tf_body::~tf_body(){
-	// std::cout << "JE SUIS DANS LE DESTRUCTEUR DE TF BODY" << std::endl;
 }
 
 //operator =
