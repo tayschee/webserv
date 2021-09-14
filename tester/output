@@ -1,60 +1,38 @@
 
-----------------------  error GET /  ------------------------
+----------------------  multiple_location GET_BEFORE_PUT_1 /new.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT							      |	Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT
-Connection: keep-alive							      <
-ETag: "613f1ddd-16271"							      <
-Accept-Ranges: bytes					      <
----------------------- error   HEAD   / ------------------------
+Date: Tue, 14 Sep 2021 16:00:40 GMT							      |	Date: Tue, 14 Sep 2021 16:00:41 GMT								
+----------------------  multiple_location GET_BEFORE_PUT_1 /private/impossible.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613f1ddd-16271"							      <
-Accept-Ranges: bytes							      <
-----------------------  error GET /inexistant_file  ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-Content-Length: 153							      |	Content-Length: 153
-Connection: keep-alive					      <
-5c5
-< <hr><center>nginx/1.18.0</center>
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+2c2
+< <head><title>403 Forbidden</title></head>
 ---
-> <hr><center>server/1.0.0</center>
----------------------- error   HEAD   /inexistant_file ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/  ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-Date: Mon, 13 Sep 2021 10:49:06 GMT							      |	Date: Mon, 13 Sep 2021 10:49:07 GMT								
-Connection: keep-alive							      <
-5c5
-< <hr><center>nginx/1.18.0</center>
+> <head><title>404 Not Found</title></head>
+4c4
+< <center><h1>403 Forbidden</h1></center>
 ---
-> <hr><center>server/1.0.0</center>
----------------------- error   HEAD   /secret/ ------------------------
+> <center><h1>404 Not Found</h1></center>
+----------------------  multiple_location GET_AFTER_PUT_1 /private/impossible.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT							      |	Last-Modified: Mon, 13 Sep 2021 09:46:05 GMT
-Connection: keep-alive							      <
-ETag: "613f1ddd-5b"							      <
-Accept-Ranges: bytes					      <
----------------------- error   HEAD   /secret/ ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-ETag: "613f1ddd-5b"							      <
-Accept-Ranges: bytes							      <
-----------------------  error GET /secret/ -H Authorization: Basic gegfgrsrwwrrw  ------------------------
-
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
-Connection: keep-alive							      <
-5c5
-< <hr><center>nginx/1.18.0</center>
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+2c2
+< <head><title>403 Forbidden</title></head>
 ---
-> <hr><center>server/1.0.0</center>
----------------------- error   HEAD   /secret/ ------------------------
+> <head><title>404 Not Found</title></head>
+4c4
+< <center><h1>403 Forbidden</h1></center>
+---
+> <center><h1>404 Not Found</h1></center>
+----------------------  multiple_location GET_AFTER_PUT_2 /private/impossible.html  ------------------------
 
-Server: nginx/1.18.0							      |	Server: server/1.0.0								
+HTTP/1.1 403 Forbidden							      |	HTTP/1.1 404 Not Found								
+Date: Tue, 14 Sep 2021 16:00:42 GMT							      |	Date: Tue, 14 Sep 2021 16:00:43 GMT								
+2c2
+< <head><title>403 Forbidden</title></head>
+---
+> <head><title>404 Not Found</title></head>
+4c4
+< <center><h1>403 Forbidden</h1></center>
+---
+> <center><h1>404 Not Found</h1></center>

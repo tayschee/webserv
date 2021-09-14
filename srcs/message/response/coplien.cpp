@@ -31,6 +31,7 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 		first_line.status = generate_response(path_info, pars, req, method);
 
 	}
+	add_connection(first_line.status, req);
 	first_line.status_string = find_status_string(first_line.status);
 	first_line.version = req.get_version();
 }

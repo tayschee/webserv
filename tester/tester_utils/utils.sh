@@ -7,7 +7,7 @@ get_response()
 	declare PORT="$3"
 
 
-	curl  -H "Host: $SERVER_NAME" -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
+	curl -H "Host: $SERVER_NAME" -sSiX "$4" "${@:6}" $IP:$PORT$5 > ${!RESPONSE}
 	python $SPLIT_RESPONSE_PY ${!RESPONSE} ${!HEADER} ${!BODY}
 	# if [[$? == 1]]; then
 	# 	echo python failed
@@ -34,7 +34,8 @@ print_diff()
 	HEADER_DIFF_BOOL=$?
 	diff ${!BODY_NGINX} ${!BODY_WEBSERV} > ${!BODY_DIFF}
 	BODY_DIFF_BOOL=$?
-    if [[ $HEADER_DIFF_BOOL ]] || [[ $BODY_DIFF_BOOL ]]; then
+	echo ici $HEADER_DIFF_BOOL $BODY_DIFF_BOOL
+    if [[ $HEADER_DIFF_BOOL != 0 ]] || [[ $BODY_DIFF_BOOL != 0 ]]; then
         echo -e "---------------------- " "${@:4}" " ------------------------\n" >> $OUTPUT
         echo -e "${@:4}" ": CHECK " $OUTPUT
     else

@@ -88,10 +88,12 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 
 void			response::status_header(int status, const std::string &path, const parser &pars)
 {
-	if (status == 401)
+	(void)path;
+	(void)pars;
+	/*if (status == 401)
 	{
 		add_www_autentificate(pars, path);
-	}
+	}*/
 	if (status == 503)
 		add_retry_after(200);
 	//if (first_line.status > 299 && first_line.status < 400)
@@ -184,12 +186,21 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 	if (lstat(path.c_str(), &file_stat) < 0)
 	{
 		if (errno == ENOENT)
+		{
+			std::cout << " ENOENT !!!!!!!! \n";
 			return 404;
+		}
 		if (errno == EACCES)
+		{
+			std::cout << " EACCESS !!!!!!!! \n";
 			return 403;
+		}
 	}
-	 if (is_acces(file_stat))
+	if (is_acces(file_stat))
+	{
+		std::cout << " ACCESS !!!!!!!! \n";
 	 	return 403;
+	}
 	return (0);
 }
 
@@ -332,8 +343,8 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 int		response::sent(int fd, request &req, const std::string &hf_sep, const std::string &eol)
 {
 	std::string resp_str;
-
-	if (req.get_method() == HEAD)
+	(void)req;
+	/*if (req.get_method() == HEAD)
 	{
 		if (header.find(CONTENT_LENGTH) != header.end() && header.find(CONTENT_LENGTH)->second == "0")
 			header.erase(CONTENT_LENGTH);
@@ -341,14 +352,7 @@ int		response::sent(int fd, request &req, const std::string &hf_sep, const std::
 		{
 			header.erase(LAST_MODIFIED);
 		}
-		if (first_line.status >= 500)
-		{
-			header.insert(value_type(CONNECTION, CLOSE));
-			req.set_connexion(CLOSE);
-		}
-		else if (first_line.status >= 200)
-			header.insert(value_type(CONNECTION, req.get_connexion()));
-	}
+	}*/
 
 	resp_str = get(hf_sep, eol);
     write(fd, resp_str.c_str(), resp_str.size());

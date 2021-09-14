@@ -83,6 +83,27 @@ void				response::add_content_language(const std::string &language)
 	header.insert(std::pair<std::string, std::string>(CONTENT_LANGUAGE, language));
 }
 
+void				response::add_connection(int status, const request &req)
+{
+	size_t i = 0;
+	int invalid_rep[] = {400, 500, -1};
+
+	while (invalid_rep[i] != -1)
+	{
+		if (status == invalid_rep[i])
+			header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
+		++i;
+	}
+	
+	request::header_type::const_iterator it = req.get_header().find(CONNECTION);
+	request::header_type::const_iterator end = req.get_header().end();
+
+	if (it == end)
+		header.insert(std::pair<std::string, std::string>(CONNECTION, "keep-alive"));
+	else
+		header.insert(std::pair<std::string, std::string>(CONNECTION, it->second));
+}
+
 /* this time, this is not a field it's the body of response which be add */
 
 int			response::add_body(const std::string &path)

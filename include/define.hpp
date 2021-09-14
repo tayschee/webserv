@@ -2,7 +2,7 @@
 # define DEFINE_HPP
 
 /*Server*/
-# define WEBSERV "server/1.0.0"
+# define WEBSERV "nginx/1.18.0"
 # define HTTP_VERSION "HTTP/1.1"
 # define GATEWAY_INTERFACE "CGI/1.1"
 
@@ -130,7 +130,7 @@
 # define STATUS_402 "Payment Required"
 # define STATUS_403 "Forbidden"
 # define STATUS_404 "Not Found"
-# define STATUS_405 "Method Not Allowed"
+# define STATUS_405 "Not Allowed"
 # define STATUS_406 "Not Acceptable"
 # define STATUS_407 "Proxy Authentification Required"
 # define STATUS_408 "Request Timeout"

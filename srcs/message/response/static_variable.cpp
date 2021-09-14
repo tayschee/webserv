@@ -4,11 +4,10 @@ const response::method_array response::existing_method(response::initialise_exis
 
 response::method_array	response::initialise_existing_method()
 {
-	const size_t			size(9);
-	const std::string		method_name[size] = {GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH};
+	const size_t			size(5);
+	const std::string		method_name[size] = {GET, HEAD, POST, PUT, DELETE};
 	const method_function	method_func[size] = {&response::method_is_get, &response::method_is_head, &response::method_is_post,
-											 &response::method_is_put, &response::method_is_delete, &response::method_is_unknow,
-											 &response::method_is_options, &response::method_is_trace, &response::method_is_unknow};
+											 &response::method_is_put, &response::method_is_delete};
 
 	method_array	map;
 	size_t			i;

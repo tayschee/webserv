@@ -76,42 +76,17 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
+	int ret;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
-	int ret = del_content(path, req, pars, 0);
+	if ((ret = is_authorize(uri, req, pars)))
+		return ret;
+	ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
 	ret = del_content(path, req, pars);
 	if (ret != 0)
 		return ret;
 	return 204;
-}
-
-int response::method_is_options(const std::string &uri, const request &req, const parser &pars)
-{
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
-	struct stat file_stat; //information about file
-	if (path.empty())
-		return 404;
-	if (stat(path.c_str(), &file_stat) < 0 && uri != std::string("/*"))
-		return 403;
-
-	if (uri == std::string("/*"))
-	{
-		parser::entries path_info(pars.get_block(BLOCK_SERVER).conf);
-		if (path_info.find(ACCEPT) != path_info.end())
-		{
-			std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
-			add_allow(allow_method);
-		}
-	}
-	else
-	{
-		parser::entries path_info(pars.get_block(BLOCK_LOCATION, uri).conf);
-		std::vector<std::string> allow_method(path_info.find(ACCEPT)->second);
-		add_allow(allow_method);
-	}
-	add_content_length(0);
-	return 200; //value of OK response
 }
 
 int response::method_is_put(const std::string &uri, const request &req, const parser &pars)
@@ -190,26 +165,6 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 			return ft_atoi<int>(body);
 	}
 	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
-	add_content_length(body.size());
-
-	return 200;
-}
-
-int response::method_is_trace(const std::string &uri, const request &req, const parser &pars)
-{
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
-	struct stat file_stat; //information about file
-	int ret = check_path(path, file_stat, req, pars);
-	if (ret != 0)
-		return ret;
-	body = req.get_body();
-	header.clear();
-	message::header_type header_rcv = req.get_header();
-	for (message::header_type::iterator it = header_rcv.begin(); it != header_rcv.end(); ++it)
-		header.insert(value_type(it->first, it->second));
-	header.erase(CONTENT_TYPE);
-	header.erase(CONTENT_LENGTH);
-	add_content_type(MESSAGE_HTTP);
 	add_content_length(body.size());
 
 	return 200;

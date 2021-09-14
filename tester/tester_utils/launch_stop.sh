@@ -48,7 +48,6 @@ launch_server()
 		docker stop $CONTAINER_NAME
         exit 1
     fi
-
 }
 
 #launch_multi_server "config_dir for nginx"

@@ -107,6 +107,7 @@ class response : public message
 		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
 		void				add_www_autentificate(const parser &pars, const std::string &path); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
+		void				add_connection(int status, const request &req);
 		int					add_body(const std::string &path);
 
 

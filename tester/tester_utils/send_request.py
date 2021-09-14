@@ -17,12 +17,13 @@ def client(txt, argv) :
 		return ""
 
 def main(argv) :
-	fd = open(argv[0], "r") # ouvre le fichier en parametre
-	if fd == -1 :
+	try :
+		fd = open(argv[0], "r") # ouvre le fichier en parametre
+		txt1 = fd.read() # l'affiche
+		txt2 = client(txt1, argv[1:])
+		print(txt2)
+	except :
 		print("ERROR : fd")
-
-	txt1 = fd.read() # l'affiche
-	txt2 = client(txt1, argv[1:])
 
 if len(sys.argv) < 4 :
 	print("ERROR : need an argument")

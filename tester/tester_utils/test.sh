@@ -45,7 +45,7 @@ test_put()
 	get_response "7" "$NGINX_IP" "$NGINX_PORT" "PUT"  "${@:3:$PUT_OPTIONS}"
 	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 
-    rm -f ./srcs$PUT_OPTIONS > /dev/null #ignore if there is no permission
+    rm -f ./srcs/$3 > /dev/null #ignore if there is no permission
 
 
 	#TEST FIRST PUT
@@ -57,7 +57,7 @@ test_put()
 	get_response "17" "$WEBSERV_IP" "$WEBSERV_PORT" "PUT"  "${@:3:$PUT_OPTIONS}"
 	get_response "19" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 
-	rm -f ./srcs$PUT_OPTIONS >/dev/null #ignore if there is no permission
+	rm -f ./srcs/$3 >/dev/null #ignore if there is no permission
 
 
 	print_diff 1 11 21 $1 GET_BEFORE_PUT_1 "$3" "${@:$GET_OPTIONS}"
@@ -127,16 +127,13 @@ test_syntax()
 	declare WS_BODY=$TMP6
 
 
-	python $SEND_REQUEST_PY $1 $NGINX_IP $NGINX_PORT > $NG_REP
-	python $SPLIT_RESPONSE_PY $NG_REP $NG_HEAD $NG_BODY
+	python $SEND_REQUEST_PY "$1" "$NGINX_IP" "$NGINX_PORT" > "$NG_REP"
+	python $SPLIT_RESPONSE_PY "$NG_REP" "$NG_HEAD" "$NG_BODY"
 
-
-	python $SEND_REQUEST_PY $1 $WEBSERV_IP $WEBSERV_PORT > $WS_REP
-	python $SPLIT_RESPONSE_PY $WS_REP  $WS_BODY$WS_HEAD
+	python $SEND_REQUEST_PY "$1" "$WEBSERV_IP" "$WEBSERV_PORT" > "$WS_REP"
+	python $SPLIT_RESPONSE_PY "$WS_REP" "$WS_HEAD" "$WS_BODY"
 
 	print_diff 2 5 7 "$@"
-
-	sleep 20
 
 	clear_x_tmpfile TMP 8
 }
