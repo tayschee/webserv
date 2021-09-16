@@ -104,7 +104,7 @@ class response : public message
 		void				add_content_type(const std::string &file, const request &req); //Content-type
 		void				add_content_type(const std::string &file); //Content-type without precise charset
 		void				add_content_language(const std::string &language); //Content-Language
-		void				add_transfert_encoding(const std::string &file); //Transfert-Encoding
+		void				add_transfert_encoding(); //Transfert-Encoding
 		void				add_www_autentificate(const parser &pars, const std::string &path); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
 		void				add_connection(int status, const request &req);

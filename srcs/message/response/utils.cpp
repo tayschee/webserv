@@ -115,7 +115,9 @@ bool			response::is_acces(const struct stat &file) const
 	// IXOTH:  printf("les autres ont le droit d'exécution\n");
 	if (!(file.st_mode & S_IRUSR)) // check read
 		return (403);
-	// if (!(file.st_mode & S_IWUSR)) // check write
+	if (!(file.st_mode & S_IWUSR)) // check write
+		return (403);
+	// if (!(file.st_mode & S_IRWXU)) // ALL
 	// 	return (403);
 	// if (!(file.st_mode & S_IXUSR)) // check execution
 	// 	return (403);
@@ -182,7 +184,37 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 	(void)req;
 	(void)pars;
 	errno = 0;
+	std::string tmp;
 
+	tmp = path;
+	size_t beg = 0;
+	if (path.find("/") != std::string::npos)
+		tmp = path.substr(beg, path.find_first_of("/") + 1);
+
+	while (!tmp.empty())
+	{
+		if (lstat(tmp.c_str(), &file_stat) < 0)
+		{
+			if (errno == EACCES)
+			{
+				std::cout << " EACCESS !!!!!!!! \n";
+				return 403;
+			}
+		}
+		if (is_acces(file_stat))
+		{
+			std::cout << " ACCESS !!!!!!!! \n";
+			return 403;
+		}
+		beg = tmp.size();
+		if (path.size() == tmp.size())
+			break;
+		if (path.find("/", beg) != std::string::npos)
+			tmp = path.substr(0, path.find_first_of("/", beg) + 1);
+		else
+			tmp = path;	
+	}
+	errno = 0;
 	if (lstat(path.c_str(), &file_stat) < 0)
 	{
 		if (errno == ENOENT)
@@ -190,16 +222,6 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 			std::cout << " ENOENT !!!!!!!! \n";
 			return 404;
 		}
-		if (errno == EACCES)
-		{
-			std::cout << " EACCESS !!!!!!!! \n";
-			return 403;
-		}
-	}
-	if (is_acces(file_stat))
-	{
-		std::cout << " ACCESS !!!!!!!! \n";
-	 	return 403;
 	}
 	return (0);
 }
@@ -344,15 +366,8 @@ int		response::sent(int fd, request &req, const std::string &hf_sep, const std::
 {
 	std::string resp_str;
 	(void)req;
-	/*if (req.get_method() == HEAD)
-	{
-		if (header.find(CONTENT_LENGTH) != header.end() && header.find(CONTENT_LENGTH)->second == "0")
-			header.erase(CONTENT_LENGTH);
-		if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
-		{
-			header.erase(LAST_MODIFIED);
-		}
-	}*/
+	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+		header.erase(LAST_MODIFIED);
 
 	resp_str = get(hf_sep, eol);
     write(fd, resp_str.c_str(), resp_str.size());

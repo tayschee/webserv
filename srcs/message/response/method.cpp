@@ -4,6 +4,7 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 {
 	int ret = method_is_get(uri, req, pars);
 	body.clear();
+	header.erase("Transfer-Encoding");
 	return ret; //value of OK response
 }
 
@@ -12,11 +13,14 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 	struct stat file_stat; //information about file
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	int ret = 0;
+
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
+
 	ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
+
 	std::string type = find_media_type(get_extension(path), pars);
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
@@ -39,7 +43,9 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 				}
 			}
 			else
+			{
 				return 404;
+			}
 		}
 		catch (const std::exception &e)
 		{
@@ -47,7 +53,10 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		}
 		std::string add = (path.substr(pars.get_block(BLOCK_LOCATION, uri).conf.find(BLOCK_ROOT)->second[0].size()));
 		body = index(path, uri, add);
+		add_transfert_encoding();
 		add_content_type(TEXT_HTML);
+
+		return 200;
 	}
 	else if (is_cgi(get_extension(path), pars, req.get_method()))
 	{
@@ -76,10 +85,29 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	int ret;
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
+	struct stat file_stat;
+	int ret = 0;
+
+	std::string root = pars.get_block(BLOCK_LOCATION, uri).args[0];
+
+	ret = check_path(path, file_stat, req, pars);
+	if (ret == 403)
+		if (root == uri || root + "/" == uri)
+			return 500;
+	if (ret != 0)
+		return ret;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
+	if (is_cgi(get_extension(path), pars, req.get_method()))
+	{
+		first_line.status = 42;
+		method_function method = existing_method.find(POST)->second;
+		return (this->*method)(path, req, pars); //change for if there is redirect
+
+		// status = (this->*method)(path, req, pars); //change for if there is redirect
+	}
+
 	ret = del_content(path, req, pars, 0);
 	if (ret != 0)
 		return ret;
@@ -116,7 +144,7 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 				return 403;
 			}
 			/* this header field are specific if file didn't exists */
-			add_content_length(0);
+			//add_content_length(0);
 			close(fd);
 		}
 	}
@@ -149,6 +177,7 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 int response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path;
+	struct stat file_stat;
 
 	if (first_line.status == 42)
 		path = uri;
@@ -157,6 +186,9 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
+	ret = check_path(path, file_stat, req, pars);
+	if (ret != 0)
+		return 404;
 
 	if (is_cgi(get_extension(path), pars, req.get_method()))
 	{
@@ -165,7 +197,9 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 			return ft_atoi<int>(body);
 	}
 	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
-	add_content_length(body.size());
+	if (req.get_method() != HEAD)
+		add_transfert_encoding();
+	// add_content_length(body.size());
 
 	return 200;
 }

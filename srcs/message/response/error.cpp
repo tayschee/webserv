@@ -27,11 +27,15 @@ void response::error_special_case(const request &req)
 
 void response::default_error(int error_status, const request &req, const parser &pars)
 {
+	std::cout << "STATUS = " << error_status << std::endl;
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
 	std::string new_str(ft_itoa(error_status) + " " + find_status_string(error_status));
 	if (error_status == 401)
+	{
+		add_www_autentificate(pars, req.get_uri());
 		new_str = "401 Authorization Required";
+	}
 	size_t size_new_str(new_str.size());
 	body = DEFAULT_ERROR_FILE;
 	while ((pos = body.find(STR_TO_REPLACE, pos)) != body.npos)

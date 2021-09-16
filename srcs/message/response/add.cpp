@@ -34,7 +34,8 @@ void			response::add_content_length(const off_t &bytes_size) //off_t == long lon
 {
 	/*Warning dont know of type off_t is larger than int*/
 	header.erase(CONTENT_LENGTH);
-	header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
+	if (bytes_size > 0)
+		header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
 }
 
 void				response::add_www_autentificate(const parser &pars, const std::string &path)
@@ -85,23 +86,34 @@ void				response::add_content_language(const std::string &language)
 
 void				response::add_connection(int status, const request &req)
 {
-	size_t i = 0;
-	int invalid_rep[] = {400, 500, -1};
+	// size_t i = 0;
+	// int invalid_rep[] = {400, 500, -1,};
 
-	while (invalid_rep[i] != -1)
+	// while (invalid_rep[i] != -1)
+	// {
+	// 	if (status == invalid_rep[i])
+	// 		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
+	// 	++i;
+	// }
+	if (status >= 500)
 	{
-		if (status == invalid_rep[i])
-			header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
-		++i;
+		request &tmp = (request&)req;
+		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
+		tmp.set_connexion(ft_itoa(status));
 	}
 	
-	request::header_type::const_iterator it = req.get_header().find(CONNECTION);
-	request::header_type::const_iterator end = req.get_header().end();
+	// request::header_type::const_iterator it = req.get_header().find(CONNECTION);
+	// request::header_type::const_iterator end = req.get_header().end();
 
-	if (it == end)
+	// if (it == end)
 		header.insert(std::pair<std::string, std::string>(CONNECTION, "keep-alive"));
-	else
-		header.insert(std::pair<std::string, std::string>(CONNECTION, it->second));
+	// else
+	// 	header.insert(std::pair<std::string, std::string>(CONNECTION, it->second));
+}
+
+void				response::add_transfert_encoding() //Transfert-Encoding
+{
+	header.insert(std::pair<std::string, std::string>("Transfer-Encoding", "chunked"));
 }
 
 /* this time, this is not a field it's the body of response which be add */

@@ -8,7 +8,10 @@ test ()
 #test_method "name of config" "METHOD" "uri" ...(other options)
 test_method ()
 {
+	chown www-data:www-data -R srcs
+
 	get_response "1" "$NGINX_IP" "$NGINX_PORT" "${@:2}"
+	chown $USER:$USER -R srcs
 	get_response "3" "$WEBSERV_IP" "$WEBSERV_PORT" "${@:2}"
  
 	print_diff 1 3 5 "${@}"
@@ -36,6 +39,8 @@ test_put()
 	declare GET_OPTIONS=$(expr "$2" + 1)
 	declare PUT_OPTIONS=$(expr "$2" - 2)
 
+	chown www-data:www-data -R srcs
+
 	#TEST FIRST PUT
 	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
 	get_response "3" "$NGINX_IP" "$NGINX_PORT" "PUT" "${@:3:$PUT_OPTIONS}"
@@ -47,6 +52,7 @@ test_put()
 
     rm -f ./srcs/$3 > /dev/null #ignore if there is no permission
 
+	chown $USER:$USER -R srcs
 
 	#TEST FIRST PUT
 	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$3" "${@:$GET_OPTIONS}"
@@ -78,6 +84,8 @@ test_delete()
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
 
+	chown www-data:www-data -R srcs
+
 	#TEST FIRST DELETE
 	get_response "1" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 	get_response "3" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
@@ -87,11 +95,14 @@ test_delete()
 	get_response "7" "$NGINX_IP" "$NGINX_PORT" "DELETE" "${@:6:$DELETE_OPTIONS}"
 	get_response "9" "$NGINX_IP" "$NGINX_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
 
+	chown $USER:$USER -R srcs
+
 	chmod 777 "$5"
     rm -rf $5 > /dev/null #ignore if there is no permission
 
 	cp -r "$3" "$5"
 	chmod "$4" "$5"
+	echo chmod $4 $5
 
 	#TEST FIRST DELETE
 	get_response "11" "$WEBSERV_IP" "$WEBSERV_PORT" "GET" "$6" "${@:$GET_OPTIONS}"
@@ -126,9 +137,12 @@ test_syntax()
 	declare WS_HEAD=$TMP5
 	declare WS_BODY=$TMP6
 
+	chown www-data:www-data -R srcs
 
 	python $SEND_REQUEST_PY "$1" "$NGINX_IP" "$NGINX_PORT" > "$NG_REP"
 	python $SPLIT_RESPONSE_PY "$NG_REP" "$NG_HEAD" "$NG_BODY"
+
+	chown $USER:$USER -R srcs
 
 	python $SEND_REQUEST_PY "$1" "$WEBSERV_IP" "$WEBSERV_PORT" > "$WS_REP"
 	python $SPLIT_RESPONSE_PY "$WS_REP" "$WS_HEAD" "$WS_BODY"

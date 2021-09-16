@@ -24,6 +24,7 @@ def main(argv):
 		fd.close()
 		txt = txt.split("\r\n\r\n", 1)
 		if (len(txt) >= 1):
+			txt[0] += "\r\n\r\n"
 			header_fd.write(txt[0])
 		header_fd.write("\n")
 
