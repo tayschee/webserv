@@ -21,7 +21,7 @@ const std::string				&response::get_version() const
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
-	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, TRANSFERT_ENCODING, LAST_MODIFIED, LOCATION, CONNECTION};
+	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, TRANSFERT_ENCODING, LAST_MODIFIED, CONNECTION, LOCATION};
 	std::vector<std::string> vec(list, &list[8]);
 
 	std::string resp_str;
@@ -45,7 +45,7 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 		++it;
 	}
 	resp_str += eol;
-	if (header.find("Transfer-Encoding") == header.end())
+	if (header.find(TRANSFERT_ENCODING) == header.end())
 		resp_str += body;
 	else
 		resp_str += ft_itoa_base(body.size(), HEXADECIMAL_BASE) + eol + body + "\r\n0\r\n\r\n";
