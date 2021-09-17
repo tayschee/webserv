@@ -11,7 +11,8 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 	if (pars_it == pars_list.end() || (first_line.status = req.validity()) != 200)
 	{
 		main_header();
-		first_line.status = error_response(first_line.status, req);
+		first_line.status = error_response(first_line.status, req, *pars_it);
+		// first_line.status = generate_response(path_info, pars, req, method);
 	}
 	else
 	{
@@ -33,7 +34,10 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 	}
 	add_connection(first_line.status, req);
 	first_line.status_string = find_status_string(first_line.status);
-	first_line.version = req.get_version();
+	if (!req.get_version().empty())
+		first_line.version = req.get_version();
+	if (first_line.version.empty())
+		first_line.version = HTTP_VERSION;
 }
 
 response::~response(){};

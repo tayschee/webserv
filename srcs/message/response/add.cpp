@@ -86,29 +86,13 @@ void				response::add_content_language(const std::string &language)
 
 void				response::add_connection(int status, const request &req)
 {
-	// size_t i = 0;
-	// int invalid_rep[] = {400, 500, -1,};
-
-	// while (invalid_rep[i] != -1)
-	// {
-	// 	if (status == invalid_rep[i])
-	// 		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
-	// 	++i;
-	// }
-	if (status >= 500)
+	if (status >= 500 || status == 400)
 	{
 		request &tmp = (request&)req;
 		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
 		tmp.set_connexion(ft_itoa(status));
 	}
-	
-	// request::header_type::const_iterator it = req.get_header().find(CONNECTION);
-	// request::header_type::const_iterator end = req.get_header().end();
-
-	// if (it == end)
-		header.insert(std::pair<std::string, std::string>(CONNECTION, "keep-alive"));
-	// else
-	// 	header.insert(std::pair<std::string, std::string>(CONNECTION, it->second));
+	header.insert(std::pair<std::string, std::string>(CONNECTION, "keep-alive"));
 }
 
 void				response::add_transfert_encoding() //Transfert-Encoding

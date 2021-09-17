@@ -349,8 +349,8 @@ int		response::sent(int fd, request &req, const std::string &hf_sep, const std::
 {
 	std::string resp_str;
 	(void)req;
-	//if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
-	//	header.erase(LAST_MODIFIED);
+	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+		header.erase(LAST_MODIFIED);
 
 	resp_str = get(hf_sep, eol);
     write(fd, resp_str.c_str(), resp_str.size());

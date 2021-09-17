@@ -1,26 +1,280 @@
 
+----------------------  error GET /  ------------------------
+
+ETag: "61449163-16271"							      <
+Accept-Ranges: bytes							      <
+---------------------- error   HEAD   / ------------------------
+
+ETag: "61449163-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+---------------------- error   HEAD   /secret/ ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+---------------------- error   HEAD   /secret/ ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  error GET /bad_secret/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:46 GMT							      |	Date: Fri, 17 Sep 2021 13:32:47 GMT								
+----------------------  index_off GET /  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:47 GMT							      |	Date: Fri, 17 Sep 2021 13:32:48 GMT								
+----------------------  index_off GET /html/3.html  ------------------------
+
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+---------------------- index_off   HEAD   /html/3.html ------------------------
+
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect GET /html/  ------------------------
+
+ETag: "61449163-232b"							      <
+---------------------- redirect   HEAD   /html/ ------------------------
+
+ETag: "61449163-232b"							      <
+----------------------  redirect GET /error/  ------------------------
+
+ETag: "61449163-232b"							      <
+Accept-Ranges: bytes							      <
+---------------------- redirect   HEAD   /error/ ------------------------
+
+ETag: "61449163-232b"							      <
+Accept-Ranges: bytes							      <
+----------------------  redirect GET /dest/  ------------------------
+
+ETag: "61449163-174ab7"							      <
+Accept-Ranges: bytes							      <
+---------------------- redirect   HEAD   /dest/ ------------------------
+
+ETag: "61449163-174ab7"							      <
+Accept-Ranges: bytes							      <
 ----------------------  redirect GET /php/  ------------------------
 
-Connection: keep-alive							      <
-							      >	Connection: keep-alive								
----------------------- redirect   HEAD   /php/ ------------------------
+Date: Fri, 17 Sep 2021 13:32:49 GMT							      |	Date: Fri, 17 Sep 2021 13:32:50 GMT								
+----------------------  redirect GET /html/3.html -L  ------------------------
 
-Connection: keep-alive							      <
-							      >	Connection: keep-alive								
+ETag: "61449163-232b"							      <
+---------------------- redirect   HEAD   /html/3.html ------------------------
+
+ETag: "61449163-232b"							      <
+----------------------  same_error GET /  ------------------------
+
+ETag: "61449163-13e3"							      <
+---------------------- same_error   HEAD   / ------------------------
+
+ETag: "61449163-13e3"							      <
+----------------------  same_error GET /ffgsdgsfgsg  ------------------------
+
+ETag: "61449163-13e3"							      <
+---------------------- same_error   HEAD   /ffgsdgsfgsg ------------------------
+
+ETag: "61449163-13e3"							      <
+----------------------  same_error GET /secret/secret.html  ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+---------------------- same_error   HEAD   /secret/secret.html ------------------------
+
+ETag: "61449164-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  same_error GET /html/3.html  ------------------------
+
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+---------------------- same_error   HEAD   /html/3.html ------------------------
+
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET /  ------------------------
+
+1,20c1,20
+< <html>
+< <head><title>Index of /</title></head>
+< <body>
+< <h1>Index of /</h1><hr><pre><a href="../">../</a>
+< <a href="dest/">dest/</a>                                              17-Sep-2021 13:00                   -
+< <a href="dir_to_copy/">dir_to_copy/</a>                                       17-Sep-2021 13:00                   -
+< <a href="error/">error/</a>                                             17-Sep-2021 13:00                   -
+< <a href="gif/">gif/</a>                                               17-Sep-2021 13:00                   -
+< <a href="html/">html/</a>                                              17-Sep-2021 13:00                   -
+< <a href="jpeg/">jpeg/</a>                                              17-Sep-2021 13:00                   -
+< <a href="php/">php/</a>                                               17-Sep-2021 13:00                   -
+< <a href="png/">png/</a>                                               17-Sep-2021 13:00                   -
+< <a href="private/">private/</a>                                           17-Sep-2021 13:00                   -
+< <a href="redirect/">redirect/</a>                                          17-Sep-2021 13:00                   -
+< <a href="secret/">secret/</a>                                            17-Sep-2021 13:00                   -
+< <a href="spoiler/">spoiler/</a>                                           17-Sep-2021 13:00                   -
+< <a href="test_autoindex/">test_autoindex/</a>                                    17-Sep-2021 13:00                   -
+< </pre><hr></body>
+< </html>
+< 
+---
+> <html>
+> 	<head><title>Index of /</title></head>
+> 	<body bgcolor="white">
+> 		<h1>Index of /</h1>
+> 		<hr><pre><a href="../">../</a>
+> <a href="/gif/">gif/</a>
+> <a href="/test_autoindex/">test_autoindex/</a>
+> <a href="/error/">error/</a>
+> <a href="/redirect/">redirect/</a>
+> <a href="/jpeg/">jpeg/</a>
+> <a href="/php/">php/</a>
+> <a href="/secret/">secret/</a>
+> <a href="/dest/">dest/</a>
+> <a href="/html/">html/</a>
+> <a href="/spoiler/">spoiler/</a>
+> <a href="/dir_to_copy/">dir_to_copy/</a>
+> <a href="/png/">png/</a>
+> <a href="/private/">private/</a>
+> </pre><hr></body>
+> 	</html>
+----------------------  multiple_location GET /gif/  ------------------------
+
+ETag: "61449163-23cf4"							      <
+Accept-Ranges: bytes							      <
+---------------------- multiple_location   HEAD   /gif/ ------------------------
+
+ETag: "61449163-23cf4"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET /html/  ------------------------
+
+ETag: "61449163-24"							      <
+Accept-Ranges: bytes							      <
+---------------------- multiple_location   HEAD   /html/ ------------------------
+
+ETag: "61449163-24"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET /jpeg/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:51 GMT							      |	Date: Fri, 17 Sep 2021 13:32:52 GMT								
+ETag: "61449163-16271"							      <
+Accept-Ranges: bytes							      <
+---------------------- multiple_location   HEAD   /jpeg/ ------------------------
+
+ETag: "61449163-16271"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET /html/3.html  ------------------------
+
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+---------------------- multiple_location   HEAD   /html/3.html ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:53 GMT							      |	Date: Fri, 17 Sep 2021 13:32:54 GMT								
+ETag: "61449163-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_BEFORE_PUT_1 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:55 GMT							      |	Date: Fri, 17 Sep 2021 13:32:56 GMT								
+----------------------  multiple_location PUT_1 /secret/new.html -d <p>secret</p> -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:55 GMT							      |	Date: Fri, 17 Sep 2021 13:32:56 GMT								
+----------------------  multiple_location GET_AFTER_PUT_1 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:55 GMT							      |	Date: Fri, 17 Sep 2021 13:32:56 GMT								
+----------------------  multiple_location PUT_2 /secret/new.html -d <p>secret</p> -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:55 GMT							      |	Date: Fri, 17 Sep 2021 13:32:56 GMT								
+----------------------  multiple_location GET_AFTER_PUT_2 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:55 GMT							      |	Date: Fri, 17 Sep 2021 13:32:56 GMT								
+----------------------  multiple_location GET_AFTER_PUT_1 /spoiler/new.html  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:56 GMT							      |	Date: Fri, 17 Sep 2021 13:32:57 GMT								
+----------------------  multiple_location PUT_2 /spoiler/new.html -d <p>spoil</p>  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:56 GMT							      |	Date: Fri, 17 Sep 2021 13:32:57 GMT								
+----------------------  multiple_location GET_AFTER_PUT_2 /spoiler/new.html  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:56 GMT							      |	Date: Fri, 17 Sep 2021 13:32:57 GMT								
+----------------------  multiple_location GET_BEFORE_PUT_1 /html/new.html  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:58 GMT							      |	Date: Fri, 17 Sep 2021 13:32:59 GMT								
+----------------------  multiple_location PUT_1 /html/new.html -d <p>YES</p>  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:58 GMT							      |	Date: Fri, 17 Sep 2021 13:32:59 GMT								
+----------------------  multiple_location GET_AFTER_PUT_1 /html/new.html  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:58 GMT							      |	Date: Fri, 17 Sep 2021 13:32:59 GMT								
+----------------------  multiple_location PUT_2 /put_and_delete/page.html -d <p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:59 GMT							      |	Date: Fri, 17 Sep 2021 13:33:00 GMT								
+----------------------  multiple_location GET_AFTER_PUT_2 /put_and_delete/page.html  ------------------------
+
+Date: Fri, 17 Sep 2021 13:32:59 GMT							      |	Date: Fri, 17 Sep 2021 13:33:00 GMT								
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/html/1.html  ------------------------
+
+ETag: "6144990c-22"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+ETag: "6144990e-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Last-Modified: Fri, 17 Sep 2021 13:33:02 GMT							      |	Last-Modified: Fri, 17 Sep 2021 13:33:03 GMT								
+ETag: "6144990e-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Last-Modified: Fri, 17 Sep 2021 13:33:02 GMT							      |	Last-Modified: Fri, 17 Sep 2021 13:33:03 GMT								
+ETag: "6144990e-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+
+Last-Modified: Fri, 17 Sep 2021 13:33:02 GMT							      |	Last-Modified: Fri, 17 Sep 2021 13:33:03 GMT								
+ETag: "6144990e-5b"							      <
+Accept-Ranges: bytes							      <
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:03 GMT							      |	Date: Fri, 17 Sep 2021 13:33:04 GMT								
+----------------------  multiple_location DELETE_1 /dir_to_delete/gif/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:03 GMT							      |	Date: Fri, 17 Sep 2021 13:33:04 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:03 GMT							      |	Date: Fri, 17 Sep 2021 13:33:04 GMT								
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:04 GMT							      |	Date: Fri, 17 Sep 2021 13:33:05 GMT								
+----------------------  multiple_location DELETE_1 /dir_to_delete/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:04 GMT							      |	Date: Fri, 17 Sep 2021 13:33:05 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:04 GMT							      |	Date: Fri, 17 Sep 2021 13:33:05 GMT								
+----------------------  multiple_location DELETE_2 /dir_to_delete/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:04 GMT							      |	Date: Fri, 17 Sep 2021 13:33:05 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:04 GMT							      |	Date: Fri, 17 Sep 2021 13:33:05 GMT								
+----------------------  multiple_location DELETE_1 /dir_to_delete/php/1.php  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:05 GMT							      |	Date: Fri, 17 Sep 2021 13:33:06 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/php/1.php  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:05 GMT							      |	Date: Fri, 17 Sep 2021 13:33:06 GMT								
+----------------------  multiple_location DELETE_2 /dir_to_delete/php/1.php  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:05 GMT							      |	Date: Fri, 17 Sep 2021 13:33:06 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/php/1.php  ------------------------
+
+Date: Fri, 17 Sep 2021 13:33:05 GMT							      |	Date: Fri, 17 Sep 2021 13:33:06 GMT								
 ----------------------  syntax_ressources/wrong_uri  ------------------------
 
-Date: Fri, 17 Sep 2021 11:49:13 GMT							      |	Date: Fri, 17 Sep 2021 11:49:14 GMT								
-Content-Type: text/html							      |	Connection: keep-alive								
-Content-Length: 157							      <
-Connection: close							      <
-1,7d0
-< <html>
-< <head><title>400 Bad Request</title></head>
-< <body>
-< <center><h1>400 Bad Request</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
+Date: Fri, 17 Sep 2021 13:33:07 GMT							      |	Date: Fri, 17 Sep 2021 13:33:08 GMT								
 ----------------------  syntax_ressources/line_feed  ------------------------
 
 1,21c1,21
@@ -29,19 +283,19 @@ Connection: close							      <
 < <head><title>Index of /</title></head>
 < <body>
 < <h1>Index of /</h1><hr><pre><a href="../">../</a>
-< <a href="dest/">dest/</a>                                              16-Sep-2021 14:58                   -
-< <a href="dir_to_copy/">dir_to_copy/</a>                                       16-Sep-2021 14:58                   -
-< <a href="error/">error/</a>                                             16-Sep-2021 14:58                   -
-< <a href="gif/">gif/</a>                                               16-Sep-2021 14:58                   -
-< <a href="html/">html/</a>                                              16-Sep-2021 14:58                   -
-< <a href="jpeg/">jpeg/</a>                                              16-Sep-2021 14:58                   -
-< <a href="php/">php/</a>                                               16-Sep-2021 14:58                   -
-< <a href="png/">png/</a>                                               16-Sep-2021 14:58                   -
-< <a href="private/">private/</a>                                           16-Sep-2021 14:58                   -
-< <a href="redirect/">redirect/</a>                                          16-Sep-2021 14:58                   -
-< <a href="secret/">secret/</a>                                            16-Sep-2021 14:58                   -
-< <a href="spoiler/">spoiler/</a>                                           16-Sep-2021 14:58                   -
-< <a href="test_autoindex/">test_autoindex/</a>                                    16-Sep-2021 14:58                   -
+< <a href="dest/">dest/</a>                                              17-Sep-2021 13:00                   -
+< <a href="dir_to_copy/">dir_to_copy/</a>                                       17-Sep-2021 13:00                   -
+< <a href="error/">error/</a>                                             17-Sep-2021 13:00                   -
+< <a href="gif/">gif/</a>                                               17-Sep-2021 13:00                   -
+< <a href="html/">html/</a>                                              17-Sep-2021 13:00                   -
+< <a href="jpeg/">jpeg/</a>                                              17-Sep-2021 13:00                   -
+< <a href="php/">php/</a>                                               17-Sep-2021 13:00                   -
+< <a href="png/">png/</a>                                               17-Sep-2021 13:00                   -
+< <a href="private/">private/</a>                                           17-Sep-2021 13:00                   -
+< <a href="redirect/">redirect/</a>                                          17-Sep-2021 13:00                   -
+< <a href="secret/">secret/</a>                                            17-Sep-2021 13:00                   -
+< <a href="spoiler/">spoiler/</a>                                           17-Sep-2021 13:00                   -
+< <a href="test_autoindex/">test_autoindex/</a>                                    17-Sep-2021 13:00                   -
 < </pre><hr></body>
 < </html>
 < 
@@ -52,35 +306,21 @@ Connection: close							      <
 > 	<body bgcolor="white">
 > 		<h1>Index of /</h1>
 > 		<hr><pre><a href="../">../</a>
-> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/gif/">gif/</a>
-> <a href="/dir_to_copy/">dir_to_copy/</a>
-> <a href="/html/">html/</a>
+> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/error/">error/</a>
-> <a href="/dest/">dest/</a>
+> <a href="/redirect/">redirect/</a>
 > <a href="/jpeg/">jpeg/</a>
+> <a href="/php/">php/</a>
+> <a href="/secret/">secret/</a>
+> <a href="/dest/">dest/</a>
+> <a href="/html/">html/</a>
+> <a href="/spoiler/">spoiler/</a>
+> <a href="/dir_to_copy/">dir_to_copy/</a>
 > <a href="/png/">png/</a>
 > <a href="/private/">private/</a>
-> <a href="/spoiler/">spoiler/</a>
-> <a href="/redirect/">redirect/</a>
-> <a href="/secret/">secret/</a>
-> <a href="/php/">php/</a>
 > </pre><hr></body>
 > 	</html>
-----------------------  syntax_ressources/line_feed2  ------------------------
-
-Date: Fri, 17 Sep 2021 11:49:14 GMT							      |	Date: Fri, 17 Sep 2021 11:49:15 GMT								
-Content-Type: text/html							      |	Connection: keep-alive								
-Content-Length: 157							      <
-Connection: close							      <
-1,7d0
-< <html>
-< <head><title>400 Bad Request</title></head>
-< <body>
-< <center><h1>400 Bad Request</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
 ----------------------  syntax_ressources/multiple_space  ------------------------
 
 1,21c1,21
@@ -89,19 +329,19 @@ Connection: close							      <
 < <head><title>Index of /</title></head>
 < <body>
 < <h1>Index of /</h1><hr><pre><a href="../">../</a>
-< <a href="dest/">dest/</a>                                              16-Sep-2021 14:58                   -
-< <a href="dir_to_copy/">dir_to_copy/</a>                                       16-Sep-2021 14:58                   -
-< <a href="error/">error/</a>                                             16-Sep-2021 14:58                   -
-< <a href="gif/">gif/</a>                                               16-Sep-2021 14:58                   -
-< <a href="html/">html/</a>                                              16-Sep-2021 14:58                   -
-< <a href="jpeg/">jpeg/</a>                                              16-Sep-2021 14:58                   -
-< <a href="php/">php/</a>                                               16-Sep-2021 14:58                   -
-< <a href="png/">png/</a>                                               16-Sep-2021 14:58                   -
-< <a href="private/">private/</a>                                           16-Sep-2021 14:58                   -
-< <a href="redirect/">redirect/</a>                                          16-Sep-2021 14:58                   -
-< <a href="secret/">secret/</a>                                            16-Sep-2021 14:58                   -
-< <a href="spoiler/">spoiler/</a>                                           16-Sep-2021 14:58                   -
-< <a href="test_autoindex/">test_autoindex/</a>                                    16-Sep-2021 14:58                   -
+< <a href="dest/">dest/</a>                                              17-Sep-2021 13:00                   -
+< <a href="dir_to_copy/">dir_to_copy/</a>                                       17-Sep-2021 13:00                   -
+< <a href="error/">error/</a>                                             17-Sep-2021 13:00                   -
+< <a href="gif/">gif/</a>                                               17-Sep-2021 13:00                   -
+< <a href="html/">html/</a>                                              17-Sep-2021 13:00                   -
+< <a href="jpeg/">jpeg/</a>                                              17-Sep-2021 13:00                   -
+< <a href="php/">php/</a>                                               17-Sep-2021 13:00                   -
+< <a href="png/">png/</a>                                               17-Sep-2021 13:00                   -
+< <a href="private/">private/</a>                                           17-Sep-2021 13:00                   -
+< <a href="redirect/">redirect/</a>                                          17-Sep-2021 13:00                   -
+< <a href="secret/">secret/</a>                                            17-Sep-2021 13:00                   -
+< <a href="spoiler/">spoiler/</a>                                           17-Sep-2021 13:00                   -
+< <a href="test_autoindex/">test_autoindex/</a>                                    17-Sep-2021 13:00                   -
 < </pre><hr></body>
 < </html>
 < 
@@ -112,43 +352,42 @@ Connection: close							      <
 > 	<body bgcolor="white">
 > 		<h1>Index of /</h1>
 > 		<hr><pre><a href="../">../</a>
-> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/gif/">gif/</a>
-> <a href="/dir_to_copy/">dir_to_copy/</a>
-> <a href="/html/">html/</a>
+> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/error/">error/</a>
-> <a href="/dest/">dest/</a>
+> <a href="/redirect/">redirect/</a>
 > <a href="/jpeg/">jpeg/</a>
+> <a href="/php/">php/</a>
+> <a href="/secret/">secret/</a>
+> <a href="/dest/">dest/</a>
+> <a href="/html/">html/</a>
+> <a href="/spoiler/">spoiler/</a>
+> <a href="/dir_to_copy/">dir_to_copy/</a>
 > <a href="/png/">png/</a>
 > <a href="/private/">private/</a>
-> <a href="/spoiler/">spoiler/</a>
-> <a href="/redirect/">redirect/</a>
-> <a href="/secret/">secret/</a>
-> <a href="/php/">php/</a>
 > </pre><hr></body>
 > 	</html>
 ----------------------  syntax_ressources/space_and_tab  ------------------------
 
-Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:16 GMT								
 1,21c1,21
 < 638
 < <html>
 < <head><title>Index of /</title></head>
 < <body>
 < <h1>Index of /</h1><hr><pre><a href="../">../</a>
-< <a href="dest/">dest/</a>                                              16-Sep-2021 14:58                   -
-< <a href="dir_to_copy/">dir_to_copy/</a>                                       16-Sep-2021 14:58                   -
-< <a href="error/">error/</a>                                             16-Sep-2021 14:58                   -
-< <a href="gif/">gif/</a>                                               16-Sep-2021 14:58                   -
-< <a href="html/">html/</a>                                              16-Sep-2021 14:58                   -
-< <a href="jpeg/">jpeg/</a>                                              16-Sep-2021 14:58                   -
-< <a href="php/">php/</a>                                               16-Sep-2021 14:58                   -
-< <a href="png/">png/</a>                                               16-Sep-2021 14:58                   -
-< <a href="private/">private/</a>                                           16-Sep-2021 14:58                   -
-< <a href="redirect/">redirect/</a>                                          16-Sep-2021 14:58                   -
-< <a href="secret/">secret/</a>                                            16-Sep-2021 14:58                   -
-< <a href="spoiler/">spoiler/</a>                                           16-Sep-2021 14:58                   -
-< <a href="test_autoindex/">test_autoindex/</a>                                    16-Sep-2021 14:58                   -
+< <a href="dest/">dest/</a>                                              17-Sep-2021 13:00                   -
+< <a href="dir_to_copy/">dir_to_copy/</a>                                       17-Sep-2021 13:00                   -
+< <a href="error/">error/</a>                                             17-Sep-2021 13:00                   -
+< <a href="gif/">gif/</a>                                               17-Sep-2021 13:00                   -
+< <a href="html/">html/</a>                                              17-Sep-2021 13:00                   -
+< <a href="jpeg/">jpeg/</a>                                              17-Sep-2021 13:00                   -
+< <a href="php/">php/</a>                                               17-Sep-2021 13:00                   -
+< <a href="png/">png/</a>                                               17-Sep-2021 13:00                   -
+< <a href="private/">private/</a>                                           17-Sep-2021 13:00                   -
+< <a href="redirect/">redirect/</a>                                          17-Sep-2021 13:00                   -
+< <a href="secret/">secret/</a>                                            17-Sep-2021 13:00                   -
+< <a href="spoiler/">spoiler/</a>                                           17-Sep-2021 13:00                   -
+< <a href="test_autoindex/">test_autoindex/</a>                                    17-Sep-2021 13:00                   -
 < </pre><hr></body>
 < </html>
 < 
@@ -159,19 +398,19 @@ Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:
 > 	<body bgcolor="white">
 > 		<h1>Index of /</h1>
 > 		<hr><pre><a href="../">../</a>
-> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/gif/">gif/</a>
-> <a href="/dir_to_copy/">dir_to_copy/</a>
-> <a href="/html/">html/</a>
+> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/error/">error/</a>
-> <a href="/dest/">dest/</a>
+> <a href="/redirect/">redirect/</a>
 > <a href="/jpeg/">jpeg/</a>
+> <a href="/php/">php/</a>
+> <a href="/secret/">secret/</a>
+> <a href="/dest/">dest/</a>
+> <a href="/html/">html/</a>
+> <a href="/spoiler/">spoiler/</a>
+> <a href="/dir_to_copy/">dir_to_copy/</a>
 > <a href="/png/">png/</a>
 > <a href="/private/">private/</a>
-> <a href="/spoiler/">spoiler/</a>
-> <a href="/redirect/">redirect/</a>
-> <a href="/secret/">secret/</a>
-> <a href="/php/">php/</a>
 > </pre><hr></body>
 > 	</html>
 ----------------------  syntax_ressources/tab  ------------------------
@@ -182,19 +421,19 @@ Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:
 < <head><title>Index of /</title></head>
 < <body>
 < <h1>Index of /</h1><hr><pre><a href="../">../</a>
-< <a href="dest/">dest/</a>                                              16-Sep-2021 14:58                   -
-< <a href="dir_to_copy/">dir_to_copy/</a>                                       16-Sep-2021 14:58                   -
-< <a href="error/">error/</a>                                             16-Sep-2021 14:58                   -
-< <a href="gif/">gif/</a>                                               16-Sep-2021 14:58                   -
-< <a href="html/">html/</a>                                              16-Sep-2021 14:58                   -
-< <a href="jpeg/">jpeg/</a>                                              16-Sep-2021 14:58                   -
-< <a href="php/">php/</a>                                               16-Sep-2021 14:58                   -
-< <a href="png/">png/</a>                                               16-Sep-2021 14:58                   -
-< <a href="private/">private/</a>                                           16-Sep-2021 14:58                   -
-< <a href="redirect/">redirect/</a>                                          16-Sep-2021 14:58                   -
-< <a href="secret/">secret/</a>                                            16-Sep-2021 14:58                   -
-< <a href="spoiler/">spoiler/</a>                                           16-Sep-2021 14:58                   -
-< <a href="test_autoindex/">test_autoindex/</a>                                    16-Sep-2021 14:58                   -
+< <a href="dest/">dest/</a>                                              17-Sep-2021 13:00                   -
+< <a href="dir_to_copy/">dir_to_copy/</a>                                       17-Sep-2021 13:00                   -
+< <a href="error/">error/</a>                                             17-Sep-2021 13:00                   -
+< <a href="gif/">gif/</a>                                               17-Sep-2021 13:00                   -
+< <a href="html/">html/</a>                                              17-Sep-2021 13:00                   -
+< <a href="jpeg/">jpeg/</a>                                              17-Sep-2021 13:00                   -
+< <a href="php/">php/</a>                                               17-Sep-2021 13:00                   -
+< <a href="png/">png/</a>                                               17-Sep-2021 13:00                   -
+< <a href="private/">private/</a>                                           17-Sep-2021 13:00                   -
+< <a href="redirect/">redirect/</a>                                          17-Sep-2021 13:00                   -
+< <a href="secret/">secret/</a>                                            17-Sep-2021 13:00                   -
+< <a href="spoiler/">spoiler/</a>                                           17-Sep-2021 13:00                   -
+< <a href="test_autoindex/">test_autoindex/</a>                                    17-Sep-2021 13:00                   -
 < </pre><hr></body>
 < </html>
 < 
@@ -205,27 +444,29 @@ Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:
 > 	<body bgcolor="white">
 > 		<h1>Index of /</h1>
 > 		<hr><pre><a href="../">../</a>
-> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/gif/">gif/</a>
-> <a href="/dir_to_copy/">dir_to_copy/</a>
-> <a href="/html/">html/</a>
+> <a href="/test_autoindex/">test_autoindex/</a>
 > <a href="/error/">error/</a>
-> <a href="/dest/">dest/</a>
+> <a href="/redirect/">redirect/</a>
 > <a href="/jpeg/">jpeg/</a>
+> <a href="/php/">php/</a>
+> <a href="/secret/">secret/</a>
+> <a href="/dest/">dest/</a>
+> <a href="/html/">html/</a>
+> <a href="/spoiler/">spoiler/</a>
+> <a href="/dir_to_copy/">dir_to_copy/</a>
 > <a href="/png/">png/</a>
 > <a href="/private/">private/</a>
-> <a href="/spoiler/">spoiler/</a>
-> <a href="/redirect/">redirect/</a>
-> <a href="/secret/">secret/</a>
-> <a href="/php/">php/</a>
 > </pre><hr></body>
 > 	</html>
 ----------------------  syntax_ressources/security_breach  ------------------------
 
-Content-Type: text/html							      |	Connection: keep-alive								
-Content-Length: 157							      <
-Connection: close							      <
-1,7d0
+HTTP/1.1 400 Bad Request							      |	HTTP/1.1 200 OK								
+Content-Type: text/html							      |	Content-Type: application/octet-stream								
+Content-Length: 157							      |	Content-Length: 1172								
+Connection: close							      |	Last-Modified: Fri, 17 Sep 2021 13:00:20 GMT								
+							      >	Connection: keep-alive								
+1,7c1,78
 < <html>
 < <head><title>400 Bad Request</title></head>
 < <body>
@@ -233,42 +474,93 @@ Connection: close							      <
 < <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
-----------------------  syntax_ressources/no_method  ------------------------
-
-HTTP/1.1 400 Bad Request							      |	 400 Bad Request								
-Content-Type: text/html							      |	Connection: keep-alive								
-Content-Length: 157							      <
-Connection: close							      <
-1,7d0
-< <html>
-< <head><title>400 Bad Request</title></head>
-< <body>
-< <center><h1>400 Bad Request</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
-----------------------  syntax_ressources/no_uri  ------------------------
-
-HTTP/1.1 400 Bad Request							      |	 400 Bad Request								
-Content-Type: text/html							      |	Connection: keep-alive								
-Content-Length: 157							      <
-Connection: close							      <
-1,7d0
-< <html>
-< <head><title>400 Bad Request</title></head>
-< <body>
-< <center><h1>400 Bad Request</h1></center>
-< <hr><center>nginx/1.18.0</center>
-< </body>
-< </html>
+---
+> #include "webserv.hpp"
+> 
+> static int check_argument(int c, char **v)
+> {
+> 	int i;
+> 
+> 	if (c < 2 || c > 3)
+> 	{
+> 		i = -1;
+> 		std::cout << "Invalid number of argument\n";
+> 	}
+> 	else if (c == 2)
+> 	{
+> 		i = 0;
+> 	}
+> 	else
+> 	{
+> 		if (!strcmp(v[1], "-d") || !strcmp(v[1], "--debug"))
+> 		{
+> 			i = 1;
+> 		}
+> 		else
+> 		{
+> 			i = -1;
+> 			std::cout << "Illegal option\nusage: webserv [-d] or [--debug] [directory]\n";
+> 		}
+> 	}
+> 	return i;
+> }
+> 
+> static int start(cluster &cl)
+> {
+> 	int ret = 0;
+> 	try
+> 	{
+> 		cl.start();
+> 	}
+> 	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
+> 	{
+> 		std::cerr << e;
+> 		ret = 1;
+> 	}
+> 	catch(std::exception &e)
+> 	{
+> 		std::cout << e.what();
+> 		std::cerr << "something failed\n";
+> 		ret = 1;
+> 	}
+> 	return ret;
+> }
+> 
+> int main(int c, char **v)
+> {
+> 	int ret = 0;
+> 	int i = check_argument(c, v);
+> 
+> 	if (i < 0) //bad arguments
+> 		return 1;
+> 
+> 	try
+> 	{
+> 		cluster cl(v[i + 1], i);
+> 		cl.init_listen();
+> 		ret = start(cl);
+> 	}
+> 	catch(std::exception &e)
+> 	{
+> 		std::cout << e.what() << "\n";
+> 		std::cerr << "initialisation failed\n";
+> 		ret = 1;
+> 	}
+> 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
+> 	{
+> 		std::cerr << e;
+> 		ret = 1;
+> 	}
+> 	return ret;
+> }
 ----------------------  syntax_ressources/no_version  ------------------------
 
-<html>							      |	 400 Bad Request								
+<html>							      |	HTTP/1.1 400 Bad Request								
 <head><title>Index of /</title></head>							      |	Server: nginx/1.18.0								
-<body>							      |	Date: Fri, 17 Sep 2021 11:49:18 GMT								
-<h1>Index of /</h1><hr><pre><a href="../">../</a>							      |	Connection: keep-alive								
-<a href="dest/">dest/</a>                                    							      <
-<a href="dir_to_copy/">dir_to_copy/</a>                      							      <
+<body>							      |	Date: Fri, 17 Sep 2021 13:33:10 GMT								
+<h1>Index of /</h1><hr><pre><a href="../">../</a>							      |	Content-Type: text/html								
+<a href="dest/">dest/</a>                                    							      |	Content-Length: 157								
+<a href="dir_to_copy/">dir_to_copy/</a>                      							      |	Connection: close								
 <a href="error/">error/</a>                                  							      <
 <a href="gif/">gif/</a>                                      							      <
 <a href="html/">html/</a>                                    							      <
@@ -284,5 +576,32 @@ Connection: close							      <
 </html>							      <
 							      <
 							      <
-1a2
+0a1,8
+> <html>
+> <head><title>400 Bad Request</title></head>
+> <body>
+> <center><h1>400 Bad Request</h1></center>
+> <hr><center>nginx/1.18.0</center>
+> </body>
+> </html>
 > 
+----------------------  multiple_location /php/info.php  ------------------------
+
+HTTP/1.1 400 Bad Request							      |	HTTP/1.1 405 Not Allowed								
+Connection: close							      |	Connection: keep-alive								
+2c2
+< <head><title>400 Bad Request</title></head>
+---
+> <head><title>405 Not Allowed</title></head>
+4c4
+< <center><h1>400 Bad Request</h1></center>
+---
+> <center><h1>405 Not Allowed</h1></center>
+----------------------  same_error_php GET /html/cat.html  ------------------------
+
+ETag: "61449163-24"							      <
+Accept-Ranges: bytes							      <
+---------------------- same_error_php   HEAD   /html/cat.html ------------------------
+
+ETag: "61449163-24"							      <
+Accept-Ranges: bytes							      <

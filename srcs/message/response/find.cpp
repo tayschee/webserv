@@ -134,14 +134,10 @@ std::string response::find_index(const parser::entries &entries, const std::stri
 
 const parser::address_conf::const_iterator	response::find_parser(const parser::address_conf &pars_list	, const request &req) const
 {
-	std::string host;
 	parser::address_conf::const_iterator it;
-	parser::address_conf::const_iterator it_default = pars_list.end();
+	parser::address_conf::const_iterator it_default = pars_list.begin();
 	for (it = pars_list.begin(); it != pars_list.end(); ++it)
 	{
-		host = req.get_host();
-		if (host.find(":") != host.size())
-			host = host.substr(0, host.find(":"));
 		if (it->get_block(BLOCK_SERVER).conf.find(LISTEN)->second.size() == 2 && it->get_block(BLOCK_SERVER).conf.find(LISTEN)->second[1] == DEFAULT_SERVER)
 			it_default = it;
 		if (it->get_block(BLOCK_SERVER).conf.find(SERVER_NAME) != it->get_block(BLOCK_SERVER).conf.end())
@@ -152,5 +148,6 @@ const parser::address_conf::const_iterator	response::find_parser(const parser::a
 	}
 	if (it == pars_list.end())
 		it = it_default;
+	
 	return it;
 }

@@ -2,14 +2,19 @@
 
 int		 request::validity() const
 {
-	if (first_line.version == "")
+	// if (first_line.version.empty())
+	// 	first_line.version = HTTP_VERSION;
+
+	if (first_line.method.empty())
 		return 400;
-	if (first_line.version != HTTP_VERSION)
-		return 505;
 	if (first_line.uri.size() < 1 || first_line.uri[0] != '/')
 	{
 		return 400;
 	}
+	if (first_line.version.empty())
+		return 400;
+	if (first_line.version != HTTP_VERSION)
+		return 400;
 
 	
 	header_type::const_iterator end(header.end());
@@ -19,10 +24,6 @@ int		 request::validity() const
 	{
 		return 400;
 	}
-
-	if (path_is_valid(first_line.uri))
-	{
-		return 400;
-	}
+	
 	return 200;
 }
