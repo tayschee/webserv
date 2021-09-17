@@ -48,8 +48,8 @@ bool parser::check_prop_return(const std::string &block_id, const std::vector<st
 		return false;
 	if (!basic_chk_args(PARSER_RETURN, args.size(), 2, true, line_no))
 		return false;
-	if (!advanced_chk_err_code(args, line_no))
-		return false;
+	//if (!advanced_chk_err_code(args, line_no))
+	//	return false;
 	return true;
 }
 

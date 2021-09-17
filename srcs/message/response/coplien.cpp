@@ -8,7 +8,7 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 {
 	first_line.status = 400;
 	const parser::address_conf::const_iterator pars_it = find_parser(pars_list, req);
-	if (pars_it == pars_list.end())
+	if (pars_it == pars_list.end() || (first_line.status = req.validity()) != 200)
 	{
 		main_header();
 		first_line.status = error_response(first_line.status, req);

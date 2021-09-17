@@ -302,25 +302,8 @@ int response::is_redirect(const parser::entries &block, const parser &pars, cons
 
 	header.insert(value_type(CONTENT_TYPE, APP_OCT_STREAM)); //CHANGE
 	status = ft_atoi<int>(*return_arg);
-	std::string host = req.get_host();
-	
-	if (host.find("http") == host.npos)
-		host = "http://" + host;
 
-	size_t i = -1;
-	int v = 0;
-	while (++i < host.size())
-	{
-		if (host[i] == ':')
-		{
-			if (++v == 2)
-			{
-				host = host.substr(0, i);	
-				break;
-			}
-		}
-	}
-	header.insert(value_type(LOCATION, host += *++return_arg));
+	header.insert(value_type(LOCATION, return_arg[1]));
 
 	return status;
 }
@@ -366,8 +349,8 @@ int		response::sent(int fd, request &req, const std::string &hf_sep, const std::
 {
 	std::string resp_str;
 	(void)req;
-	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
-		header.erase(LAST_MODIFIED);
+	//if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+	//	header.erase(LAST_MODIFIED);
 
 	resp_str = get(hf_sep, eol);
     write(fd, resp_str.c_str(), resp_str.size());

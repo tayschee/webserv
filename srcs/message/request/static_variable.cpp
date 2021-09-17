@@ -5,12 +5,12 @@ const request::method_array request::existing_method(request::initialise_existin
 request::method_array request::initialise_existing_method()
 {
 	int						i(0);
-	const int				size(9); 
-	const std::string		string_array[size] = {GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH};
+	const int				size(5); 
+	const std::string		string_array[size] = {GET, HEAD, POST, PUT, DELETE};
 	method_array			array; //j'ai pas reussi a appeler le constructeur first, end
 
-	array.reserve(9);
-	for (i = 0; i < 9; ++i)
+	array.reserve(size);
+	for (i = 0; i < size; ++i)
 	{
 		array.push_back(string_array[i]);
 	}
