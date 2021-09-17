@@ -33,7 +33,6 @@ print_diff()
 	HEADER_DIFF_BOOL=$?
 	diff ${!BODY_NGINX} ${!BODY_WEBSERV} > ${!BODY_DIFF}
 	BODY_DIFF_BOOL=$?
-	echo ici $HEADER_DIFF_BOOL $BODY_DIFF_BOOL
     if [[ $HEADER_DIFF_BOOL != 0 ]] || [[ $BODY_DIFF_BOOL != 0 ]]; then
         echo -e "---------------------- " "${@:4}" " ------------------------\n" >> $OUTPUT
         echo -e "${@:4}" ": CHECK " $OUTPUT

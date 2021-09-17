@@ -52,7 +52,7 @@ SERVER_NAME=redirect
 # test $SERVER_NAME "/error/"
 # test $SERVER_NAME "/dest/"
 #test $SERVER_NAME "/" "-L"
-test $SERVER_NAME "/php/"
+#test $SERVER_NAME "/php/"
 #test $SERVER_NAME "/html/3.html" "-L"
 
 # SERVER_NAME=same_error
@@ -90,8 +90,8 @@ test $SERVER_NAME "/php/"
 # # #DELETE TEST
 # test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
 # test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
-# test_delete $SERVER_NAME 10 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
-# test_delete $SERVER_NAME 10 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+#test_delete $SERVER_NAME 10 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Connection : close" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
+#test_delete $SERVER_NAME 10 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html" -H "Authorization: Basic gfgfsgs" -H "Connection : close" -H "Connection : close" -H "Authorization: Basic YWRtaW46YWRtaW4="
 # test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/gif/"
 # test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/"
 

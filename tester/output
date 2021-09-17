@@ -1,15 +1,7 @@
 
-----------------------  redirect GET /php/  ------------------------
-
-Connection: keep-alive							      <
-							      >	Connection: keep-alive								
----------------------- redirect   HEAD   /php/ ------------------------
-
-Connection: keep-alive							      <
-							      >	Connection: keep-alive								
 ----------------------  syntax_ressources/wrong_uri  ------------------------
 
-Date: Fri, 17 Sep 2021 11:49:13 GMT							      |	Date: Fri, 17 Sep 2021 11:49:14 GMT								
+Date: Fri, 17 Sep 2021 12:14:29 GMT							      |	Date: Fri, 17 Sep 2021 12:14:30 GMT								
 Content-Type: text/html							      |	Connection: keep-alive								
 Content-Length: 157							      <
 Connection: close							      <
@@ -69,7 +61,6 @@ Connection: close							      <
 > 	</html>
 ----------------------  syntax_ressources/line_feed2  ------------------------
 
-Date: Fri, 17 Sep 2021 11:49:14 GMT							      |	Date: Fri, 17 Sep 2021 11:49:15 GMT								
 Content-Type: text/html							      |	Connection: keep-alive								
 Content-Length: 157							      <
 Connection: close							      <
@@ -129,7 +120,6 @@ Connection: close							      <
 > 	</html>
 ----------------------  syntax_ressources/space_and_tab  ------------------------
 
-Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:16 GMT								
 1,21c1,21
 < 638
 < <html>
@@ -265,7 +255,7 @@ Connection: close							      <
 
 <html>							      |	 400 Bad Request								
 <head><title>Index of /</title></head>							      |	Server: nginx/1.18.0								
-<body>							      |	Date: Fri, 17 Sep 2021 11:49:18 GMT								
+<body>							      |	Date: Fri, 17 Sep 2021 12:14:33 GMT								
 <h1>Index of /</h1><hr><pre><a href="../">../</a>							      |	Connection: keep-alive								
 <a href="dest/">dest/</a>                                    							      <
 <a href="dir_to_copy/">dir_to_copy/</a>                      							      <

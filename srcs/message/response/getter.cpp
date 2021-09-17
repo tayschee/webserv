@@ -21,7 +21,7 @@ const std::string				&response::get_version() const
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
-	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, "Transfer-Encoding", LAST_MODIFIED, LOCATION, CONNECTION};
+	const std::string list[] = {SERVER, DATE, CONTENT_TYPE, CONTENT_LENGTH, TRANSFERT_ENCODING, LAST_MODIFIED, LOCATION, CONNECTION};
 	std::vector<std::string> vec(list, &list[8]);
 
 	std::string resp_str;
