@@ -83,6 +83,7 @@ class request : public message
 
 	public :
 		void			clear();
+		int				path_is_valid(const std::string &path) const;
 
 	public :
 		request();

@@ -9,6 +9,7 @@ Connection: keep-alive							      <
 							      >	Connection: keep-alive								
 ----------------------  syntax_ressources/wrong_uri  ------------------------
 
+Date: Fri, 17 Sep 2021 11:49:13 GMT							      |	Date: Fri, 17 Sep 2021 11:49:14 GMT								
 Content-Type: text/html							      |	Connection: keep-alive								
 Content-Length: 157							      <
 Connection: close							      <
@@ -22,7 +23,6 @@ Connection: close							      <
 < </html>
 ----------------------  syntax_ressources/line_feed  ------------------------
 
-Date: Fri, 17 Sep 2021 10:48:04 GMT							      |	Date: Fri, 17 Sep 2021 10:48:05 GMT								
 1,21c1,21
 < 638
 < <html>
@@ -69,6 +69,7 @@ Date: Fri, 17 Sep 2021 10:48:04 GMT							      |	Date: Fri, 17 Sep 2021 10:48:
 > 	</html>
 ----------------------  syntax_ressources/line_feed2  ------------------------
 
+Date: Fri, 17 Sep 2021 11:49:14 GMT							      |	Date: Fri, 17 Sep 2021 11:49:15 GMT								
 Content-Type: text/html							      |	Connection: keep-alive								
 Content-Length: 157							      <
 Connection: close							      <
@@ -128,6 +129,7 @@ Connection: close							      <
 > 	</html>
 ----------------------  syntax_ressources/space_and_tab  ------------------------
 
+Date: Fri, 17 Sep 2021 11:49:15 GMT							      |	Date: Fri, 17 Sep 2021 11:49:16 GMT								
 1,21c1,21
 < 638
 < <html>
@@ -220,12 +222,10 @@ Connection: close							      <
 > 	</html>
 ----------------------  syntax_ressources/security_breach  ------------------------
 
-HTTP/1.1 400 Bad Request							      |	HTTP/1.1 200 OK								
-Content-Type: text/html							      |	Content-Type: application/octet-stream								
-Content-Length: 157							      |	Content-Length: 1172								
-Connection: close							      |	Last-Modified: Thu, 16 Sep 2021 14:58:55 GMT								
-							      >	Connection: keep-alive								
-1,7c1,78
+Content-Type: text/html							      |	Connection: keep-alive								
+Content-Length: 157							      <
+Connection: close							      <
+1,7d0
 < <html>
 < <head><title>400 Bad Request</title></head>
 < <body>
@@ -233,85 +233,6 @@ Connection: close							      |	Last-Modified: Thu, 16 Sep 2021 14:58:55 GMT
 < <hr><center>nginx/1.18.0</center>
 < </body>
 < </html>
----
-> #include "webserv.hpp"
-> 
-> static int check_argument(int c, char **v)
-> {
-> 	int i;
-> 
-> 	if (c < 2 || c > 3)
-> 	{
-> 		i = -1;
-> 		std::cout << "Invalid number of argument\n";
-> 	}
-> 	else if (c == 2)
-> 	{
-> 		i = 0;
-> 	}
-> 	else
-> 	{
-> 		if (!strcmp(v[1], "-d") || !strcmp(v[1], "--debug"))
-> 		{
-> 			i = 1;
-> 		}
-> 		else
-> 		{
-> 			i = -1;
-> 			std::cout << "Illegal option\nusage: webserv [-d] or [--debug] [directory]\n";
-> 		}
-> 	}
-> 	return i;
-> }
-> 
-> static int start(cluster &cl)
-> {
-> 	int ret = 0;
-> 	try
-> 	{
-> 		cl.start();
-> 	}
-> 	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
-> 	{
-> 		std::cerr << e;
-> 		ret = 1;
-> 	}
-> 	catch(std::exception &e)
-> 	{
-> 		std::cout << e.what();
-> 		std::cerr << "something failed\n";
-> 		ret = 1;
-> 	}
-> 	return ret;
-> }
-> 
-> int main(int c, char **v)
-> {
-> 	int ret = 0;
-> 	int i = check_argument(c, v);
-> 
-> 	if (i < 0) //bad arguments
-> 		return 1;
-> 
-> 	try
-> 	{
-> 		cluster cl(v[i + 1], i);
-> 		cl.init_listen();
-> 		ret = start(cl);
-> 	}
-> 	catch(std::exception &e)
-> 	{
-> 		std::cout << e.what() << "\n";
-> 		std::cerr << "initialisation failed\n";
-> 		ret = 1;
-> 	}
-> 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
-> 	{
-> 		std::cerr << e;
-> 		ret = 1;
-> 	}
-> 	return ret;
-> }
 ----------------------  syntax_ressources/no_method  ------------------------
 
 HTTP/1.1 400 Bad Request							      |	 400 Bad Request								
@@ -329,7 +250,6 @@ Connection: close							      <
 ----------------------  syntax_ressources/no_uri  ------------------------
 
 HTTP/1.1 400 Bad Request							      |	 400 Bad Request								
-Date: Fri, 17 Sep 2021 10:48:10 GMT							      |	Date: Fri, 17 Sep 2021 10:48:11 GMT								
 Content-Type: text/html							      |	Connection: keep-alive								
 Content-Length: 157							      <
 Connection: close							      <
@@ -345,7 +265,7 @@ Connection: close							      <
 
 <html>							      |	 400 Bad Request								
 <head><title>Index of /</title></head>							      |	Server: nginx/1.18.0								
-<body>							      |	Date: Fri, 17 Sep 2021 10:48:12 GMT								
+<body>							      |	Date: Fri, 17 Sep 2021 11:49:18 GMT								
 <h1>Index of /</h1><hr><pre><a href="../">../</a>							      |	Connection: keep-alive								
 <a href="dest/">dest/</a>                                    							      <
 <a href="dir_to_copy/">dir_to_copy/</a>                      							      <

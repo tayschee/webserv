@@ -19,6 +19,10 @@ int		 request::validity() const
 	{
 		return 400;
 	}
-	
+
+	if (path_is_valid(first_line.uri))
+	{
+		return 400;
+	}
 	return 200;
 }
