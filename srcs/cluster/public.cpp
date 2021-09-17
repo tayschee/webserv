@@ -11,11 +11,6 @@ int cluster::init_listen() // start sockets
 			std::cerr << "Failed to listen. Error: " << strerror(errno) << std::endl;
 			return 0;
 		}
-		else
-		{
-			if (debug_mode)
-				std::cout << "Connection etablished with " << (*it)->get_fd() << std::endl; //change to put ip + port will be better
-		}
 	}
 	return (1);
 }
@@ -43,8 +38,6 @@ int cluster::start() // cluster manage the list of socketc
 					return 0;
 				else if (ret == -1)
 				{
-					if (debug_mode)
-						std::cout << "Client quit : ";
 					close_client(it);
 				}
 			}
@@ -52,8 +45,6 @@ int cluster::start() // cluster manage the list of socketc
 			{
 				if (cli.sent(vec_parser) == -1)
 				{
-					if (debug_mode)
-						std::cout << "Client quit : ";
 					close_client(it);
 				}
 			}

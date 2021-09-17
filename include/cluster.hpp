@@ -16,7 +16,6 @@ class cluster
     private: /*private function*/
 		std::vector<parser::address_conf> vec_parser;
 		std::list<client*>       list_client; // list all clients
-		bool					debug_mode; // 1 activate
 
         cluster();
         cluster(const cluster& other); // cannot copy cluster
@@ -29,7 +28,7 @@ class cluster
         int		                send_response(client &cl); // send to response
 
     public: /*public function*/
-        cluster(const std::string _path, bool debug_mode = 0); // constructor used
+        cluster(const std::string _path); // constructor used
         ~cluster(); // destructor
 
         int		                init_listen(); // initializing listens

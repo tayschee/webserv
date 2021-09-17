@@ -11,8 +11,6 @@ void sighandler(const int signal) // catch the signals
 
 void	cluster::close_client(iterator &it) // close a client
 {
-	if (debug_mode)
-		std::cerr << "Client closed : " << (*it)->get_fd() << std::endl;
 	iterator tmp = it;
 	--it;
 	delete(*tmp);
@@ -80,8 +78,6 @@ int		cluster::receive(client &cli) // there is something to read
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
 		else //change that
 		{
-			if (debug_mode)
-				std::cout << "Connection etablished with " << cli.get_fd() << " -> " << res << "\n";
 			list_client.push_back(new client(res, false, cli.get_nb_pars()));
 		}
 	}
