@@ -91,29 +91,25 @@ int response::method_is_delete(const std::string &uri, const request &req, const
 
 	std::string root = pars.get_block(BLOCK_LOCATION, uri).args[0];
 
-	ret = check_path(path, file_stat, req, pars);
-	if (ret == 403)
-		if (root == uri || root + "/" == uri)
-			return 500;
-	if (ret != 0)
-		return ret;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
-	if (is_cgi(get_extension(path), pars, req.get_method()))
+	ret = check_path(path, file_stat, req, pars);
+	if (ret == 403)
 	{
-		first_line.status = 42;
-		method_function method = existing_method.find(POST)->second;
-		return (this->*method)(path, req, pars); //change for if there is redirect
-
-		// status = (this->*method)(path, req, pars); //change for if there is redirect
+		if (root == uri || root + "/" == uri)
+			return 500;
+		if (path.size() > 0 && *--path.end() != '/')
+			return 404;
 	}
+	if (ret != 0)
+		return ret;
 
 	ret = del_content(path, req, pars, 0);
 	if (ret != 0)
-		return ret;
+		return 404;
 	ret = del_content(path, req, pars);
 	if (ret != 0)
-		return ret;
+		return 404;
 	return 204;
 }
 
@@ -152,7 +148,6 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 	{
 		if (is_acces(file_stat))
 			return ret;
-		errno = 0;
 		if ((fd = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
 		{
 			close(fd);
@@ -187,15 +182,19 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
 	ret = check_path(path, file_stat, req, pars);
-	if (ret != 0)
-		return 404;
-
-	if (is_cgi(get_extension(path), pars, req.get_method()))
+	if (ret == 403)
 	{
-		cgi(req, pars, body, path);
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
+		if (path.size() > 0 && *--path.end() != '/')
+			return 404;
 	}
+	if (ret != 0)
+		return ret;
+	if (!is_cgi(get_extension(path), pars, req.get_method()))
+		return 405;
+	cgi(req, pars, body, path);
+	if (body[0] == '5')
+		return ft_atoi<int>(body);
+
 	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
 	if (req.get_method() != HEAD)
 		add_transfert_encoding();

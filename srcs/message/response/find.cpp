@@ -81,7 +81,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		path.erase(pos, 1);
 	if (stat(path.c_str(), &file_stat) < 0)
 	{
-		perror("test : ");
+		// perror("test : ");
 		//do something
 	}
 	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory

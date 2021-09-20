@@ -4,6 +4,7 @@ bool is_alive;
 
 int cluster::init_listen() // start sockets
 {
+	errno = 0;
 	for (iterator it = list_client.begin(); it != list_client.end(); ++it)
 	{
 		if (listen((*it)->get_fd(), SOMAXCONN))

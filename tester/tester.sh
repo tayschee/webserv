@@ -112,7 +112,9 @@ test_syntax syntax_ressources/no_uri
 test_syntax syntax_ressources/no_version
 #test_syntax syntax_ressources/multiple_request
 
-#TEST QUERY AND PHP
+# #TEST QUERY AND PHP
+test_method $SERVER_NAME POST /php/1.phppl
+test_method $SERVER_NAME POST /php/1.phpp
 test_method $SERVER_NAME POST /php/1.php
 test_method $SERVER_NAME POST /php/2.php
 test_method $SERVER_NAME POST /php/exemple.php

@@ -56,7 +56,6 @@ int	response::is_authorize(const std::string &uri, const request &req, const par
 		struct stat file_stat; //information about file
 		char buf[4096];
 		int fd = 0;
-		errno = 0;
 		std::string Authorization(req.get_user());
 
 		if (Authorization.empty() || Authorization == "Og==")
@@ -196,16 +195,10 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 		if (lstat(tmp.c_str(), &file_stat) < 0)
 		{
 			if (errno == EACCES)
-			{
-				std::cout << " EACCESS !!!!!!!! \n";
 				return 403;
-			}
 		}
 		if (is_acces(file_stat))
-		{
-			std::cout << " ACCESS !!!!!!!! \n";
 			return 403;
-		}
 		beg = tmp.size();
 		if (path.size() == tmp.size())
 			break;
@@ -218,11 +211,9 @@ int		response::check_path(const std::string &path, struct stat &file_stat, const
 	if (lstat(path.c_str(), &file_stat) < 0)
 	{
 		if (errno == ENOENT)
-		{
-			std::cout << " ENOENT !!!!!!!! \n";
 			return 404;
-		}
 	}
+	
 	return (0);
 }
 
@@ -231,6 +222,8 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 {
 	try
 	{
+		if (method == "DELETE" || method == "PUT")
+			return false;
 		parser::entries bc(pars.get_block(BLOCK_CGI, type).conf);
 		std::vector<std::string> tab;
 		

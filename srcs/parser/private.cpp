@@ -5,6 +5,7 @@ void parser::parse_file()
 	int file = open(filename.c_str(), O_RDONLY);
 	std::string line;
 	int line_no = 0;
+	errno = 0;
 	blocks::key_type block_id = std::make_pair("server", std::vector<std::string>());
 
 	if (file == -1)

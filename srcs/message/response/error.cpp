@@ -27,7 +27,6 @@ void response::error_special_case(const request &req)
 
 void response::default_error(int error_status, const request &req, const parser &pars)
 {
-	std::cout << "STATUS = " << error_status << std::endl;
 	size_t pos(0);
 	size_t size_str_to_replace(ft_strlen(STR_TO_REPLACE));
 	std::string new_str(ft_itoa(error_status) + " " + find_status_string(error_status));

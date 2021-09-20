@@ -74,6 +74,7 @@ int		cluster::receive(client &cli) // there is something to read
 		sockaddr_in addr;
 		socklen_t len = sizeof(addr);
 		res = accept(cli.get_fd(), (sockaddr*)&addr, &len);
+		errno = 0;
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
 		else //change that

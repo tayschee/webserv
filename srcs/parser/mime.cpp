@@ -20,6 +20,7 @@ void parser::parse_mime(const std::string& filename)
 	int file = open(filename.c_str(), O_RDONLY); //WARNING
 	std::string line;
 	int line_no = 0;
+	errno = 0;
 
 	if (file == -1)
 	{

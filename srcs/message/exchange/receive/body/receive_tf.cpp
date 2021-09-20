@@ -1,7 +1,5 @@
 #include "message/exchange.hpp"
 
-#include <iostream>
-
 /*tf_body struct, use to read body with Content-Length header, this struct is manipulated
 by receive once header is read */
 
@@ -30,7 +28,6 @@ receive::tf_body	&receive::tf_body::operator=(const tf_body &x)
 int receive::tf_body::receive(const int socket)
 {
 	char *buffer;
-	errno = 0;
 	ssize_t i;
 
 	buffer = new char[this->buf_size + 1];
@@ -41,10 +38,7 @@ int receive::tf_body::receive(const int socket)
 		if (i == 0)
 			return -1;
 		else
-		{
-			std::cout << strerror(errno) << std::endl;
 			return 500; //throw
-		}
 	}
 	buffer[i] = 0;
 	this->msg += buffer;

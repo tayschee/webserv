@@ -53,8 +53,13 @@ void		cgi::son(long fdin, long fdout, FILE* file_in, FILE* file_out, int save_in
 {
 
 	char **nll = NULL;
+	long		fderr;
+	
+	FILE* file_err = tmpfile();
+	fderr = fileno(file_err);
 	dup2(fdout, STDOUT_FILENO);
 	dup2(fdin, STDIN_FILENO);
+	//dup2(fderr, STDERR_FILENO);
 	execve(script_name, nll, env);
 	close(fdin);
 	fclose(file_in);
@@ -88,13 +93,13 @@ void			cgi::father(long fdout, std::string &new_body)
 std::string     cgi::exec(char **env, const request &req, const parser &pars, const std::string &path)
 {
     pid_t			pid;
-	int				save_in, save_out;
+	int				save_in, save_out, save_err;
 	std::string		new_body;
-	errno = 0;
 
     // save stdin and stdout
 	save_in = dup(STDIN_FILENO);
 	save_out = dup(STDOUT_FILENO);
+	save_err = dup(STDERR_FILENO);
 
 	FILE* file_in = tmpfile();
 	FILE* file_out = tmpfile();
@@ -108,8 +113,15 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 	{
 		if (write(fdin, req.get_body().c_str(), req.get_body().size()) < 0)
 		{
-			std::cout << strerror(errno) << std::endl;
-			sleep(10);
+			close(fdin);
+			fclose(file_in);
+			fclose(file_out);
+			dup2(save_in, STDIN_FILENO);
+			dup2(save_out, STDOUT_FILENO);
+			close(save_in);
+			close(save_out);
+			clear(env);
+			return "500";
 		}
 		lseek(fdin, 0, SEEK_SET);
 	}
@@ -117,10 +129,7 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 	pid = fork();
 	if (pid == -1)
 	{
-		close(fdin);
-		fclose(file_in);
 		close(fdout);
-		fclose(file_out);
 		std::cerr << "Fork crashed." << std::endl;
 	}
 	else if (pid == 0)
@@ -136,6 +145,7 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 	fclose(file_out);
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
+	dup2(save_err, STDERR_FILENO);
 	close(save_in);
 	close(save_out);
 	clear(env);
