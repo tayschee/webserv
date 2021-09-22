@@ -1,6 +1,7 @@
 
 ----------------------  error GET /  ------------------------
 
+Date: Wed, 22 Sep 2021 13:34:05 GMT							      |	Date: Wed, 22 Sep 2021 13:34:06 GMT								
 ETag: "614866f7-16271"							      <
 Accept-Ranges: bytes							      <
 ---------------------- error   HEAD   / ------------------------
@@ -15,6 +16,9 @@ Accept-Ranges: bytes							      <
 
 ETag: "614866f7-5b"							      <
 Accept-Ranges: bytes							      <
+---------------------- error   HEAD   /secret/ ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:06 GMT							      |	Date: Wed, 22 Sep 2021 13:34:07 GMT								
 ----------------------  error GET /secret/ -H Authorization: Basic YWRtaW46YWRtaW4= YTREYE  ------------------------
 
 ETag: "614866f7-5b"							      <
@@ -23,16 +27,12 @@ Accept-Ranges: bytes							      <
 
 ETag: "614866f7-5b"							      <
 Accept-Ranges: bytes							      <
-----------------------  error GET /bad_secret2/ -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:35 GMT							      |	Date: Mon, 20 Sep 2021 14:53:36 GMT								
 ----------------------  index_off GET /html/3.html  ------------------------
 
 ETag: "614866f6-22"							      <
 Accept-Ranges: bytes							      <
 ---------------------- index_off   HEAD   /html/3.html ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:36 GMT							      |	Date: Mon, 20 Sep 2021 14:53:37 GMT								
 ETag: "614866f6-22"							      <
 Accept-Ranges: bytes							      <
 ----------------------  redirect GET /  ------------------------
@@ -54,6 +54,7 @@ ETag: "614866f6-232b"							      <
 Location: http://127.0.0.1/html/							      |	Location: http://127.0.0.1:8080/html/								
 ---------------------- redirect   HEAD   /gif/ ------------------------
 
+Date: Wed, 22 Sep 2021 13:34:08 GMT							      |	Date: Wed, 22 Sep 2021 13:34:09 GMT								
 Location: http://127.0.0.1/html/							      |	Location: http://127.0.0.1:8080/html/								
 ----------------------  redirect GET /jpeg/  ------------------------
 
@@ -80,7 +81,7 @@ Accept-Ranges: bytes							      <
 ----------------------  redirect GET / -L  ------------------------
 
 Location: http://127.0.0.1/gif/							      |	Location: http://127.0.0.1:8080/gif/								
-Binary files 8893be5b96b8de4a316d9311ffd9f2c1/0ca6554c274aa7266144cdfe8640427e and 8893be5b96b8de4a316d9311ffd9f2c1/ac55978c39f4246c9db1c8cd5835ec47 differ
+Binary files 1e82fc152addd4581c96d34411a6ad7c/971990ee855028fd5707236b35fce0e6 and 1e82fc152addd4581c96d34411a6ad7c/eaeaa915b7fd256134bd71d6354e0374 differ
 ---------------------- redirect   HEAD   / ------------------------
 
 Location: http://127.0.0.1/gif/							      |	Location: http://127.0.0.1:8080/gif/								
@@ -92,9 +93,10 @@ ETag: "614866f6-174ab7"							      <
 Accept-Ranges: bytes							      <
 ----------------------  redirect GET /html/3.html -L  ------------------------
 
+Date: Wed, 22 Sep 2021 13:34:09 GMT							      |	Date: Wed, 22 Sep 2021 13:34:10 GMT								
 Location: http://127.0.0.1/jpeg/							      |	Location: http://127.0.0.1:8080/jpeg/								
 ETag: "614866f6-232b"							      <
-Binary files 8893be5b96b8de4a316d9311ffd9f2c1/0ca6554c274aa7266144cdfe8640427e and 8893be5b96b8de4a316d9311ffd9f2c1/ac55978c39f4246c9db1c8cd5835ec47 differ
+Binary files 1e82fc152addd4581c96d34411a6ad7c/971990ee855028fd5707236b35fce0e6 and 1e82fc152addd4581c96d34411a6ad7c/eaeaa915b7fd256134bd71d6354e0374 differ
 ---------------------- redirect   HEAD   /html/3.html ------------------------
 
 Location: http://127.0.0.1/jpeg/							      |	Location: http://127.0.0.1:8080/jpeg/								
@@ -104,7 +106,6 @@ ETag: "614866f6-174ab7"							      <
 Accept-Ranges: bytes							      <
 ----------------------  same_error GET /  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:38 GMT							      |	Date: Mon, 20 Sep 2021 14:53:39 GMT								
 ETag: "614866f6-13e3"							      <
 ---------------------- same_error   HEAD   / ------------------------
 
@@ -177,7 +178,7 @@ Accept-Ranges: bytes							      <
 > 	</html>
 ----------------------  multiple_location GET / -H Connection: close  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:39 GMT							      |	Date: Mon, 20 Sep 2021 14:53:40 GMT								
+Date: Wed, 22 Sep 2021 13:34:10 GMT							      |	Date: Wed, 22 Sep 2021 13:34:11 GMT								
 1,20c1,20
 < <html>
 < <head><title>Index of /</title></head>
@@ -244,6 +245,9 @@ Accept-Ranges: bytes							      <
 
 ETag: "614866f7-16271"							      <
 Accept-Ranges: bytes							      <
+----------------------  multiple_location GET /secret/  ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:11 GMT							      |	Date: Wed, 22 Sep 2021 13:34:12 GMT								
 ----------------------  multiple_location GET /html/3.html  ------------------------
 
 ETag: "614866f6-22"							      <
@@ -252,52 +256,46 @@ Accept-Ranges: bytes							      <
 
 ETag: "614866f6-22"							      <
 Accept-Ranges: bytes							      <
-----------------------  multiple_location GET_BEFORE_PUT_1 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+----------------------  multiple_location GET_AFTER_PUT_2 /private/impossible.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:43 GMT							      |	Date: Mon, 20 Sep 2021 14:53:44 GMT								
-----------------------  multiple_location PUT_1 /secret/new.html -d <p>secret</p> -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+Date: Wed, 22 Sep 2021 13:34:13 GMT							      |	Date: Wed, 22 Sep 2021 13:34:14 GMT								
+----------------------  multiple_location PUT_1 /spoiler/new.html -d <p>spoil</p>  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:43 GMT							      |	Date: Mon, 20 Sep 2021 14:53:44 GMT								
-----------------------  multiple_location GET_AFTER_PUT_1 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+Date: Wed, 22 Sep 2021 13:34:14 GMT							      |	Date: Wed, 22 Sep 2021 13:34:15 GMT								
+----------------------  multiple_location GET_AFTER_PUT_1 /spoiler/new.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:43 GMT							      |	Date: Mon, 20 Sep 2021 14:53:44 GMT								
-----------------------  multiple_location PUT_2 /secret/new.html -d <p>secret</p> -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+Date: Wed, 22 Sep 2021 13:34:14 GMT							      |	Date: Wed, 22 Sep 2021 13:34:15 GMT								
+----------------------  multiple_location PUT_2 /spoiler/new.html -d <p>spoil</p>  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:43 GMT							      |	Date: Mon, 20 Sep 2021 14:53:44 GMT								
-----------------------  multiple_location GET_AFTER_PUT_2 /secret/new.html -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
+Date: Wed, 22 Sep 2021 13:34:14 GMT							      |	Date: Wed, 22 Sep 2021 13:34:15 GMT								
+----------------------  multiple_location GET_AFTER_PUT_2 /spoiler/new.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:43 GMT							      |	Date: Mon, 20 Sep 2021 14:53:44 GMT								
+Date: Wed, 22 Sep 2021 13:34:14 GMT							      |	Date: Wed, 22 Sep 2021 13:34:15 GMT								
 ----------------------  multiple_location GET_BEFORE_PUT_1 /no_path/new.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:45 GMT							      |	Date: Mon, 20 Sep 2021 14:53:46 GMT								
-----------------------  multiple_location PUT_2 /html/new.html -d <p>YES</p>  ------------------------
+Date: Wed, 22 Sep 2021 13:34:15 GMT							      |	Date: Wed, 22 Sep 2021 13:34:16 GMT								
+----------------------  multiple_location PUT_1 /no_path/new.html -d <p>error</p>  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:46 GMT							      |	Date: Mon, 20 Sep 2021 14:53:47 GMT								
-----------------------  multiple_location GET_AFTER_PUT_2 /html/new.html  ------------------------
+Date: Wed, 22 Sep 2021 13:34:15 GMT							      |	Date: Wed, 22 Sep 2021 13:34:16 GMT								
+----------------------  multiple_location GET_AFTER_PUT_1 /no_path/new.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:46 GMT							      |	Date: Mon, 20 Sep 2021 14:53:47 GMT								
+Date: Wed, 22 Sep 2021 13:34:15 GMT							      |	Date: Wed, 22 Sep 2021 13:34:16 GMT								
 ----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/html/1.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:47 GMT							      |	Date: Mon, 20 Sep 2021 14:53:48 GMT								
-Last-Modified: Mon, 20 Sep 2021 14:53:47 GMT							      |	Last-Modified: Mon, 20 Sep 2021 14:53:48 GMT								
-ETag: "6148a07b-22"							      <
+ETag: "614b30d9-22"							      <
 Accept-Ranges: bytes							      <
-----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
+----------------------  multiple_location DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:48 GMT							      |	Date: Mon, 20 Sep 2021 14:53:49 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html  ------------------------
+Date: Wed, 22 Sep 2021 13:34:17 GMT							      |	Date: Wed, 22 Sep 2021 13:34:18 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/html/1.html  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:48 GMT							      |	Date: Mon, 20 Sep 2021 14:53:49 GMT								
-----------------------  multiple_location DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:48 GMT							      |	Date: Mon, 20 Sep 2021 14:53:49 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:48 GMT							      |	Date: Mon, 20 Sep 2021 14:53:49 GMT								
+Date: Wed, 22 Sep 2021 13:34:17 GMT							      |	Date: Wed, 22 Sep 2021 13:34:18 GMT								
 ----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
+Date: Wed, 22 Sep 2021 13:34:18 GMT							      |	Date: Wed, 22 Sep 2021 13:34:19 GMT								
+Last-Modified: Wed, 22 Sep 2021 13:34:18 GMT							      |	Last-Modified: Wed, 22 Sep 2021 13:34:19 GMT								
 Connection: keep-alive							      |	Connection: close								
-ETag: "6148a07d-5b"							      <
+ETag: "614b30da-5b"							      <
 Accept-Ranges: bytes							      <
 ----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic YWRtaW46YWRtaW4= -H Connection : close  ------------------------
 
@@ -313,64 +311,48 @@ Connection: keep-alive							      |	Connection: close
 Connection: keep-alive							      |	Connection: close								
 ----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
-Last-Modified: Mon, 20 Sep 2021 14:53:49 GMT							      |	Last-Modified: Mon, 20 Sep 2021 14:53:50 GMT								
 Connection: keep-alive							      |	Connection: close								
-ETag: "6148a07d-5b"							      <
+ETag: "614b30db-5b"							      <
 Accept-Ranges: bytes							      <
 ----------------------  multiple_location DELETE_1 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs -H Connection : close  ------------------------
 
 Connection: keep-alive							      |	Connection: close								
 ----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
-Last-Modified: Mon, 20 Sep 2021 14:53:49 GMT							      |	Last-Modified: Mon, 20 Sep 2021 14:53:50 GMT								
 Connection: keep-alive							      |	Connection: close								
-ETag: "6148a07d-5b"							      <
+ETag: "614b30db-5b"							      <
 Accept-Ranges: bytes							      <
 ----------------------  multiple_location DELETE_2 /dir_to_delete/secret/secret.html -H Authorization: Basic gfgfsgs -H Connection : close  ------------------------
 
+Date: Wed, 22 Sep 2021 13:34:19 GMT							      |	Date: Wed, 22 Sep 2021 13:34:20 GMT								
 Connection: keep-alive							      |	Connection: close								
 ----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/secret/secret.html -H Connection : close -H Authorization: Basic YWRtaW46YWRtaW4=  ------------------------
 
-Last-Modified: Mon, 20 Sep 2021 14:53:49 GMT							      |	Last-Modified: Mon, 20 Sep 2021 14:53:50 GMT								
+Date: Wed, 22 Sep 2021 13:34:19 GMT							      |	Date: Wed, 22 Sep 2021 13:34:20 GMT								
 Connection: keep-alive							      |	Connection: close								
-ETag: "6148a07d-5b"							      <
+ETag: "614b30db-5b"							      <
 Accept-Ranges: bytes							      <
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:50 GMT							      |	Date: Mon, 20 Sep 2021 14:53:51 GMT								
-----------------------  multiple_location DELETE_1 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:50 GMT							      |	Date: Mon, 20 Sep 2021 14:53:51 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:50 GMT							      |	Date: Mon, 20 Sep 2021 14:53:51 GMT								
-----------------------  multiple_location DELETE_2 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:50 GMT							      |	Date: Mon, 20 Sep 2021 14:53:51 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:50 GMT							      |	Date: Mon, 20 Sep 2021 14:53:51 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:51 GMT							      |	Date: Mon, 20 Sep 2021 14:53:52 GMT								
-----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/gif/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:52 GMT							      |	Date: Mon, 20 Sep 2021 14:53:53 GMT								
 ----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:54 GMT								
+Date: Wed, 22 Sep 2021 13:34:20 GMT							      |	Date: Wed, 22 Sep 2021 13:34:21 GMT								
 ----------------------  multiple_location DELETE_1 /dir_to_delete/  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:54 GMT								
+Date: Wed, 22 Sep 2021 13:34:20 GMT							      |	Date: Wed, 22 Sep 2021 13:34:21 GMT								
+----------------------  multiple_location DELETE_2 /dir_to_delete/php/1.php  ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:21 GMT							      |	Date: Wed, 22 Sep 2021 13:34:22 GMT								
+----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/php/1.php  ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:21 GMT							      |	Date: Wed, 22 Sep 2021 13:34:22 GMT								
+----------------------  multiple_location GET_BEFORE_DELETE_1 /dir_to_delete/  ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:22 GMT							      |	Date: Wed, 22 Sep 2021 13:34:23 GMT								
+----------------------  multiple_location DELETE_1 /dir_to_delete/  ------------------------
+
+Date: Wed, 22 Sep 2021 13:34:22 GMT							      |	Date: Wed, 22 Sep 2021 13:34:23 GMT								
 ----------------------  multiple_location GET_AFTER_DELETE_1 /dir_to_delete/  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:54 GMT								
-----------------------  multiple_location DELETE_2 /dir_to_delete/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:54 GMT								
-----------------------  multiple_location GET_AFTER_DELETE_2 /dir_to_delete/  ------------------------
-
-Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:54 GMT								
+Date: Wed, 22 Sep 2021 13:34:22 GMT							      |	Date: Wed, 22 Sep 2021 13:34:23 GMT								
 ----------------------  syntax_ressources/line_feed  ------------------------
 
 1,21c1,21
@@ -559,7 +541,7 @@ Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:
 
 <html>							      |	HTTP/1.1 400 Bad Request								
 <head><title>Index of /</title></head>							      |	Server: nginx/1.18.0								
-<body>							      |	Date: Mon, 20 Sep 2021 14:53:56 GMT								
+<body>							      |	Date: Wed, 22 Sep 2021 13:34:24 GMT								
 <h1>Index of /</h1><hr><pre><a href="../">../</a>							      |	Content-Type: text/html								
 <a href="dest/">dest/</a>                                    							      |	Content-Length: 157								
 <a href="dir_to_copy/">dir_to_copy/</a>                      							      |	Connection: close								
@@ -587,9 +569,9 @@ Date: Mon, 20 Sep 2021 14:53:53 GMT							      |	Date: Mon, 20 Sep 2021 14:53:
 > </body>
 > </html>
 > 
-----------------------  multiple_location POST /php/php.php -d arg1=O -d arg2=K -d arg3=!  ------------------------
+----------------------  multiple_location POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST  ------------------------
 
-Date: Mon, 20 Sep 2021 14:53:56 GMT							      |	Date: Mon, 20 Sep 2021 14:53:57 GMT								
+Date: Wed, 22 Sep 2021 13:34:25 GMT							      |	Date: Wed, 22 Sep 2021 13:34:26 GMT								
 ----------------------  same_error_php GET /html/cat.html  ------------------------
 
 ETag: "614866f6-24"							      <

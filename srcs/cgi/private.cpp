@@ -59,7 +59,7 @@ void		cgi::son(long fdin, long fdout, FILE* file_in, FILE* file_out, int save_in
 	fderr = fileno(file_err);
 	dup2(fdout, STDOUT_FILENO);
 	dup2(fdin, STDIN_FILENO);
-	//dup2(fderr, STDERR_FILENO);
+	dup2(fderr, STDERR_FILENO);
 	execve(script_name, nll, env);
 	close(fdin);
 	fclose(file_in);
