@@ -34,6 +34,9 @@ if [[ -z "$my_cgi" ]]; then
     echo -e "127.0.0.1\tmonsite" >> /etc/hosts
 fi
 
+chmod 000 ../www/html/private
+chmod 000 ../www/html/private2/index.html
+chmod 000 ../www/html/private3
 
 sudo rm /etc/php/7.4/cgi/php.ini && cp php.ini /etc/php/7.4/cgi/php.ini
 
