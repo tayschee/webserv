@@ -1,7 +1,5 @@
 #include "message/exchange.hpp"
 
-#include <iostream>
-
 //constructor and destructor of class exchange inside message it is parent of receive and send
 typedef message::exchange exchange;
 

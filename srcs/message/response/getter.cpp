@@ -14,10 +14,30 @@ const std::string				&response::get_status_string() const
 {
 	return first_line.status_string;
 }
+
 const std::string				&response::get_version() const
 {
 	return first_line.version;
 }
+
+const std::string				&response::get_func() const
+{
+	return func;
+}
+
+const std::string				&response::get_save_path() const
+{
+	return save_path;
+}
+
+int								response::get_fd_response() const
+{
+	return fd_response;
+}
+
+std::string		func;
+		std::string		save_path;
+		int				fd_response;
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {
@@ -45,9 +65,17 @@ std::string		response::get(const std::string &hf_sep, const std::string &eol) co
 		++it;
 	}
 	resp_str += eol;
+	return resp_str;
+}
+
+std::string		response::get_rep_body(const std::string &eol) const
+{
+	std::string		resp_str;
 	if (header.find(TRANSFERT_ENCODING) == header.end())
-		resp_str += body;
+		resp_str = body;
+	else if (body.empty())
+		resp_str = "0\r\n\r\n";
 	else
-		resp_str += ft_itoa_base(body.size(), HEXADECIMAL_BASE) + eol + body + "\r\n0\r\n\r\n";
+		resp_str = ft_itoa_base(body.size(), HEXADECIMAL_BASE) + eol + body + "\r\n0\r\n\r\n";
 	return resp_str;
 }

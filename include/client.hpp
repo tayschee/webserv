@@ -20,9 +20,10 @@ class client
         message::receive                rcv;
         int                             fdin;
         FILE                            *file;
-        size_t                          size_body;
         bool                            reset;
-
+	    std::string		                func;
+	    int				                fd_response;
+        bool                            alive;
 
         client();
 
@@ -45,6 +46,8 @@ class client
         int                             is_read() const; // Check if read
         bool                            is_reset() const; // Check if read
 		void							reset_rcv(size_t buf_size);
+        int			                    add_body();
+
 };
 
 #endif

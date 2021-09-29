@@ -89,39 +89,53 @@ void				response::add_connection(int status, const request &req)
 	if (status >= 500 || status == 400)
 	{
 		request &tmp = (request&)req;
-		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
-		tmp.set_connexion(ft_itoa(status));
+		header.insert(std::pair<std::string, std::string>(CONNECTION, CLOSE));
+		tmp.set_connexion(CLOSE);
 	}
-	if (req.get_header().find(CONNECTION)->second == "keep-alive")
-		header.insert(std::pair<std::string, std::string>(CONNECTION, "keep-alive"));
+	message::const_iterator it = req.get_header().find(CONNECTION);
+
+	if (it != req.get_header().end())
+		header.insert(std::pair<std::string, std::string>(CONNECTION, it->second));
 	else
 	{
 		request &tmp = (request&)req;
-		header.insert(std::pair<std::string, std::string>(CONNECTION, "close"));
-		tmp.set_connexion(ft_itoa(status));
+		header.insert(std::pair<std::string, std::string>(CONNECTION, KEEP_ALIVE));
+		tmp.set_connexion(KEEP_ALIVE);
 	}
 }
 
 void				response::add_transfert_encoding() //Transfert-Encoding
 {
-	header.insert(std::pair<std::string, std::string>("Transfer-Encoding", "chunked"));
+	header.insert(std::pair<std::string, std::string>(TRANSFERT_ENCODING, "chunked"));
 }
 
 /* this time, this is not a field it's the body of response which be add */
 
-int			response::add_body(const std::string &path)
+int response::add_body(const std::string &path)
 {
-	char buf[4096] = {0};
-	int fd;
+	struct stat file_stat; //information about file
+	char buf[100] = {0};
 	int res;
-	if ((fd = open(path.c_str(), O_RDONLY)) < 0)
-		return 403;
-	while ((res = read(fd, buf, 4095)) > 0)
+	if (func.empty())
+	{
+		if ((fd_response = open(path.c_str(), O_RDONLY)) < 0)
+			return 403;
+	}
+	if ((res = read(fd_response, buf, 99)) > 0)
 	{
 		body.insert(body.end(), buf, buf + res);
-		memset(buf, 0, 4096);
+		memset(buf, 0, 100);
 	}
-	close(fd);
-
+	stat(path.c_str(), &file_stat);
+	add_content_length(file_stat.st_size);
+	if (res == 0 && func.empty())
+	{
+		func = "";
+		save_path = "";
+		close(fd_response);
+		return 0;
+	}
+	save_path = path;
+	func = "add_body";
 	return 0;
 }

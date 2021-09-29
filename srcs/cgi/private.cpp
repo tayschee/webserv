@@ -51,26 +51,34 @@ void			cgi::clear(char **env)
 
 void		cgi::son(long fdin, long fdout, FILE* file_in, FILE* file_out, int save_in, int save_out, const char *script_name, char **env)
 {
-
 	char **nll = NULL;
 	long		fderr;
-	
+	int			save_err;
+
 	FILE* file_err = tmpfile();
 	fderr = fileno(file_err);
+	save_err = dup(STDERR_FILENO);
+
 	dup2(fdout, STDOUT_FILENO);
 	dup2(fdin, STDIN_FILENO);
 	dup2(fderr, STDERR_FILENO);
 	execve(script_name, nll, env);
 	close(fdin);
+	close(fdout);
+	close(fderr);
 	fclose(file_in);
 	fclose(file_out);
+	fclose(file_err);
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
+	dup2(save_err, STDERR_FILENO);
+
 	close(save_in);
 	close(save_out);
+	close(save_err);
 	clear(env);
 	std::cerr << "Execve crashed." << std::endl;
-	throw std::string("quit");
+	throw std::string("quit cgi");
 }
 
 void			cgi::father(long fdout, std::string &new_body)
@@ -125,7 +133,6 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 		}
 		lseek(fdin, 0, SEEK_SET);
 	}
-
 	pid = fork();
 	if (pid == -1)
 	{
@@ -133,13 +140,9 @@ std::string     cgi::exec(char **env, const request &req, const parser &pars, co
 		std::cerr << "Fork crashed." << std::endl;
 	}
 	else if (pid == 0)
-	{
 		son(fdin, fdout, file_in, file_out, save_in, save_out, pars.get_block(BLOCK_CGI, get_extension(path)).conf.find(SCRIPT_NAME)->second[0].c_str(), env);
-	}
 	else
-	{
 		father(fdout, new_body);
-	}
 	close(fdin);
 	fclose(file_in);
 	fclose(file_out);

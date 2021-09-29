@@ -4,7 +4,7 @@ response::response() : message()
 {
 }
 
-response::response(const request &req, const parser::address_conf &pars_list) : message()
+response::response(const request &req, const parser::address_conf &pars_list, int fd) : message(), fd_response(fd)
 {
 	first_line.status = 400;
 	const parser::address_conf::const_iterator pars_it = find_parser(pars_list, req);
@@ -21,7 +21,6 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 		std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second); //no protect
 		std::string path = find_path(pars.get_block(BLOCK_LOCATION, req.get_uri()), req.get_uri(), req);
 		method_function method;
-
 		/*without typedef method_function f write it, typedef int (response::*f)(const request &req). this is pointer to function*/
 		if (is_cgi(get_extension(path), pars, req.get_method()))
 			method = existing_method.find(POST)->second; //give function associate with request
@@ -30,8 +29,9 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 		
 		main_header(); /*add header_field which are present in all method*/
 		first_line.status = generate_response(path_info, pars, req, method);
-
 	}
+	if (func == "cgi run")
+		return ;
 	add_connection(first_line.status, req);
 	first_line.status_string = find_status_string(first_line.status);
 	if (!req.get_version().empty())
@@ -39,5 +39,22 @@ response::response(const request &req, const parser::address_conf &pars_list) : 
 	if (first_line.version.empty())
 		first_line.version = HTTP_VERSION;
 }
+
+void	response::next()
+{
+	add_body(save_path);
+}
+
+response& response::operator=(const response &other)
+{
+	first_line = other.first_line;
+	func = other.func;
+	save_path = other.save_path;
+	fd_response = other.fd_response;
+	body = other.body;
+	header = other.header;
+	return *this;
+}
+
 
 response::~response(){};

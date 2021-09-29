@@ -12,25 +12,25 @@ static int check_argument(int c)
 	return i;
 }
 
-static int start(cluster &cl)
-{
-	int ret = 0;
-	try
-	{
-		cl.start();
-	}
-	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
-	{
-		std::cerr << e;
-		ret = 1;
-	}
-	catch(std::exception &e)
-	{
-		std::cerr << e.what();
-		ret = 1;
-	}
-	return ret;
-}
+// static int start(cluster &cl)
+// {
+// 	int ret = 0;
+// 	try
+// 	{
+// 		cl.start();
+// 	}
+// 	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
+// 	{
+// 		std::cerr << e << std::endl;
+// 		ret = 1;
+// 	}
+// 	catch(std::exception &e)
+// 	{
+// 		std::cerr << e.what();
+// 		ret = 1;
+// 	}
+// 	return ret;
+// }
 
 int main(int c, char **v)
 {
@@ -44,16 +44,17 @@ int main(int c, char **v)
 	{
 		cluster cl(v[i + 1]);
 		cl.init_listen();
-		ret = start(cl);
+		cl.start();
+		//ret = start(cl);
 	}
 	catch(std::exception &e)
 	{
-		std::cerr << e.what();
+		std::cerr << e.what() << std::endl;
 		ret = 1;
 	}
 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
 	{
-		std::cerr << e;
+		std::cerr << e << std::endl;
 		ret = 1;
 	}
 	return ret;

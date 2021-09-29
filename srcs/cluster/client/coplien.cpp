@@ -4,11 +4,12 @@
 
 // constructor used
 client::client(int _fd, bool _listen, int _nb_pars) : fd(_fd), listen(_listen),
-my_read(false), nb_pars(_nb_pars), rcv(fd, 4096), size_body(0), reset(false)
+my_read(false), nb_pars(_nb_pars), rcv(fd, 4096), reset(false), alive(true)
 {
 	file = tmpfile();
 	fdin = fileno(file);
-	//fcntl(fd, F_SETFL, O_NONBLOCK);
+	fcntl(fd, F_SETFL, O_NONBLOCK);
+	fcntl(fdin, F_SETFL, O_NONBLOCK);
     gettimeofday(&time, NULL);
 }
 

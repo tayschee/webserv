@@ -1,3 +1,42 @@
+sudo service nginx stop
+
+my_cgi=$(which php)
+echo $my_cgi
+
+if [ "$my_cgi" != "/usr/bin/php" ]; then
+    sudo apt-get install php -y
+fi
+
+my_cgi=$(which php-cgi)
+echo $my_cgi
+
+if [ "$my_cgi" != "/usr/bin/php-cgi" ]; then
+    sudo apt-get install php-cgi -y
+fi
+
+my_cgi=$(which python)
+echo $my_cgi
+
+if [ "$my_cgi" != "/usr/bin/python" ]; then
+    sudo apt-get install python -y
+fi
+
+my_cgi=$(which curl)
+echo $my_cgi
+
+if [ "$my_cgi" != "/usr/bin/curl" ]; then
+    sudo apt-get install curl -y
+fi
+
+my_cgi=$(grep "monsite" /etc/hosts)
+echo $my_cgi
+if [[ -z "$my_cgi" ]]; then
+    echo -e "127.0.0.1\tmonsite" >> /etc/hosts
+fi
+
+
+sudo rm /etc/php/7.4/cgi/php.ini && cp php.ini /etc/php/7.4/cgi/php.ini
+
 source tester_utils/include.sh
 source tester_utils/launch_stop.sh
 source tester_utils/random_file.sh
@@ -51,8 +90,8 @@ test $SERVER_NAME "/gif/"
 test $SERVER_NAME "/jpeg/"
 test $SERVER_NAME "/error/"
 test $SERVER_NAME "/dest/"
-test $SERVER_NAME "/" "-L"
 test $SERVER_NAME "/php/"
+test $SERVER_NAME "/" "-L"
 test $SERVER_NAME "/html/3.html" "-L"
 
 SERVER_NAME=same_error
@@ -109,8 +148,8 @@ test_syntax syntax_ressources/tab
 test_syntax syntax_ressources/security_breach
 test_syntax syntax_ressources/no_method
 test_syntax syntax_ressources/no_uri
-test_syntax syntax_ressources/no_version
-#test_syntax syntax_ressources/multiple_request
+# test_syntax syntax_ressources/no_version
+test_syntax syntax_ressources/multiple_request
 
 # #TEST QUERY AND PHP
 test_method $SERVER_NAME POST /php/1.phppl

@@ -16,8 +16,6 @@ int response::error_file(int errnum) const
 
 void response::error_special_case(const request &req)
 {
-	if (req.get_method() == HEAD)
-		body.clear();
 	if (req.get_method() == CONNECT)
 	{
 		body.clear();
@@ -63,7 +61,6 @@ int response::redirect_to_error(const std::string &path, const request &req, con
 
 	parser::entries path_info(pars.get_block(PARSER_LOCATION, path).conf);
 	status = (this->*method)(path, req, pars); //change for if there is redirect
-
 	return status;
 }
 
@@ -72,7 +69,6 @@ int response::error_response(int status, const request &req, const parser &pars)
 	std::map<int, std::string> block = pars.get_block(PARSER_SERVER).errors;
 	std::map<int, std::string>::iterator it;
 	std::map<int, std::string>::const_iterator end(block.end());
-
 	it = block.find(status);
 	if (it == end)
 		default_error(status, req, pars);

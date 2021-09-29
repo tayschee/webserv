@@ -40,6 +40,9 @@ class response : public message
 
 	private :
 		response_line	first_line; //information about first line of response
+		std::string		func;
+		std::string		save_path;
+		int				fd_response;
 
 	private :
 		static response::method_array			initialise_existing_method();
@@ -108,10 +111,13 @@ class response : public message
 		void				add_www_autentificate(const parser &pars, const std::string &path); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
 		void				add_connection(int status, const request &req);
+		const parser			save_pars;
 		int					add_body(const std::string &path);
 
 
+
 	public :
+		void									next();
 		void 									parse_start_line(const std::string &start_line){ (void)start_line; }
 		void 									parse_header(const std::string &start_line){ (void)start_line; }
 
@@ -121,14 +127,15 @@ class response : public message
 		int									get_status() const;
 		const std::string					&get_status_string() const;
 		const std::string					&get_version() const;
+		const std::string					&get_func() const;
+		const std::string					&get_save_path() const;
+		int									get_fd_response() const;
 
-		//const std::string	&get_body() const;
-		//const header_type	&get_header() const;
-	
 		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
-		int										sent(int fd, request &req, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
+		std::string								get_rep_body(const std::string &eol = std::string(CRLF)) const;
+		int										sent(int fd, bool first = 0, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function
@@ -139,10 +146,15 @@ class response : public message
 		void									error_special_case(const request &req);
 
 	public :
+
+		// method_function method;
+
+
 		response();
-		response(const request &req, const parser::address_conf &pars_list);
+		response(const request &req, const parser::address_conf &pars_list, int fd);
 		response(const request::exception except, const parser &pars);
 		~response();
+		response& operator=(const response &other);
 };
 
 #endif

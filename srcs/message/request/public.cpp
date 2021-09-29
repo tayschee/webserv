@@ -2,9 +2,6 @@
 
 int		 request::validity() const
 {
-	// if (first_line.version.empty())
-	// 	first_line.version = HTTP_VERSION;
-
 	if (first_line.version.empty())
 		return 400;
 	if (first_line.uri.size() < 1 || first_line.uri[0] != '/')

@@ -89,37 +89,16 @@ void			response::status_header(int status, const std::string &path, const parser
 {
 	(void)path;
 	(void)pars;
-	/*if (status == 401)
-	{
-		add_www_autentificate(pars, path);
-	}*/
 	if (status == 503)
 		add_retry_after(200);
-	//if (first_line.status > 299 && first_line.status < 400)
-	//	add_retry_after(1);
 }
 
 bool			response::is_acces(const struct stat &file) const
 {
-	// IRWXU:  printf("le propriétaire a le droit de lecture\n");
-	// IWUSR:  printf("le propriétaire a le droit d'écriture\n"); 
-	// IXUSR:  printf("le propriétaire a le droit d'exécution\n");
-	// IRWXG:  printf("lecture/écriture/exécution du groupe\n");
-	// IRGRP:  printf("le groupe a le droit de lecture\n");
-	// IWGRP:  printf("le groupe a le droit d'écriture\n");      
-	// IXGRP:  printf("le groupe a le droit d'exécution\n");   
-	// IRWXO:  printf("lecture/écriture/exécution des autres\n");   
-	// IROTH:  printf("les autres ont le droit de lecture\n");   
-	// IWOTH:  printf("les autres ont le droit d'écriture\n");   
-	// IXOTH:  printf("les autres ont le droit d'exécution\n");
 	if (!(file.st_mode & S_IRUSR)) // check read
 		return (403);
 	if (!(file.st_mode & S_IWUSR)) // check write
 		return (403);
-	// if (!(file.st_mode & S_IRWXU)) // ALL
-	// 	return (403);
-	// if (!(file.st_mode & S_IXUSR)) // check execution
-	// 	return (403);
 	return 0;
 }
 
@@ -338,14 +317,18 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 	return resp_str;
 }
 
-int		response::sent(int fd, request &req, const std::string &hf_sep, const std::string &eol)
+int		response::sent(int fd, bool first, const std::string &hf_sep, const std::string &eol)
 {
 	std::string resp_str;
-	(void)req;
-	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
-		header.erase(LAST_MODIFIED);
-
-	resp_str = get(hf_sep, eol);
+	if (first)
+	{
+		if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+			header.erase(LAST_MODIFIED);
+		resp_str = get(hf_sep, eol);
+	}
+	resp_str += get_rep_body();
     write(fd, resp_str.c_str(), resp_str.size());
+	body.clear();
+	header.clear();
 	return 0;
 }

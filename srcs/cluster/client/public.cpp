@@ -10,7 +10,6 @@ void client::receive() // call recieve
 	{
 		my_read = -1;
 		msg.clear();
-		msg = "";
 	}
 	else
 	{
@@ -18,10 +17,8 @@ void client::receive() // call recieve
 		if (i & rcv.BODY_MASK)
 		{
 			msg += rcv.get_buffer();
-			size_body += msg.size();
 			write(fdin, msg.c_str(), msg.size());
 			msg.clear();
-			msg = "";
 
 			rcv.prepare_next();
 
@@ -30,48 +27,87 @@ void client::receive() // call recieve
 		else if (i & rcv.HEADER_MASK)
 		{
 			msg += rcv.get_buffer();
-			size_body += msg.size();
 
 			write(fdin, msg.c_str(), msg.size());
 			msg.clear();
-			msg = "";
 			my_read = 0;
 		}
 	}
 	reset = true;
-	// reset_time();
+}
+
+int			client::add_body()
+{
+	char buf[100] = {0};
+	int res;
+	std::string body;
+	
+	if ((res = read(fd_response, buf, 99)) > 0)
+	{
+		body.insert(body.end(), buf, buf + res);
+		memset(buf, 0, 100);
+	}
+	if (res == 0)
+	{
+		func = "";
+		close(fd_response);
+	}
+	write (fd, body.c_str(), body.size());
+	body.clear();
+	return 0;
 }
 
 long client::sent(const std::vector<parser::address_conf> &vec_parser) // send response
 {
 	std::string msg;
+	bool first = false;
 
-	lseek(fdin, 0, SEEK_SET);
-	size_t size = 4096;
-	char buf[size + 1];
-	int ret = 0;
-	while ((ret = read(fdin, buf, size)) > 0)
+	if (func.empty())
 	{
-		buf[ret] = 0;
-		msg += buf;
+		first = true;
+		lseek(fdin, 0, SEEK_SET);
+		size_t size = 4096;
+		char buf[size + 1];
+		int ret = 0;
+		while ((ret = read(fdin, buf, size)) > 0)
+		{
+			buf[ret] = 0;
+			msg += buf;
+		}
+		close(fdin);
+		fclose(file);
+		file = tmpfile();
+		fdin = fileno(file);
+		request req(msg);
+		msg.clear();
+		msg = "";
+		response rep(req, vec_parser[nb_pars], fd);
+		if (req.get_connexion() == "close")
+			alive = false;
+		func = rep.get_func();
+		fd_response = rep.get_fd_response();
+		if (func != "cgi run")
+			rep.sent(fd, first);
+		rep = response();
 	}
-
-	close(fdin);
-	fclose(file);
-	file = tmpfile();
-	fdin = fileno(file);
-	request req(msg);
-	msg.clear();
-	msg = "";
-
-	if (req.get_connexion().empty())
-		req.set_connexion(KEEP_ALIVE);
-	response rep(req, vec_parser[nb_pars]);
-	my_read = rep.sent(fd, req);
-	size_body = 0;
+	else
+	{
+		first = false;
+		add_body();
+	}
+	if (func.empty() || func == "cgi run")
+	{
+		func.clear();
+		fd_response = -1;
+		my_read = 0;
+		if (!alive)
+			return -1;
+	}
+	if (func == "cgi end")
+	{
+		throw std::string("quit PHP");
+	}
 	reset = true;
-	if (req.get_connexion() != KEEP_ALIVE)
-		return -1;
-	// reset_time();
+
 	return 0;
 }

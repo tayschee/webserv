@@ -4,7 +4,8 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 {
 	int ret = method_is_get(uri, req, pars);
 	body.clear();
-	header.erase("Transfer-Encoding");
+	header.erase(TRANSFERT_ENCODING);
+	func.clear();
 	return ret; //value of OK response
 }
 
@@ -22,6 +23,7 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		return ret;
 
 	std::string type = find_media_type(get_extension(path), pars);
+
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
 		try
@@ -63,7 +65,8 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		first_line.status = 42;
 		method_function method = existing_method.find(POST)->second;
 		return (this->*method)(path, req, pars); //change for if there is redirect
-
+		add_last_modified(file_stat.st_mtime);	 /* st_mtime = hour of last modification */
+		add_content_length(body.size());
 		// status = (this->*method)(path, req, pars); //change for if there is redirect
 	}
 	else
@@ -76,9 +79,8 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		}
 		else
 			add_content_type(type);
+		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	}
-	add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
-	add_content_length(body.size());
 
 	return 200;
 }
@@ -139,8 +141,6 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 				close(fd);
 				return 403;
 			}
-			/* this header field are specific if file didn't exists */
-			//add_content_length(0);
 			close(fd);
 		}
 	}
@@ -189,16 +189,32 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 	}
 	if (ret != 0)
 		return ret;
+
 	if (!is_cgi(get_extension(path), pars, req.get_method()))
 		return 405;
-	cgi(req, pars, body, path);
-	if (body[0] == '5')
-		return ft_atoi<int>(body);
 
-	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
-	if (req.get_method() != HEAD)
-		add_transfert_encoding();
-	// add_content_length(body.size());
+	signal(SIGCHLD, SIG_IGN);
+
+	pid_t pid;
+	pid = fork();
+	if (pid == -1)
+	{
+		std::cerr << "Fork crashed." << std::endl;
+		return 500;
+	}
+	if (pid == 0)
+	{
+		cgi(req, pars, body, path);
+		func = "cgi end";
+		if (body[0] == '5')
+			return ft_atoi<int>(body);
+
+		add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
+		if (req.get_method() != HEAD)
+			add_transfert_encoding();
+	}
+	else
+		func = "cgi run";
 
 	return 200;
 }

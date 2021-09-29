@@ -9,7 +9,6 @@ RUN apt install -y nginx-full \
 
 # php config
 RUN apt install -y php-fpm \
-&& apt install -y python \
 && service php7.4-fpm start
 
 RUN touch /etc/nginx/conf.d/default.conf

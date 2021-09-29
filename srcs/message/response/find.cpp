@@ -81,12 +81,9 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		path.erase(pos, 1);
 	if (stat(path.c_str(), &file_stat) < 0)
 	{
-		// perror("test : ");
-		//do something
 	}
 	else if (index && (file_stat.st_mode & S_IFMT) == S_IFDIR) //S_IFMT is a mask to find S_IFDIR which is value to directory
 	{
-
 		//determine if this is complete path or if this not for that verify if this is a directory
 		if (is_acces(file_stat))
 			return path;
@@ -126,7 +123,6 @@ std::string response::find_index(const parser::entries &entries, const std::stri
 	}
 	catch(const std::exception& e)
 	{
-		// std::cerr << e.what() << '\n';
 	}
 
 	return path;
