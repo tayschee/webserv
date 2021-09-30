@@ -37,9 +37,6 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 
 	mime = create_default_mime_type();
 
-	if (path[path.length() - 1] == '/')
-		path.erase(path.end());
-
 	if (dir == NULL)
 		throw std::invalid_argument("Cannot open " + path + ": no such file or directory.");
 
