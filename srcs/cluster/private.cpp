@@ -6,7 +6,6 @@ void sighandler(const int signal) // catch the signals
 {
 	if (signal)
 		is_alive = 0;
-	std::cerr << "SIGNAL : " << signal << "\n";
 }
 
 void	cluster::close_client(iterator &it) // close a client

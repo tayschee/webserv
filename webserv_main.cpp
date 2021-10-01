@@ -49,12 +49,12 @@ int main(int c, char **v)
 	}
 	catch(std::exception &e)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cerr << e.what();
 		ret = 1;
 	}
 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
 	{
-		std::cerr << e << std::endl;
+		std::cerr << e;
 		ret = 1;
 	}
 	return ret;

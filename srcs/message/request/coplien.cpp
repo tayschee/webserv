@@ -14,7 +14,6 @@
 	8.Date =							17.WWW-Authenticate
 */
 
-//do nothing wait read
 request::request() : message() {}
 
 //request::request(const request &x) : message(x) {}
