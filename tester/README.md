@@ -1,8 +1,8 @@
 # WEBSERV TESTER
 
 ## Configuration
-You must configure some server like nginx server configured in directory nginx_config just change ip  
-In file tester_utils/include.sh  
+You must configure your server like nginx server, configured in directory nginx_config just keep ip different.  
+And in file tester_utils/include.sh  
 MODIFY : 
   - WEBSERV_IP
   - WEBSERV_PORT
