@@ -14,6 +14,9 @@ PATH_TO_DOCKERFILE=./nginx_serv
 
 SRCS_PATH=$(pwd)/srcs
 
+PATH_TO_PHP_INI=/etc/php/7.2/cgi/php.ini
+PATH_TO_MY_PHP_INI=php.ini
+
 SEND_REQUEST_PY=tester_utils/send_request.py
 SPLIT_RESPONSE_PY=tester_utils/split_response.py
 

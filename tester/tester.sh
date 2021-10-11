@@ -1,3 +1,9 @@
+source tester_utils/include.sh
+source tester_utils/launch_stop.sh
+source tester_utils/random_file.sh
+source tester_utils/test.sh
+source tester_utils/utils.sh
+
 sudo service nginx stop
 
 my_cgi=$(which php)
@@ -5,6 +11,9 @@ echo $my_cgi
 
 if [ "$my_cgi" != "/usr/bin/php" ]; then
     sudo apt-get install php -y
+    if [$? == 1]; then
+        exit 1
+    fi
 fi
 
 my_cgi=$(which php-cgi)
@@ -12,6 +21,9 @@ echo $my_cgi
 
 if [ "$my_cgi" != "/usr/bin/php-cgi" ]; then
     sudo apt-get install php-cgi -y
+    if [$? == 1]; then
+        exit 1
+    fi
 fi
 
 my_cgi=$(which python)
@@ -19,6 +31,9 @@ echo $my_cgi
 
 if [ "$my_cgi" != "/usr/bin/python" ]; then
     sudo apt-get install python -y
+    if [$? == 1]; then
+        exit 1
+    fi
 fi
 
 my_cgi=$(which curl)
@@ -26,6 +41,9 @@ echo $my_cgi
 
 if [ "$my_cgi" != "/usr/bin/curl" ]; then
     sudo apt-get install curl -y
+    if [$? == 1]; then
+        exit 1
+    fi
 fi
 
 my_cgi=$(grep "monsite" /etc/hosts)
@@ -38,14 +56,8 @@ chmod 000 ../www/html/private
 chmod 000 ../www/html/private2/index.html
 chmod 000 ../www/html/private3
 
-sudo rm /etc/php/7.4/cgi/php.ini
-sudo cp php.ini /etc/php/7.4/cgi/php.ini
-
-source tester_utils/include.sh
-source tester_utils/launch_stop.sh
-source tester_utils/random_file.sh
-source tester_utils/test.sh
-source tester_utils/utils.sh
+sudo rm $PATH_TO_PHP_INI
+sudo cp $PATH_TO_MY_PHP_INI $PATH_TO_PHP_INI
 
 echo "" > $OUTPUT; #clear output
 #echo ""  > $ERROR_OUTPUT; #clear error
