@@ -54,6 +54,7 @@ all : $(EXEC)
 $(EXEC) : $(OBJS)
 	$(CXX) -o $(EXEC) $(INCLUDE) $^
 #-fsanitize=address -g
+# $(CXX) -o $(EXEC) $(INCLUDE) -fsanitize=address -g3  $^
 clean :
 	rm -f $(OBJS) $(DEBUG_OBJS)
 

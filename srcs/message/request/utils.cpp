@@ -2,17 +2,17 @@
 
 void	request::request_line::clear()
 {
-	method.clear();
-	uri.clear();
-	query_string.clear();
-	version.clear();
+	method = "";
+	uri = "";
+	query_string = "";
+	version = "";
 }
 
 void	request::clear()
 {
 	first_line.clear();
 	header.clear();
-	body.clear();
+	body = "";
 }
 
 int		request::path_is_valid(const std::string &path) const

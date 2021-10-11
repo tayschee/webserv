@@ -19,14 +19,20 @@ response::find_status_string(const int status) const
 
 /*this function return function associated to a method*/
 response::method_array::mapped_type //method_function
-response::find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const
+response::find_method_function(const request &req, const std::vector<std::string> &allow_method, const parser &pars) const
 {
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
+	std::string method = req.get_method();
+	std::string path = find_path(pars.get_block(BLOCK_LOCATION, req.get_uri()), req.get_uri(), req);
 	while (it < end)
 	{
 		if (method == *it)
+		{
+			if (is_cgi(get_extension(path), pars, method))
+				return existing_method.find(POST)->second;
 			return existing_method.find(method)->second;
+		}
 		++it;
 	}
 	return &response::method_is_unknow;
@@ -72,7 +78,6 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 		alias = entries.find(ALIAS)->second[0];
 		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
 	}
-
 
 	struct stat file_stat;
 
@@ -144,6 +149,5 @@ const parser::address_conf::const_iterator	response::find_parser(const parser::a
 	}
 	if (it == pars_list.end())
 		it = it_default;
-	
 	return it;
 }

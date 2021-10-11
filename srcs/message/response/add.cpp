@@ -33,9 +33,9 @@ void			response::add_date()
 void			response::add_content_length(const off_t &bytes_size) //off_t == long long on mac
 {
 	/*Warning dont know of type off_t is larger than int*/
-	header.erase(CONTENT_LENGTH);
-	if (bytes_size > 0)
-		header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
+	// header.erase(CONTENT_LENGTH);
+	// if (bytes_size > 0)
+	header.insert(std::pair<std::string, std::string>(CONTENT_LENGTH, ft_itoa(bytes_size)));
 }
 
 void				response::add_www_autentificate(const parser &pars, const std::string &path)
@@ -114,27 +114,27 @@ void				response::add_transfert_encoding() //Transfert-Encoding
 int response::add_body(const std::string &path)
 {
 	struct stat file_stat; //information about file
-	char buf[100] = {0};
-	int res;
-	if (func.empty())
-	{
-		if ((fd_response = open(path.c_str(), O_RDONLY)) < 0)
-			return 403;
-	}
-	if ((res = read(fd_response, buf, 99)) > 0)
-	{
-		body.insert(body.end(), buf, buf + res);
-		memset(buf, 0, 100);
-	}
+	// char buf[100] = {0};
+	// int res;
+	// if (func.empty())
+	// {
+	if ((fdout = open(path.c_str(), O_RDONLY)) < 0)
+		return 403;
+	// }
+	// if ((res = read(fd_response, buf, 99)) > 0)
+	// {
+	// 	body.insert(body.end(), buf, buf + res);
+	// 	memset(buf, 0, 100);
+	// }
 	stat(path.c_str(), &file_stat);
 	add_content_length(file_stat.st_size);
-	if (res == 0 && func.empty())
-	{
-		func = "";
-		save_path = "";
-		close(fd_response);
-		return 0;
-	}
+	// if (res == 0 && func.empty())
+	// {
+	// 	func = "";
+	// 	save_path = "";
+	// 	close(fd_response);
+	// 	return 0;
+	// }
 	save_path = path;
 	func = "add_body";
 	return 0;

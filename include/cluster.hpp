@@ -24,7 +24,7 @@ class cluster
         void	                close_client(iterator &it); // close a client
         void	                set_list_fd(fd_set &readfds, fd_set &writefds, int &max); // initialize all sockets
         int                     wait_activity(fd_set &readfds, fd_set &writefds); // wait a activity as read or write
-        int 	                receive(client &cl); // call receive
+        int 	                receive(client &cl, const fd_set &writefds); // call receive
         int		                send_response(client &cl); // send to response
 
     public: /*public function*/

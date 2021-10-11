@@ -16,6 +16,18 @@ void	cluster::close_client(iterator &it) // close a client
 	list_client.erase(tmp);
 }
 
+void	init_fd(int fd, fd_set &readfds, fd_set &writefds, int &max)
+{
+	if (fd > 0)
+	{
+		// std::cout << "fd in init_fd = " << fd << std::endl;
+		if (fd > max)
+			max = fd;
+		FD_SET(fd, &readfds);
+		FD_SET(fd, &writefds);
+	}
+}
+
 void	cluster::set_list_fd(fd_set &readfds, fd_set &writefds, int &max) // initialize the list of sockets
 {
 	FD_ZERO(&readfds);
@@ -28,10 +40,14 @@ void	cluster::set_list_fd(fd_set &readfds, fd_set &writefds, int &max) // initia
 		}
 		if (!(*it)->is_time())
 		{
-			if ((*it)->get_fd() > max)
-				max = (*it)->get_fd();
-			FD_SET((*it)->get_fd(), &readfds);
-			FD_SET((*it)->get_fd(), &writefds);
+			init_fd((*it)->get_fd(), readfds, writefds, max);
+			init_fd((*it)->get_fdbody(), readfds, writefds, max);
+			init_fd((*it)->get_fdin(), readfds, writefds, max);
+			init_fd((*it)->get_fdout(), readfds, writefds, max);
+			// init_fd((*it)->get_pipe_in_0(), readfds, writefds, max);
+			// init_fd((*it)->get_pipe_in_1(), readfds, writefds, max);
+			// init_fd((*it)->get_pipe_out_0(), readfds, writefds, max);
+			// init_fd((*it)->get_pipe_out_1(), readfds, writefds, max);
 		}
 		else
 		{
@@ -63,7 +79,7 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 	return 1;
 }
 
-int		cluster::receive(client &cli) // there is something to read
+int		cluster::receive(client &cli, const fd_set &writefds) // there is something to read
 {
 	int res;//, size;
 	if (cli.is_listen()) // check if new client
@@ -83,9 +99,11 @@ int		cluster::receive(client &cli) // there is something to read
 	}
 	else
 	{
-		cli.receive();
+		cli.receive(writefds);
 		if (cli.is_read() == -1)
+		{
 			return -1;
+		}
 	}
 	return 1;
 }

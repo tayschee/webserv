@@ -32,21 +32,18 @@ int cluster::start() // cluster manage the list of socketc
 			int ret = 0;
 			client &cli = *(*it);
 
-			if (!cli.is_read() && FD_ISSET(cli.get_fd(), &readfds)) // is there a modification on the current list_client ?
+			if (FD_ISSET(cli.get_fd(), &readfds)) // is there a modification on the current list_client ?
 			{
-				if ((ret = receive(cli)) == 0)
+				if ((ret = receive(cli, writefds)) == 0)
 					return 0;
 				else if (ret == -1)
 				{
 					close_client(it);
 				}
 			}
-			else if (cli.is_read() && FD_ISSET(cli.get_fd(), &writefds))
+			else if (ret != -1 && cli.is_read() && cli.sent(vec_parser, readfds, writefds) == -1)
 			{
-				if (cli.sent(vec_parser) == -1)
-				{
-					close_client(it);
-				}
+				close_client(it);
 			}
 		}
 	}

@@ -39,10 +39,15 @@ class response : public message
 		typedef std::map<int, std::string>				status_array;
 
 	private :
-		response_line	first_line; //information about first line of response
+		response_line	first_line; //information about first line of response`
 		std::string		func;
 		std::string		save_path;
-		int				fd_response;
+		int				&fdbody;
+		int				&fdin;
+		int				&fdout;
+		// int				pipe_in[2];
+		const parser			*save_pars;
+
 
 	private :
 		static response::method_array			initialise_existing_method();
@@ -68,11 +73,11 @@ class response : public message
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
 		std::string		header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const;
-
+		void			end_header(const request &req);
 
 	private : //find_* functions, they return a value with a key without map
 		/*the key_array allow_method is pass in parameter and create in response(std::string[3], header_type, body) in public.cpp*/
-		method_array::mapped_type				find_method_function(const std::string &method, const std::vector<std::string> &allow_method) const; //KEY : method, VALUE : function
+		method_array::mapped_type				find_method_function(const request &req, const std::vector<std::string> &allow_method, const parser &pars) const; //KEY : method, VALUE : function
 		status_array::value_type::second_type	find_status_string(const int status) const; //KEY : status, VALUE: message
 		//std::string								find_path(const parser::block &block, const std::string &partial_path,  const request &req) const;
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
@@ -108,7 +113,6 @@ class response : public message
 		void				add_www_autentificate(const parser &pars, const std::string &path); //WWW-Authentificate
 		void				add_retry_after(size_t sec); //Retry-After
 		void				add_connection(int status, const request &req);
-		const parser			save_pars;
 		int					add_body(const std::string &path);
 
 
@@ -126,12 +130,14 @@ class response : public message
 		const std::string					&get_version() const;
 		const std::string					&get_func() const;
 		const std::string					&get_save_path() const;
-		int									get_fd_response() const;
+		const parser						*get_save_pars() const;
+		int									get_fdin() const;
 
 		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 		std::string								get_rep_body(const std::string &eol = std::string(CRLF)) const;
+		std::string								get_rep_header(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 		int										sent(int fd, bool first = 0, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 
 	private : //error_* functions, they are relations with error returns
@@ -148,10 +154,12 @@ class response : public message
 
 
 		response();
-		response(const request &req, const parser::address_conf &pars_list, int fd);
-		response(const request::exception except, const parser &pars);
-		~response();
+		response(const request &req, const parser::address_conf &pars_list, int &fdbody, int &fdin, int &fdout);
+		response(int status, const request &req, const parser &pars, int &fdbody, int &fdin, int &fdout);
+
+		// response(const request &req, const parser &pars, int status);
 		response& operator=(const response &other);
+		~response();
 };
 
 #endif

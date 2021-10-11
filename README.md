@@ -6,6 +6,6 @@ git clone https://github.com/tayschee/webserv.git webserv
   make
 ## Launch Server
   ./webserv config_directory  
-  For more information about config see : https://github.com/tayschee/webserv/tree/alternatif_master/conf#readme
+  For more information about config see PUT_A_LINK
 ## Stop Server
   CTRL-C

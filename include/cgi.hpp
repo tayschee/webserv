@@ -9,18 +9,20 @@
 class cgi
 {
     private: /*private function*/
+        int                    my_pid;
         cgi(const cgi& other);
         cgi &operator=(const cgi& other);
         
         void			        clear(char **env);
-        std::string             exec(char **env, const request &req, const parser &pars, const std::string &path);
-        char                    **init_env(const request &req, const parser &pars, const std::string &path);
-        void                    son(long fdin, long fdout, FILE* file_in, FILE* file_out, int save_in, int save_out, const char *script_name, char **env);
-        void			        father(long fdout, std::string &new_body);
+        std::string             exec(char **env, const parser &pars, const std::string &path, int &fdin, int &fdout);
+        char                    **init_env(const request &req, const parser &pars, const std::string &path, int &fdin);
+        void                    son(int &fdin, int &fdout, int save_in, int save_out, const char *script_name, char **env);
+        // void			        father(long fdout, std::string &new_body);
 
 
     public: /*public function*/
-        cgi(const request &req, const parser &pars, std::string &body, const std::string &path);
+        int                     get_pid();
+        cgi(const request &req, const parser &pars, const std::string &path, int &fdin, int &fdout);
         ~cgi();
 };
 

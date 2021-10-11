@@ -11,6 +11,8 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 
 int response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
+	std::cout << "JE SUIS DANS GET" << std::endl;
+
 	struct stat file_stat; //information about file
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	int ret = 0;
@@ -58,6 +60,8 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		add_transfert_encoding();
 		add_content_type(TEXT_HTML);
 
+		func = "index";
+
 		return 200;
 	}
 	else if (is_cgi(get_extension(path), pars, req.get_method()))
@@ -67,10 +71,11 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		return (this->*method)(path, req, pars); //change for if there is redirect
 		add_last_modified(file_stat.st_mtime);	 /* st_mtime = hour of last modification */
 		add_content_length(body.size());
-		// status = (this->*method)(path, req, pars); //change for if there is redirect
 	}
 	else
 	{
+		std::cout << "path = " << path << std::endl;
+
 		if ((ret = add_body(path)) != 0)
 			return ret;
 		else if (type.empty())
@@ -79,9 +84,9 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		}
 		else
 			add_content_type(type);
+		std::cout << "add last modified" << std::endl;
 		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	}
-
 	return 200;
 }
 
@@ -117,8 +122,7 @@ int response::method_is_delete(const std::string &uri, const request &req, const
 
 int response::method_is_put(const std::string &uri, const request &req, const parser &pars)
 {
-	int fd;
-	int response_value = 204;
+	first_line.status = 204;
 
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	struct stat file_stat; //information about file
@@ -128,46 +132,42 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 	/*verify if content exist*/
 	if (lstat(path.c_str(), &file_stat) < 0)
 	{
-		if ((fd = open(path.c_str(), O_WRONLY)) < 0)
+		if ((fdin = open(path.c_str(), O_WRONLY)) < 0)
 		{
-			response_value = 201;										 //CREATE
-			if ((fd = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
+			first_line.status = 201;										 //CREATE
+			if ((fdin = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
 			{
-				close(fd);
+				close(fdin);
+				std::cout << "close fdin" << std::endl;
+				fdin = -1;
 				return 403;
 			}
-			if (write(fd, req.get_body().c_str(), req.get_body().size()) < 0)
-			{
-				close(fd);
-				return 403;
-			}
-			close(fd);
 		}
 	}
 	else
 	{
 		if (is_acces(file_stat))
 			return ret;
-		if ((fd = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
+		if ((fdin = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
 		{
-			close(fd);
-			return 403;
-		}
-		if (write(fd, req.get_body().c_str(), req.get_body().size()) < 0)
-		{
-			close(fd);
-			return 403;
-		}
-		/* this header field are specific if file didn't exists */
+			close(fdin);
+			std::cout << "close fdin" << std::endl;
 
-		response_value = 204; //CREATE
-		close(fd);
+			fdin = -1;
+			return 403;
+		}
+
+		first_line.status = 204; //CREATE
 	}
+
 	header.insert(value_type(CONTENT_LOCATION, uri));
 	add_content_type(TEXT_HTML);
+	func = "put";
 
-	return response_value;
+	
+	return first_line.status;
 }
+
 
 int response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
@@ -190,31 +190,16 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 	if (ret != 0)
 		return ret;
 
+	func = "cgi";
 	if (!is_cgi(get_extension(path), pars, req.get_method()))
+	{
 		return 405;
-
-	signal(SIGCHLD, SIG_IGN);
-
-	pid_t pid;
-	pid = fork();
-	if (pid == -1)
-	{
-		std::cerr << "Fork crashed." << std::endl;
-		return 500;
 	}
-	if (pid == 0)
-	{
-		cgi(req, pars, body, path);
-		func = "cgi end";
-		if (body[0] == '5')
-			return ft_atoi<int>(body);
+	save_path = path;
 
-		add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
-		if (req.get_method() != HEAD)
-			add_transfert_encoding();
-	}
-	else
-		func = "cgi run";
+	add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
+	if (req.get_method() != HEAD)
+		add_transfert_encoding();
 
 	return 200;
 }
@@ -224,7 +209,6 @@ int response::method_is_unknow(const std::string &uri, const request &req, const
 	(void)pars;
 	(void)req;
 	(void)uri;
-	header.erase(GET);
 
 	//Method Not Allowed
 	return 405;

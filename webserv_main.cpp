@@ -49,13 +49,19 @@ int main(int c, char **v)
 	}
 	catch(std::exception &e)
 	{
-		std::cerr << e.what();
+		std::cerr << e.what() << std::endl;
 		ret = 1;
 	}
 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
 	{
-		std::cerr << e;
-		ret = 1;
+		// if (e == "cgi quit")
+		// {
+			ret = 500;
+			// sleep(10);
+			std::cout << "quit de cgi" << std::endl;
+			std::cerr << e << std::endl;
+			// sleep(5);
+		// }
 	}
 	return ret;
 }

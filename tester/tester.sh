@@ -38,7 +38,8 @@ chmod 000 ../www/html/private
 chmod 000 ../www/html/private2/index.html
 chmod 000 ../www/html/private3
 
-sudo rm /etc/php/7.4/cgi/php.ini && cp php.ini /etc/php/7.4/cgi/php.ini
+sudo rm /etc/php/7.4/cgi/php.ini
+sudo cp php.ini /etc/php/7.4/cgi/php.ini
 
 source tester_utils/include.sh
 source tester_utils/launch_stop.sh

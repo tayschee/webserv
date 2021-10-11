@@ -203,20 +203,20 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 	{
 		if (method == "DELETE" || method == "PUT")
 			return false;
-		parser::entries bc(pars.get_block(BLOCK_CGI, type).conf);
-		std::vector<std::string> tab;
+		pars.get_block(BLOCK_CGI, type);
+		// std::vector<std::string> tab;
 		
-		if (bc.find(ACCEPT) != bc.end())
-			tab = bc.find(ACCEPT)->second;
-		else
-			tab = pars.get_block(BLOCK_SERVER).conf.find(ACCEPT)->second;
+		// if (bc.find(ACCEPT) != bc.end())
+		// 	tab = bc.find(ACCEPT)->second;
+		// else
+		// 	tab = pars.get_block(BLOCK_SERVER).conf.find(ACCEPT)->second;
 
-		for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-		{
-			if (*it == method)
-				return true;	
-		}
-		return false;
+		// for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
+		// {
+		// 	if (*it == method)
+		// 		return true;	
+		// }
+		// return false;
 	}
 	catch(const std::exception& e)
 	{
@@ -283,8 +283,16 @@ int response::is_redirect(const parser::entries &block, const parser &pars, cons
 int response::generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method)
 {
 	int status;
+	long size_fd = -1;
+	long size_body = -1;
+	struct stat fd_stat;
 
-	if (path_info.find(BODY_SIZE) != path_info.end() && req.get_body().size() > ft_atoi<unsigned long>(path_info.find("body_size_max")->second[0]))
+	if (fstat(fdbody, &fd_stat) == 0)
+		size_fd = fd_stat.st_size;
+	if (path_info.find(BODY_SIZE) != path_info.end())
+		size_body = ft_atoi<long>(path_info.find("body_size_max")->second[0]);
+
+	if (size_body != -1 && ((long)req.get_body().size() > size_body || size_fd > size_body))
 	{
 		status = 413;
 	}
@@ -294,7 +302,9 @@ int response::generate_response(const parser::entries &path_info, const parser &
 		status = (this->*method)(req.get_uri(), req, pars);
 	}
 	if (status > 299)
+	{
 		status = error_response(status, req, pars);
+	}
 	return status;
 }
 
@@ -317,8 +327,22 @@ std::string			response::header_in_order(const std::string &hf_sep, const std::st
 	return resp_str;
 }
 
+void	response::end_header(const request &req)
+{
+	add_connection(first_line.status, req);
+	first_line.status_string = find_status_string(first_line.status);
+	if (!req.get_version().empty())
+		first_line.version = req.get_version();
+	if (first_line.version.empty())
+		first_line.version = HTTP_VERSION;
+	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
+		header.erase(LAST_MODIFIED);
+}
+
 int		response::sent(int fd, bool first, const std::string &hf_sep, const std::string &eol)
 {
+	(void)hf_sep;
+	(void)eol;
 	std::string resp_str;
 	if (first)
 	{
