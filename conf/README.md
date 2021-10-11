@@ -29,7 +29,7 @@ name arg0 arg1 ... argn {
 
 	- The "location /" block is mandatory. Not putting it will result in an error and the removal of the file from the parsing architecture.
 
-	- If no listen is specified, the default port will be 80.
+	- Listen and Host must be specified in order to have a valid configuration file.
 	- In the "location /", it must be at least a root and an index properties.
 
 ## Other blocks and properties

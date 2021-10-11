@@ -98,6 +98,7 @@ void parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_ob
 	if (!new_object.validate())
 		return;
 
+
 	entries pars_new_object(new_object.get_block(PARSER_SERVER).conf);
 
 	while (i < pars.size())

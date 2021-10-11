@@ -65,6 +65,7 @@ bool parser::validate()
 	if (error || _blocks.empty())
 		return (false);
 
+
 	blocks::key_type server = std::make_pair(PARSER_SERVER, std::vector<std::string>());
 	_blocks[server].conf.insert(std::make_pair(PARSER_LISTEN, std::vector<std::string>(1, "80")));
 
@@ -78,6 +79,12 @@ bool parser::validate()
 			_blocks[server].conf.find(PARSER_ROOT) == _blocks[server].conf.end())
 	{
 		std::cerr << "Error: " << filename << ": No root in the 'location /' block neither in the server block.\n";
+		return false;
+	}
+	else if (_blocks[server].conf.find(PARSER_HOST) == _blocks[server].conf.end() ||
+			_blocks[server].conf.find(PARSER_LISTEN) == _blocks[server].conf.end())
+	{
+		std::cerr << "Error: " << filename << ": No host or no listen in the server block.\n";
 		return false;
 	}
 	return true;
