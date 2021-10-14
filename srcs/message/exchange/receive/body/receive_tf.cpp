@@ -31,19 +31,26 @@ int receive::tf_body::receive(const int socket)
 	ssize_t i;
 
 	buffer = new char[this->buf_size + 1];
+	if (!buffer)
+		return -1;
 	if ((i = read(socket, buffer, this->buf_size)) <= 0)
 	{
 		msg.clear();
-		delete[] buffer;
-		if (i == 0)
-			return -1;
-		else
-			return 500; //throw
+		if (buffer)
+		{
+			delete[] buffer;
+			buffer = NULL;
+		}
+		return -1;
 	}
 	buffer[i] = 0;
 	this->msg += buffer;
 	memset(buffer, 0, buf_size + 1);
-	delete[] buffer;
+	if (buffer)
+	{
+		delete[] buffer;
+		buffer = NULL;
+	}
 	this->buf_size -= i;
 	return 0;
 }

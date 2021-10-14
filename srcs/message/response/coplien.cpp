@@ -1,7 +1,7 @@
 #include "message/response.hpp"
 
-response::response(const request &req, const parser::address_conf &pars_list, int &Pfdbody, int &Pfdin, int &Pfdout)
-: message(), fdbody(Pfdbody), fdin(Pfdin), fdout(Pfdout)
+response::response(const request &req, const parser::address_conf &pars_list, int &Pfdbody, int &Pfdout)
+: message(), fdbody(Pfdbody), fdout(Pfdout)
 {
 	first_line.status = 400;
 	const parser::address_conf::const_iterator pars_it = find_parser(pars_list, req);
@@ -26,10 +26,11 @@ response::response(const request &req, const parser::address_conf &pars_list, in
 	end_header(req);
 }
 
-response::response(int status, const request &req, const parser &pars, int &Pfdbody, int &Pfdin, int &Pfdout)
-: message(), fdbody(Pfdbody), fdin(Pfdin), fdout(Pfdout)
+response::response(int status, const request &req, const parser &pars, int &Pfdbody, int &Pfdout)
+: message(), fdbody(Pfdbody), fdout(Pfdout)
 {
-	first_line.status = error_response(status, req, pars);
+	first_line.status = status;
+	default_error(status, req, pars);
 	end_header(req);
 }
 

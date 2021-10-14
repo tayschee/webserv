@@ -204,19 +204,6 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 		if (method == "DELETE" || method == "PUT")
 			return false;
 		pars.get_block(BLOCK_CGI, type);
-		// std::vector<std::string> tab;
-		
-		// if (bc.find(ACCEPT) != bc.end())
-		// 	tab = bc.find(ACCEPT)->second;
-		// else
-		// 	tab = pars.get_block(BLOCK_SERVER).conf.find(ACCEPT)->second;
-
-		// for (std::vector<std::string>::iterator it = tab.begin(); it != tab.end(); ++it)
-		// {
-		// 	if (*it == method)
-		// 		return true;	
-		// }
-		// return false;
 	}
 	catch(const std::exception& e)
 	{
@@ -337,22 +324,4 @@ void	response::end_header(const request &req)
 		first_line.version = HTTP_VERSION;
 	if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
 		header.erase(LAST_MODIFIED);
-}
-
-int		response::sent(int fd, bool first, const std::string &hf_sep, const std::string &eol)
-{
-	(void)hf_sep;
-	(void)eol;
-	std::string resp_str;
-	if (first)
-	{
-		if (first_line.status >= 300 && header.find(LAST_MODIFIED) != header.end())
-			header.erase(LAST_MODIFIED);
-		resp_str = get(hf_sep, eol);
-	}
-	resp_str += get_rep_body();
-    write(fd, resp_str.c_str(), resp_str.size());
-	body.clear();
-	header.clear();
-	return 0;
 }

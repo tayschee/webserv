@@ -36,11 +36,6 @@ int         client::get_fdbody() const
     return fdbody;
 }
 
-int         client::get_fdin() const
-{
-    return fdin;
-}
-
 int         client::get_fdout() const
 {
     return fdout;
@@ -61,26 +56,6 @@ void    client::parse_body(std::string &request_str, std::string &header)
         request_str.erase(0, pos + sep.size());
 	}
 }
-
-// int         client::get_pipe_in_0() const
-// {
-//     return pipe_in[0];
-// }
-
-// int         client::get_pipe_in_1() const
-// {
-//     return pipe_in[1];
-// }
-
-// int         client::get_pipe_out_0() const
-// {
-//     return pipe_out[0];
-// }
-
-// int         client::get_pipe_out_1() const
-// {
-//     return pipe_out[1];
-// }
 
 int         client::get_nb_pars() const
 {

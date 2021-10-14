@@ -11,8 +11,6 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 
 int response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
-	std::cout << "JE SUIS DANS GET" << std::endl;
-
 	struct stat file_stat; //information about file
 	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
 	int ret = 0;
@@ -74,8 +72,6 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 	}
 	else
 	{
-		std::cout << "path = " << path << std::endl;
-
 		if ((ret = add_body(path)) != 0)
 			return ret;
 		else if (type.empty())
@@ -84,7 +80,6 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		}
 		else
 			add_content_type(type);
-		std::cout << "add last modified" << std::endl;
 		add_last_modified(file_stat.st_mtime); /* st_mtime = hour of last modification */
 	}
 	return 200;
@@ -132,14 +127,16 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 	/*verify if content exist*/
 	if (lstat(path.c_str(), &file_stat) < 0)
 	{
-		if ((fdin = open(path.c_str(), O_WRONLY)) < 0)
+		if ((fdout = open(path.c_str(), O_WRONLY)) < 0)
 		{
 			first_line.status = 201;										 //CREATE
-			if ((fdin = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
+			if ((fdout = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
 			{
-				close(fdin);
-				std::cout << "close fdin" << std::endl;
-				fdin = -1;
+				if (fdout != -1)
+				{
+					close(fdout);
+					fdout = -1;
+				}
 				return 403;
 			}
 		}
@@ -148,12 +145,13 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 	{
 		if (is_acces(file_stat))
 			return ret;
-		if ((fdin = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
+		if ((fdout = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
 		{
-			close(fdin);
-			std::cout << "close fdin" << std::endl;
-
-			fdin = -1;
+			if (fdout != -1)
+			{
+				close(fdout);
+				fdout = -1;
+			}
 			return 403;
 		}
 
@@ -163,7 +161,7 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 	header.insert(value_type(CONTENT_LOCATION, uri));
 	add_content_type(TEXT_HTML);
 	func = "put";
-
+	fcntl(fdout, F_SETFL, O_NONBLOCK);
 	
 	return first_line.status;
 }

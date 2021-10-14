@@ -4,10 +4,11 @@
 # include <time.h>
 # include <sys/time.h>
 # include "server.hpp"
-# include "../include/message/request.hpp"
-# include "../include/message/message.hpp"
-# include "../include/message/response.hpp"
-# include "../include/parser.hpp"
+# include "cgi.hpp"
+# include "message/request.hpp"
+# include "message/message.hpp"
+# include "message/response.hpp"
+# include "parser.hpp"
 
 class client
 {
@@ -54,14 +55,10 @@ class client
         int                             get_fdbody() const;
         int                             get_fdin() const;
         int                             get_fdout() const;
-        int                             get_pipe_in_0() const;
-        int                             get_pipe_in_1() const;
-        int                             get_pipe_out_0() const;
-        int                             get_pipe_out_1() const;
         int                             get_nb_pars() const;
         int                             get_first() const;
-        void                            receive(const fd_set &writefds); // manage receive
-        long                            sent(const std::vector<parser::address_conf> &vec_parser, const fd_set &readfds, const fd_set &writefds); // send response
+        bool                            receive(const fd_set &writefds); // manage receive
+        bool                            sent(const std::vector<parser::address_conf> &vec_parser, const fd_set &readfds, const fd_set &writefds); // send response
         bool                            is_listen() const; // Check if listening socket
         bool                            is_time() const; // Check if the time is finished
         int                             is_read() const; // Check if read
@@ -70,7 +67,12 @@ class client
         int			                    add_body();
         void                            parse_body(std::string &request_str, std::string &header);
         void                            error(int status);
-
+        bool                            select_method(const fd_set &readfds, const fd_set &writefds);
+        bool                            add_body(const fd_set &readfds, const fd_set &writefds);
+        bool                            put(const fd_set &readfds, const fd_set &writefds);
+        bool                            method_cgi(const fd_set &readfds, const fd_set &writefds);
+        bool	                        send_header();
+        void                            del();
 };
 
 #endif

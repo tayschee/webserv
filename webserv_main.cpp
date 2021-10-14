@@ -12,26 +12,6 @@ static int check_argument(int c)
 	return i;
 }
 
-// static int start(cluster &cl)
-// {
-// 	int ret = 0;
-// 	try
-// 	{
-// 		cl.start();
-// 	}
-// 	catch(std::string &e) //remplacela string par une vrai exception ça serait un peut mieux
-// 	{
-// 		std::cerr << e << std::endl;
-// 		ret = 1;
-// 	}
-// 	catch(std::exception &e)
-// 	{
-// 		std::cerr << e.what();
-// 		ret = 1;
-// 	}
-// 	return ret;
-// }
-
 int main(int c, char **v)
 {
 	int ret = 0;
@@ -45,7 +25,6 @@ int main(int c, char **v)
 		cluster cl(v[i + 1]);
 		cl.init_listen();
 		cl.start();
-		//ret = start(cl);
 	}
 	catch(std::exception &e)
 	{
@@ -54,14 +33,11 @@ int main(int c, char **v)
 	}
 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
 	{
-		// if (e == "cgi quit")
-		// {
+		if (e == "quit cgi")
+		{
 			ret = 500;
-			// sleep(10);
-			std::cout << "quit de cgi" << std::endl;
 			std::cerr << e << std::endl;
-			// sleep(5);
-		// }
+		}
 	}
 	return ret;
 }

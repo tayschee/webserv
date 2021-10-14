@@ -1,8 +1,5 @@
 #include "message/exchange.hpp"
 
-#include <iostream>
-#include <stdio.h>
-
 typedef message::receive receive;
 
 /* receive parent class of other receive class,
@@ -27,7 +24,10 @@ receive &receive::operator=(const receive &x)
 {
 	fd = x.fd;
 	if (data != NULL)
+	{
 		delete data;
+		data = NULL;
+	}
 	data = x.clone();
 	buf_size = x.buf_size;
 	return *this;
@@ -55,7 +55,11 @@ int		receive::check()
 		if (ret == NOTHING_END) //if true this is header
 		{
 			receive::body	*new_data = data->next_step();
-			delete data;
+			if (data)
+			{
+				delete data;
+				data = NULL;
+			}
 			data = new_data;
 			ret = HEADER_END;
 		}
@@ -75,7 +79,10 @@ receive::header		*receive::clone() const
 void				receive::clear()
 {
 	if (data != NULL)
+	{
 		delete data;
+		data = NULL;
+	}
 	data = NULL;
 }
 
@@ -117,14 +124,22 @@ void				receive::prepare_next()
 		header *new_data;
 		new_data = body_data->previous_step(buf_size);
 
-		delete data;
+		if (data)
+		{
+			delete data;
+			data = NULL;
+		}
 		data = new_data;
 	}
 }
 
 void				receive::reset(const int fd, const size_t buf_size)
 {
-	delete data;
+	if (data)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	this->fd = fd;
 	this->buf_size = buf_size;

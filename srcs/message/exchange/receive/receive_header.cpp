@@ -25,20 +25,27 @@ receive::header &receive::header::operator=(const header &x)
 int		receive::header::receive(const int socket)
 {
 	char		*buffer = new char[buf_size + 1];
+	if (!buffer)
+		return -1;
 	ssize_t		i; //this just a long return type of read
 	if ((i = read(socket, buffer, buf_size)) <= 0)
 	{
 		msg.clear();
-		delete[] buffer;
-		if (i == 0)
-			return -1;
-		else
-			return 500; //replace by an exception
+		if (buffer)
+		{
+			delete[] buffer;
+			buffer = NULL;
+		}
+		return -1;
 	}
 	buffer[i] = 0;
 	msg += buffer;
 	memset(buffer, 0, buf_size + 1);
-	delete[] buffer;
+	if (buffer)
+	{
+		delete[] buffer;
+		buffer = NULL;
+	}
 
 	return 0;
 }

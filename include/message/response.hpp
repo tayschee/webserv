@@ -10,7 +10,6 @@ class request;
 # include "server.hpp"
 # include <dirent.h>
 # include <sys/stat.h>
-# include "cgi.hpp"
 # include "utils.hpp" //files_in_dir
 
 # include <list>
@@ -43,7 +42,6 @@ class response : public message
 		std::string		func;
 		std::string		save_path;
 		int				&fdbody;
-		int				&fdin;
 		int				&fdout;
 		// int				pipe_in[2];
 		const parser			*save_pars;
@@ -118,27 +116,24 @@ class response : public message
 
 
 	public :
-		void									next();
 		void 									parse_start_line(const std::string &start_line){ (void)start_line; }
 		void 									parse_header(const std::string &start_line){ (void)start_line; }
 
 	public : //get_* functions, inside getter.cpp, this function are used to have access private variable
 
-		const response_line					&get_first_line() const;
-		int									get_status() const;
-		const std::string					&get_status_string() const;
-		const std::string					&get_version() const;
-		const std::string					&get_func() const;
-		const std::string					&get_save_path() const;
-		const parser						*get_save_pars() const;
-		int									get_fdin() const;
+		const response_line						&get_first_line() const;
+		int										get_status() const;
+		const std::string						&get_status_string() const;
+		const std::string						&get_version() const;
+		const std::string						&get_func() const;
+		const std::string						&get_save_path() const;
+		const parser							*get_save_pars() const;
 
 		int										is_redirect(const parser::entries &block, const parser &pars, const request &req);
 
 		std::string								get(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
 		std::string								get_rep_body(const std::string &eol = std::string(CRLF)) const;
 		std::string								get_rep_header(const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF)) const;
-		int										sent(int fd, bool first = 0, const std::string &hf_sep = std::string(": "), const std::string &eol = std::string(CRLF));
 
 	private : //error_* functions, they are relations with error returns
 		int										error_file(int errnum) const; //can maybe be change by find_* function
@@ -154,8 +149,8 @@ class response : public message
 
 
 		response();
-		response(const request &req, const parser::address_conf &pars_list, int &fdbody, int &fdin, int &fdout);
-		response(int status, const request &req, const parser &pars, int &fdbody, int &fdin, int &fdout);
+		response(const request &req, const parser::address_conf &pars_list, int &fdbody, int &fdout);
+		response(int status, const request &req, const parser &pars, int &fdbody, int &fdout);
 
 		// response(const request &req, const parser &pars, int status);
 		response& operator=(const response &other);

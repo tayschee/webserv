@@ -20,7 +20,6 @@ void	init_fd(int fd, fd_set &readfds, fd_set &writefds, int &max)
 {
 	if (fd > 0)
 	{
-		// std::cout << "fd in init_fd = " << fd << std::endl;
 		if (fd > max)
 			max = fd;
 		FD_SET(fd, &readfds);
@@ -42,12 +41,7 @@ void	cluster::set_list_fd(fd_set &readfds, fd_set &writefds, int &max) // initia
 		{
 			init_fd((*it)->get_fd(), readfds, writefds, max);
 			init_fd((*it)->get_fdbody(), readfds, writefds, max);
-			init_fd((*it)->get_fdin(), readfds, writefds, max);
 			init_fd((*it)->get_fdout(), readfds, writefds, max);
-			// init_fd((*it)->get_pipe_in_0(), readfds, writefds, max);
-			// init_fd((*it)->get_pipe_in_1(), readfds, writefds, max);
-			// init_fd((*it)->get_pipe_out_0(), readfds, writefds, max);
-			// init_fd((*it)->get_pipe_out_1(), readfds, writefds, max);
 		}
 		else
 		{
@@ -93,17 +87,9 @@ int		cluster::receive(client &cli, const fd_set &writefds) // there is something
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
 		else //change that
-		{
 			list_client.push_back(new client(res, false, cli.get_nb_pars()));
-		}
 	}
 	else
-	{
-		cli.receive(writefds);
-		if (cli.is_read() == -1)
-		{
-			return -1;
-		}
-	}
+		return cli.receive(writefds);
 	return 1;
 }

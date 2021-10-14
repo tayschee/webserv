@@ -29,19 +29,13 @@ int cluster::start() // cluster manage the list of socketc
 		iterator end = list_client.end();
 		for (iterator it = list_client.begin(); it != end; ++it)
 		{
-			int ret = 0;
 			client &cli = *(*it);
 
-			if (FD_ISSET(cli.get_fd(), &readfds)) // is there a modification on the current list_client ?
+			if (FD_ISSET(cli.get_fd(), &readfds) && !receive(cli, writefds)) // is there a modification on the current list_client ?
 			{
-				if ((ret = receive(cli, writefds)) == 0)
-					return 0;
-				else if (ret == -1)
-				{
-					close_client(it);
-				}
+				close_client(it);
 			}
-			else if (ret != -1 && cli.is_read() && cli.sent(vec_parser, readfds, writefds) == -1)
+			else if (cli.is_read() && !cli.sent(vec_parser, readfds, writefds))
 			{
 				close_client(it);
 			}

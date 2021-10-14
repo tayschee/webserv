@@ -35,14 +35,9 @@ const	parser					*response::get_save_pars() const
 	return save_pars;
 }
 
-int								response::get_fdin() const
-{
-	return fdin;
-}
-
 std::string		func;
-		std::string		save_path;
-		int				fd_response;
+std::string		save_path;
+int				fd_response;
 
 std::string		response::get(const std::string &hf_sep, const std::string &eol) const
 {

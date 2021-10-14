@@ -35,7 +35,11 @@ cluster::~cluster() // destructor
 	{
 		tmp = it;
 		it++;
-		close((*tmp)->get_fd());
-		delete (*tmp);
+		if (*tmp)
+		{
+			close((*tmp)->get_fd());
+			delete (*tmp);
+			*tmp = NULL;
+		}
 	}
 }

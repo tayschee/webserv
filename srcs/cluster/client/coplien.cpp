@@ -9,16 +9,12 @@ msg(*(new std::string)), resp(*(new std::string)), header(*(new std::string)), m
 {
 	h = 0;
 	cgi_start = false;
-	fdin = -1;
 	fdout = -1;
 	file_body = tmpfile();
-	file_in = tmpfile();
-	file_out = tmpfile();
+	file_out = NULL;
 	fdbody = fileno(file_body);
 	
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	fcntl(fdin, F_SETFL, O_NONBLOCK);
-	fcntl(fdout, F_SETFL, O_NONBLOCK);
 	fcntl(fdbody, F_SETFL, O_NONBLOCK);
     gettimeofday(&time, NULL);
 }
@@ -46,39 +42,11 @@ client &client::operator=(const client& other) // assignation
 
 client::~client()
 {
-	fclose(file_in);
-	fclose(file_out);
-	
-	if (fdbody != -1)
-	{
-		fclose(file_body);
-		close(fdbody);
-	}
-
-	if (fdin != -1)
-		close(fdin);
-	
-	if (fdout != -1)
-		close(fdout);
-	
-
+	del();
 	if (fd != -1)
 		close(fd);
-
 	delete(&msg);
 	delete(&resp);
 	delete(&header);
 
-	if (my_cgi != NULL)
-	{
-		delete(my_cgi);
-		my_cgi = NULL;
-	}
-
 } // destructor
-
-
-int			cgi::get_pid()
-{
-	return my_pid;
-}

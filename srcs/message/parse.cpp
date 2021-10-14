@@ -1,8 +1,5 @@
 # include "message/message.hpp"
 
-#include <iostream>
-
-
 /*store body part of request inside request::body and erase body_part in request_str*/
 void		message::parse_body(std::string &request_str)
 {
