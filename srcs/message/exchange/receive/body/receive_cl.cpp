@@ -39,27 +39,18 @@ int receive::cl_body::receive(const int socket)
 	char *buffer = new char[buf_size + 1];
 	ssize_t i;
 
-	if (!buffer)
-		return -1;
-
 	if ((i = read(socket, buffer, this->buf_size)) <= 0)
 	{
 		msg.clear();
-		if (buffer)
-		{
-			delete[] buffer;
-			buffer = NULL;
-		}
+		delete[] buffer;
+		buffer = NULL;
 		return -1;
 	}
 	buffer[i] = 0;
 	this->msg += buffer;
 	memset(buffer, 0, buf_size + 1);
-	if (buffer)
-	{
-		delete[] buffer;
-		buffer = NULL;
-	}
+	delete[] buffer;
+	buffer = NULL;
 	buf_size -= i;
 	return 0;
 }
