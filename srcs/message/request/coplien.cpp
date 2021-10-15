@@ -25,11 +25,6 @@ request::request(const std::string &const_request_str) : message(), first_line()
 	parse_header(request_str); //fill header + fill first_line
 }
 
-request::request(const exception &except) : message(), first_line()
-{
-	first_line.method = except.get_method();
-}
-
 request request::operator=(const request &x)
 {
 	first_line = x.first_line;

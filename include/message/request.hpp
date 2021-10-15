@@ -22,25 +22,6 @@ class request : public message
 		};
 
 	public :
-		class exception : public std::exception
-		{
-			private :
-				int 			status;
-				std::string 	method;
-			
-			public :
-				virtual const char	*what() const throw();
-				const std::string	&get_method() const;
-				int					get_status() const;
-
-			public :
-				exception(int status = 500, const std::string &method = "");
-				exception(const exception &x);
-				exception &operator=(const exception &x);
-				virtual ~exception() throw();
-		};
-
-	public :
 		typedef std::vector<std::string> method_array;
 
 	public : //public variable
@@ -87,7 +68,6 @@ class request : public message
 
 	public :
 		request();
-		request(const exception &except);
 		request(const std::string &const_request_str); //take in parameter the char * of receive or read to parse him
 		//request(const request &x);
 		request operator=(const request &x);
