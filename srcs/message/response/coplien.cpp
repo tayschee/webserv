@@ -28,8 +28,12 @@ response::response(int status, const request &req, const parser &pars, int &Pfdb
 : message(), fdbody(Pfdbody), fdout(Pfdout)
 {
 	first_line.status = status;
-	default_error(status, req, pars);
+	main_header();
+	error_response(first_line.status, req, pars);
 	end_header(req);
+	/*first_line.status = status;
+	default_error(status, req, pars);
+	end_header(req);*/
 }
 
 response& response::operator=(const response &other)
