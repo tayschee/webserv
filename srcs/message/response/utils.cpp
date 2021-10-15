@@ -213,7 +213,7 @@ bool		response::is_cgi(const std::string &type, const parser &pars, const std::s
 }
 
 // Manage autoindex
-std::string		response::index(const std::string &path, std::string root, std::string add) const
+std::string		response::index(const std::string &path, std::string root) const
 {
 	DIR *dir = opendir(path.c_str());
 	struct dirent *dp;
@@ -230,7 +230,7 @@ std::string		response::index(const std::string &path, std::string root, std::str
 			{
 				struct stat file_stat;
 				stat( (path + dp->d_name).c_str(), &file_stat);
-				index += "<a href=\"" + add + std::string(dp->d_name);
+				index += "<a href=\"" + std::string(dp->d_name);
 				if ((file_stat.st_mode & S_IFMT) == S_IFDIR)
 					index += "/\">" + std::string(dp->d_name) + "/";
 				else
@@ -285,8 +285,9 @@ int response::generate_response(const parser::entries &path_info, const parser &
 	}
 	else if (!(status = is_redirect(path_info, pars, req))) //do function with all condition
 	{
-		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way
+		//call pointer to member function this is exactly like that we must call it, ALL bracket are neccessary there is no other way		
 		status = (this->*method)(req.get_uri(), req, pars);
+
 	}
 	if (status > 299)
 	{

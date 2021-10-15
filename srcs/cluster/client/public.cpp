@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-bool 	client::receive(const fd_set &writefds) // call recieve
+bool client::receive(const fd_set &writefds) // call recieve
 {
 	long i;
 	long ret = 0;
@@ -55,13 +55,13 @@ bool 	client::receive(const fd_set &writefds) // call recieve
 	return true;
 }
 
-bool 	client::sent(const std::vector<parser::address_conf> &vec_parser, const fd_set &readfds, const fd_set &writefds) // send response
+bool client::sent(const std::vector<parser::address_conf> &vec_parser, const fd_set &readfds, const fd_set &writefds) // send response
 {
 	if (!first && !msg.empty() && (FD_ISSET(fdbody, &writefds)))
 	{
-		size_t	size_buffer = 0;
-		int 	ret = 0;
-		__socklen_t	optlen;
+		size_t size_buffer = 0;
+		int ret = 0;
+		__socklen_t optlen;
 		optlen = sizeof(size_buffer);
 		getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 		if (size_buffer > 4096)
@@ -90,7 +90,6 @@ bool 	client::sent(const std::vector<parser::address_conf> &vec_parser, const fd
 			buf = NULL;
 		}
 		return true;
-
 	}
 	else if (!first && msg.empty() && !header.empty())
 	{
@@ -121,8 +120,10 @@ bool 	client::sent(const std::vector<parser::address_conf> &vec_parser, const fd
 		{
 			if (my_cgi == NULL)
 			{
-				file_out = tmpfile();
-				fdout = fileno(file_out);
+				FILE *file_out = tmpfile();
+				fdout = dup(fileno(file_out));
+				fclose(file_out);
+				file_out = NULL;
 				fcntl(fdout, F_SETFL, O_NONBLOCK);
 				my_cgi = new cgi(req, *save_pars, save_path, fdbody, fdout, fd);
 				if (!my_cgi)
@@ -146,8 +147,8 @@ bool 	client::sent(const std::vector<parser::address_conf> &vec_parser, const fd
 		if (func == "quit")
 			return false;
 		size_t size_buffer = 0;
-		int		ret = 0;
-		__socklen_t	optlen;
+		int ret = 0;
+		__socklen_t optlen;
 		optlen = sizeof(size_buffer);
 		getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 
@@ -184,12 +185,14 @@ bool 	client::sent(const std::vector<parser::address_conf> &vec_parser, const fd
 			buf = NULL;
 		}
 		del();
-		file_body = tmpfile();
-		fdbody = fileno(file_body);
+		FILE *file_body = tmpfile();
+		fdbody = dup(fileno(file_body));
+		fclose(file_body);
+		file_body = NULL;
 
 		if (!alive)
 			return false;
-		
+
 		cgi_start = false;
 		first = true;
 		resp = "";

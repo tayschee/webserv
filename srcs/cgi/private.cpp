@@ -69,33 +69,21 @@ void			cgi::clear(char **env)
 void		cgi::son(int &fdin, int &fdout, int save_in, int save_out, const char *script_name, char **env)
 {
 	char **nll = NULL;
-	int			save_err, fderr;
-
 	save_in = dup(STDIN_FILENO);
 	save_out = dup(STDOUT_FILENO);
 
-	FILE* file_err = tmpfile();
-	fderr = fileno(file_err);
-	save_err = dup(STDERR_FILENO);
-	
 	lseek(fdin, 0, SEEK_SET);
 	dup2(fdin, STDIN_FILENO);
 	dup2(fdout, STDOUT_FILENO);
-	dup2(fderr, STDERR_FILENO);
 	close(fdin);
 	close(fdout);
-	close(fderr);
 
 	execve(script_name, nll, env);
 
 	dup2(save_in, STDIN_FILENO);
 	dup2(save_out, STDOUT_FILENO);
-	dup2(save_err, STDERR_FILENO);
 	close(save_in);
 	close(save_out);
-	close(save_err);
-	fclose(file_err);
-
 	clear(env);
 	std::cerr << "Execve crashed." << std::endl;
 	throw std::string("quit cgi");

@@ -1,7 +1,9 @@
-<form action="/form.php" method="post">
-<p>CECI EST UN FORMULAIRE POST</p>
-<p>LES INFORMATIONS SON ENVOYER PAR LE BODY</p>
- <p>Votre nom : <input type="text" name="nom" /></p>
- <p>Votre age : <input type="text" name="age" /></p>
- <p><input type="submit" value="OK"></p>
+<form action="/www/form.php" method="post">
+<h1>CECI EST UN FORMULAIRE POST</h1>
+<p>LES INFORMATIONS SERONT ENVOYER PAR LE BODY</p>
+    <label for="nom">NON:   </label>
+    <input type="text" id="nom" name="nom" placeholder="NOM" minlength="2" maxlength="20">
+    <label for="age">AGE:   </label>
+    <input type="number" id="age" min="0" max="120" name="age" placeholder="AGE" />
+    <input type="submit" value="VALIDER">
 </form>

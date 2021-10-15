@@ -31,8 +31,6 @@ class client
         int                             fdin;
         int                             fdout;
 	    FILE                            *file_in;
-	    FILE                            *file_out;
-	    FILE                            *file_body;
         std::string                     save_path;
         const parser                    *save_pars;
         cgi                             *my_cgi;

@@ -24,7 +24,7 @@ response::find_method_function(const request &req, const std::vector<std::string
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
 	std::string method = req.get_method();
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, req.get_uri()), req.get_uri(), req);
+	std::string path = find_path(pars, req.get_uri(), req);
 	while (it < end)
 	{
 		if (method == *it)
@@ -63,20 +63,27 @@ response::find_media_type(const std::string subtype, const parser &pars) const
 	return type;
 }
 
-std::string	response::find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index) const
+std::string	response::find_path(const parser &pars, const std::string &partial_path, const request &req, const bool index) const
 {
 	(void)req;
-	parser::entries entries(block.conf);
+	parser::block block(pars.get_block(BLOCK_LOCATION, partial_path));
 	std::string path;
 
 	std::string alias;
 
-	if (entries.find(ALIAS) == entries.end())
-		path = entries.find(BLOCK_ROOT)->second[0] + partial_path;
+	if (block.conf.find(ALIAS) == block.conf.end())
+	{
+		path = block.conf.find(BLOCK_ROOT)->second[0] + partial_path;
+	}
 	else
 	{
-		alias = entries.find(ALIAS)->second[0];
-		path = alias + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
+		alias = block.conf.find(ALIAS)->second[0];
+		std::string root;
+		if (pars.get_block(BLOCK_LOCATION, alias).conf.find(BLOCK_ROOT) != block.conf.end())
+			root =  pars.get_block(BLOCK_LOCATION, alias).conf.find(BLOCK_ROOT)->second[0];
+		else
+			root = pars.get_block(BLOCK_SERVER).conf.find(BLOCK_ROOT)->second[0];
+		path = root + std::string(partial_path.begin() + block.args[0].size(), partial_path.end());
 	}
 
 	struct stat file_stat;
@@ -94,7 +101,7 @@ std::string	response::find_path(const parser::block &block, const std::string &p
 			return path;
 		if (*(--path.end()) != '/')
 			path.push_back('/');
-		return find_index(entries, path);
+		return find_index(block.conf, path);
 	}
 	else
 	{

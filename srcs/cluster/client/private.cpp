@@ -10,11 +10,12 @@ void    client::error(int status)
 {
 	if (fdbody != -1)
 	{
-		fclose(file_body);
 		close(fdbody);
 		fdbody = -1;
-		file_body = tmpfile();
-		fdbody = fileno(file_body);
+		FILE *file_body = tmpfile();
+		fdbody = dup(fileno(file_body));
+		fclose(file_body);
+		file_body = NULL;
 	}
 	resp.clear();
 	header.clear();
@@ -56,16 +57,6 @@ void	client::del()
 		}
 		delete(my_cgi);
 		my_cgi = NULL;
-	}
-	if (file_body)
-	{
-		fclose(file_body);
-		file_body = NULL;
-	}
-	if (file_out)
-	{
-		fclose(file_out);
-		file_out = NULL;
 	}
 	if (fdbody != -1)
 	{

@@ -12,17 +12,18 @@ int response::method_is_head(const std::string &uri, const request &req, const p
 int response::method_is_get(const std::string &uri, const request &req, const parser &pars)
 {
 	struct stat file_stat; //information about file
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
+	std::string path = find_path(pars, uri, req);
 	int ret = 0;
 
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
-
 	ret = check_path(path, file_stat, req, pars);
 	if (ret != 0)
 		return ret;
 
 	std::string type = find_media_type(get_extension(path), pars);
+
+
 
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
@@ -53,11 +54,9 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 		{
 			return 404;
 		}
-		std::string add = (path.substr(pars.get_block(BLOCK_LOCATION, uri).conf.find(BLOCK_ROOT)->second[0].size()));
-		body = index(path, uri, add);
+		body = index(path, uri);
 		add_transfert_encoding();
 		add_content_type(TEXT_HTML);
-
 		func = "index";
 
 		return 200;
@@ -87,7 +86,7 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 int response::method_is_delete(const std::string &uri, const request &req, const parser &pars)
 {
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req, 0);
+	std::string path = find_path(pars, uri, req, 0);
 	struct stat file_stat;
 	int ret = 0;
 
@@ -119,7 +118,7 @@ int response::method_is_put(const std::string &uri, const request &req, const pa
 {
 	first_line.status = 204;
 
-	std::string path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
+	std::string path = find_path(pars, uri, req);
 	struct stat file_stat; //information about file
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
@@ -175,7 +174,7 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 	if (first_line.status == 42)
 		path = uri;
 	else
-		path = find_path(pars.get_block(BLOCK_LOCATION, uri), uri, req);
+		path = find_path(pars, uri, req);
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;

@@ -10,9 +10,10 @@ msg(*(new std::string)), resp(*(new std::string)), header(*(new std::string)), m
 	h = 0;
 	cgi_start = false;
 	fdout = -1;
-	file_body = tmpfile();
-	file_out = NULL;
-	fdbody = fileno(file_body);
+	FILE *file_body = tmpfile();
+	fdbody = dup(fileno(file_body));
+	fclose(file_body);
+	file_body = NULL;
 	
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	fcntl(fdbody, F_SETFL, O_NONBLOCK);

@@ -67,7 +67,7 @@ class response : public message
 		std::string		&file_without_language_ext(std::string &path) const; //maybe put path in const
 		int				del_content(std::string path, const request &req, const parser &pars, const bool del = 1);
 		int				check_path(const std::string & path, struct stat &file_stat, const request &req, const parser &pars) const;
-		std::string		index(const std::string &path, std::string root, std::string add) const;
+		std::string		index(const std::string &path, std::string root) const;
 		int				generate_response(const parser::entries &path_info, const parser &pars, const request &req, const method_function &method);
 		bool            is_cgi(const std::string &type, const parser &pars, const std::string &method) const;
 		std::string		header_in_order(const std::string &hf_sep, const std::string &eol, const std::vector<std::string> &list) const;
@@ -80,7 +80,7 @@ class response : public message
 		//std::string								find_path(const parser::block &block, const std::string &partial_path,  const request &req) const;
 		media_type_array::value_type			find_media_type(const std::string subtype) const; //KEY : subtype, VALUE : TYPE
 		std::string								find_media_type(const std::string subtype, const parser &pars) const; //KEY : subtype, VALUE : TYPE
-		std::string								find_path(const parser::block &block, const std::string &partial_path, const request &req, const bool index = 1) const;
+		std::string								find_path(const parser &pars, const std::string &partial_path, const request &req, const bool index = 1) const;
 	
 		std::string								find_index(const parser::entries &entries, const std::string &path) const;
 		const parser::address_conf::const_iterator	find_parser(const parser::address_conf &pars_list, const request &req) const;
