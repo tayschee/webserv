@@ -9,6 +9,7 @@
 # include "message/message.hpp"
 # include "message/response.hpp"
 # include "parser.hpp"
+# include "signal.h"
 
 class client
 {

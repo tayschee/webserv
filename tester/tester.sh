@@ -46,16 +46,6 @@ if [ "$my_cgi" != "/usr/bin/curl" ]; then
     fi
 fi
 
-my_cgi=$(grep "monsite" /etc/hosts)
-echo $my_cgi
-if [[ -z "$my_cgi" ]]; then
-    echo -e "127.0.0.1\tmonsite" >> /etc/hosts
-fi
-
-chmod 000 ../www/html/private
-chmod 000 ../www/html/private2/index.html
-chmod 000 ../www/html/private3
-
 sudo rm $PATH_TO_PHP_INI
 sudo cp $PATH_TO_MY_PHP_INI $PATH_TO_PHP_INI
 

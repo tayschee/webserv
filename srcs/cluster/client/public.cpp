@@ -98,6 +98,8 @@ bool client::sent(const std::vector<parser::address_conf> &vec_parser, const fd_
 		request req(header);
 		header.clear();
 		response rep(req, vec_parser[nb_pars], fdbody, fdout);
+		if (req.get_connexion() == "close")
+			alive = false;
 		save_path = rep.get_save_path();
 		save_pars = rep.get_save_pars();
 		func = rep.get_func();
