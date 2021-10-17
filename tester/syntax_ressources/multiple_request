@@ -1,12 +1,16 @@
 GET / HTTP/1.1
 Host: on s'en fout
+Connection: closed
 
 GET / HTTP/1.1
 Host: on s'en fout
+Connection: closed
 
 GET / HTTP/1.1
 Host: on s'en fout
+Connection: closed
 
 GET / HTTP/1.1
 Host: on s'en fout
+Connection: closed
 

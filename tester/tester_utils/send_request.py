@@ -5,10 +5,16 @@ def client(txt, argv) :
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #cree une socket pour communiquer
 	except :
 		return ""
+	txt2 = ""
 	try :
 		sock.connect((argv[0], int(argv[1]))) #destinataire de la com
 		sock.send(txt) #envoie du message
-		txt2 = sock.recv(1000000)
+		while 1:
+			txt1 = sock.recv(4096)
+			if txt1 == "" :
+				break
+			txt2 += txt1
+
 		sock.close() #arrete la socket
 		return txt2
 	except :
