@@ -46,16 +46,6 @@ if [ "$my_cgi" != "/usr/bin/curl" ]; then
     fi
 fi
 
-my_cgi=$(grep "monsite" /etc/hosts)
-echo $my_cgi
-if [[ -z "$my_cgi" ]]; then
-    echo -e "127.0.0.1\tmonsite" >> /etc/hosts
-fi
-
-chmod 000 ../www/html/private
-chmod 000 ../www/html/private2/index.html
-chmod 000 ../www/html/private3
-
 sudo rm $PATH_TO_PHP_INI
 sudo cp $PATH_TO_MY_PHP_INI $PATH_TO_PHP_INI
 
@@ -133,16 +123,6 @@ test $SERVER_NAME "/php/"
 test $SERVER_NAME "/html/3.html"
 test $SERVER_NAME "/unexist.html"
 
-#PUT TEST
-test_put $SERVER_NAME 5 "/new.html" -d "<p>little</p>"
-test_put $SERVER_NAME 5 "/private/impossible.html" -d "<p>une phrase un peu plus longue</p>" #dont work
-test_put $SERVER_NAME 7 "/secret/new.html" -d "<p>secret</p>" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Authorization: Basic YWRtaW46YWRtaW4="
-test_put $SERVER_NAME 5 "/spoiler/new.html" -d "<p>spoil</p>" #must do test
-test_put $SERVER_NAME 7 "/spoiler/new.html" -d "<p>spoil</p>" -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Authorization: Basic YWRtaW46YWRtaW4="
-test_put $SERVER_NAME 5 "/no_path/new.html" -d "<p>error</p>" #dont work
-test_put $SERVER_NAME 5 "/html/new.html" -d "<p>YES</p>" #work
-test_put $SERVER_NAME 5 "/put_and_delete/page.html" -d "<p>QUELQUE CHOSE D'UN PEU PLUS LONG QUE LE RESTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>" #work
-
 #DELETE TEST
 test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/html/1.html"
 test_delete $SERVER_NAME 6 "srcs/dir_to_copy" 755 "srcs/dir_to_delete" "/dir_to_delete/secret/secret.html"
@@ -164,7 +144,9 @@ test_syntax syntax_ressources/tab
 test_syntax syntax_ressources/security_breach
 test_syntax syntax_ressources/no_method
 test_syntax syntax_ressources/no_uri
-# test_syntax syntax_ressources/no_version
+
+test_syntax syntax_ressources/no_version
+
 test_syntax syntax_ressources/multiple_request
 
 # #TEST QUERY AND PHP
@@ -173,7 +155,9 @@ test_method $SERVER_NAME POST /php/1.phpp
 test_method $SERVER_NAME POST /php/1.php
 test_method $SERVER_NAME POST /php/2.php
 test_method $SERVER_NAME POST /php/exemple.php
-#test_method $SERVER_NAME POST /php/info.php
+
+test_method $SERVER_NAME POST /php/info.php
+
 test_method $SERVER_NAME POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
 test_method $SERVER_NAME POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
 test_method $SERVER_NAME GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING

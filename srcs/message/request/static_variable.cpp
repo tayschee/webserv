@@ -5,8 +5,8 @@ const request::method_array request::existing_method(request::initialise_existin
 request::method_array request::initialise_existing_method()
 {
 	int						i(0);
-	const int				size(5); 
-	const std::string		string_array[size] = {GET, HEAD, POST, PUT, DELETE};
+	const int				size(4); 
+	const std::string		string_array[size] = {GET, HEAD, POST, DELETE};
 	method_array			array; //j'ai pas reussi a appeler le constructeur first, end
 
 	array.reserve(size);

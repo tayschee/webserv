@@ -1,13 +1,13 @@
+#include "message/request.hpp"
 #include "message/response.hpp"
 
 const response::method_array response::existing_method(response::initialise_existing_method());
 
 response::method_array	response::initialise_existing_method()
 {
-	const size_t			size(5);
-	const std::string		method_name[size] = {GET, HEAD, POST, PUT, DELETE};
-	const method_function	method_func[size] = {&response::method_is_get, &response::method_is_head, &response::method_is_post,
-											 &response::method_is_put, &response::method_is_delete};
+	const size_t			size(4);
+	const std::vector<std::string>		method_name = request::existing_method;
+	const method_function	method_func[size] = {&response::method_is_get, &response::method_is_head, &response::method_is_post, &response::method_is_delete};
 
 	method_array	map;
 	size_t			i;

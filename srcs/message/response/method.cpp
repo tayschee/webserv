@@ -114,58 +114,6 @@ int response::method_is_delete(const std::string &uri, const request &req, const
 	return 204;
 }
 
-int response::method_is_put(const std::string &uri, const request &req, const parser &pars)
-{
-	first_line.status = 204;
-
-	std::string path = find_path(pars, uri, req);
-	struct stat file_stat; //information about file
-	int ret = 0;
-	if ((ret = is_authorize(uri, req, pars)))
-		return ret;
-	/*verify if content exist*/
-	if (lstat(path.c_str(), &file_stat) < 0)
-	{
-		if ((fdout = open(path.c_str(), O_WRONLY)) < 0)
-		{
-			first_line.status = 201;										 //CREATE
-			if ((fdout = open(path.c_str(), O_WRONLY | O_CREAT, 0666)) < 0) //content doesn't exist so create it
-			{
-				if (fdout != -1)
-				{
-					close(fdout);
-					fdout = -1;
-				}
-				return 403;
-			}
-		}
-	}
-	else
-	{
-		if (is_acces(file_stat))
-			return ret;
-		if ((fdout = open(path.c_str(), O_WRONLY | O_TRUNC)) < 0) //content doesn't exist so create it
-		{
-			if (fdout != -1)
-			{
-				close(fdout);
-				fdout = -1;
-			}
-			return 403;
-		}
-
-		first_line.status = 204; //CREATE
-	}
-
-	header.insert(value_type(CONTENT_LOCATION, uri));
-	add_content_type(TEXT_HTML);
-	func = "put";
-	fcntl(fdout, F_SETFL, O_NONBLOCK);
-	
-	return first_line.status;
-}
-
-
 int response::method_is_post(const std::string &uri, const request &req, const parser &pars)
 {
 	std::string path;

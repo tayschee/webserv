@@ -1,3 +1,4 @@
+
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
@@ -43,8 +44,7 @@ class response : public message
 		std::string		save_path;
 		int				&fdbody;
 		int				&fdout;
-		// int				pipe_in[2];
-		const parser			*save_pars;
+		const parser	*save_pars;
 
 
 	private :
@@ -92,7 +92,6 @@ class response : public message
 		int										method_is_get(const std::string &uri, const request &req, const parser &pars); //GET
 		int										method_is_delete(const std::string &uri, const request &req, const parser &pars); //DELETE
 		int										method_is_options(const std::string &uri, const request &req, const parser &pars); //OPTION
-		int										method_is_put(const std::string &uri, const request &req, const parser &pars); //PUT
 		int										method_is_post(const std::string &uri, const request &req, const parser &pars); //POST
 		int										method_is_trace(const std::string &uri, const request &req, const parser &pars); //POST
 		int										method_is_connect(const std::string &uri, const request &req, const parser &pars); //CONNECT

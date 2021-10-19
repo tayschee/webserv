@@ -46,62 +46,6 @@ bool client::add_body(const fd_set &readfds, const fd_set &writefds)
 	return true;
 }
 
-bool client::put(const fd_set &readfds, const fd_set &writefds)
-{
-	size_t size_buffer = 0;
-	size_t size = 0;
-	struct stat fd_stat;
-	if (fstat(fdbody, &fd_stat) == 0)
-		size = fd_stat.st_size;
-	if (!size)
-	{
-		func.clear();
-	}
-	else if (msg.empty() && FD_ISSET(fdbody, &readfds) && FD_ISSET(fdout, &writefds))
-	{
-		size_buffer = 4096;
-		char *buf = new char[size_buffer];
-		int res;
-		size = 0;
-		if (fstat(fdout, &fd_stat) == 0)
-			size = fd_stat.st_size;
-
-		while ((res = read(fdbody, buf, size_buffer - 1)) > 0)
-		{
-			buf[res] = 0;
-			msg += buf;
-			errno = 0;
-			if (write(fdout, msg.c_str(), msg.size()) <= 0)
-			{
-				delete[](buf);
-				buf = NULL;
-				return false;
-			}
-			msg.clear();
-		}
-		if (res < 0)
-		{
-			delete[](buf);
-			buf = NULL;
-			return false;
-		}
-		if (res == 0)
-			func.clear();
-		delete[](buf);
-		buf = NULL;
-	}
-	else if (!msg.empty() && FD_ISSET(fdout, &writefds))
-	{
-		if (write(fdout, msg.c_str(), msg.size()) <= 0)
-		{
-			msg.clear();
-			return false;
-		}
-		msg.clear();
-	}
-	return true;
-}
-
 bool client::method_cgi(const fd_set &readfds, const fd_set &writefds)
 {
 
