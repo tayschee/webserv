@@ -1,11 +1,13 @@
-#test "name of config" "uri" ...(other options)
+#this function compare webserv and nginx with method get and head
+#test "name of config" "uri" ...(options for curl)
 test ()
 {
     test_method "$1" "GET" "${@:2}"
     test_head "$@"
 }
 
-#test_method "name of config" "METHOD" "uri" ...(other options)
+#this function compare webserv and nginx with method put in parameter but use it only for GET and POST
+#test_method "name of config" "METHOD" "uri" ...(options for curl)
 test_method ()
 {
 	chown www-data:www-data -R srcs
@@ -18,6 +20,7 @@ test_method ()
     clear_x_tmpfile TMP 6
 }
 
+#this function compare webserv and nginx with method HEAD
 #test "name of config" "uri" ...(other options)
 test_head ()
 {
@@ -33,7 +36,7 @@ test_head ()
     clear_x_tmpfile TMP 1
 }
 
-#test "name_of_config" "path_to_test" ...(put param)
+#DOESNT WORK
 test_put()
 {
 	declare GET_OPTIONS=$(expr "$2" + 1)
@@ -75,7 +78,8 @@ test_put()
 	clear_x_tmpfile TMP 22
 }
 
-#test "name_of_config" "path_to_test"
+#compare difference between nginx and webserv for DELETE
+#test "name_of_config" "6 + (number of parameter after uri for method delete)" "dir_to_copy_to_test_delete" "chmod value(ex: 755)" "name_of_copy" "uri" ...(curl delete options) ...(curl get options)
 test_delete()
 {
 	declare GET_OPTIONS=$(expr "$2" + 1)
@@ -126,7 +130,8 @@ test_delete()
     clear_x_tmpfile TMP 22
 }
 
-#test_syntax file 
+#send file in parameter to servers they must contains header field "Connection : close"
+#test_syntax file
 test_syntax()
 {
     declare NG_REP=$TMP1

@@ -12,7 +12,6 @@ sudo bash tester.sh
 Then check output to see all difference between nginx
 ## Explanation
 #### This tester test methods :
-  - PUT
   - GET
   - HEAD
   - POST
