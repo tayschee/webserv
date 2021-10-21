@@ -1,3 +1,4 @@
 GET /
 Host: multiple_location
+Connection: close
 

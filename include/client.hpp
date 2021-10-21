@@ -9,7 +9,6 @@
 # include "message/message.hpp"
 # include "message/response.hpp"
 # include "parser.hpp"
-# include "signal.h"
 
 class client
 {
@@ -68,7 +67,6 @@ class client
         void                            error(int status);
         bool                            select_method(const fd_set &readfds, const fd_set &writefds);
         bool                            add_body(const fd_set &readfds, const fd_set &writefds);
-        bool                            put(const fd_set &readfds, const fd_set &writefds);
         bool                            method_cgi(const fd_set &readfds, const fd_set &writefds);
         bool	                        send_header();
         void                            del();

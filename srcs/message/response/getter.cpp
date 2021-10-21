@@ -109,6 +109,7 @@ std::string		response::get_rep_header(const std::string &hf_sep, const std::stri
 	size_t pos;
 	if ((pos = resp_str.find("\r\n\r\n")) != std::string::npos)
 		resp_str = resp_str.substr(pos);
-	resp_str += eol;
+	if (func != "cgi")
+		resp_str += eol;
 	return resp_str;
 }

@@ -1,7 +1,5 @@
 #include "cgi.hpp"
 
-extern int is_alive;
-
 char            **cgi::init_env(const request &req, const parser &pars, const std::string &path, int &fdin)
 {
     std::map<std::string, std::string> env_tmp;
@@ -30,8 +28,6 @@ char            **cgi::init_env(const request &req, const parser &pars, const st
 	env_tmp[DEF_SERVER_SOFTWARE] = WEBSERV;
 
 	char	**env = new char*[env_tmp.size() + 1];
-	if (!env)
-		return NULL;
 	int	j = 0;
 	for (std::map<std::string, std::string>::const_iterator it = env_tmp.begin(); it != env_tmp.end(); ++it)
 	{
@@ -87,12 +83,6 @@ void		cgi::son(int &fdin, int &fdout, int save_in, int save_out, const char *scr
 	clear(env);
 	std::cerr << "Execve crashed." << std::endl;
 	throw std::string("quit cgi");
-}
-
-void sighandlercgi(const int signal) // catch the signals
-{
-	if (signal)
-		is_alive = 0;
 }
 
 std::string     cgi::exec(char **env, const parser &pars, const std::string &path, int &fdin, int &fdout, int fd)

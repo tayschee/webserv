@@ -34,7 +34,7 @@ def main(argv):
 	except :
 		header_fd.close()
 		body_fd.close()
-	 	return 5
+		return 5
 	header_fd.close()
 	body_fd.close()
 	return 0

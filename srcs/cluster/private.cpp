@@ -67,6 +67,7 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 			return 0;
 		time_select.tv_sec = 20;
 		time_select.tv_usec = 0;
+
 		if ((activity = select(max + 1, &readfds, &writefds, NULL, &time_select)) < 0 && errno != EINTR)
 			std::cerr << "Failed to select. Error: " << strerror(errno) << std::endl;
 	}
@@ -87,7 +88,16 @@ int		cluster::receive(client &cli, const fd_set &writefds) // there is something
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
 		else //change that
+		{
+			try
+			{
 			list_client.push_back(new client(res, false, cli.get_nb_pars()));
+			}
+			catch(std::exception &e)
+			{
+				(void)e;
+			}
+		}
 	}
 	else
 		return cli.receive(writefds);

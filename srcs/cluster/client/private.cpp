@@ -33,8 +33,6 @@ bool	client::select_method(const fd_set &readfds, const fd_set &writefds)
 	bool ret = false;
 	if (func == "add_body")
 		ret = add_body(readfds, writefds);
-	else if (func == "put")
-		ret = put(readfds, writefds);
 	else if (func == "cgi")
 		ret = method_cgi(readfds, writefds);
 	else

@@ -7,7 +7,7 @@ static int check_argument(int c)
 	if (c != 2)
 	{
 		i = 1;
-		std::cout << "Invalid number of argument\n";
+		std::cerr << "Invalid number of argument\n";
 	}
 	return i;
 }
