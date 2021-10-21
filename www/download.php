@@ -16,8 +16,9 @@
     // Afficher l'URL
     if ($_SERVER['REQUEST_METHOD'] == 'POST') 
     {
-        $path = htmlspecialchars($_POST['my_download']);
-        $url = $url . $path;
+        $link = htmlspecialchars($_POST['my_download']);
+        $path = $link;
+        $path = str_replace($url, "", $path);
         $name = basename($path);
         $path = './html/' . $path;
         if (!file_exists($path))
@@ -25,7 +26,7 @@
 			echo 'Chemin invalide<br />';
 			exit;
 		}
-        echo("Clic ici pour telecharger: <a href=$url download=''>$name</a>");
+        echo("Clic ici pour telecharger: <a href=$link download=''>$name</a>");
     }
     else
         echo "Il y a ue un probleme"
