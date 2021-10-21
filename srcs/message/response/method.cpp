@@ -23,8 +23,6 @@ int response::method_is_get(const std::string &uri, const request &req, const pa
 
 	std::string type = find_media_type(get_extension(path), pars);
 
-
-
 	if ((file_stat.st_mode & S_IFMT) == S_IFDIR /* || (file_stat.st_mode & S_IFMT) == S_IFLNK*/) //there is segfault on symbolic_link wihtout com
 	{
 		try
@@ -118,31 +116,35 @@ int response::method_is_post(const std::string &uri, const request &req, const p
 {
 	std::string path;
 	struct stat file_stat;
-
 	if (first_line.status == 42)
 		path = uri;
 	else
 		path = find_path(pars, uri, req);
+
 	int ret = 0;
 	if ((ret = is_authorize(uri, req, pars)))
 		return ret;
+
 	ret = check_path(path, file_stat, req, pars);
 	if (ret == 403)
 	{
 		if (path.size() > 0 && *--path.end() != '/')
 			return 404;
 	}
+
 	if (ret != 0)
 		return ret;
 
-	func = "cgi";
 	if (!is_cgi(get_extension(path), pars, req.get_method()))
 	{
-		return 405;
+		return 403;
 	}
+	if (find_method_allow(req, pars, "POST") == "unknow")
+		return 405;
+	func = "cgi";
+
 	save_path = path;
 
-	// add_content_type(TEXT_HTML + std::string("; ") + CHARSET_UTF8);
 	if (req.get_method() != HEAD)
 		add_transfert_encoding();
 

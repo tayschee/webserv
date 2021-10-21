@@ -15,9 +15,9 @@ response::response(const request &req, const parser::address_conf &pars_list, in
 		save_pars = &(*pars_it);
 		const parser &pars(*pars_it);
 		parser::entries path_info(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf);
-		std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second); //no protect
+		// std::vector<std::string> allow_method(path_info.find(PARSER_ACCEPT)->second); //no protect
 		method_function method;
-		method = find_method_function(req, allow_method, pars); //give function associate with request
+		method = find_method_function(req, find_method_allow(req, pars, req.get_method()), pars); //give function associate with request
 		main_header(); /*add header_field which are present in all method*/
 		first_line.status = generate_response(path_info, pars, req, method);
 	}

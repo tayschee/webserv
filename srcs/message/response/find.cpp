@@ -17,25 +17,30 @@ response::find_status_string(const int status) const
 	}
 }
 
-/*this function return function associated to a method*/
-response::method_array::mapped_type //method_function
-response::find_method_function(const request &req, const std::vector<std::string> &allow_method, const parser &pars) const
+std::string		response::find_method_allow(const request &req, const parser &pars, const std::string &method)
 {
+	std::vector<std::string> allow_method(pars.get_block(BLOCK_LOCATION, req.get_uri()).conf.find(PARSER_ACCEPT)->second); //no protect
 	std::vector<std::string>::const_iterator it(allow_method.begin());
 	std::vector<std::string>::const_iterator end(allow_method.end());
-	std::string method = req.get_method();
-	std::string path = find_path(pars, req.get_uri(), req);
 	while (it < end)
 	{
 		if (method == *it)
-		{
-			if (is_cgi(get_extension(path), pars, method))
-				return existing_method.find(POST)->second;
-			return existing_method.find(method)->second;
-		}
+			return method;
 		++it;
 	}
-	return &response::method_is_unknow;
+	return "unknow";
+}
+
+/*this function return function associated to a method*/
+response::method_array::mapped_type //method_function
+response::find_method_function(const request &req, const std::string &method, const parser &pars) const
+{
+	if (method == "unknow")
+		return &response::method_is_unknow;
+	std::string path = find_path(pars, req.get_uri(), req);
+	if (is_cgi(get_extension(path), pars, method))
+		return existing_method.find(POST)->second;
+	return existing_method.find(method)->second;
 }
 
 //response::media_type_array::value_type //std::pair<std::string, std::string>
