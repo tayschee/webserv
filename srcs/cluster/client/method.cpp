@@ -13,7 +13,7 @@ bool client::add_body(const fd_set &readfds, const fd_set &writefds)
 	else if (FD_ISSET(fdout, &readfds) && FD_ISSET(fd, &writefds))
 	{
 		int size_buffer = 0;
-		__socklen_t optlen;
+		socklen_t optlen;
 		optlen = sizeof(size_buffer);
 		getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 		if (size_buffer > 4096)
@@ -71,7 +71,7 @@ bool client::method_cgi(const fd_set &readfds, const fd_set &writefds)
 		else
 		{
 			int size_buffer = 0;
-			__socklen_t optlen;
+			socklen_t optlen;
 			optlen = sizeof(size_buffer);
 			getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 			if (size_buffer > 4196)
@@ -141,7 +141,7 @@ bool client::send_header()
 {
 	size_t size_buffer = 0;
 	int ret = 0;
-	__socklen_t optlen;
+	socklen_t optlen;
 	optlen = sizeof(size_buffer);
 	getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 

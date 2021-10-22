@@ -72,7 +72,7 @@ bool client::sent(const std::vector<parser::address_conf> &vec_parser, const fd_
 		{
 			size_t size_buffer = 0;
 			int ret = 0;
-			__socklen_t optlen;
+			socklen_t optlen;
 			optlen = sizeof(size_buffer);
 			getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 			if (size_buffer > 4096)
@@ -155,7 +155,7 @@ bool client::sent(const std::vector<parser::address_conf> &vec_parser, const fd_
 				return false;
 			size_t size_buffer = 0;
 			int ret = 0;
-			__socklen_t optlen;
+			socklen_t optlen;
 			optlen = sizeof(size_buffer);
 			getsockopt(fd, SOL_SOCKET, SO_SNDBUF, &size_buffer, &optlen);
 

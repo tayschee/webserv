@@ -3,6 +3,7 @@
 
 # include <time.h>
 # include <sys/time.h>
+# include <signal.h>
 # include "server.hpp"
 # include "cgi.hpp"
 # include "message/request.hpp"

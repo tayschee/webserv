@@ -27,7 +27,6 @@ port(ft_atoi<int>(_pars.get_block(PARSER_SERVER).conf.find(PARSER_LISTEN)->secon
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 	address.sin_addr.s_addr = ip;
-
 	socket_host = socket(AF_INET, SOCK_STREAM, 0);
 	int opt = true;
 	if (setsockopt(socket_host, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0) // Enable reuse of address, fixes the error "address is already in use"
