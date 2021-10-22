@@ -1,8 +1,6 @@
 #include "cluster.hpp"
 
 extern bool is_alive;
-long OPEN = 0;
-long nbCLOSE = 0;
 
 void sighandler(const int signal) // catch the signals
 {
@@ -12,7 +10,6 @@ void sighandler(const int signal) // catch the signals
 
 void	cluster::close_client(iterator &it) // close a client
 {
-	nbCLOSE++;
 	iterator tmp = it;
 	--it;
 	delete(*tmp);
@@ -94,10 +91,6 @@ int		cluster::receive(client &cli, const fd_set &writefds) // there is something
 		{
 			try
 			{
-<<<<<<< HEAD
-=======
-				OPEN++;
->>>>>>> abee9c913e0472fcaac746b784490330e2819822
 				list_client.push_back(new client(res, false, cli.get_nb_pars()));
 			}
 			catch(std::exception &e)

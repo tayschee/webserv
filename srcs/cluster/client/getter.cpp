@@ -21,7 +21,7 @@ bool        client::is_time() const // Check if the time is finished
         return 0;
     struct timeval now;
     gettimeofday(&now, NULL);
-	if ((now.tv_sec - time.tv_sec) > 99999)
+	if ((now.tv_sec - time.tv_sec) > 60)
         return 1;
     return 0;
 }
