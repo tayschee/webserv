@@ -34,10 +34,8 @@ int main(int c, char **v)
 	catch(std::string &e) //remplace la string par une vrai exception ça serait un peut mieux
 	{
 		if (e == "quit cgi")
-		{
 			ret = 500;
-			std::cerr << e << std::endl;
-		}
+		std::cerr << e << std::endl;
 	}
 	return ret;
 }

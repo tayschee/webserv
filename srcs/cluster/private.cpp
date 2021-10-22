@@ -87,11 +87,11 @@ int		cluster::receive(client &cli, const fd_set &writefds) // there is something
 		errno = 0;
 		if (res < 0)
 			std::cerr << "Failed to accept. Error: " << strerror(errno) << std::endl;
-		else //change that
+		else
 		{
 			try
 			{
-			list_client.push_back(new client(res, false, cli.get_nb_pars()));
+				list_client.push_back(new client(res, false, cli.get_nb_pars()));
 			}
 			catch(std::exception &e)
 			{
