@@ -18,6 +18,8 @@ int cluster::start() // cluster manage the list of socketc
 {
 	fd_set readfds, writefds;
 
+	signal(SIGPIPE, SIG_IGN);
+
 	while (true)
 	{
 		if (!wait_activity(readfds, writefds))

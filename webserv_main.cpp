@@ -27,14 +27,17 @@ int main(int c, char **v)
 
 	if (i)
 		return 1;
+
 	signal(SIGINT, sighandler);
-	signal(SIGPIPE, SIG_IGN);
+
 	try
 	{
 		cluster cl(v[i + 1]);
 		if (is_alive && cl.init_listen())
+		{
 			if (is_alive && cl.start())
 				return ret;
+		}
 	}
 	catch(std::exception &e)
 	{
