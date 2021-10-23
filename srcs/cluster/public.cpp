@@ -1,5 +1,7 @@
 #include "cluster.hpp"
 
+extern bool is_alive;
+
 int cluster::init_listen() // start sockets
 {
 	errno = 0;
@@ -20,7 +22,7 @@ int cluster::start() // cluster manage the list of socketc
 
 	signal(SIGPIPE, SIG_IGN);
 
-	while (true)
+	while (is_alive)
 	{
 		if (!wait_activity(readfds, writefds))
 			return 0;
