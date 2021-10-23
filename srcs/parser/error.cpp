@@ -25,14 +25,13 @@ bool parser::check_prop(const std::string &name, const std::string &block_id, co
 	try
 	{
 		if (block_id == PARSER_TYPES)
-			return (1);
+			return (true);
 		bool res = (this->*prop_checker.at(name))(block_id, args, line_no);
 		error = error | !res;
 		return res;
 	}
 	catch (const std::out_of_range &e)
 	{
-		std::cerr << e.what() << "\n\n";
 		std::cerr << "Error: " << filename << ": Unknown property '" << name << "' at line " << line_no << ".\n";
 		error = true;
 		return false;
@@ -48,8 +47,12 @@ bool parser::check_prop_return(const std::string &block_id, const std::vector<st
 		return false;
 	if (!basic_chk_args(PARSER_RETURN, args.size(), 2, true, line_no))
 		return false;
-	//if (!advanced_chk_err_code(args, line_no))
-	//	return false;
+	long nb = ft_atoi<long>(args[0]);
+	if (!(300 <= nb && nb <= 399))
+	{
+		std::cerr << "Error: " << filename << ": Return code should only be between 300 and 399. (line : " << line_no << ")" << std::endl;
+		return false;
+	}
 	return true;
 }
 

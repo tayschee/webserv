@@ -147,7 +147,7 @@ private:
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	std::string find_best_match(std::string arg) const;
-	static void insert_parse_folder(std::vector<address_conf> &pars, parser &new_object);
+	static bool insert_parse_folder(std::vector<address_conf> &pars, parser &new_object);
 	static void chk_def_server(const std::vector<address_conf> &pars);
 	//std::string remove_comments(const std::string &line) const;
 	static std::string remove_comments(const std::string &line);

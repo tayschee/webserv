@@ -49,7 +49,8 @@ std::vector<parser::address_conf> parser::parse_folder(std::string path)
 		else if (entry->d_type == DT_REG && (get_extension(entry->d_name) == ".conf"))
 		{
 			parser new_object(path + "/" + entry->d_name);
-			insert_parse_folder(res, new_object);
+			if (!insert_parse_folder(res, new_object))
+				throw std::runtime_error("The file " + path + "/" + entry->d_name + " is invalid.");
 		}
 	}
 
@@ -91,12 +92,12 @@ void parser::chk_def_server(const std::vector<address_conf> &pars)
 	}
 }
 
-void parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_object)
+bool parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_object)
 {
 	size_t i = 0;
 
 	if (!new_object.validate())
-		return;
+		return false;
 
 
 	entries pars_new_object(new_object.get_block(PARSER_SERVER).conf);
@@ -108,11 +109,12 @@ void parser::insert_parse_folder(std::vector<address_conf> &pars, parser &new_ob
 		if (pars_block.find(PARSER_HOST)->second == pars_new_object.find(PARSER_HOST)->second && pars_block.find(PARSER_LISTEN)->second[0] == pars_new_object.find(PARSER_LISTEN)->second[0])
 		{
 			pars[i].push_back(new_object);
-			return;
+			return (true);
 		}
 		++i;
 	}
 	pars.push_back(std::vector<parser>(1, new_object));
+	return true;
 }
 
 const parser::block &parser::get_block(const std::string &block_name, const std::vector<std::string> &block_args) const
