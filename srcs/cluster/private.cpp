@@ -2,12 +2,6 @@
 
 extern bool is_alive;
 
-void sighandler(const int signal) // catch the signals
-{
-	if (signal)
-		is_alive = 0;
-}
-
 void	cluster::close_client(iterator &it) // close a client
 {
 	iterator tmp = it;
@@ -61,7 +55,6 @@ int	cluster::wait_activity(fd_set &readfds, fd_set &writefds) // wait for someth
 	{
 		errno = 0;
 		set_list_fd(readfds, writefds, max);
-		signal(SIGINT, sighandler);
 		signal(SIGPIPE, SIG_IGN);
 		if (!is_alive)
 			return 0;

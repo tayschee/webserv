@@ -1,7 +1,5 @@
 #include "cluster.hpp"
 
-bool is_alive;
-
 int cluster::init_listen() // start sockets
 {
 	errno = 0;
@@ -18,7 +16,6 @@ int cluster::init_listen() // start sockets
 
 int cluster::start() // cluster manage the list of socketc
 {
-	is_alive = 1;
 	fd_set readfds, writefds;
 
 	while (true)
