@@ -145,7 +145,7 @@ test_syntax syntax_ressources/security_breach
 test_syntax syntax_ressources/no_method
 test_syntax syntax_ressources/no_uri
 
-test_syntax syntax_ressources/no_version
+#test_syntax syntax_ressources/no_version
 
 test_syntax syntax_ressources/multiple_request
 
@@ -156,11 +156,11 @@ test_method $SERVER_NAME POST /php/1.php
 test_method $SERVER_NAME POST /php/2.php
 test_method $SERVER_NAME POST /php/exemple.php
 
-test_method $SERVER_NAME POST /php/info.php
+#test_method $SERVER_NAME POST /php/info.php
 
-test_method $SERVER_NAME POST /php/php.php -d arg1=O -d arg2=K -d arg3=!
+test_method $SERVER_NAME POST /php/php.php -d arg1=O -d arg2=K -d arg3=! -d arg4="abc"
 test_method $SERVER_NAME POST /php/php.php -d arg1=ceci -d arg2=EST -d arg3=method -d arg4=POST
-test_method $SERVER_NAME GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING
+test_method $SERVER_NAME GET /php/php.php -G -d arg1=GET -d arg2=query -d arg3=STRING -d arg4="oups"
 
 SERVER_NAME=same_error_php
 

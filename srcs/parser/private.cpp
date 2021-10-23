@@ -78,8 +78,6 @@ void parser::parse_line(std::string line, int line_no, blocks::key_type &block_i
 		}
 		if (name == PARSER_CGI && splitted[0][0] != '.')
 			splitted[0].insert(splitted[0].begin(), '.');
-		if (name == PARSER_CGI)
-			std::cout << "Arg : " << splitted[0] << std::endl;
 		block_id = std::make_pair(name, splitted);
 		_blocks[block_id].create_block(block_id.first, block_id.second, _blocks[entries::value_type(PARSER_SERVER, std::vector<std::string>())]); //dont work
 	}
